@@ -8,6 +8,7 @@ import LayoutFilms from './components/layouts/LayoutFilms/LayoutFilms';
 import Thrillers from './pages/Thrillers';
 import SeriesUs from './pages/SeriesUs';
 import Mangas from './pages/Mangas';
+import Login from './pages/Login';
 
 
 export default (store) => {
@@ -44,6 +45,8 @@ export default (store) => {
         <Route path="mangas" component={Mangas} />
       </Route>
 
+      <Route path="login" component={Login} />
+      <Route path="signup" component={Login} />
     </Route>
   );
 };

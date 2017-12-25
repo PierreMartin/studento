@@ -52,9 +52,9 @@ class Home extends Component {
       <LayoutPage {...this.getMetaData()}>
 				<Segment inverted textAlign="center" style={{ minHeight: 400, padding: '1em 0em' }} vertical>
 					<Container text>
-						<Header as="h1" content="Hello, world!" inverted className={cx('myClass')} style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '1em' }} />
-						<Header as="h2" content="Do whatever you want when you want to." inverted style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
-						<Button primary size="huge">Get Started<Icon name="right arrow" /></Button>
+						<Header as="h1" content="Hello!" inverted className={cx('myClass')} style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '1em' }} />
+						<Header as="h2" content="Start to share you courses / knowledges with the world." inverted style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
+						<Button primary size="huge">Sign up<Icon name="right arrow" /></Button>
 					</Container>
 				</Segment>
 

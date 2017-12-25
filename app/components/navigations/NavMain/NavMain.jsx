@@ -33,8 +33,8 @@ class NavigationMain extends Component {
 						<Menu.Item as={Link} to="/films" name="films" active={activeItem === 'films'} onClick={this.handleItemClick}>Films</Menu.Item>
 
 						<Menu.Item position="right">
-							<Button as="a" inverted>Log in</Button>
-							<Button as="a" inverted style={{marginLeft: '0.5em'}}>Sign Up</Button>
+							<Menu.Item as={Link} to="/login" name="login" active={activeItem === 'login'} onClick={this.handleItemClick}>Log in</Menu.Item>
+							<Button as={Link} to="/signup" name="signup" active={activeItem === 'signup'} inverted style={{marginLeft: '0.5em'}} onClick={this.handleItemClick}>Sign Up</Button>
 						</Menu.Item>
 					</Menu>
 				</Container>
