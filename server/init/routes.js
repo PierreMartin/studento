@@ -15,11 +15,11 @@ export default (app) => {
 
   // user routes
   if (usersController) {
-    app.post('/sessions', usersController.login);
-    app.post('/users', usersController.signUp);
-    app.delete('/sessions', usersController.logout);
+    app.post('/api/login', usersController.login);
+    app.post('/api/signup', usersController.signUp);
+    app.post('/api/logout', usersController.logout);
   } else {
-    console.warn('users routes');
+    console.warn('authentification routes');
   }
 
   /*
@@ -39,6 +39,4 @@ export default (app) => {
     );
   }
   */
-
-
 };

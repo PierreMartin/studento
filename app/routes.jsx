@@ -13,7 +13,7 @@ import Login from './pages/Login';
 
 export default (store) => {
   const requireAuth = (nextState, replace, callback) => {
-    const { user: { authenticated }} = store.getState();
+    const { authentification: { authenticated }} = store.getState();
     if (!authenticated) {
       replace({
         pathname: '/login',
@@ -22,8 +22,9 @@ export default (store) => {
     }
     callback();
   };
+  /*
   const redirectAuth = (nextState, replace, callback) => {
-    const { user: { authenticated }} = store.getState();
+    const { authentification: { authenticated }} = store.getState();
     if (authenticated) {
       replace({
         pathname: '/'
@@ -31,6 +32,7 @@ export default (store) => {
     }
     callback();
   };
+  */
 
   return (
     <Route path="/" component={App}>
@@ -42,7 +44,7 @@ export default (store) => {
         <IndexRoute />
         <Route path="thrillers" component={Thrillers} />
         <Route path="seriesus" component={SeriesUs} />
-        <Route path="mangas" component={Mangas} />
+        <Route path="mangas" component={Mangas} onEnter={requireAuth} />
       </Route>
 
       <Route path="login" component={Login} />

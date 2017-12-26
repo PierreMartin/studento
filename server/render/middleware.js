@@ -6,8 +6,15 @@ import fetchDataForRoute from '../../app/middlewares/fetchDataForRoute';
 
 
 export default function render(req, res) {
+	const authenticated = req.isAuthenticated();
   const history = createMemoryHistory();
-  const store = configureStore({}, history);
+	const store = configureStore({
+		authentification: {
+			authenticated,
+			isWaiting: false,
+			message: ''
+		}
+	}, history);
   const routes = createRoutes(store);
 
   // for server-side rendering

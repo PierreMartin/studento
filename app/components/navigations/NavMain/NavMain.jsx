@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { logoutAction } from '../../../actions/authentification';
 import { Button, Container, Menu, Segment } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from '../../../css/main.scss';
@@ -23,6 +26,7 @@ class NavigationMain extends Component {
 
 	render() {
 		const { activeItem } = this.state;
+		const { authentification, logoutAction } = this.props;
 
 		return (
 			<Segment inverted>
@@ -33,8 +37,9 @@ class NavigationMain extends Component {
 						<Menu.Item as={Link} to="/films" name="films" active={activeItem === 'films'} onClick={this.handleItemClick}>Films</Menu.Item>
 
 						<Menu.Item position="right">
-							<Menu.Item as={Link} to="/login" name="login" active={activeItem === 'login'} onClick={this.handleItemClick}>Log in</Menu.Item>
-							<Button as={Link} to="/signup" name="signup" active={activeItem === 'signup'} inverted style={{marginLeft: '0.5em'}} onClick={this.handleItemClick}>Sign Up</Button>
+							{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" name="login" active={activeItem === 'login'} onClick={this.handleItemClick}>Log in</Menu.Item>) : ''}
+							{ !authentification.authenticated ? (<Button as={Link} to="/signup" name="signup" active={activeItem === 'signup'} inverted style={{marginLeft: '0.5em'}} onClick={this.handleItemClick}>Sign Up</Button>) : ''}
+							{ authentification.authenticated ? (<Menu.Item as={Link} onClick={logoutAction} to="/">Logout</Menu.Item>) : ''}
 						</Menu.Item>
 					</Menu>
 				</Container>
@@ -51,4 +56,15 @@ class NavigationMain extends Component {
 	}
 }
 
-export default NavigationMain;
+NavigationMain.propTypes = {
+	authentification: PropTypes.object,
+	logoutAction: PropTypes.func.isRequired
+};
+
+function mapStateToProps(state) {
+	return {
+		authentification: state.authentification
+	};
+}
+
+export default connect(mapStateToProps, { logoutAction })(NavigationMain);
