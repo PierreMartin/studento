@@ -4,11 +4,12 @@ import { combineReducers } from 'redux';
 
 const messageError = (state = '', action) => {
 	switch (action.type) {
-		case types.MANUAL_LOGIN_USER:
-		case types.SIGNUP_USER:
-		case types.LOGOUT_USER:
+		case types.LOGIN_BEGIN_USER:
+		case types.SIGNUP_BEGIN_USER:
+		case types.LOGOUT_BEGIN_USER:
 		case types.LOGIN_SUCCESS_USER:
 		case types.SIGNUP_SUCCESS_USER:
+		case types.LOGOUT_SUCCESS_USER:
 			return '';
 		case types.LOGIN_ERROR_USER:
 		case types.SIGNUP_ERROR_USER:
@@ -20,9 +21,9 @@ const messageError = (state = '', action) => {
 
 const isWaiting = (state = false, action) => {
 	switch (action.type) {
-		case types.MANUAL_LOGIN_USER:
-		case types.SIGNUP_USER:
-		case types.LOGOUT_USER:
+		case types.LOGIN_BEGIN_USER:
+		case types.SIGNUP_BEGIN_USER:
+		case types.LOGOUT_BEGIN_USER:
 			return true;
 		case types.LOGIN_SUCCESS_USER:
 		case types.SIGNUP_SUCCESS_USER:

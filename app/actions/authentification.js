@@ -28,7 +28,7 @@ export function typingLoginSignupAction(nameField, valueField) {
 
 /***************************************** Log In ********************************************/
 export function beginLogin() {
-	return {type: types.MANUAL_LOGIN_USER};
+	return {type: types.LOGIN_BEGIN_USER};
 }
 
 export function loginSuccess(message, userObj) {
@@ -75,7 +75,7 @@ export function loginAction(data) {
 
 /***************************************** Sign Up ********************************************/
 export function beginSignUp() {
-	return {type: types.SIGNUP_USER};
+	return {type: types.SIGNUP_BEGIN_USER};
 }
 
 export function signUpError(email, messageError) {
@@ -123,7 +123,7 @@ export function signupAction(data) {
 
 /***************************************** Log Out ********************************************/
 export function beginLogout() {
-	return {type: types.LOGOUT_USER};
+	return {type: types.LOGOUT_BEGIN_USER};
 }
 
 export function logoutSuccess() {

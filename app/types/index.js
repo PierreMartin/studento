@@ -25,15 +25,18 @@ export const RATING_COURSE_SUCCESS = 'RATING_COURSE_SUCCESS';
 export const RATING_COURSE_FAILURE = 'RATING_COURSE_FAILURE';
 
 /***************************************** Authentification ********************************************/
+export const LOGIN_BEGIN_USER = 'LOGIN_BEGIN_USER';
+export const SIGNUP_BEGIN_USER = 'SIGNUP_BEGIN_USER';
+export const LOGOUT_BEGIN_USER = 'LOGOUT_BEGIN_USER';
+
 export const TYPING_LOGIN_SIGNUP_ACTION = 'TYPING_LOGIN_SIGNUP_ACTION';
-export const MANUAL_LOGIN_USER = 'MANUAL_LOGIN_USER';
+
 export const LOGIN_SUCCESS_USER = 'LOGIN_SUCCESS_USER';
-export const LOGIN_ERROR_USER = 'LOGIN_ERROR_USER';
-export const SIGNUP_USER = 'SIGNUP_USER';
 export const SIGNUP_SUCCESS_USER = 'SIGNUP_SUCCESS_USER';
-export const SIGNUP_ERROR_USER = 'SIGNUP_ERROR_USER';
-export const LOGOUT_USER = 'LOGOUT_USER';
 export const LOGOUT_SUCCESS_USER = 'LOGOUT_SUCCESS_USER';
+
+export const LOGIN_ERROR_USER = 'LOGIN_ERROR_USER';
+export const SIGNUP_ERROR_USER = 'SIGNUP_ERROR_USER';
 export const LOGOUT_ERROR_USER = 'LOGOUT_ERROR_USER';
 
 // DISPLAYING MISSING FIELDS :
