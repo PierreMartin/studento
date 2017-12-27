@@ -1,19 +1,12 @@
-import request from 'axios';
-// import { } from './../api'; // TODO refacto here
+import { loginRequest, signupRequest, logoutRequest } from './../api';
 import { push } from 'react-router-redux';
 import * as types from 'types';
-
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 const getFieldsMissing = res => res.response && res.response.data && res.response.data.errorField;
 
 
-function makeUserRequest(method, data, api = '/api/login') {
-	return request[method](api, data);
-}
-
-
-// for login / signup :
+// Required fields login / signup :
 export function requiredFieldsError(fields) {
 	return {
 		type: types.LOGIN_SIGNUP_MISSING_REQUIRED_FIELDS,
@@ -21,7 +14,7 @@ export function requiredFieldsError(fields) {
 	};
 }
 
-/***************************************** Log In / Sign Up ********************************************/
+// Typing login / signup :
 export function typingLoginSignupAction(nameField, valueField) {
 	return {
 		type: types.TYPING_LOGIN_SIGNUP_ACTION,
@@ -56,7 +49,7 @@ export function loginAction(data) {
 	return (dispatch) => {
 		dispatch(beginLogin());
 
-		return makeUserRequest('post', data, '/api/login')
+		loginRequest(data)
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(loginSuccess(response.data.message, response.data.userObj));
@@ -103,7 +96,7 @@ export function signupAction(data) {
 	return (dispatch) => {
 		dispatch(beginSignUp());
 
-		return makeUserRequest('post', data, '/api/signup')
+		signupRequest(data)
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(signUpSuccess(response.data.message, response.data.userObj));
@@ -142,13 +135,17 @@ export function logoutAction() {
 	return (dispatch) => {
 		dispatch(beginLogout());
 
-		return makeUserRequest('post', null, '/api/logout')
+		logoutRequest()
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(logoutSuccess());
 				} else {
 					dispatch(logoutError());
 				}
+			})
+			.catch((err) => {
+				console.error(err);
+				dispatch(logoutError());
 			});
 	};
 }
