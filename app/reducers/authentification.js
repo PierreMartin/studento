@@ -2,7 +2,7 @@ import * as types from 'types';
 import { combineReducers } from 'redux';
 
 
-const message = (state = '', action) => {
+const messageError = (state = '', action) => {
 	switch (action.type) {
 		case types.MANUAL_LOGIN_USER:
 		case types.SIGNUP_USER:
@@ -12,7 +12,7 @@ const message = (state = '', action) => {
 			return '';
 		case types.LOGIN_ERROR_USER:
 		case types.SIGNUP_ERROR_USER:
-			return action.message;
+			return action.messageError;
 		default:
 			return state;
 	}
@@ -87,7 +87,7 @@ const missingRequiredField = (state = {}, action) => {
 const authentificationReducer = combineReducers({
 	isWaiting,
 	authenticated,
-	message,
+	messageError,
 	typingLoginSignupState,
 	missingRequiredField
 });

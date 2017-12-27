@@ -38,10 +38,10 @@ export function loginSuccess(message, userObj) {
 	};
 }
 
-export function loginError(message) {
+export function loginError(messageError) {
 	return {
 		type: types.LOGIN_ERROR_USER,
-		message
+		messageError
 	};
 }
 
@@ -76,10 +76,10 @@ export function beginSignUp() {
 	return {type: types.SIGNUP_USER};
 }
 
-export function signUpError(email, message) {
+export function signUpError(email, messageError) {
 	return {
 		type: types.SIGNUP_ERROR_USER,
-		message,
+		messageError,
 		email
 	};
 }
