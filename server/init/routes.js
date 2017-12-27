@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { controllers, passport as passportConfig } from '../db';
 
-const usersController = controllers && controllers.users;
+const authController = controllers && controllers.auth;
 const coursesController = controllers && controllers.courses;
 
 export default (app) => {
@@ -13,11 +13,11 @@ export default (app) => {
 		console.warn('courses routes');
 	}
 
-  // user routes
-  if (usersController) {
-    app.post('/api/login', usersController.login);
-    app.post('/api/signup', usersController.signUp);
-    app.post('/api/logout', usersController.logout);
+  // authentification routes
+  if (authController) {
+    app.post('/api/login', authController.login);
+    app.post('/api/signup', authController.signUp);
+    app.post('/api/logout', authController.logout);
   } else {
     console.warn('authentification routes');
   }

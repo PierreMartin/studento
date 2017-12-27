@@ -12,7 +12,7 @@ export default function render(req, res) {
 		authentification: {
 			authenticated,
 			isWaiting: false,
-			message: ''
+			messageError: ''
 		}
 	}, history);
   const routes = createRoutes(store);

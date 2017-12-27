@@ -30,7 +30,7 @@ export function login(req, res, next) {
     return req.logIn(user, (loginErr) => {
 			if (loginErr) return res.status(401).json({message: loginErr});
 
-			return res.status(200).json({message: 'You\re now logged.', userObj: user});
+			return res.status(200).json({message: 'You\'re now logged.', userObj: user});
     });
   })(req, res, next);
 }
@@ -69,7 +69,7 @@ export function signUp(req, res, next) {
       return req.logIn(user, (loginErr) => {
 				if (loginErr) return res.status(401).json({message: loginErr});
 
-				return res.status(200).json({message: 'You\re now logged.', userObj: user});
+				return res.status(200).json({message: 'You\'re now logged.', userObj: user});
       });
     });
   });

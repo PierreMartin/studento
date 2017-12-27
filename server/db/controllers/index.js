@@ -1,5 +1,5 @@
 import courses from './courses';
-import users from './users';
+import auth from './authentification';
 
-export { courses, users };
-export default { courses, users };
+export { courses, auth };
+export default { courses, auth };
