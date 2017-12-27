@@ -69,9 +69,9 @@ class Login extends Component {
 			errorsField.push({message: messageErrorState, key: 'backendError'});
 		}
 
-		const messagesListNode = errorsField.map((errorField) => {
+		const messagesListNode = errorsField.map((errorField, key) => {
 			return (
-				<li>{errorField.message}</li>
+				<li key={key}>{errorField.message}</li>
 			);
 		});
 

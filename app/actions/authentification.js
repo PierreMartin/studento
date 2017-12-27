@@ -1,6 +1,7 @@
 import { loginRequest, signupRequest, logoutRequest } from './../api';
 import { push } from 'react-router-redux';
 import * as types from 'types';
+import { toast } from 'react-toastify';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 const getFieldsMissing = res => res.response && res.response.data && res.response.data.errorField;
@@ -54,6 +55,7 @@ export function loginAction(data) {
 				if (response.status === 200) {
 					dispatch(loginSuccess(response.data.message, response.data.userObj));
 					dispatch(push('/user/' + response.data.userObj._id)); // redirection
+					toast.success(response.data.message);
 				} else {
 					dispatch(loginError('Oops! Something went wrong!'));
 				}
@@ -101,6 +103,7 @@ export function signupAction(data) {
 				if (response.status === 200) {
 					dispatch(signUpSuccess(response.data.message, response.data.userObj));
 					dispatch(push('/user/' + response.data.userObj._id)); // redirection
+					toast.success(response.data.message);
 				} else {
 					dispatch(signUpError(data.email, 'Oops! Something went wrong'));
 				}
@@ -139,6 +142,7 @@ export function logoutAction() {
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(logoutSuccess());
+					toast.success('Lougout');
 				} else {
 					dispatch(logoutError());
 				}

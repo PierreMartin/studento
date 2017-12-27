@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import NavMain from '../../navigations/NavMain/NavMain';
 import { Grid, Header, List, Segment, Container } from 'semantic-ui-react';
+import { ToastContainer } from 'react-toastify';
 import styles from '../../../css/main.scss';
 
 const cx = classNames.bind(styles);
@@ -13,6 +14,7 @@ const App = ({ children }) => {
     <div className={cx('myClass', 'myOtherClass')}>
       <NavMain />
       {children}
+			<ToastContainer />
 
 			<Segment inverted vertical style={{ padding: '5em 0em' }}>
 				<Container text>

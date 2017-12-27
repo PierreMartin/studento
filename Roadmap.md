@@ -48,7 +48,6 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - authentification.js
 - users.js
 
-# toaster
 # unique email + username for login/signupp
 
 - deplacer getChannels() à l'ouverture de la chatbox

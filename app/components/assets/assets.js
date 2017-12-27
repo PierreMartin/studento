@@ -30,6 +30,6 @@ const linkAssets = () => {
   return links;
 };
 
-export const title = 'React Redux - :)';
+export const title = 'Studento';
 export const meta = metaAssets();
 export const link = linkAssets();
