@@ -40,9 +40,9 @@ const typingCreateCourseState = (state = '', action) => {
 	}
 };
 
-const courseReducer = combineReducers({
+const coursesReducer = combineReducers({
 	courses,
 	typingCreateCourseState
 });
 
-export default courseReducer;
+export default coursesReducer;

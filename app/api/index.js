@@ -1,6 +1,8 @@
 import { api } from './services';
 import * as types from 'types';
 
+const getMessage = res => res.response && res.response.data && res.response.data.message;
+
 /********************************************** Courses ***********************************************/
 export const fetchCoursesRequest = (params, store) => {
 	return api().getCourses()
@@ -64,5 +66,18 @@ export const logoutRequest = () => {
 		})
 		.catch((err) => {
 			return Promise.reject(err);
+		});
+};
+
+/********************************************** Users ***********************************************/
+export const fetchUsersRequest = (params, store) => {
+	return api().getUsers()
+		.then((res) => {
+			if (res.status === 200) {
+				store.dispatch({type: types.GET_USERS_SUCCESS, data: res.data});
+			}
+		})
+		.catch((err) => {
+			store.dispatch({type: types.GET_USERS_FAILURE, message: getMessage(err)});
 		});
 };

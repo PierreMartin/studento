@@ -13,7 +13,8 @@ export default function render(req, res) {
 			authenticated,
 			isWaiting: false,
 			messageError: ''
-		}
+		},
+		userMe: req.user
 	}, history);
   const routes = createRoutes(store);
 

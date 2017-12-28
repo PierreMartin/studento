@@ -2,6 +2,7 @@ import passport from 'passport';
 import { controllers, passport as passportConfig } from '../db';
 
 const authController = controllers && controllers.auth;
+const usersController = controllers && controllers.users;
 const coursesController = controllers && controllers.courses;
 
 export default (app) => {
@@ -21,6 +22,13 @@ export default (app) => {
   } else {
     console.warn('authentification routes');
   }
+
+	// users routes
+	if (usersController) {
+		app.get('/api/getusers', usersController.all);
+	} else {
+		console.warn('users routes');
+	}
 
   /*
   if (passportConfig && passportConfig.google) {

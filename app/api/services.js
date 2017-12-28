@@ -42,6 +42,12 @@ export function api() {
 		logout: () => localClient.request({
 			method: 'POST',
 			url: '/api/logout'
+		}),
+
+		// Users
+		getUsers: () => localClient.request({
+			method: 'GET',
+			url: '/api/getusers'
 		})
 	};
 }
