@@ -44,8 +44,7 @@ export default (store) => {
       <Route path="/about" component={About} />
 
       <Route path="/settings" component={LayoutSettings} >
-        {/* <IndexRoute component={Thrillers} /> */}
-        <IndexRoute />
+        <IndexRoute component={SettingsProfile} />
         <Route path="profile" component={SettingsProfile} />
         <Route path="avatar" component={SettingsAvatar} />
         <Route path="account" component={SettingsAccount} onEnter={requireAuth} />
