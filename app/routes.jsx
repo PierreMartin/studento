@@ -4,10 +4,10 @@ import { fetchCoursesRequest, fetchUsersRequest, fetchUserRequest } from './api'
 import App from './pages/App';
 import Home from './pages/Home';
 import About from './pages/About';
-import LayoutFilms from './components/layouts/LayoutFilms/LayoutFilms';
-import Thrillers from './pages/Thrillers';
-import SeriesUs from './pages/SeriesUs';
-import Mangas from './pages/Mangas';
+import LayoutSettings from './components/layouts/LayoutSettings/LayoutSettings';
+import SettingsProfile from './pages/SettingsProfile';
+import SettingsAvatar from './pages/SettingsAvatar';
+import SettingsAccount from './pages/SettingsAccount';
 import Login from './pages/Login';
 import Users from './pages/Users';
 import User from './pages/User';
@@ -43,12 +43,12 @@ export default (store) => {
       <Route path="/user/:id" component={User} fetchData={fetchUserRequest} onEnter={requireAuth} />
       <Route path="/about" component={About} />
 
-      <Route path="/films" component={LayoutFilms} >
+      <Route path="/settings" component={LayoutSettings} >
         {/* <IndexRoute component={Thrillers} /> */}
         <IndexRoute />
-        <Route path="/thrillers" component={Thrillers} />
-        <Route path="/seriesus" component={SeriesUs} />
-        <Route path="/mangas" component={Mangas} onEnter={requireAuth} />
+        <Route path="profile" component={SettingsProfile} />
+        <Route path="avatar" component={SettingsAvatar} />
+        <Route path="account" component={SettingsAccount} onEnter={requireAuth} />
       </Route>
 
       <Route path="/login" component={Login} />

@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logoutAction } from '../../../actions/authentification';
-import { Button, Container, Menu, Segment, Dropdown } from 'semantic-ui-react';
+import { Button, Container, Menu, Segment, Dropdown, Label, Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from '../../../css/main.scss';
 
@@ -18,14 +18,14 @@ class NavigationMain extends Component {
 		};
 
 		this.handleItemClick = this.handleItemClick.bind(this);
-		this.renderDropdownIfLogged = this.renderDropdownIfLogged.bind(this);
+		this.renderDropdownProfile = this.renderDropdownProfile.bind(this);
 	}
 
 	handleItemClick = (e, { name }) => {
 		this.setState({ activeItem: name });
 	};
 
-	renderDropdownIfLogged(userMe, authentification, logoutAction) {
+	renderDropdownProfile(userMe, authentification, logoutAction) {
 		if (authentification.authenticated) {
 			return (
 				<Dropdown item text={userMe.username}>
@@ -49,11 +49,13 @@ class NavigationMain extends Component {
 					<Menu inverted pointing secondary className={cx('myClass')}>
 						<Menu.Item as={Link} to="/" name="home" active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item>
 						<Menu.Item as={Link} to="/about" name="about" active={activeItem === 'about'} onClick={this.handleItemClick}>About</Menu.Item>
-						<Menu.Item as={Link} to="/films" name="films" active={activeItem === 'films'} onClick={this.handleItemClick}>Films</Menu.Item>
 						{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" name="users" active={activeItem === 'users'} onClick={this.handleItemClick}>Users</Menu.Item>) : ''}
 
 						<Menu.Item position="right">
-							{ this.renderDropdownIfLogged(userMe, authentification, logoutAction) }
+							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
+
+							{ authentification.authenticated ? (<Menu.Item as="a"><Icon name="mail" /><Label circular color="red" size="mini" floating>22</Label></Menu.Item>) : ''}
+							{ authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''}
 							{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" name="login" active={activeItem === 'login'} onClick={this.handleItemClick}>Log in</Menu.Item>) : ''}
 							{ !authentification.authenticated ? (<Button as={Link} to="/signup" name="signup" active={activeItem === 'signup'} inverted style={{marginLeft: '0.5em'}} onClick={this.handleItemClick}>Sign Up</Button>) : ''}
 						</Menu.Item>
@@ -61,14 +63,6 @@ class NavigationMain extends Component {
 				</Container>
 			</Segment>
 		);
-
-		/*
-		 <nav role="navigation" className={cx('navigation')}>
-			 <Link to="/" activeClassName={cx('active')}>Home</Link>
-			 <Link to="/about" activeClassName={cx('active')}>About</Link>
-			 <Link to="/films" activeClassName={cx('active')}>Films</Link>
-		 </nav>
-		 */
 	}
 }
 

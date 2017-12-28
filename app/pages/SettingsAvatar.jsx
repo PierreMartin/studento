@@ -1,20 +1,20 @@
 import React from 'react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 
-const Thrillers = () => {
+const SettingsAvatar = () => {
 	function getMetaData() {
 		return {
-			title: 'Thrillers | react stater',
-			meta: [{ name: 'description', content: 'react stater' }],
+			title: 'SettingsAvatar',
+			meta: [{ name: 'description', content: 'SettingsAvatar...' }],
 			link: []
 		};
 	}
 
 	return (
 		<LayoutPage {...getMetaData()}>
-			<h4>Thrillers ...</h4>
+			<h4>SettingsAvatar ...</h4>
 		</LayoutPage>
 	);
 };
 
-export default Thrillers;
+export default SettingsAvatar;

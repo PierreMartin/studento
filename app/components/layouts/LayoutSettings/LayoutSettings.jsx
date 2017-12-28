@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Segment } from 'semantic-ui-react';
 import LayoutPage from '../LayoutPage/LayoutPage';
-import FilmsNavigation from '../../navigations/FilmsNavigation/FilmsNavigation';
+import SettingsNavigation from '../../navigations/SettingsNavigation/SettingsNavigation';
 
-const LayoutFilms = ({ children }) => {
+const LayoutSettings = ({ children }) => {
 	function getMetaData() {
 		return {
-			title: 'Films Categories | react stater',
-			meta: [{ name: 'description', content: 'react stater' }],
+			title: 'Settings',
+			meta: [{ name: 'description', content: 'Settings ...' }],
 			link: []
 		};
 	}
@@ -18,7 +18,7 @@ const LayoutFilms = ({ children }) => {
 			<Segment vertical>
 				<Grid container style={{height: '500px'}}>
 					<Grid.Column mobile={16} tablet={4} computer={4}>
-						<FilmsNavigation />
+						<SettingsNavigation />
 					</Grid.Column>
 
 					<Grid.Column stretched mobile={16} tablet={12} computer={12}>
@@ -32,8 +32,8 @@ const LayoutFilms = ({ children }) => {
 	);
 };
 
-LayoutFilms.propTypes = {
+LayoutSettings.propTypes = {
 	children: PropTypes.object
 };
 
-export default LayoutFilms;
+export default LayoutSettings;

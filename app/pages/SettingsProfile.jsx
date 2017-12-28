@@ -1,20 +1,20 @@
 import React from 'react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 
-const SeriesUs = () => {
+const SettingsProfile = () => {
 	function getMetaData() {
 		return {
-			title: 'SeriesUs | react stater',
-			meta: [{ name: 'description', content: 'react stater' }],
+			title: 'SettingsProfile',
+			meta: [{ name: 'description', content: 'SettingsProfile...' }],
 			link: []
 		};
 	}
 
 	return (
 		<LayoutPage {...getMetaData()}>
-			<h4>Serie Us ...</h4>
+			<h4>SettingsProfile ...</h4>
 		</LayoutPage>
 	);
 };
 
-export default SeriesUs;
+export default SettingsProfile;
