@@ -39,20 +39,20 @@ export default (store) => {
   return (
     <Route path="/" component={App}>
       <IndexRoute component={Home} fetchData={fetchCoursesRequest} />
-      <Route path="users" component={Users} fetchData={fetchUsersRequest} onEnter={requireAuth} />
-      <Route path="user/:id" component={User} fetchData={fetchUserRequest} onEnter={requireAuth} />
-      <Route path="about" component={About} />
+      <Route path="/users" component={Users} fetchData={fetchUsersRequest} onEnter={requireAuth} />
+      <Route path="/user/:id" component={User} fetchData={fetchUserRequest} onEnter={requireAuth} />
+      <Route path="/about" component={About} />
 
-      <Route path="films" component={LayoutFilms} >
+      <Route path="/films" component={LayoutFilms} >
         {/* <IndexRoute component={Thrillers} /> */}
         <IndexRoute />
-        <Route path="thrillers" component={Thrillers} />
-        <Route path="seriesus" component={SeriesUs} />
-        <Route path="mangas" component={Mangas} onEnter={requireAuth} />
+        <Route path="/thrillers" component={Thrillers} />
+        <Route path="/seriesus" component={SeriesUs} />
+        <Route path="/mangas" component={Mangas} onEnter={requireAuth} />
       </Route>
 
-      <Route path="login" component={Login} />
-      <Route path="signup" component={Login} />
+      <Route path="/login" component={Login} />
+      <Route path="/signup" component={Login} />
     </Route>
   );
 };

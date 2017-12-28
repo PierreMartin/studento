@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logoutAction } from '../../../actions/authentification';
-import { Button, Container, Menu, Segment } from 'semantic-ui-react';
+import { Button, Container, Menu, Segment, Dropdown } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from '../../../css/main.scss';
 
@@ -18,15 +18,30 @@ class NavigationMain extends Component {
 		};
 
 		this.handleItemClick = this.handleItemClick.bind(this);
+		this.renderDropdownIfLogged = this.renderDropdownIfLogged.bind(this);
 	}
 
 	handleItemClick = (e, { name }) => {
 		this.setState({ activeItem: name });
 	};
 
+	renderDropdownIfLogged(userMe, authentification, logoutAction) {
+		if (authentification.authenticated) {
+			return (
+				<Dropdown item text={userMe.username}>
+					<Dropdown.Menu>
+						<Dropdown.Item icon="user" text="Profile" as={Link} to={'/user/' + userMe._id} />
+						<Dropdown.Item icon="settings" text="Edit Profile" as={Link} to="/settings" />
+						<Dropdown.Item icon="user outline" text="logout" as={Link} to="/" onClick={logoutAction} />
+					</Dropdown.Menu>
+				</Dropdown>
+			);
+		}
+	}
+
 	render() {
 		const { activeItem } = this.state;
-		const { authentification, logoutAction } = this.props;
+		const { authentification, logoutAction, userMe } = this.props;
 
 		return (
 			<Segment inverted>
@@ -38,9 +53,9 @@ class NavigationMain extends Component {
 						{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" name="users" active={activeItem === 'users'} onClick={this.handleItemClick}>Users</Menu.Item>) : ''}
 
 						<Menu.Item position="right">
+							{ this.renderDropdownIfLogged(userMe, authentification, logoutAction) }
 							{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" name="login" active={activeItem === 'login'} onClick={this.handleItemClick}>Log in</Menu.Item>) : ''}
 							{ !authentification.authenticated ? (<Button as={Link} to="/signup" name="signup" active={activeItem === 'signup'} inverted style={{marginLeft: '0.5em'}} onClick={this.handleItemClick}>Sign Up</Button>) : ''}
-							{ authentification.authenticated ? (<Menu.Item as={Link} onClick={logoutAction} to="/">Logout</Menu.Item>) : ''}
 						</Menu.Item>
 					</Menu>
 				</Container>
@@ -59,12 +74,21 @@ class NavigationMain extends Component {
 
 NavigationMain.propTypes = {
 	authentification: PropTypes.object,
+
+	userMe: PropTypes.shape({
+		username: PropTypes.string,
+		email: PropTypes.string,
+		_id: PropTypes.string,
+		password: PropTypes.string
+	}),
+
 	logoutAction: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
 	return {
-		authentification: state.authentification
+		authentification: state.authentification,
+		userMe: state.userMe
 	};
 }
 

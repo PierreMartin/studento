@@ -20,7 +20,7 @@ class User extends Component {
 	}
 
 	render() {
-		const { user } = this.props;
+		const { user, userMeId } = this.props;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -28,7 +28,7 @@ class User extends Component {
 				<Segment vertical>
 					<Container text>
 						<Header as="h2" icon="user circle" content="User profile" />
-						<UserSingle user={user} />
+						<UserSingle user={user} userMeId={userMeId} />
 					</Container>
 				</Segment>
 
@@ -51,12 +51,15 @@ User.propTypes = {
 		email: PropTypes.string,
 		_id: PropTypes.string,
 		password: PropTypes.string
-	}).isRequired
+	}).isRequired,
+
+	userMeId: PropTypes.string
 };
 
 const mapStateToProps = (state) => {
 	return {
-		user: state.users.one
+		user: state.users.one,
+		userMeId: state.userMe._id
 	};
 };
 

@@ -1,10 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { Segment, Button, Header, Grid, Image, Icon } from 'semantic-ui-react';
 import itemImage from '../../images/image.png';
 
 
-const UserSingle = ({ user }) => {
+const UserSingle = ({ user, userMeId }) => {
+	// if my profile :
+	const isMyProfile = user._id === userMeId;
+
 	return (
 		<div>
 			<Grid>
@@ -19,8 +23,9 @@ const UserSingle = ({ user }) => {
 						Developer Front-End
 					</Grid.Column>
 					<Grid.Column width={6}>
-						<Button size="mini" primary><Icon name="add user" />Add</Button>
-						<Button size="mini" primary><Icon name="talk" />Message</Button>
+						{ !isMyProfile ? <Button size="mini" primary><Icon name="add user" />Add</Button> : ''}
+						{ !isMyProfile ? <Button size="mini" primary><Icon name="talk" />Message</Button> : ''}
+						{ isMyProfile ? <Button as={Link} to="/settings" size="mini" primary><Icon name="settings" />Edit my profile</Button> : ''}
 					</Grid.Column>
 				</Grid.Row>
 
@@ -70,7 +75,9 @@ UserSingle.propTypes = {
 		email: PropTypes.string,
 		_id: PropTypes.string,
 		password: PropTypes.string
-	}).isRequired
+	}).isRequired,
+
+	userMeId: PropTypes.string
 };
 
 export default UserSingle;
