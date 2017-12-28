@@ -17,7 +17,7 @@ const UsersList = ({ users }) => {
 			return (
 				<Grid.Column key={key} mobile={6} tablet={4} computer={4}>
 					<Card className={cx('card-container')}>
-						<Image src={itemImage} />
+						<Image as={Link} to={'/user/' + user._id} src={itemImage} />
 						<Card.Content>
 							<Card.Header as={Link} to={'/user/' + user._id}>{user.username}</Card.Header>
 							<Card.Meta>

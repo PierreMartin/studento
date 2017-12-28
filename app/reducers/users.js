@@ -14,8 +14,21 @@ const all = (state = [], action) => {
 	}
 };
 
+const one = (state = {}, action) => {
+	switch (action.type) {
+		case types.GET_USER_SUCCESS:
+			if (action.data) return action.data;
+			return state;
+		case types.GET_USER_FAILURE:
+			return state;
+		default:
+			return state;
+	}
+};
+
 const usersReducer = combineReducers({
-	all
+	all,
+	one
 });
 
 export default usersReducer;

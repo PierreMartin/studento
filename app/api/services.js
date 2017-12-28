@@ -48,6 +48,10 @@ export function api() {
 		getUsers: () => localClient.request({
 			method: 'GET',
 			url: '/api/getusers'
+		}),
+		getUser: id => localClient.request({
+			method: 'GET',
+			url: '/api/getuser/' + id
 		})
 	};
 }

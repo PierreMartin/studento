@@ -81,3 +81,15 @@ export const fetchUsersRequest = (params, store) => {
 			store.dispatch({type: types.GET_USERS_FAILURE, message: getMessage(err)});
 		});
 };
+
+export const fetchUserRequest = (params, store) => {
+	return api().getUser(params.id)
+		.then((res) => {
+			if (res.status === 200) {
+				store.dispatch({type: types.GET_USER_SUCCESS, data: res.data});
+			}
+		})
+		.catch((err) => {
+			store.dispatch({type: types.GET_USER_FAILURE, message: getMessage(err)});
+		});
+};
