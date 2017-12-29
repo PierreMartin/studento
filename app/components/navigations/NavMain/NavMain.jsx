@@ -82,7 +82,7 @@ NavigationMain.propTypes = {
 function mapStateToProps(state) {
 	return {
 		authentification: state.authentification,
-		userMe: state.userMe
+		userMe: state.userMe.data
 	};
 }
 

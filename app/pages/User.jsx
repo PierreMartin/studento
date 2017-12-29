@@ -59,7 +59,7 @@ User.propTypes = {
 const mapStateToProps = (state) => {
 	return {
 		user: state.users.one,
-		userMeId: state.userMe._id
+		userMeId: state.userMe.data._id
 	};
 };
 

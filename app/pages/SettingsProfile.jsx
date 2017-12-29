@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { typingUpdateUserAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Header, Form } from 'semantic-ui-react';
 
@@ -45,7 +46,6 @@ class SettingsProfile extends Component {
 		super(props);
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
-		this.fields = [];
 	}
 
 	getMetaData() {
@@ -56,10 +56,8 @@ class SettingsProfile extends Component {
 		};
 	}
 
-	handleInputChange(event) {
-		this.fields.push(event.target.name);
-
-		// this.props.typingUpdateUserAction(event.target.name, event.target.value);
+	handleInputChange(event, field) {
+		this.props.typingUpdateUserAction(field.name, field.value);
 	}
 
 	handleOnSubmit(event) {
@@ -70,42 +68,45 @@ class SettingsProfile extends Component {
 	}
 
 	render() {
-		const { userMe } = this.props;
+		const { userMe, typingUpdateUserState } = this.props;
+		console.log(typingUpdateUserState);
+
+		// (typeof typingUpdateUserState.username !== 'undefined' && typingUpdateUserState.username !== '') ? typingUpdateUserState.username : userMe.username
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<h4>Settings Profile</h4>
 
 				<Form size="small" onSubmit={this.handleOnSubmit}>
-					<Form.Input required label="Username" placeholder="Username" value={userMe.username} onChange={this.handleInputChange} />
+					<Form.Input required label="Username" placeholder="Username" name="username" value={userMe.username} onChange={this.handleInputChange} />
 
-					<Form.Select label="Job / current position" options={optionsPosition} placeholder="Job / current position" />
-					<Form.Input label="Domain of studing / working" placeholder="Domain of studing / working" />
-					<Form.Input label="University / School" placeholder="University / School" />
+					<Form.Select label="Job / current position" options={optionsPosition} placeholder="Job / current position" name="position" onChange={this.handleInputChange} />
+					<Form.Input label="Domain of studing / working" placeholder="Domain of studing / working" name="domain" onChange={this.handleInputChange} />
+					<Form.Input label="University / School" placeholder="University / School" name="schoolName" onChange={this.handleInputChange} />
 
 					<Form.Group widths="equal">
-						<Form.Input label="First name" placeholder="First name" />
-						<Form.Input label="Last name" placeholder="Last name" />
+						<Form.Input label="First name" placeholder="First name" name="firstName" onChange={this.handleInputChange} />
+						<Form.Input label="Last name" placeholder="Last name" name="lastName" onChange={this.handleInputChange} />
 					</Form.Group>
 
-					<Form.Select label="Gender" options={optionsGender} placeholder="Gender" />
+					<Form.Select label="Gender" options={optionsGender} placeholder="Gender" name="gender" onChange={this.handleInputChange} />
 
 					<Form.Group>
-						<Form.Select label="Country" options={optionsCountry} placeholder="Country" width={8} />
-						<Form.Input label="City" placeholder="City" width={8} />
+						<Form.Select label="Country" options={optionsCountry} placeholder="Country" width={8} name="country" onChange={this.handleInputChange} />
+						<Form.Input label="City" placeholder="City" width={8} name="city" onChange={this.handleInputChange} />
 					</Form.Group>
 
 					{/* TODO Birthdate ca dans un component */}
 					<Segment>
 						<Header as="h4" icon="birthday" content="Birthdate" />
 						<Form.Group widths="equal">
-							<Form.Select label="Day" options={optionsDay} placeholder="Day" width={8} />
-							<Form.Select label="Month" options={optionsMonth} placeholder="Month" width={8} />
+							<Form.Select label="Day" options={optionsDay} placeholder="Day" width={8} name="birthDateDay" onChange={this.handleInputChange} />
+							<Form.Select label="Month" options={optionsMonth} placeholder="Month" width={8} name="birthDateMonth" onChange={this.handleInputChange} />
 						</Form.Group>
-						<Form.Select label="Year" options={optionsYear} placeholder="Year" width={16} />
+						<Form.Select label="Year" options={optionsYear} placeholder="Year" width={16} name="birthdateYear" onChange={this.handleInputChange} />
 					</Segment>
 
-					<Form.TextArea label="About" placeholder="Tell us more about you..." />
+					<Form.TextArea label="About" placeholder="Tell us more about you..." name="about" onChange={this.handleInputChange} />
 
 					<Form.Button>Submit</Form.Button>
 				</Form>
@@ -116,6 +117,9 @@ class SettingsProfile extends Component {
 }
 
 SettingsProfile.propTypes = {
+	typingUpdateUserAction: PropTypes.func.isRequired,
+	typingUpdateUserState: PropTypes.object,
+
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
 		email: PropTypes.string,
@@ -126,9 +130,9 @@ SettingsProfile.propTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		userMe: state.userMe
+		userMe: state.userMe.data,
+		typingUpdateUserState: state.userMe.typingUpdateUserState
 	};
 };
 
-export default connect(mapStateToProps, null)(SettingsProfile);
-
+export default connect(mapStateToProps, { typingUpdateUserAction })(SettingsProfile);

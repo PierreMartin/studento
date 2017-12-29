@@ -1,6 +1,8 @@
 import * as types from './../types';
+import { combineReducers } from 'redux';
 
-const userMe = (state = {}, action) => {
+
+const data = (state = {}, action) => {
 	switch (action.type) {
 		case types.LOGIN_SUCCESS_USER:
 		case types.SIGNUP_SUCCESS_USER:
@@ -16,4 +18,22 @@ const userMe = (state = {}, action) => {
 	}
 };
 
-export default userMe;
+const typingUpdateUserState = (state = {}, action) => {
+	switch (action.type) {
+		case types.TYPING_UPDATE_USER_ACTION:
+			return Object.assign({}, state, action.data);
+		case types.UPDATE_USER_SUCCESS:
+		case types.UPDATE_USER_FAILURE:
+		case types.LOGOUT_SUCCESS_USER:
+			return {};
+		default:
+			return state;
+	}
+};
+
+const userMeReducer = combineReducers({
+	data,
+	typingUpdateUserState
+});
+
+export default userMeReducer;

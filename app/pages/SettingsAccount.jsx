@@ -64,7 +64,7 @@ SettingsAccount.propTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		userMe: state.userMe
+		userMe: state.userMe.data
 	};
 };
 

@@ -14,7 +14,9 @@ export default function render(req, res) {
 			isWaiting: false,
 			messageError: ''
 		},
-		userMe: req.user
+		userMe: {
+			data: req.user
+		}
 	}, history);
   const routes = createRoutes(store);
 
