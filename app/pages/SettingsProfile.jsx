@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { typingUpdateUserAction, updateUserAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { Segment, Header, Form, Message } from 'semantic-ui-react';
+import { Form, Message } from 'semantic-ui-react';
+import BirthdateField from '../components/common/BirthdateField/BirthdateField';
 import classNames from 'classnames/bind';
 import styles from '../css/main.scss';
 
@@ -35,25 +36,6 @@ class SettingsProfile extends Component {
 			{ key: 'm', text: 'Male', value: 'male' },
 			{ key: 'f', text: 'Female', value: 'female' }
 		];
-
-		// Birthdate :
-		const day = [];
-		for (let i = 1; i <= 31; i++) {
-			day.push({key: i + '', text: i + '', value: i});
-		}
-		options.day = day;
-
-		const month = [];
-		for (let j = 1; j <= 12; j++) {
-			month.push({key: j + '', text: j + '', value: j});
-		}
-		options.month = month;
-
-		const year = [];
-		for (let k = 1930; k <= 2012; k++) {
-			year.push({key: k + '', text: k + '', value: k});
-		}
-		options.year = year;
 
 		return options;
 	}
@@ -112,7 +94,7 @@ class SettingsProfile extends Component {
 		}
 
 		if (missingRequiredField.birthDateFull) {
-			errorsField.push({message: 'All the fields birthDate is required (or neither) ', key: 'birthDate'});
+			errorsField.push({message: 'All the fields birthDate is required ', key: 'birthDate'});
 		}
 
 		if (messageErrorState && messageErrorState.length > 0) {
@@ -129,7 +111,7 @@ class SettingsProfile extends Component {
 	}
 
 	render() {
-		const { userMe, typingUpdateUserState, updateMissingRequiredField, updateMessageError } = this.props;
+		const { userMe, typingUpdateUserState, updateMissingRequiredField, updateMessageError, typingUpdateUserAction } = this.props;
 		const options = this.getOptionsFormsSelect();
 		const fields = this.getFieldsVal(typingUpdateUserState, userMe);
 		const messagesError = this.dispayFieldsErrors(updateMissingRequiredField, updateMessageError);
@@ -157,15 +139,7 @@ class SettingsProfile extends Component {
 						<Form.Input label="City" placeholder="City" width={8} name="city" value={fields.city || ''} onChange={this.handleInputChange} />
 					</Form.Group>
 
-					{/* TODO Birthdate ca dans un component */}
-					<Segment>
-						<Header as="h4" icon="birthday" content="Birthdate" />
-						<Form.Group widths="equal">
-							<Form.Select label="Day" options={options.day} placeholder="Day" width={8} name="birthDateDay" value={fields.birthDateDay || ''} error={updateMissingRequiredField.birthDateDay} onChange={this.handleInputChange} />
-							<Form.Select label="Month" options={options.month} placeholder="Month" width={8} name="birthDateMonth" value={fields.birthDateMonth || ''} error={updateMissingRequiredField.birthDateMonth} onChange={this.handleInputChange} />
-						</Form.Group>
-						<Form.Select label="Year" options={options.year} placeholder="Year" width={16} name="birthDateYear" value={fields.birthDateYear || ''} error={updateMissingRequiredField.birthDateYear} onChange={this.handleInputChange} />
-					</Segment>
+					<BirthdateField fields={fields} updateMissingRequiredField={updateMissingRequiredField} typingUpdateUserAction={typingUpdateUserAction} />
 
 					<Form.TextArea label="About" placeholder="Tell us more about you..." name="about" value={fields.about || ''} onChange={this.handleInputChange} />
 					<Message error content={messagesError} />
@@ -180,8 +154,8 @@ class SettingsProfile extends Component {
 
 SettingsProfile.propTypes = {
 	typingUpdateUserAction: PropTypes.func.isRequired,
-	updateUserAction: PropTypes.func.isRequired,
 	typingUpdateUserState: PropTypes.object,
+	updateUserAction: PropTypes.func.isRequired,
 	updateMissingRequiredField: PropTypes.object,
 	updateMessageError: PropTypes.string,
 
