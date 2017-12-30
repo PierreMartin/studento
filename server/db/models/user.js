@@ -5,14 +5,23 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true },
   password: String,
 	username: { type: String, unique: true },
+
+	firstName: { type: String, default: '' },
+	lastName: { type: String, default: '' },
+	gender: { type: String, default: '' },
+	country: { type: String, default: '' },
+	birthDate: { type: Date, default: Date.now },
+	birthDateDay: { type: Number },
+	birthDateMonth: { type: Number },
+	birthDateYear: { type: Number },
+	age: { type: Number, min: 0, max: 120 },
+	about: { type: String, default: '' },
+	city: { type: String, default: '' },
+	position: { type: String, default: '' },
+	domain: { type: String, default: '' },
+	schoolName: { type: String, default: '' },
+
   tokens: Array,
-  profile: {
-    name: { type: String, default: '' },
-    gender: { type: String, default: '' },
-    location: { type: String, default: '' },
-    website: { type: String, default: '' },
-    picture: { type: String, default: '' }
-  },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   google: {}

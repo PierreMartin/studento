@@ -93,3 +93,13 @@ export const fetchUserRequest = (params, store) => {
 			store.dispatch({type: types.GET_USER_FAILURE, message: getMessage(err)});
 		});
 };
+
+export const updateUserRequest = (data, id) => {
+	return api().updateUser(data, id)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};

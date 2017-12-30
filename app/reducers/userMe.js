@@ -9,6 +9,11 @@ const data = (state = {}, action) => {
 		case types.LOGOUT_ERROR_USER:
 			if (action.userObj) return action.userObj;
 			return state;
+		case types.UPDATE_USER_SUCCESS:
+			if (action.userObj) {
+				return {...state, ...action.userObj};
+			}
+			return state;
 		case types.LOGIN_ERROR_USER:
 		case types.SIGNUP_ERROR_USER:
 		case types.LOGOUT_SUCCESS_USER:
@@ -21,7 +26,7 @@ const data = (state = {}, action) => {
 const typingUpdateUserState = (state = {}, action) => {
 	switch (action.type) {
 		case types.TYPING_UPDATE_USER_ACTION:
-			return Object.assign({}, state, action.data);
+			return {...state, ...action.data};
 		case types.UPDATE_USER_SUCCESS:
 		case types.UPDATE_USER_FAILURE:
 		case types.LOGOUT_SUCCESS_USER:

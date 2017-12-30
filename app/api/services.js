@@ -52,6 +52,11 @@ export function api() {
 		getUser: id => localClient.request({
 			method: 'GET',
 			url: '/api/getuser/' + id
+		}),
+		updateUser: (data, id) => localClient.request({
+			method: 'PUT',
+			url: '/api/updateuser/' + id,
+			data
 		})
 	};
 }

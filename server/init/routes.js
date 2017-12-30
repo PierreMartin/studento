@@ -27,6 +27,7 @@ export default (app) => {
 	if (usersController) {
 		app.get('/api/getusers', usersController.all);
 		app.get('/api/getuser/:id', usersController.oneById);
+		app.put('/api/updateuser/:id', usersController.update);
 	} else {
 		console.warn('users routes');
 	}

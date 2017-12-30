@@ -1,5 +1,4 @@
-import { updateUser } from './../api';
-import { push } from 'react-router-redux';
+import { updateUserRequest } from './../api';
 import * as types from 'types';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
@@ -27,21 +26,28 @@ export function updateUserSuccess(res) {
 	return {
 		type: types.UPDATE_USER_SUCCESS,
 		message: res.message,
-		userObj: res.userObj
+		userObj: res.data
+	};
+}
+
+export function requiredFieldsError(fields) {
+	return {
+		type: types.MISSING_REQUIRED_FIELDS_UPDATE_USER, // TODO rename here
+		fields
 	};
 }
 
 export function updateUserAction(data, id) {
-	return dispatch => {
-		return updateUser(data, id)
-			.then(response => {
+	return (dispatch) => {
+		return updateUserRequest(data, id)
+			.then((response) => {
 				if (response.status === 200) {
 					dispatch(updateUserSuccess(response.data));
 				} else {
-					dispatch(updateUserError(response.data.message));
+					dispatch(updateUserError(getMessage(response)));
 				}
 			})
-			.catch(err => {
+			.catch((err) => {
 				if (err.response.data.errorField) {
 					// missing required fields :
 					dispatch(requiredFieldsError(getFieldsMissing(err)));

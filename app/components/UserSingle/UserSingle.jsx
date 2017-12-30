@@ -18,9 +18,11 @@ const UserSingle = ({ user, userMeId }) => {
 					</Grid.Column>
 					<Grid.Column width={7}>
 						<Header as="h2" >{user.username}</Header>
-						Paris, France
+						{user.city}, {user.country}
 						<br />
-						Developer Front-End
+						{user.domain} ( {user.position} )
+						<br />
+						{user.schoolName ? 'At ' + user.schoolName : ''}
 					</Grid.Column>
 					<Grid.Column width={6}>
 						{ !isMyProfile ? <Button size="mini" primary><Icon name="add user" />Add</Button> : ''}
@@ -43,26 +45,24 @@ const UserSingle = ({ user, userMeId }) => {
 						Contact: {user.email}
 					</Grid.Column>
 					<Grid.Column width={8}>
-						Age: 32
+						{user.age ? 'Age: ' + user.age : ''}
 					</Grid.Column>
 				</Grid.Row>
 			</Grid>
 
 			<div>
-				<Header as="h3" attached="top">Description</Header>
+				<Header as="h3" attached="top">Infos</Header>
 				<Segment attached>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-					ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-					laboris nisi ut aliquip ex ea commodo consequat.
+					<div>firstName: {user.firstName}</div>
+					<div>lastName: {user.lastName}</div>
+					<div>genre: {user.gender}</div>
 				</Segment>
 			</div>
 
 			<div>
-				<Header as="h3" attached="top">Studing</Header>
+				<Header as="h3" attached="top">About</Header>
 				<Segment attached>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-					ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-					laboris nisi ut aliquip ex ea commodo consequat.
+					{user.about}
 				</Segment>
 			</div>
 		</div>
