@@ -36,9 +36,36 @@ const typingUpdateUserState = (state = {}, action) => {
 	}
 };
 
+const updateMessageError = (state = '', action) => {
+	switch (action.type) {
+		case types.UPDATE_USER_SUCCESS:
+		case types.LOGOUT_SUCCESS_USER:
+			return '';
+		case types.UPDATE_USER_FAILURE:
+			return action.messageError;
+		default:
+			return state;
+	}
+};
+
+const updateMissingRequiredField = (state = {}, action) => {
+	switch (action.type) {
+		case types.UPDATE_USER_MISSING_REQUIRED_FIELDS:
+			return action.fields;
+		case types.LOGOUT_SUCCESS_USER:
+		case types.UPDATE_USER_SUCCESS:
+		case types.UPDATE_USER_FAILURE:
+			return {};
+		default:
+			return state;
+	}
+};
+
 const userMeReducer = combineReducers({
 	data,
-	typingUpdateUserState
+	typingUpdateUserState,
+	updateMissingRequiredField,
+	updateMessageError
 });
 
 export default userMeReducer;

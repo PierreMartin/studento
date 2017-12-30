@@ -1,4 +1,5 @@
 import { updateUserRequest } from './../api';
+import { toast } from 'react-toastify';
 import * as types from 'types';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
@@ -32,7 +33,7 @@ export function updateUserSuccess(res) {
 
 export function requiredFieldsError(fields) {
 	return {
-		type: types.MISSING_REQUIRED_FIELDS_UPDATE_USER, // TODO rename here
+		type: types.UPDATE_USER_MISSING_REQUIRED_FIELDS,
 		fields
 	};
 }
@@ -43,6 +44,7 @@ export function updateUserAction(data, id) {
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(updateUserSuccess(response.data));
+					toast.success(response.data.message);
 				} else {
 					dispatch(updateUserError(getMessage(response)));
 				}

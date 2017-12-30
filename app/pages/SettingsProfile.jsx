@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { typingUpdateUserAction, updateUserAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { Segment, Header, Form } from 'semantic-ui-react';
+import { Segment, Header, Form, Message } from 'semantic-ui-react';
+import classNames from 'classnames/bind';
+import styles from '../css/main.scss';
 
+const cx = classNames.bind(styles);
 
 class SettingsProfile extends Component {
 	constructor(props) {
@@ -96,17 +99,47 @@ class SettingsProfile extends Component {
 		this.props.typingUpdateUserAction(field.name, field.value);
 	}
 
+	/**
+	 * Display a error if a field is wrong
+	 * @param {object} missingRequiredField - object with true as key if a field is missing
+	 * @param {string} messageErrorState - message from back-end
+	 * @return {HTML} the final message if error
+	 * */
+	dispayFieldsErrors(missingRequiredField, messageErrorState) {
+		const errorsField = [];
+		if (missingRequiredField.username) {
+			errorsField.push({message: 'the username is required ', key: 'username'});
+		}
+
+		if (missingRequiredField.birthDateFull) {
+			errorsField.push({message: 'All the fields birthDate is required (or neither) ', key: 'birthDate'});
+		}
+
+		if (messageErrorState && messageErrorState.length > 0) {
+			errorsField.push({message: messageErrorState, key: 'backendError'});
+		}
+
+		const messagesListNode = errorsField.map((errorField, key) => {
+			return (
+				<li key={key}>{errorField.message}</li>
+			);
+		});
+
+		return <ul className={cx('error-message')}>{messagesListNode}</ul>;
+	}
+
 	render() {
-		const { userMe, typingUpdateUserState } = this.props;
+		const { userMe, typingUpdateUserState, updateMissingRequiredField, updateMessageError } = this.props;
 		const options = this.getOptionsFormsSelect();
 		const fields = this.getFieldsVal(typingUpdateUserState, userMe);
+		const messagesError = this.dispayFieldsErrors(updateMissingRequiredField, updateMessageError);
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<h4>Settings Profile</h4>
 
-				<Form size="small" onSubmit={this.handleOnSubmit}>
-					<Form.Input required label="Username" placeholder="Username" name="username" value={fields.username || ''} onChange={this.handleInputChange} />
+				<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
+					<Form.Input required label="Username" placeholder="Username" name="username" value={fields.username || ''} error={updateMissingRequiredField.username} onChange={this.handleInputChange} />
 
 					<Form.Select label="Job / current position" options={options.position} placeholder="Job / current position" name="position" value={fields.position || ''} onChange={this.handleInputChange} />
 					<Form.Input label="Domain of studing / working" placeholder="Domain of studing / working" name="domain" value={fields.domain || ''} onChange={this.handleInputChange} />
@@ -128,13 +161,14 @@ class SettingsProfile extends Component {
 					<Segment>
 						<Header as="h4" icon="birthday" content="Birthdate" />
 						<Form.Group widths="equal">
-							<Form.Select label="Day" options={options.day} placeholder="Day" width={8} name="birthDateDay" value={fields.birthDateDay || ''} onChange={this.handleInputChange} />
-							<Form.Select label="Month" options={options.month} placeholder="Month" width={8} name="birthDateMonth" value={fields.birthDateMonth || ''} onChange={this.handleInputChange} />
+							<Form.Select label="Day" options={options.day} placeholder="Day" width={8} name="birthDateDay" value={fields.birthDateDay || ''} error={updateMissingRequiredField.birthDateDay} onChange={this.handleInputChange} />
+							<Form.Select label="Month" options={options.month} placeholder="Month" width={8} name="birthDateMonth" value={fields.birthDateMonth || ''} error={updateMissingRequiredField.birthDateMonth} onChange={this.handleInputChange} />
 						</Form.Group>
-						<Form.Select label="Year" options={options.year} placeholder="Year" width={16} name="birthDateYear" value={fields.birthDateYear || ''} onChange={this.handleInputChange} />
+						<Form.Select label="Year" options={options.year} placeholder="Year" width={16} name="birthDateYear" value={fields.birthDateYear || ''} error={updateMissingRequiredField.birthDateYear} onChange={this.handleInputChange} />
 					</Segment>
 
 					<Form.TextArea label="About" placeholder="Tell us more about you..." name="about" value={fields.about || ''} onChange={this.handleInputChange} />
+					<Message error content={messagesError} />
 
 					<Form.Button>Submit</Form.Button>
 				</Form>
@@ -146,7 +180,10 @@ class SettingsProfile extends Component {
 
 SettingsProfile.propTypes = {
 	typingUpdateUserAction: PropTypes.func.isRequired,
+	updateUserAction: PropTypes.func.isRequired,
 	typingUpdateUserState: PropTypes.object,
+	updateMissingRequiredField: PropTypes.object,
+	updateMessageError: PropTypes.string,
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
@@ -159,7 +196,9 @@ SettingsProfile.propTypes = {
 const mapStateToProps = (state) => {
 	return {
 		userMe: state.userMe.data,
-		typingUpdateUserState: state.userMe.typingUpdateUserState
+		typingUpdateUserState: state.userMe.typingUpdateUserState,
+		updateMissingRequiredField: state.userMe.updateMissingRequiredField,
+		updateMessageError: state.userMe.updateMessageError
 	};
 };
 

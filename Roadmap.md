@@ -31,24 +31,9 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 
 
 ### TODO :
-# Reducer :
-- users.js
-- userMe.js
-- authentification.js
+- refacto les notifications
+- check si un username / email est deja utilisé
 
-    - state.users.single
-    - state.users.all
-    
-# Actions :
-- users.js      // add friends
-- userMe.js     // upload avatar 
-- authentification.js
-
-# Controller
-- authentification.js
-- users.js
-
-# unique email + username for login/signupp
 
 - deplacer getChannels() à l'ouverture de la chatbox
 - keep data in state redux

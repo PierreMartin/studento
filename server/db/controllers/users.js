@@ -55,6 +55,9 @@ export function update(req, res) {
 	// check if the birthDate is half full:
 	if (condiBirthDate1 || condiBirthDate2 || condiBirthDate3 || condiBirthDate4 || condiBirthDate5 || condiBirthDate6) {
 		errorField.birthDateFull = true;
+		errorField.birthDateDay = data.birthDateDay === null;
+		errorField.birthDateMonth = data.birthDateMonth === null;
+		errorField.birthDateYear = data.birthDateYear === null;
 	} else if (condiBirthDateFull) {
 		const birthDateFull = new Date(data.birthDateYear, data.birthDateMonth, data.birthDateDay);
 		errorField.birthDateFull = Object.prototype.toString.call(birthDateFull) !== '[object Date]';

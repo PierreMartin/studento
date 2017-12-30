@@ -6,8 +6,9 @@ import { loginAction, signupAction, typingLoginSignupAction } from '../actions/a
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/login.scss';
+import stylesMain from '../css/main.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind({...styles, ...stylesMain});
 
 class Login extends Component {
 	constructor(props) {
