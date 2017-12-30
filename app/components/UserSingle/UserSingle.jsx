@@ -18,9 +18,9 @@ const UserSingle = ({ user, userMeId }) => {
 					</Grid.Column>
 					<Grid.Column width={7}>
 						<Header as="h2" >{user.username}</Header>
-						{user.city}, {user.country}
+						{user.city ? user.city + ', ' : ''} {user.country}
 						<br />
-						{user.domain} ( {user.position} )
+						{user.domain} {user.position ? '(' + user.position + ')' : ''}
 						<br />
 						{user.schoolName ? 'At ' + user.schoolName : ''}
 					</Grid.Column>
