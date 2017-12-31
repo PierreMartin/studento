@@ -1,4 +1,5 @@
 import User from '../models/user';
+import bcrypt from 'bcrypt-nodejs';
 import { calculateAge } from '../../../toolbox/toolbox';
 
 /**
@@ -43,6 +44,8 @@ export function update(req, res) {
 
 	// handling required fields :
 	errorField.username = data.username === null;
+	errorField.email = data.email === null;
+	errorField.password = data.password === null;
 
 	const condiBirthDate1 = data.birthDateDay === null && data.birthDateMonth === null && data.birthDateYear !== null;
 	const condiBirthDate2 = data.birthDateDay === null && data.birthDateMonth !== null && data.birthDateYear === null;
@@ -67,18 +70,18 @@ export function update(req, res) {
 	}
 
 	if (data.password) {
-		// data.password = bcrypt.hashSync(data.password);
+		data.password = bcrypt.hashSync(data.password);
 	}
 
 	// displaying required fields :
-	for (let key in errorField) {
+	for (const key in errorField) {
 		if (errorField[key] === true) {
 			return res.status(400).json({errorField});
 		}
 	}
 
 	if (id && !data) {
-		return res.status(400).json({message: 'A error happen at the updating profile'});
+		return res.status(400).json({message: 'A error happen at the updating profile, no data'});
 	}
 
 	User.findOneAndUpdate({'_id': id}, data, (err) => {

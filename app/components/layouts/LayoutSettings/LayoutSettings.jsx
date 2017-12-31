@@ -15,7 +15,7 @@ const LayoutSettings = ({ children }) => {
 
 	return (
 		<LayoutPage {...getMetaData()}>
-			<Segment vertical>
+			<Segment vertical style={{ minHeight: 800 }}>
 				<Grid container>
 					<Grid.Column mobile={16} tablet={4} computer={4}>
 						<SettingsNavigation />

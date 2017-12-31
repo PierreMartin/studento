@@ -24,7 +24,8 @@ class SettingsNavigation extends Component {
 			<Menu fluid vertical tabular>
 				<Menu.Item as={Link} to="/settings/profile" name="profile" active={activeItem === 'profile'} onClick={this.handleItemClick}>Profile</Menu.Item>
 				<Menu.Item as={Link} to="/settings/avatar" name="avatar" active={activeItem === 'avatar'} onClick={this.handleItemClick}>Avatar</Menu.Item>
-				<Menu.Item as={Link} to="/settings/account" name="account" active={activeItem === 'account'} onClick={this.handleItemClick}>Account</Menu.Item>
+				<Menu.Item as={Link} to="/settings/mail" name="mail" active={activeItem === 'mail'} onClick={this.handleItemClick}>E-mail</Menu.Item>
+				<Menu.Item as={Link} to="/settings/password" name="password" active={activeItem === 'password'} onClick={this.handleItemClick}>Password</Menu.Item>
 			</Menu>
 		);
 	}

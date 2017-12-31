@@ -7,7 +7,8 @@ import About from './pages/About';
 import LayoutSettings from './components/layouts/LayoutSettings/LayoutSettings';
 import SettingsProfile from './pages/SettingsProfile';
 import SettingsAvatar from './pages/SettingsAvatar';
-import SettingsAccount from './pages/SettingsAccount';
+import SettingsMail from './pages/SettingsMail';
+import SettingsPassword from './pages/SettingsPassword';
 import Login from './pages/Login';
 import Users from './pages/Users';
 import User from './pages/User';
@@ -43,11 +44,12 @@ export default (store) => {
       <Route path="/user/:id" component={User} fetchData={fetchUserRequest} onEnter={requireAuth} />
       <Route path="/about" component={About} />
 
-      <Route path="/settings" component={LayoutSettings} >
-        <IndexRoute component={SettingsProfile} />
-        <Route path="profile" component={SettingsProfile} />
-        <Route path="avatar" component={SettingsAvatar} />
-        <Route path="account" component={SettingsAccount} onEnter={requireAuth} />
+      <Route path="/settings" component={LayoutSettings} onEnter={requireAuth} >
+        <IndexRoute component={SettingsProfile} onEnter={requireAuth} />
+        <Route path="profile" component={SettingsProfile} onEnter={requireAuth} />
+        <Route path="avatar" component={SettingsAvatar} onEnter={requireAuth} />
+        <Route path="mail" component={SettingsMail} onEnter={requireAuth} />
+        <Route path="password" component={SettingsPassword} onEnter={requireAuth} />
       </Route>
 
       <Route path="/login" component={Login} />
