@@ -1,0 +1,25 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css);
+
+.dropzone-container .dropzone-input {
+  display: inline-block;
+  cursor: pointer;
+  height: 155px;
+  width: 155px;
+  border-width: 2px;
+  border-color: rgb(102, 102, 102);
+  border-style: dashed;
+}
+
+.dropzone-container .row {
+  justify-content: center !important;
+  text-align: center;
+}
+
+.dropzone-container .row .dropzone-text {
+  margin: 12px;
+  text-align: center;
+}
+
+.dropzone-container .row .dropzone-column {
+  border: 1px solid #d4d4d5;
+}

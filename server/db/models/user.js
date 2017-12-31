@@ -21,6 +21,13 @@ const UserSchema = new mongoose.Schema({
 	domain: { type: String, default: '' },
 	schoolName: { type: String, default: '' },
 
+	avatarsSrc: [{
+		avatarId: { type: Number },
+		thumbnail1: String,
+		mainProfil: String
+	}],
+	avatarMainSelected: { type: Number, default: 0 },
+
   tokens: Array,
   resetPasswordToken: String,
   resetPasswordExpires: Date,
