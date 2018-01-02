@@ -44,7 +44,7 @@ class SettingsAvatar extends Component {
 	reloadImage(avatarId) {
 		const avatarsList = this.props.userMe.avatarsSrc;
 		const image = this.refs['avatar_' + avatarId];
-		var that = this;
+		const that = this;
 
 		if (image) {
 			image.onerror = function () {
@@ -91,22 +91,20 @@ class SettingsAvatar extends Component {
 			imageSmoothingQuality: 'high'
 		});
 
-		/*
 		this.refs.cropper.getCroppedCanvas().toBlob(function (blob) {
-			var $filename = document.querySelector('#formAvatar input[type="file"]');
-			var filename = $filename.files[0] && $filename.files[0].name || 'undefined.jpg';
-			var avatarId = avatarUploadImagePreviewState.nameField;
-			let formData = new FormData();
+			const $filename = document.querySelector('#formAvatar input[type="file"]');
+			const filename = ($filename.files[0] && $filename.files[0].name) || 'undefined.jpg';
+			const avatarId = that.state.avatarUploadImagePreview.nameField;
+			const formData = new FormData();
 			formData.append('formAvatar', blob, filename); // 'formAvatar' is used in routes.js
 
 			// send image cropped to back-end :
 			if (_id && formData && avatarId) {
-				uploadAvatarUserAction(formData, {id: _id, avatarId: avatarId});
+				uploadAvatarUserAction(formData, {id: _id, avatarId});
 			}
 
 			that.reloadImage(avatarId);
 		});
-		*/
 	}
 
 	/**
@@ -122,7 +120,7 @@ class SettingsAvatar extends Component {
 	handleDefaultAvatar(avatarId) {
 		const { userMe, avatarMainSelectedAction } = this.props;
 		const _id = userMe._id;
-		return function() {
+		return function () {
 			avatarMainSelectedAction(avatarId, _id);
 		};
 	}
@@ -163,7 +161,7 @@ class SettingsAvatar extends Component {
 					<p>Drag and drop a image or click for select a image.</p>
 					<img src={getAvatarById(avatarMainSelected, avatarsList) ? `/uploads/${getAvatarById(avatarMainSelected, avatarsList).mainProfil}` : ''} alt="avatar" ref={'avatar_main'} />
 
-					<Modal open={this.state.openModal} onClose={this.close}>
+					<Modal open={this.state.openModal} onClose={this.handleCloseModal}>
 						<Modal.Header>Cropp the image</Modal.Header>
 						<Modal.Content image>
 							<Modal.Description>
@@ -184,7 +182,7 @@ class SettingsAvatar extends Component {
 						</Modal.Actions>
 					</Modal>
 
-					<Grid className={cx('dropzone-container')}>
+					<Grid className={cx('dropzone-container')} id="formAvatar">
 						<Grid.Row className={cx('row')}>
 							{ this.renderItemsAvatar() }
 						</Grid.Row>

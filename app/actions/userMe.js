@@ -1,4 +1,4 @@
-import { updateUserRequest } from './../api';
+import { updateUserRequest, createAvatarUserRequest } from './../api';
 import { toast } from 'react-toastify';
 import * as types from 'types';
 
@@ -57,6 +57,39 @@ export function updateUserAction(data, id) {
 					// others errors :
 					dispatch(updateUserError(getMessage(err)));
 				}
+			});
+	};
+}
+
+/***************************************** POST AVATAR user ********************************************/
+export function avatarUploadUserError(message) {
+	return {
+		type: types.UPDATE_USER_AVATAR_FAILURE,
+		message
+	};
+}
+
+export function avatarUploadUserSuccess(res) {
+	return {
+		type: types.UPDATE_USER_AVATAR_SUCCESS,
+		message: res.message,
+		avatarsSrc: res.avatarsSrc
+	};
+}
+
+export function uploadAvatarUserAction(data, params) {
+	return (dispatch) => {
+		return createAvatarUserRequest(data, params)
+			.then((response) => {
+				if (response.status === 200) {
+					dispatch(avatarUploadUserSuccess(response.data));
+					toast.success(response.data.message);
+				} else {
+					dispatch(avatarUploadUserError(getMessage(response)));
+				}
+			})
+			.catch((err) => {
+				dispatch(avatarUploadUserError(getMessage(err)));
 			});
 	};
 }

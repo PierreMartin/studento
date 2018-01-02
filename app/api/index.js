@@ -103,3 +103,14 @@ export const updateUserRequest = (data, id) => {
 			return Promise.reject(err);
 		});
 };
+
+// Avatar
+export const createAvatarUserRequest = (data, params) => {
+	return api().createAvatarUser(data, params.id, params.avatarId)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};

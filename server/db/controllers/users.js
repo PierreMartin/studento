@@ -1,3 +1,5 @@
+import multer from 'multer';
+import path from 'path';
 import User from '../models/user';
 import bcrypt from 'bcrypt-nodejs';
 import { calculateAge } from '../../../toolbox/toolbox';
@@ -92,8 +94,117 @@ export function update(req, res) {
 }
 
 
+/***************************************** Upload Avatars *****************************************/
+const maxSize = 1000 * 1000 * 1000;
+const uploaded = multer().single('formAvatar');
+
+const storage = multer.diskStorage({
+	destination: function (req, file, callback) {
+		callback(null, 'public/uploads/');
+	},
+	filename: function (req, file, callback) {
+		crypto.pseudoRandomBytes(16, function (err, raw) {
+			if (!err) {
+				let ext = file.originalname && path.extname(file.originalname);
+
+				if (typeof ext === 'undefined' || ext === '') {
+					ext = '.jpg';
+				}
+				callback(null, raw.toString('hex') + Date.now() + ext.toLowerCase());
+			}
+		});
+	}
+});
+
+const upload = multer({
+	storage,
+	limits: { fileSize: maxSize },
+	fileFilter: function (req, file, callback) {
+		const typeArray = file.mimetype.split('/');
+		const ext = file.originalname && path.extname(file.originalname).toLowerCase();
+
+		if (typeArray[0] !== 'image') {
+			return callback(new Error('Something went wrong'), false);
+		}
+
+		if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+			return callback(new Error('Only images are allowed'), false);
+		}
+
+		callback(null, true);
+	}
+});
+
+export const uploadAvatarMulter = upload.single('formAvatar');
+
+/**
+ * POST /api/addavatar/:id/:avatarId
+ */
+export function uploadAvatar(req, res) {
+	const id = req.params.id;
+	const filename = req.file.filename;
+	const mainProfil = '150_' + req.file.filename;
+	const thumbnail1 = '80_' + req.file.filename;
+	const avatarId = parseInt(req.params.avatarId, 10);
+	const avatarsSrc = { avatarId, mainProfil, thumbnail1 };
+
+	uploaded(req, res, function (err) {
+		if (err || !id || !filename) {
+			return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
+		}
+
+		sharp.cache(true);
+
+		// Main image :
+		sharp(req.file.path)
+			.resize(150, 150)
+			.crop(sharp.strategy.entropy)
+			.toFile('public/uploads/' + mainProfil);
+
+		// Thumbnail image :
+		sharp(req.file.path)
+			.resize(80, 80)
+			.crop(sharp.strategy.entropy)
+			.toFile('public/uploads/' + thumbnail1, function (err) {
+				// for deleting the original image // TODO ATTENTION ON WINDOWS
+				unlinkSync('public/uploads/' + filename);
+			});
+	});
+
+	User.findOne({ '_id': id, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userAvatar) => {
+		// If avatar already exist
+		if (userAvatar) {
+			console.log('This avatar already exist');
+
+			User.findOneAndUpdate({'_id': id, 'avatarsSrc.avatarId': avatarId},
+				{
+					$set: {
+						'avatarsSrc.$.avatarId': avatarId,
+						'avatarsSrc.$.mainProfil': mainProfil,
+						'avatarsSrc.$.thumbnail1': thumbnail1
+					}
+				}, (err) => {
+					if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});
+
+					return res.status(200).json({message: 'Your avatar has been update', avatarsSrc});
+				});
+		// If avatar don't exist
+		} else {
+			console.log('This avatar don\'t exist');
+
+			User.findOneAndUpdate({'_id': id}, {$push: { avatarsSrc } }, (err) => {
+				if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});
+
+				return res.status(200).json({message: 'Your avatar has been add', avatarsSrc});
+			});
+		}
+	});
+}
+
 export default {
 	all,
 	oneById,
-	update
+	update,
+	uploadAvatarMulter,
+	uploadAvatar
 };

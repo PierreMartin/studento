@@ -57,6 +57,11 @@ export function api() {
 			method: 'PUT',
 			url: '/api/updateuser/' + id,
 			data
+		}),
+		createAvatarUser: (data, id, avatarId) => localClient.request({
+			method: 'POST',
+			url: '/api/addavatar/' + id + '/' + avatarId,
+			data
 		})
 	};
 }
