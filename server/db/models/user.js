@@ -23,8 +23,8 @@ const UserSchema = new mongoose.Schema({
 
 	avatarsSrc: [{
 		avatarId: { type: Number },
-		thumbnail1: String,
-		mainProfil: String
+		avatar80: String,
+		avatar150: String
 	}],
 	avatarMainSelected: { type: Number, default: 0 },
 

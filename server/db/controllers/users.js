@@ -1,5 +1,8 @@
 import multer from 'multer';
 import path from 'path';
+import jimp from 'jimp';
+import crypto from 'crypto';
+import { unlinkSync } from 'fs';
 import User from '../models/user';
 import bcrypt from 'bcrypt-nodejs';
 import { calculateAge } from '../../../toolbox/toolbox';
@@ -23,7 +26,7 @@ export function all(req, res) {
 export function oneById(req, res) {
 	const id = req.params.id;
 
-	User.findOne({'_id': id}).exec((err, user) => {
+	User.findOne({_id: id}).exec((err, user) => {
 		if (err) {
 			return res.status(500).send({message: 'Something went wrong getting the data'});
 		}
@@ -86,7 +89,7 @@ export function update(req, res) {
 		return res.status(400).json({message: 'A error happen at the updating profile, no data'});
 	}
 
-	User.findOneAndUpdate({'_id': id}, data, (err) => {
+	User.findOneAndUpdate({_id: id}, data, (err) => {
 		if (err) return res.status(500).json({message: 'A error happen at the updating profile'});
 
 		return res.status(200).json({message: 'You\'re profile as been updated!', data});
@@ -143,45 +146,37 @@ export const uploadAvatarMulter = upload.single('formAvatar');
 export function uploadAvatar(req, res) {
 	const id = req.params.id;
 	const filename = req.file.filename;
-	const mainProfil = '150_' + req.file.filename;
-	const thumbnail1 = '80_' + req.file.filename;
+	const sizes = [150, 80];
+	const avatar150 = sizes[0] + '_' + filename;
+	const avatar80 = sizes[1] + '_' + filename;
 	const avatarId = parseInt(req.params.avatarId, 10);
-	const avatarsSrc = { avatarId, mainProfil, thumbnail1 };
+	const avatarsSrc = { avatarId, avatar150, avatar80 };
 
-	uploaded(req, res, function (err) {
-		if (err || !id || !filename) {
-			return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
-		}
+	uploaded(req, res, (err) => {
+		if (err || !id || !filename) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
 
-		sharp.cache(true);
+		jimp.read(req.file.path, (err, image) => {
+			if (err) throw err;
 
-		// Main image :
-		sharp(req.file.path)
-			.resize(150, 150)
-			.crop(sharp.strategy.entropy)
-			.toFile('public/uploads/' + mainProfil);
-
-		// Thumbnail image :
-		sharp(req.file.path)
-			.resize(80, 80)
-			.crop(sharp.strategy.entropy)
-			.toFile('public/uploads/' + thumbnail1, function (err) {
-				// for deleting the original image // TODO ATTENTION ON WINDOWS
-				unlinkSync('public/uploads/' + filename);
+			sizes.forEach((size) => {
+				image
+					.scaleToFit(size, jimp.AUTO, jimp.RESIZE_BEZIER)
+					.write('./public/uploads/' + size + '_' + filename);
 			});
+
+			// unlinkSync('public/uploads/' + filename);
+		});
 	});
 
-	User.findOne({ '_id': id, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userAvatar) => {
+	User.findOne({ _id: id, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userAvatar) => {
 		// If avatar already exist
 		if (userAvatar) {
-			console.log('This avatar already exist');
-
-			User.findOneAndUpdate({'_id': id, 'avatarsSrc.avatarId': avatarId},
+			User.findOneAndUpdate({_id: id, 'avatarsSrc.avatarId': avatarId},
 				{
 					$set: {
 						'avatarsSrc.$.avatarId': avatarId,
-						'avatarsSrc.$.mainProfil': mainProfil,
-						'avatarsSrc.$.thumbnail1': thumbnail1
+						'avatarsSrc.$.avatar150': avatar150,
+						'avatarsSrc.$.avatar80': avatar80
 					}
 				}, (err) => {
 					if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});
@@ -190,9 +185,7 @@ export function uploadAvatar(req, res) {
 				});
 		// If avatar don't exist
 		} else {
-			console.log('This avatar don\'t exist');
-
-			User.findOneAndUpdate({'_id': id}, {$push: { avatarsSrc } }, (err) => {
+			User.findOneAndUpdate({_id: id}, {$push: { avatarsSrc } }, (err) => {
 				if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});
 
 				return res.status(200).json({message: 'Your avatar has been add', avatarsSrc});

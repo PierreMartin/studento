@@ -105,8 +105,8 @@ export const updateUserRequest = (data, id) => {
 };
 
 // Avatar
-export const createAvatarUserRequest = (data, params) => {
-	return api().createAvatarUser(data, params.id, params.avatarId)
+export const createAvatarUserRequest = (formData, _id, avatarId) => {
+	return api().createAvatarUser(formData, _id, avatarId)
 		.then((res) => {
 			return Promise.resolve(res);
 		})

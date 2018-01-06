@@ -51,7 +51,7 @@ class SettingsAvatar extends Component {
 				that.numberTryingLoadImg++;
 				if (that.numberTryingLoadImg < 10) {
 					setTimeout(function () {
-						image.src = `/uploads/${getAvatarById(avatarId, avatarsList).mainProfil}`;
+						image.src = `/uploads/${getAvatarById(avatarId, avatarsList).avatar150}`;
 					}, 1000);
 				}
 			};
@@ -100,7 +100,7 @@ class SettingsAvatar extends Component {
 
 			// send image cropped to back-end :
 			if (_id && formData && avatarId) {
-				uploadAvatarUserAction(formData, {id: _id, avatarId});
+				uploadAvatarUserAction(formData, _id, avatarId);
 			}
 
 			that.reloadImage(avatarId);
@@ -119,9 +119,8 @@ class SettingsAvatar extends Component {
 	 * */
 	handleDefaultAvatar(avatarId) {
 		const { userMe, avatarMainSelectedAction } = this.props;
-		const _id = userMe._id;
 		return function () {
-			avatarMainSelectedAction(avatarId, _id);
+			avatarMainSelectedAction(avatarId, userMe._id);
 		};
 	}
 
@@ -139,10 +138,10 @@ class SettingsAvatar extends Component {
 				<Grid.Column width={6} key={i} className={cx('dropzone-column')} >
 					<div><strong>Image {i}</strong><br /></div>
 					<Dropzone onDrop={this.dropHandler(i)} multiple={false} accept={'image/*'} className={cx('dropzone-input')} >
-						<Image src={getAvatarById(i, avatarsList) ? `/uploads/${getAvatarById(i, avatarsList).mainProfil}` : ''} ref={'avatar_' + i} />
+						<Image src={getAvatarById(i, avatarsList) ? `/uploads/${getAvatarById(i, avatarsList).avatar150}` : ''} ref={'avatar_' + i} />
 					</Dropzone>
 
-					{(getAvatarById(i, avatarsList) && i !== avatarMainSelected) ? <Button onClick={this.handleDefaultAvatar(i)}>Click Here</Button> : ''}
+					{(getAvatarById(i, avatarsList) && i !== avatarMainSelected) ? <Button onClick={this.handleDefaultAvatar(i)}>Set default avatar</Button> : ''}
 				</Grid.Column>
 			);
 		}
@@ -159,7 +158,7 @@ class SettingsAvatar extends Component {
 				<div>
 					<h2>Add a avatar</h2>
 					<p>Drag and drop a image or click for select a image.</p>
-					<img src={getAvatarById(avatarMainSelected, avatarsList) ? `/uploads/${getAvatarById(avatarMainSelected, avatarsList).mainProfil}` : ''} alt="avatar" ref={'avatar_main'} />
+					<img src={getAvatarById(avatarMainSelected, avatarsList) ? `/uploads/${getAvatarById(avatarMainSelected, avatarsList).avatar150}` : ''} alt="avatar" ref={'avatar_main'} />
 
 					<Modal open={this.state.openModal} onClose={this.handleCloseModal}>
 						<Modal.Header>Cropp the image</Modal.Header>

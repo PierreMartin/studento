@@ -58,10 +58,10 @@ export function api() {
 			url: '/api/updateuser/' + id,
 			data
 		}),
-		createAvatarUser: (data, id, avatarId) => localClient.request({
+		createAvatarUser: (formData, id, avatarId) => localClient.request({
 			method: 'POST',
 			url: '/api/addavatar/' + id + '/' + avatarId,
-			data
+			data: formData
 		})
 	};
 }

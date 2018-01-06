@@ -77,9 +77,9 @@ export function avatarUploadUserSuccess(res) {
 	};
 }
 
-export function uploadAvatarUserAction(data, params) {
+export function uploadAvatarUserAction(formData, _id, avatarId) {
 	return (dispatch) => {
-		return createAvatarUserRequest(data, params)
+		return createAvatarUserRequest(formData, _id, avatarId)
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(avatarUploadUserSuccess(response.data));
