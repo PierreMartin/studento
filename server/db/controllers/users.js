@@ -99,14 +99,13 @@ export function update(req, res) {
 
 /***************************************** Upload Avatars *****************************************/
 const maxSize = 1000 * 1000 * 1000;
-const uploaded = multer().single('formAvatar');
 
 const storage = multer.diskStorage({
-	destination: function (req, file, callback) {
-		callback(null, 'public/uploads/');
+	destination(req, file, callback) {
+		callback(null, 'public/uploadsRaw/');
 	},
-	filename: function (req, file, callback) {
-		crypto.pseudoRandomBytes(16, function (err, raw) {
+	filename(req, file, callback) {
+		crypto.pseudoRandomBytes(16, (err, raw) => {
 			if (!err) {
 				let ext = file.originalname && path.extname(file.originalname);
 
@@ -122,7 +121,7 @@ const storage = multer.diskStorage({
 const upload = multer({
 	storage,
 	limits: { fileSize: maxSize },
-	fileFilter: function (req, file, callback) {
+	fileFilter(req, file, callback) {
 		const typeArray = file.mimetype.split('/');
 		const ext = file.originalname && path.extname(file.originalname).toLowerCase();
 
@@ -150,22 +149,22 @@ export function uploadAvatar(req, res) {
 	const avatar150 = sizes[0] + '_' + filename;
 	const avatar80 = sizes[1] + '_' + filename;
 	const avatarId = parseInt(req.params.avatarId, 10);
-	const avatarsSrc = { avatarId, avatar150, avatar80 };
+	const avatarSrc = { avatarId, avatar150, avatar80 };
 
-	uploaded(req, res, (err) => {
-		if (err || !id || !filename) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
+	if (!id || !filename) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
 
-		jimp.read(req.file.path, (err, image) => {
-			if (err) throw err;
+	// rezise at different size :
+	jimp.read(req.file.path, (err, image) => {
+		if (err) throw err;
 
-			sizes.forEach((size) => {
-				image
-					.scaleToFit(size, jimp.AUTO, jimp.RESIZE_BEZIER)
-					.write('./public/uploads/' + size + '_' + filename);
-			});
-
-			// unlinkSync('public/uploads/' + filename);
+		sizes.forEach((size) => {
+			image
+				.scaleToFit(size, jimp.AUTO, jimp.RESIZE_BEZIER)
+				.write('./public/uploads/' + size + '_' + filename);
 		});
+
+		// remove the original image :
+		unlinkSync('public/uploadsRaw/' + filename);
 	});
 
 	User.findOne({ _id: id, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userAvatar) => {
@@ -181,14 +180,14 @@ export function uploadAvatar(req, res) {
 				}, (err) => {
 					if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});
 
-					return res.status(200).json({message: 'Your avatar has been update', avatarsSrc});
+					return res.status(200).json({message: 'Your avatar has been update', avatarSrc});
 				});
 		// If avatar don't exist
 		} else {
-			User.findOneAndUpdate({_id: id}, {$push: { avatarsSrc } }, (err) => {
+			User.findOneAndUpdate({_id: id}, {$push: { avatarsSrc: avatarSrc } }, (err) => {
 				if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});
 
-				return res.status(200).json({message: 'Your avatar has been add', avatarsSrc});
+				return res.status(200).json({message: 'Your avatar has been add', avatarSrc});
 			});
 		}
 	});

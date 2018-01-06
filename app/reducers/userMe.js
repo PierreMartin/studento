@@ -19,23 +19,23 @@ const data = (state = {}, action) => {
 		case types.LOGOUT_SUCCESS_USER:
 			return {};
 		case types.UPDATE_USER_AVATAR_SUCCESS:
-			if (action.avatarsSrc) {
+			if (action.avatarSrc) {
 				const avatarsListOutput = state.avatarsSrc || [];
 				let isAvatarAlreadyExist = false;
 
 				for (let i = 0; i < avatarsListOutput.length; i++) {
-					// if avatar already exist - modify the current :
-					if (avatarsListOutput[i].avatarId === action.avatarsSrc.avatarId) {
-						avatarsListOutput[i].avatar150 = action.avatarsSrc.avatar150;
-						avatarsListOutput[i].avatar80 = action.avatarsSrc.avatar80;
+					// If avatar already exist - modify the current :
+					if (avatarsListOutput[i].avatarId === action.avatarSrc.avatarId) {
+						avatarsListOutput[i].avatar150 = action.avatarSrc.avatar150;
+						avatarsListOutput[i].avatar80 = action.avatarSrc.avatar80;
 						isAvatarAlreadyExist = true;
 						break;
 					}
 				}
 
-				// if new avatar :
+				// Else, if new avatar :
 				if (!isAvatarAlreadyExist) {
-					avatarsListOutput.push(action.avatarsSrc);
+					avatarsListOutput.push(action.avatarSrc);
 				}
 
 				return {...state, avatarsSrc: avatarsListOutput};

@@ -47,10 +47,10 @@ class SettingsAvatar extends Component {
 		const that = this;
 
 		if (image) {
-			image.onerror = function () {
+			image.onerror = () => {
 				that.numberTryingLoadImg++;
 				if (that.numberTryingLoadImg < 10) {
-					setTimeout(function () {
+					setTimeout(() => {
 						image.src = `/uploads/${getAvatarById(avatarId, avatarsList).avatar150}`;
 					}, 1000);
 				}
@@ -84,14 +84,14 @@ class SettingsAvatar extends Component {
 		this.handleCloseModal();
 
 		this.refs.cropper.getCroppedCanvas({
-			width: 160,
+			width: 120,
 			height: 90,
 			fillColor: '#fff',
 			imageSmoothingEnabled: false,
 			imageSmoothingQuality: 'high'
 		});
 
-		this.refs.cropper.getCroppedCanvas().toBlob(function (blob) {
+		this.refs.cropper.getCroppedCanvas().toBlob((blob) => {
 			const $filename = document.querySelector('#formAvatar input[type="file"]');
 			const filename = ($filename.files[0] && $filename.files[0].name) || 'undefined.jpg';
 			const avatarId = that.state.avatarUploadImagePreview.nameField;
@@ -119,7 +119,7 @@ class SettingsAvatar extends Component {
 	 * */
 	handleDefaultAvatar(avatarId) {
 		const { userMe, avatarMainSelectedAction } = this.props;
-		return function () {
+		return () => {
 			avatarMainSelectedAction(avatarId, userMe._id);
 		};
 	}
