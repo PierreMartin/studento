@@ -21,7 +21,8 @@ class SettingsAvatar extends Component {
 		this.handleDefaultAvatar = this.handleDefaultAvatar.bind(this);
 		this.renderItemsAvatar = this.renderItemsAvatar.bind(this);
 		this.numberTryingLoadImg = 0;
-		this.numberItems = 6;
+		this.numberItems = 6; // define here the number of avatars to show
+		this.numberItems--; // -1 because start to index 0
 
 		// generate the refs :
 		this.avatarsRef = [];
@@ -108,7 +109,7 @@ class SettingsAvatar extends Component {
 			formData.append('formAvatar', blob, filename); // 'formAvatar' is used in routes.js
 
 			// send image cropped to back-end :
-			if (_id && formData && avatarId) {
+			if (_id && formData && typeof avatarId !== 'undefined') {
 				uploadAvatarUserAction(formData, _id, avatarId);
 			}
 
@@ -141,7 +142,7 @@ class SettingsAvatar extends Component {
 		const avatarsList = userMe.avatarsSrc;
 		const nodeItemsAvatar = [];
 
-		for (let i = 1; i <= this.numberItems; i++) {
+		for (let i = 0; i <= this.numberItems; i++) {
 			nodeItemsAvatar.push(
 				<Grid.Column width={6} key={i} className={cx('dropzone-column')} >
 					<div><strong>Image {i}</strong><br /></div>
