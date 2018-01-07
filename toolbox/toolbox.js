@@ -10,16 +10,16 @@ export function calculateAge(birthday) {
 }
 
 /**
- * get the avatar by the id given by parameter
+ * Get the avatar by the id given by parameter
  * @param {number} avatarId - the id of the avatar we want find
  * @param {object} avatarsList - the list of avatars to check, from the props
- * @return {object} the avatar find in the list
+ * @return {object | null} the avatar find in the list
  * */
 export function getAvatarById(avatarId, avatarsList) {
-	var avatarSelected;
+	let avatarSelected = null;
 
-	for (var i = 0; i < avatarsList.length; i++) {
-		var avatar = avatarsList[i];
+	for (let i = 0; i < avatarsList.length; i++) {
+		const avatar = avatarsList[i];
 		if (avatar.avatarId === avatarId) {
 			avatarSelected = avatar;
 			break;
