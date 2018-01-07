@@ -21,7 +21,16 @@ class SettingsAvatar extends Component {
 		this.handleDefaultAvatar = this.handleDefaultAvatar.bind(this);
 		this.renderItemsAvatar = this.renderItemsAvatar.bind(this);
 		this.numberTryingLoadImg = 0;
+		this.numberItems = 6;
 
+		// generate the refs :
+		this.avatarsRef = [];
+
+		for (let i = 0; i < this.numberItems; i++) {
+			this.avatarsRef.push('avatarRef' + i);
+		}
+
+		// initialize the state :
 		this.state = {
 			avatarUploadImagePreview: {},
 			openModal: false
@@ -37,22 +46,22 @@ class SettingsAvatar extends Component {
 	}
 
 	/**
-	 * To load the image immediately after the upload - because the resizer BE side is very long :
+	 * To load the image immediately after the upload - because sometime the back-end is long :
 	 * @param {string} avatarId - the id of the avatar we want find
 	 * @return {void}
 	 * */
 	reloadImage(avatarId) {
 		const avatarsList = this.props.userMe.avatarsSrc;
-		const image = this.refs['avatar_' + avatarId];
+		const image = this.avatarsRef[avatarId];
 		const that = this;
 
 		if (image) {
 			image.onerror = () => {
 				that.numberTryingLoadImg++;
-				if (that.numberTryingLoadImg < 10) {
+				if (that.numberTryingLoadImg < 5) {
 					setTimeout(() => {
 						image.src = `/uploads/${getAvatarById(avatarId, avatarsList).avatar150}`;
-					}, 1000);
+					}, 2000);
 				}
 			};
 		}
@@ -83,7 +92,7 @@ class SettingsAvatar extends Component {
 
 		this.handleCloseModal();
 
-		this.refs.cropper.getCroppedCanvas({
+		this.cropperRef.cropper.getCroppedCanvas({
 			width: 120,
 			height: 90,
 			fillColor: '#fff',
@@ -91,7 +100,7 @@ class SettingsAvatar extends Component {
 			imageSmoothingQuality: 'high'
 		});
 
-		this.refs.cropper.getCroppedCanvas().toBlob((blob) => {
+		this.cropperRef.cropper.getCroppedCanvas().toBlob((blob) => {
 			const $filename = document.querySelector('#formAvatar input[type="file"]');
 			const filename = ($filename.files[0] && $filename.files[0].name) || 'undefined.jpg';
 			const avatarId = that.state.avatarUploadImagePreview.nameField;
@@ -131,14 +140,13 @@ class SettingsAvatar extends Component {
 		const { avatarMainSelected, userMe } = this.props;
 		const avatarsList = userMe.avatarsSrc;
 		const nodeItemsAvatar = [];
-		const numberItems = 6;
 
-		for (let i = 1; i <= numberItems; i++) {
+		for (let i = 1; i <= this.numberItems; i++) {
 			nodeItemsAvatar.push(
 				<Grid.Column width={6} key={i} className={cx('dropzone-column')} >
 					<div><strong>Image {i}</strong><br /></div>
 					<Dropzone onDrop={this.dropHandler(i)} multiple={false} accept={'image/*'} className={cx('dropzone-input')} >
-						<Image src={getAvatarById(i, avatarsList) ? `/uploads/${getAvatarById(i, avatarsList).avatar150}` : ''} ref={'avatar_' + i} />
+						<img src={getAvatarById(i, avatarsList) ? `/uploads/${getAvatarById(i, avatarsList).avatar150}` : ''} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} />
 					</Dropzone>
 
 					{(getAvatarById(i, avatarsList) && i !== avatarMainSelected) ? <Button onClick={this.handleDefaultAvatar(i)}>Set default avatar</Button> : ''}
@@ -158,7 +166,7 @@ class SettingsAvatar extends Component {
 				<div>
 					<h2>Add a avatar</h2>
 					<p>Drag and drop a image or click for select a image.</p>
-					<img src={getAvatarById(avatarMainSelected, avatarsList) ? `/uploads/${getAvatarById(avatarMainSelected, avatarsList).avatar150}` : ''} alt="avatar" ref={'avatar_main'} />
+					<Image src={getAvatarById(avatarMainSelected, avatarsList) ? `/uploads/${getAvatarById(avatarMainSelected, avatarsList).avatar150}` : ''} />
 
 					<Modal open={this.state.openModal} onClose={this.handleCloseModal}>
 						<Modal.Header>Cropp the image</Modal.Header>
@@ -166,7 +174,7 @@ class SettingsAvatar extends Component {
 							<Modal.Description>
 								<Header>Cropp your Profile Image</Header>
 								<Cropper
-									ref="cropper"
+									ref={(cropper) => { this.cropperRef = cropper; }}
 									src={this.state.avatarUploadImagePreview.imageSrc}
 									style={{height: 400, width: '100%'}}
 									zoomable={false}
@@ -209,7 +217,7 @@ SettingsAvatar.propTypes = {
 const mapStateToProps = (state) => {
 	return {
 		userMe: state.userMe.data,
-		avatarMainSelected: state.userMe.avatarMainSelected
+		avatarMainSelected: state.userMe.data.avatarMainSelected
 	};
 };
 
