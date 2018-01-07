@@ -139,18 +139,19 @@ class SettingsAvatar extends Component {
 	 * */
 	renderItemsAvatar() {
 		const { avatarMainSelected, userMe } = this.props;
-		const avatarsList = userMe.avatarsSrc;
 		const nodeItemsAvatar = [];
 
 		for (let i = 0; i <= this.numberItems; i++) {
+			const avatarObj = getAvatarById(i, userMe.avatarsSrc);
+
 			nodeItemsAvatar.push(
 				<Grid.Column width={6} key={i} className={cx('dropzone-column')} >
 					<div><strong>Image {i}</strong><br /></div>
 					<Dropzone onDrop={this.dropHandler(i)} multiple={false} accept={'image/*'} className={cx('dropzone-input')} >
-						<img src={getAvatarById(i, avatarsList) ? `/uploads/${getAvatarById(i, avatarsList).avatar150}` : ''} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} />
+						<img src={avatarObj ? `/uploads/${avatarObj.avatar150}` : ''} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} />
 					</Dropzone>
 
-					{(getAvatarById(i, avatarsList) && i !== avatarMainSelected) ? <Button onClick={this.handleDefaultAvatar(i)}>Set default avatar</Button> : ''}
+					{(avatarObj && i !== avatarMainSelected) ? <Button onClick={this.handleDefaultAvatar(i)}>Set default avatar</Button> : ''}
 				</Grid.Column>
 			);
 		}
@@ -160,14 +161,14 @@ class SettingsAvatar extends Component {
 
 	render() {
 		const { userMe, avatarMainSelected } = this.props;
-		const avatarsList = userMe.avatarsSrc;
+		const avatarObj = getAvatarById(avatarMainSelected, userMe.avatarsSrc);
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div>
 					<h2>Add a avatar</h2>
 					<p>Drag and drop a image or click for select a image.</p>
-					<Image src={getAvatarById(avatarMainSelected, avatarsList) ? `/uploads/${getAvatarById(avatarMainSelected, avatarsList).avatar150}` : ''} />
+					<Image src={avatarObj ? `/uploads/${avatarObj.avatar150}` : ''} />
 
 					<Modal open={this.state.openModal} onClose={this.handleCloseModal}>
 						<Modal.Header>Cropp the image</Modal.Header>
