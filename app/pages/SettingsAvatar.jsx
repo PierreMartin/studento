@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { uploadAvatarUserAction, avatarMainSelectedAction } from '../actions/userMe';
+import { uploadAvatarUserAction, defaultAvatarUserAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { getAvatarById } from '../../toolbox/toolbox';
 import { Button, Grid, Image, Modal, Header } from 'semantic-ui-react';
@@ -129,9 +129,9 @@ class SettingsAvatar extends Component {
 	 * Update the default avatar id
 	 * */
 	handleDefaultAvatar(avatarId) {
-		const { userMe, avatarMainSelectedAction } = this.props;
+		const { userMe, defaultAvatarUserAction } = this.props;
 		return () => {
-			avatarMainSelectedAction(avatarId, userMe._id);
+			defaultAvatarUserAction(avatarId, userMe._id);
 		};
 	}
 
@@ -208,8 +208,8 @@ class SettingsAvatar extends Component {
 
 SettingsAvatar.propTypes = {
 	uploadAvatarUserAction: PropTypes.func,
-	avatarMainSelectedAction: PropTypes.func,
-	avatarMainSelected: PropTypes.number,
+	defaultAvatarUserAction: PropTypes.func,
+	avatarMainSelected: PropTypes.number, // TODO change to defaultAvatarUserState
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
@@ -226,4 +226,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { uploadAvatarUserAction, avatarMainSelectedAction })(SettingsAvatar);
+export default connect(mapStateToProps, { uploadAvatarUserAction, defaultAvatarUserAction })(SettingsAvatar);

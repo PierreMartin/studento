@@ -62,6 +62,11 @@ export function api() {
 			method: 'POST',
 			url: '/api/addavatar/' + id + '/' + avatarId,
 			data: formData
+		}),
+		setDefaultAvatarUser: (avatarId, idUser) => localClient.request({
+			method: 'PUT',
+			url: '/api/setdefaultavatar/' + idUser,
+			data: { defaultAvatarUser: avatarId }
 		})
 	};
 }

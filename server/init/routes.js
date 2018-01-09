@@ -29,6 +29,7 @@ export default (app) => {
 		app.get('/api/getuser/:id', usersController.oneById);
 		app.put('/api/updateuser/:id', usersController.update);
 		app.post('/api/addavatar/:id/:avatarId', usersController.uploadAvatarMulter, usersController.uploadAvatar);
+		app.put('/api/setdefaultavatar/:idUser/', usersController.setDefaultAvatar);
 	} else {
 		console.warn('users routes');
 	}

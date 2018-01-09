@@ -1,4 +1,4 @@
-import { updateUserRequest, createAvatarUserRequest } from './../api';
+import { updateUserRequest, createAvatarUserRequest, defaultAvatarUserRequest } from './../api';
 import { toast } from 'react-toastify';
 import * as types from 'types';
 
@@ -90,6 +90,39 @@ export function uploadAvatarUserAction(formData, _id, avatarId) {
 			})
 			.catch((err) => {
 				dispatch(avatarUploadUserError(getMessage(err)));
+			});
+	};
+}
+
+/***************************************** SET DEFAULT AVATAR user ********************************************/
+export function defaultAvatarUserSuccess(res) {
+	return {
+		type: types.SET_DEFAULT_USER_AVATAR_SUCCESS,
+		message: res.message,
+		avatarMainSelected: res.avatarMainSelected
+	};
+}
+
+export function defaultAvatarUserError(message) {
+	return {
+		type: types.SET_DEFAULT_USER_AVATAR_FAILURE,
+		message
+	};
+}
+
+export function defaultAvatarUserAction(avatarId, idUser) {
+	return (dispatch) => {
+		return defaultAvatarUserRequest(avatarId, idUser)
+			.then((response) => {
+				if (response.status === 200) {
+					dispatch(defaultAvatarUserSuccess(response.data));
+					toast.success(response.data.message);
+				} else {
+					dispatch(defaultAvatarUserError(getMessage(response)));
+				}
+			})
+			.catch((err) => {
+				dispatch(defaultAvatarUserError(getMessage(err)));
 			});
 	};
 }

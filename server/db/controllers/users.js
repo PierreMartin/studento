@@ -193,10 +193,27 @@ export function uploadAvatar(req, res) {
 	});
 }
 
+/**
+ * PUT /api/setdefaultavatar/:idUser/
+ */
+export function setDefaultAvatar(req, res) {
+	const data = req.body;
+	const idUser = req.params.idUser;
+
+	User.findOneAndUpdate({ _id: idUser }, data, (err, user) => {
+		if (err) {
+			return res.status(500).json({message: 'A error happen at the updating default avatar profile'});
+		} else if (user) {
+			return res.status(200).json({message: 'Your default avatar has been update', defaultAvatarUser: data.defaultAvatarUser});
+		}
+	});
+}
+
 export default {
 	all,
 	oneById,
 	update,
 	uploadAvatarMulter,
-	uploadAvatar
+	uploadAvatar,
+	setDefaultAvatar
 };

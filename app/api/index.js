@@ -114,3 +114,13 @@ export const createAvatarUserRequest = (formData, _id, avatarId) => {
 			return Promise.reject(err);
 		});
 };
+
+export const defaultAvatarUserRequest = (avatarId, idUser) => {
+	return api().setDefaultAvatarUser(avatarId, idUser)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
