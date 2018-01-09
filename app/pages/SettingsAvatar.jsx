@@ -7,6 +7,7 @@ import { getAvatarById } from '../../toolbox/toolbox';
 import { Button, Grid, Image, Modal, Header } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
+import defaultAvatar from '../images/default-avatar.png';
 import classNames from 'classnames/bind';
 import styles from './css/settingsAvatar.scss';
 
@@ -143,12 +144,13 @@ class SettingsAvatar extends Component {
 
 		for (let i = 0; i <= this.numberItems; i++) {
 			const avatarObj = getAvatarById(i, userMe.avatarsSrc);
+			const src = avatarObj ? `/uploads/${avatarObj.avatar150}` : defaultAvatar;
 
 			nodeItemsAvatar.push(
 				<Grid.Column width={6} key={i} className={cx('dropzone-column')} >
 					<div><strong>Image {i}</strong><br /></div>
 					<Dropzone onDrop={this.dropHandler(i)} multiple={false} accept={'image/*'} className={cx('dropzone-input')} >
-						<img src={avatarObj ? `/uploads/${avatarObj.avatar150}` : ''} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} />
+						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar150')} />
 					</Dropzone>
 
 					{(avatarObj && i !== avatarMainSelected) ? <Button onClick={this.handleDefaultAvatar(i)}>Set default avatar</Button> : ''}
@@ -162,13 +164,14 @@ class SettingsAvatar extends Component {
 	render() {
 		const { userMe, avatarMainSelected } = this.props;
 		const avatarObj = getAvatarById(avatarMainSelected, userMe.avatarsSrc);
+		const src = avatarObj ? `/uploads/${avatarObj.avatar150}` : defaultAvatar;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div>
 					<h2>Add a avatar</h2>
 					<p>Drag and drop a image or click for select a image.</p>
-					<Image src={avatarObj ? `/uploads/${avatarObj.avatar150}` : ''} />
+					<Image src={src} className={cx('avatar150')} />
 
 					<Modal open={this.state.openModal} onClose={this.handleCloseModal}>
 						<Modal.Header>Cropp the image</Modal.Header>

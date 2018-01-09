@@ -4,7 +4,9 @@
 # production
 /build
 /compiled
-/public
+/public/*
+/public/uploads/*
+/public/uploadsRaw/*
 
 # testing
 /coverage
