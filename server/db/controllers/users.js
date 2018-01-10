@@ -202,9 +202,9 @@ export function setDefaultAvatar(req, res) {
 
 	User.findOneAndUpdate({ _id: idUser }, data, (err, user) => {
 		if (err) {
-			return res.status(500).json({message: 'A error happen at the updating default avatar profile'});
+			return res.status(500).json({message: 'A error happen at the updating main avatar profile'});
 		} else if (user) {
-			return res.status(200).json({message: 'Your default avatar has been update', defaultAvatarUser: data.defaultAvatarUser});
+			return res.status(200).json({message: 'Your main avatar has been update', avatarMain: data.avatarMain});
 		}
 	});
 }

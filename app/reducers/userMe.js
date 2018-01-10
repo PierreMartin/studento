@@ -43,6 +43,13 @@ const data = (state = {}, action) => {
 			return state;
 		case types.UPDATE_USER_AVATAR_FAILURE:
 			return state;
+		case types.SET_MAIN_USER_AVATAR_SUCCESS:
+			if (typeof action.avatarMain !== 'undefined') {
+				return {...state, avatarMain: action.avatarMain};
+			}
+			return state;
+		case types.SET_MAIN_USER_AVATAR_FAILURE:
+			return state;
 		default:
 			return state;
 	}

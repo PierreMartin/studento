@@ -97,20 +97,20 @@ export function uploadAvatarUserAction(formData, _id, avatarId) {
 /***************************************** SET DEFAULT AVATAR user ********************************************/
 export function defaultAvatarUserSuccess(res) {
 	return {
-		type: types.SET_DEFAULT_USER_AVATAR_SUCCESS,
+		type: types.SET_MAIN_USER_AVATAR_SUCCESS,
 		message: res.message,
-		avatarMainSelected: res.avatarMainSelected
+		avatarMain: res.avatarMain
 	};
 }
 
 export function defaultAvatarUserError(message) {
 	return {
-		type: types.SET_DEFAULT_USER_AVATAR_FAILURE,
+		type: types.SET_MAIN_USER_AVATAR_FAILURE,
 		message
 	};
 }
 
-export function defaultAvatarUserAction(avatarId, idUser) {
+export function avatarMainAction(avatarId, idUser) {
 	return (dispatch) => {
 		return defaultAvatarUserRequest(avatarId, idUser)
 			.then((response) => {

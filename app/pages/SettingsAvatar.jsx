@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { uploadAvatarUserAction, defaultAvatarUserAction } from '../actions/userMe';
+import { uploadAvatarUserAction, avatarMainAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { getAvatarById } from '../../toolbox/toolbox';
 import { Button, Grid, Image, Modal, Header } from 'semantic-ui-react';
@@ -129,9 +129,9 @@ class SettingsAvatar extends Component {
 	 * Update the default avatar id
 	 * */
 	handleDefaultAvatar(avatarId) {
-		const { userMe, defaultAvatarUserAction } = this.props;
+		const { userMe, avatarMainAction } = this.props;
 		return () => {
-			defaultAvatarUserAction(avatarId, userMe._id);
+			avatarMainAction(avatarId, userMe._id);
 		};
 	}
 
@@ -139,7 +139,7 @@ class SettingsAvatar extends Component {
 	 * render the HTML elementsd dropzone
 	 * */
 	renderItemsAvatar() {
-		const { avatarMainSelected, userMe } = this.props;
+		const { avatarMain, userMe } = this.props;
 		const nodeItemsAvatar = [];
 
 		for (let i = 0; i <= this.numberItems; i++) {
@@ -148,12 +148,12 @@ class SettingsAvatar extends Component {
 
 			nodeItemsAvatar.push(
 				<Grid.Column width={6} key={i} className={cx('dropzone-column')} >
-					<div><strong>Image {i}</strong><br /></div>
+					<div><strong>Image {i + 1}</strong><br /></div>
 					<Dropzone onDrop={this.dropHandler(i)} multiple={false} accept={'image/*'} className={cx('dropzone-input')} >
 						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar150')} />
 					</Dropzone>
 
-					{(avatarObj && i !== avatarMainSelected) ? <Button onClick={this.handleDefaultAvatar(i)}>Set default avatar</Button> : ''}
+					{(avatarObj && i !== avatarMain) ? <Button onClick={this.handleDefaultAvatar(i)}>Set main avatar</Button> : ''}
 				</Grid.Column>
 			);
 		}
@@ -162,8 +162,8 @@ class SettingsAvatar extends Component {
 	}
 
 	render() {
-		const { userMe, avatarMainSelected } = this.props;
-		const avatarObj = getAvatarById(avatarMainSelected, userMe.avatarsSrc);
+		const { userMe, avatarMain } = this.props;
+		const avatarObj = getAvatarById(avatarMain, userMe.avatarsSrc);
 		const src = avatarObj ? `/uploads/${avatarObj.avatar150}` : defaultAvatar;
 
 		return (
@@ -208,8 +208,8 @@ class SettingsAvatar extends Component {
 
 SettingsAvatar.propTypes = {
 	uploadAvatarUserAction: PropTypes.func,
-	defaultAvatarUserAction: PropTypes.func,
-	avatarMainSelected: PropTypes.number, // TODO change to defaultAvatarUserState
+	avatarMainAction: PropTypes.func,
+	avatarMain: PropTypes.number,
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
@@ -222,8 +222,8 @@ SettingsAvatar.propTypes = {
 const mapStateToProps = (state) => {
 	return {
 		userMe: state.userMe.data,
-		avatarMainSelected: state.userMe.data.avatarMainSelected
+		avatarMain: state.userMe.data.avatarMain
 	};
 };
 
-export default connect(mapStateToProps, { uploadAvatarUserAction, defaultAvatarUserAction })(SettingsAvatar);
+export default connect(mapStateToProps, { uploadAvatarUserAction, avatarMainAction })(SettingsAvatar);

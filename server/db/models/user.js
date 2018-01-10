@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema({
 		avatar80: String,
 		avatar150: String
 	}],
-	avatarMainSelected: { type: Number, default: 0 },
+	avatarMain: { type: Number, default: 0 },
 
   tokens: Array,
   resetPasswordToken: String,
