@@ -167,9 +167,9 @@ export function uploadAvatar(req, res) {
 		unlinkSync('public/uploadsRaw/' + filename);
 	});
 
-	User.findOne({ _id: id, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userAvatar) => {
+	User.findOne({ _id: id, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userWithAvatar) => {
 		// If avatar already exist
-		if (userAvatar) {
+		if (userWithAvatar) {
 			User.findOneAndUpdate({_id: id, 'avatarsSrc.avatarId': avatarId},
 				{
 					$set: {
@@ -179,6 +179,13 @@ export function uploadAvatar(req, res) {
 					}
 				}, (err) => {
 					if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});
+
+					// If updated the avatar setted as main - we also set default avatar :
+					if (userWithAvatar.avatarMainSrc.avatarId === avatarId) {
+						User.findOneAndUpdate({ _id: id }, {avatarMainSrc: avatarSrc}, (err) => {
+							if (err) res.status(500).json({message: 'A error happen at the updating main avatar profile'});
+						});
+					}
 
 					return res.status(200).json({message: 'Your avatar has been update', avatarSrc});
 				});

@@ -20,25 +20,32 @@ const data = (state = {}, action) => {
 			return {};
 		case types.UPDATE_USER_AVATAR_SUCCESS:
 			if (action.avatarSrc) {
-				const avatarsListOutput = state.avatarsSrc || [];
+				let avatarsSrcOutput = state.avatarsSrc || [];
+				let avatarMainSrcOutput = state.avatarMainSrc;
 				let isAvatarAlreadyExist = false;
 
-				for (let i = 0; i < avatarsListOutput.length; i++) {
+				for (let i = 0; i < avatarsSrcOutput.length; i++) {
 					// If avatar already exist - modify the current :
-					if (avatarsListOutput[i].avatarId === action.avatarSrc.avatarId) {
-						avatarsListOutput[i].avatar150 = action.avatarSrc.avatar150;
-						avatarsListOutput[i].avatar80 = action.avatarSrc.avatar80;
+					if (avatarsSrcOutput[i].avatarId === action.avatarSrc.avatarId) {
+						avatarsSrcOutput[i].avatar150 = action.avatarSrc.avatar150;
+						avatarsSrcOutput[i].avatar80 = action.avatarSrc.avatar80;
 						isAvatarAlreadyExist = true;
+
+						// If updated the avatar setted as main - we also set default avatar :
+						if (state.avatarMainSrc.avatarId === avatarsSrcOutput[i].avatarId) {
+							avatarMainSrcOutput = avatarsSrcOutput[i];
+						}
+
 						break;
 					}
 				}
 
 				// Else, if new avatar :
 				if (!isAvatarAlreadyExist) {
-					avatarsListOutput.push(action.avatarSrc);
+					avatarsSrcOutput.push(action.avatarSrc);
 				}
 
-				return {...state, avatarsSrc: avatarsListOutput};
+				return {...state, avatarsSrc: avatarsSrcOutput, avatarMainSrc: avatarMainSrcOutput};
 			}
 			return state;
 		case types.UPDATE_USER_AVATAR_FAILURE:
