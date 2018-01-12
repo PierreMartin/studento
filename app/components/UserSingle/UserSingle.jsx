@@ -2,19 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Segment, Button, Header, Grid, Image, Icon } from 'semantic-ui-react';
-import itemImage from '../../images/image.png';
+import defaultAvatar from '../../images/default-avatar.png';
 
 
 const UserSingle = ({ user, userMeId }) => {
 	// if my profile :
 	const isMyProfile = user._id === userMeId;
+	const src = user.avatarMainSrc.avatar150 ? `/uploads/${user.avatarMainSrc.avatar150}` : defaultAvatar;
 
 	return (
 		<div>
 			<Grid>
 				<Grid.Row>
 					<Grid.Column width={3}>
-						<Image src={itemImage} />
+						<Image src={src} />
 					</Grid.Column>
 					<Grid.Column width={7}>
 						<Header as="h2" >{user.username}</Header>
