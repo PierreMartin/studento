@@ -26,7 +26,12 @@ const UserSchema = new mongoose.Schema({
 		avatar80: String,
 		avatar150: String
 	}],
-	avatarMain: { type: Number, default: 0 },
+
+	avatarMainSrc: {
+		avatarId: { type: Number, default: -1 },
+		avatar80: { type: String, default: '' },
+		avatar150: { type: String, default: '' }
+	},
 
   tokens: Array,
   resetPasswordToken: String,

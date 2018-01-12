@@ -99,7 +99,7 @@ export function defaultAvatarUserSuccess(res) {
 	return {
 		type: types.SET_MAIN_USER_AVATAR_SUCCESS,
 		message: res.message,
-		avatarMain: res.avatarMain
+		avatarMainSrc: res.avatarMainSrc
 	};
 }
 

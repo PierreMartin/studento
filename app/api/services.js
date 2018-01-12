@@ -66,7 +66,7 @@ export function api() {
 		setDefaultAvatarUser: (avatarId, idUser) => localClient.request({
 			method: 'PUT',
 			url: '/api/setdefaultavatar/' + idUser,
-			data: { avatarMain: avatarId }
+			data: { avatarId }
 		})
 	};
 }

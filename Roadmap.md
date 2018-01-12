@@ -31,6 +31,7 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 
 
 ### TODO :
+- avatars -> refresh avatarMain si upload new avatar
 - refacto les notifications + gerer toutes les erreurs
 - check si un username / email est deja utilisé
 - supprimer le fichier de l'avatar si update

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { uploadAvatarUserAction, avatarMainAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { getAvatarById } from '../../toolbox/toolbox';
 import { Button, Grid, Image, Modal, Header } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
@@ -48,12 +47,32 @@ class SettingsAvatar extends Component {
 	}
 
 	/**
+	 * Get the avatar by the id given by parameter
+	 * @param {number} avatarId - the id of the avatar we want find
+	 * @param {object} avatarsList - the list of avatars to check, from the props
+	 * @return {object | null} the avatar find in the list
+	 * */
+	getAvatarById(avatarId, avatarsList) {
+		let avatarSelected = null;
+
+		for (let i = 0; i < avatarsList.length; i++) {
+			const avatar = avatarsList[i];
+			if (avatar.avatarId === avatarId) {
+				avatarSelected = avatar;
+				break;
+			}
+		}
+
+		return avatarSelected;
+	}
+
+	/**
 	 * To load the image immediately after the upload - because sometime the back-end is long :
 	 * @param {string} avatarId - the id of the avatar we want find
 	 * @return {void}
 	 * */
 	reloadImage(avatarId) {
-		const avatarsList = this.props.userMe.avatarsSrc;
+		const { avatarsSrc } = this.props;
 		const image = this.avatarsRef[avatarId];
 		const that = this;
 
@@ -62,7 +81,7 @@ class SettingsAvatar extends Component {
 				that.numberTryingLoadImg++;
 				if (that.numberTryingLoadImg < 5) {
 					setTimeout(() => {
-						image.src = `/uploads/${getAvatarById(avatarId, avatarsList).avatar150}`;
+						image.src = `/uploads/${that.getAvatarById(avatarId, avatarsSrc).avatar150}`;
 					}, 2000);
 				}
 			};
@@ -139,11 +158,11 @@ class SettingsAvatar extends Component {
 	 * render the HTML elementsd dropzone
 	 * */
 	renderItemsAvatar() {
-		const { avatarMain, userMe } = this.props;
+		const { avatarMainSrc, avatarsSrc } = this.props;
 		const nodeItemsAvatar = [];
 
 		for (let i = 0; i <= this.numberItems; i++) {
-			const avatarObj = getAvatarById(i, userMe.avatarsSrc);
+			const avatarObj = this.getAvatarById(i, avatarsSrc);
 			const src = avatarObj ? `/uploads/${avatarObj.avatar150}` : defaultAvatar;
 
 			nodeItemsAvatar.push(
@@ -153,7 +172,7 @@ class SettingsAvatar extends Component {
 						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar150')} />
 					</Dropzone>
 
-					{(avatarObj && i !== avatarMain) ? <Button onClick={this.handleDefaultAvatar(i)}>Set main avatar</Button> : ''}
+					{(avatarObj && i !== avatarMainSrc.avatarId) ? <Button onClick={this.handleDefaultAvatar(i)}>Set main avatar</Button> : ''}
 				</Grid.Column>
 			);
 		}
@@ -162,9 +181,8 @@ class SettingsAvatar extends Component {
 	}
 
 	render() {
-		const { userMe, avatarMain } = this.props;
-		const avatarObj = getAvatarById(avatarMain, userMe.avatarsSrc);
-		const src = avatarObj ? `/uploads/${avatarObj.avatar150}` : defaultAvatar;
+		const { avatarMainSrc } = this.props;
+		const src = avatarMainSrc.avatar150 ? `/uploads/${avatarMainSrc.avatar150}` : defaultAvatar;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -209,7 +227,18 @@ class SettingsAvatar extends Component {
 SettingsAvatar.propTypes = {
 	uploadAvatarUserAction: PropTypes.func,
 	avatarMainAction: PropTypes.func,
-	avatarMain: PropTypes.number,
+
+	avatarsSrc: PropTypes.arrayOf(PropTypes.shape({
+		avatarId: PropTypes.number,
+		avatar80: PropTypes.string,
+		avatar150: PropTypes.string
+	})),
+
+	avatarMainSrc: PropTypes.shape({
+		avatarId: PropTypes.number,
+		avatar80: PropTypes.string,
+		avatar150: PropTypes.string
+	}),
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
@@ -222,7 +251,8 @@ SettingsAvatar.propTypes = {
 const mapStateToProps = (state) => {
 	return {
 		userMe: state.userMe.data,
-		avatarMain: state.userMe.data.avatarMain
+		avatarsSrc: state.userMe.data.avatarsSrc,
+		avatarMainSrc: state.userMe.data.avatarMainSrc
 	};
 };
 

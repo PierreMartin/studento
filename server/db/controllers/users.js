@@ -197,14 +197,28 @@ export function uploadAvatar(req, res) {
  * PUT /api/setdefaultavatar/:idUser/
  */
 export function setDefaultAvatar(req, res) {
-	const data = req.body;
+	const avatarId = req.body.avatarId;
 	const idUser = req.params.idUser;
 
-	User.findOneAndUpdate({ _id: idUser }, data, (err, user) => {
-		if (err) {
-			return res.status(500).json({message: 'A error happen at the updating main avatar profile'});
-		} else if (user) {
-			return res.status(200).json({message: 'Your main avatar has been update', avatarMain: data.avatarMain});
+	User.findOne({ _id: idUser }, (findErr, user) => {
+		// Set the new 'avatarMainSrc' obj :
+		let avatarMainSrc = null;
+		for (let i = 0; i < user.avatarsSrc.length; i++) {
+			const avatar = user.avatarsSrc[i];
+			if (avatar.avatarId === avatarId) {
+				avatarMainSrc = avatar;
+				break;
+			}
+		}
+
+		if (avatarMainSrc) {
+			User.findOneAndUpdate({ _id: idUser }, {avatarMainSrc}, (err, user) => {
+				if (err) {
+					return res.status(500).json({message: 'A error happen at the updating main avatar profile'});
+				} else if (user) {
+					return res.status(200).json({message: 'Your main avatar has been update', avatarMainSrc});
+				}
+			});
 		}
 	});
 }
