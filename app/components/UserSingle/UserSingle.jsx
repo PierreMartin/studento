@@ -8,7 +8,7 @@ import defaultAvatar from '../../images/default-avatar.png';
 const UserSingle = ({ user, userMeId }) => {
 	// if my profile :
 	const isMyProfile = user._id === userMeId;
-	const src = user.avatarMainSrc.avatar150 ? `/uploads/${user.avatarMainSrc.avatar150}` : defaultAvatar;
+	const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 ? `/uploads/${user.avatarMainSrc.avatar150}` : defaultAvatar;
 
 	return (
 		<div>

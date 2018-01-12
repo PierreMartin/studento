@@ -14,7 +14,7 @@ const UsersList = ({ users }) => {
 
 	if (users.length > 0) {
 		usersNode = users.map((user, key) => {
-			const src = user.avatarMainSrc.avatar150 ? `/uploads/${user.avatarMainSrc.avatar150}` : defaultAvatar;
+			const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 ? `/uploads/${user.avatarMainSrc.avatar150}` : defaultAvatar;
 
 			return (
 				<Grid.Column key={key} mobile={6} tablet={4} computer={4}>
