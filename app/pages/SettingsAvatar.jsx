@@ -114,8 +114,8 @@ class SettingsAvatar extends Component {
 		this.handleCloseModal();
 
 		this.cropperRef.cropper.getCroppedCanvas({
-			width: 120,
-			height: 90,
+			width: 150,
+			height: 150,
 			fillColor: '#fff',
 			imageSmoothingEnabled: false,
 			imageSmoothingQuality: 'high'
@@ -172,10 +172,10 @@ class SettingsAvatar extends Component {
 					<div><strong>Image {i + 1}</strong><br /></div>
 					<Dropzone onDrop={this.dropHandler(i)} multiple={false} accept={'image/*'} className={cx('dropzone-input')} >
 						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar150')} />
+						{(isMainAvatar) ? <div className={cx('mainAvatar')}><Popup trigger={<Icon name="heart" color="red" size="large" circular className={cx('icon-main-avatar')} />} content="Main avatar" position="top center" /></div> : ''}
 					</Dropzone>
 
-					{(isSettableMainAvatar) ? <Button onClick={this.handleDefaultAvatar(i)}>Define as main</Button> : ''}
-					{(isMainAvatar) ? <div className={cx('mainAvatar')}><Popup trigger={<Icon name="heart" color="red" size="large" circular className={cx('icon-main-avatar')} />} content="Main avatar" position="top center" /></div> : ''}
+					{(isSettableMainAvatar) ? <div><Button color="red" size="mini" style={{ marginBottom: 5 }} onClick={this.handleDefaultAvatar(i)}><Icon name="heart" />Define as main</Button></div> : ''}
 				</Grid.Column>
 			);
 		}
@@ -202,7 +202,7 @@ class SettingsAvatar extends Component {
 								<Cropper
 									ref={(cropper) => { this.cropperRef = cropper; }}
 									src={this.state.avatarUploadImagePreview.imageSrc}
-									style={{height: 400, width: '100%'}}
+									style={{height: 400, maxWidth: '640px', margin: '0 auto'}}
 									zoomable={false}
 									aspectRatio={1}
 									guides={false}

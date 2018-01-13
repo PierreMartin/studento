@@ -14,10 +14,10 @@ const UserSingle = ({ user, userMeId }) => {
 		<div>
 			<Grid>
 				<Grid.Row>
-					<Grid.Column width={3}>
+					<Grid.Column width={4}>
 						<Image src={src} />
 					</Grid.Column>
-					<Grid.Column width={7}>
+					<Grid.Column width={6}>
 						<Header as="h2" >{user.username}</Header>
 						{user.city ? user.city + ', ' : ''} {user.country}
 						<br />
