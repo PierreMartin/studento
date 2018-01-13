@@ -24,6 +24,7 @@ const UserSingle = ({ user, userMeId }) => {
 	// if my profile :
 	const isMyProfile = user._id === userMeId;
 	const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 ? `/uploads/${user.avatarMainSrc.avatar150}` : defaultAvatar;
+	const avatarsList = renderAvatarsList(user);
 
 	return (
 		<div>
@@ -66,9 +67,7 @@ const UserSingle = ({ user, userMeId }) => {
 				</Grid.Row>
 			</Grid>
 
-			<Segment className={cx('thumbnails-container')}>
-				{ renderAvatarsList(user) }
-			</Segment>
+			{ (avatarsList.length > 0) ? <Segment className={cx('thumbnails-container')}>{ avatarsList }</Segment> : '' }
 
 			<div>
 				<Header as="h3" attached="top">Infos</Header>
