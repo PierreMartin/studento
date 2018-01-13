@@ -3,7 +3,22 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Segment, Button, Header, Grid, Image, Icon } from 'semantic-ui-react';
 import defaultAvatar from '../../images/default-avatar.png';
+import classNames from 'classnames/bind';
+import styles from './css/userSingle.scss';
 
+const cx = classNames.bind(styles);
+
+const renderAvatarsList = (user) => {
+	if (!user.avatarsSrc) return '';
+
+	return user.avatarsSrc.map((avatar, key) => {
+		return (
+			<a href={`/uploads/${avatar.avatar150}`} key={key} className={cx('thumbnails')} >
+				<Image src={`/uploads/${avatar.avatar80}`} />
+			</a>
+		);
+	});
+};
 
 const UserSingle = ({ user, userMeId }) => {
 	// if my profile :
@@ -50,6 +65,10 @@ const UserSingle = ({ user, userMeId }) => {
 					</Grid.Column>
 				</Grid.Row>
 			</Grid>
+
+			<Segment className={cx('thumbnails-container')}>
+				{ renderAvatarsList(user) }
+			</Segment>
 
 			<div>
 				<Header as="h3" attached="top">Infos</Header>

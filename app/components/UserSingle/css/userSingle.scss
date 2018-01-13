@@ -1,0 +1,14 @@
+.thumbnails-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-flow: row wrap;
+  align-content: flex-start;
+}
+
+.thumbnails img {
+  display: inline-block !important;
+  margin: 0 2px 0 2px;
+}
