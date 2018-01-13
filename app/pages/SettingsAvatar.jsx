@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { uploadAvatarUserAction, avatarMainAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { Button, Grid, Image, Modal, Header } from 'semantic-ui-react';
+import { Button, Grid, Modal, Header, Popup, Icon } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import defaultAvatar from '../images/default-avatar.png';
@@ -155,7 +155,7 @@ class SettingsAvatar extends Component {
 	}
 
 	/**
-	 * render the HTML elementsd dropzone
+	 * render the HTML elements dropzone
 	 * */
 	renderItemsAvatar() {
 		const { avatarMainSrc, avatarsSrc } = this.props;
@@ -164,6 +164,8 @@ class SettingsAvatar extends Component {
 		for (let i = 0; i <= this.numberItems; i++) {
 			const avatarObj = this.getAvatarById(i, avatarsSrc);
 			const src = avatarObj ? `/uploads/${avatarObj.avatar150}` : defaultAvatar;
+			const isSettableMainAvatar = avatarObj && i !== avatarMainSrc.avatarId;
+			const isMainAvatar = avatarObj && i === avatarMainSrc.avatarId;
 
 			nodeItemsAvatar.push(
 				<Grid.Column width={6} key={i} className={cx('dropzone-column')} >
@@ -172,7 +174,8 @@ class SettingsAvatar extends Component {
 						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar150')} />
 					</Dropzone>
 
-					{(avatarObj && i !== avatarMainSrc.avatarId) ? <Button onClick={this.handleDefaultAvatar(i)}>Set main avatar</Button> : ''}
+					{(isSettableMainAvatar) ? <Button onClick={this.handleDefaultAvatar(i)}>Define as main</Button> : ''}
+					{(isMainAvatar) ? <div className={cx('mainAvatar')}><Popup trigger={<Icon name="heart" color="red" size="large" circular className={cx('icon-main-avatar')} />} content="Main avatar" position="top center" /></div> : ''}
 				</Grid.Column>
 			);
 		}
@@ -181,15 +184,15 @@ class SettingsAvatar extends Component {
 	}
 
 	render() {
-		const { avatarMainSrc } = this.props;
-		const src = avatarMainSrc.avatar150 ? `/uploads/${avatarMainSrc.avatar150}` : defaultAvatar;
+		// const { avatarMainSrc } = this.props;
+		// const src = avatarMainSrc.avatar150 ? `/uploads/${avatarMainSrc.avatar150}` : defaultAvatar;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div>
 					<h2>Add a avatar</h2>
 					<p>Drag and drop a image or click for select a image.</p>
-					<Image src={src} className={cx('avatar150')} />
+					{/*<img src={src} alt="avatar" className={cx('avatar150')} />*/}
 
 					<Modal open={this.state.openModal} onClose={this.handleCloseModal}>
 						<Modal.Header>Cropp the image</Modal.Header>
