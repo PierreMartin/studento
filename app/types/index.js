@@ -65,9 +65,8 @@ export const UPDATE_USER_AVATAR_FAILURE = 'UPDATE_USER_AVATAR_FAILURE';
 export const SET_MAIN_USER_AVATAR_SUCCESS = 'SET_MAIN_USER_AVATAR_SUCCESS';
 export const SET_MAIN_USER_AVATAR_FAILURE = 'SET_MAIN_USER_AVATAR_FAILURE';
 
-/***************************************** Chat ********************************************/
-export const CHATBOX_MODAL_ISOPEN_ACTION = 'CHATBOX_MODAL_ISOPEN_ACTION';
-export const CHATBOX_MODAL_ISCLOSE_ACTION = 'CHATBOX_MODAL_ISCLOSE_ACTION';
+/***************************************** Tchat ********************************************/
+export const TCHATBOX_MODAL_ISOPEN_ACTION = 'TCHATBOX_MODAL_ISOPEN_ACTION';
 
 export const RECEIVE_SOCKET = 'RECEIVE_SOCKET';
 

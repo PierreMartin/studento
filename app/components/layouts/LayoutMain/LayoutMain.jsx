@@ -2,12 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import NavMain from '../../navigations/NavMain/NavMain';
+import Chat from '../../Tchat/TchatContainer';
 import { Grid, Header, List, Segment, Container } from 'semantic-ui-react';
 import { ToastContainer } from 'react-toastify';
+import io from 'socket.io-client';
 import styles from '../../../css/main.scss';
 
 const cx = classNames.bind(styles);
-
+const socket = io('', { path: '/api/tchat' });
 
 const App = ({ children }) => {
   return (
@@ -15,6 +17,7 @@ const App = ({ children }) => {
       <NavMain />
       {children}
 			<ToastContainer />
+			<Chat socket={socket} />
 
 			<Segment inverted vertical style={{ padding: '5em 0em' }}>
 				<Container text>

@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { isBoxOpenAction } from '../actions/tchat';
 import { Header, Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import UserSingle from '../components/UserSingle/UserSingle';
 
 
 class User extends Component {
+	constructor(props) {
+		super(props);
+		this.handleOpenChatBox = this.handleOpenChatBox.bind(this);
+	}
+
+	componentDidMount() {
+		// this.props.fetchCoursesByUserIdAction(this.props.user._id);
+	}
+
 	getMetaData() {
 		return {
 			title: 'User profile',
@@ -15,8 +25,8 @@ class User extends Component {
 		};
 	}
 
-	componentDidMount() {
-		// this.props.fetchCoursesByUserIdAction(this.props.user._id);
+	handleOpenChatBox() {
+		this.props.isBoxOpenAction(true);
 	}
 
 	render() {
@@ -28,7 +38,7 @@ class User extends Component {
 				<Segment vertical>
 					<Container text>
 						<Header as="h2" icon="user circle" content="User profile" />
-						<UserSingle user={user} userMeId={userMeId} />
+						<UserSingle user={user} userMeId={userMeId} handleOpenChatBox={this.handleOpenChatBox} />
 					</Container>
 				</Segment>
 
@@ -53,6 +63,7 @@ User.propTypes = {
 		password: PropTypes.string
 	}).isRequired,
 
+	isBoxOpenAction: PropTypes.func,
 	userMeId: PropTypes.string
 };
 
@@ -63,4 +74,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, null)(User);
+export default connect(mapStateToProps, { isBoxOpenAction })(User);

@@ -16,6 +16,9 @@ export default function render(req, res) {
 		},
 		userMe: {
 			data: req.user
+		},
+		tchat: {
+			isBoxOpen: false // req.user.isBoxOpen
 		}
 	}, history);
   const routes = createRoutes(store);

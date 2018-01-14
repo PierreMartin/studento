@@ -1,10 +1,12 @@
 import express from 'express';
 import webpack from 'webpack';
+import SocketIo from 'socket.io';
 import { isDebug } from '../config/app';
 import { connect } from './db';
 import initPassport from './init/passport';
 import initExpress from './init/express';
 import initRoutes from './init/routes';
+import socketEvents from './init/socketEvents';
 import renderMiddleware from './render/middleware';
 
 const app = express();
@@ -35,4 +37,8 @@ initRoutes(app);
 
 app.get('*', renderMiddleware);
 
-app.listen(app.get('port'));
+const server = app.listen(app.get('port'));
+
+// socket Io
+const io = new SocketIo(server, {path: '/api/tchat'});
+socketEvents(io);

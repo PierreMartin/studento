@@ -20,7 +20,7 @@ const renderAvatarsList = (user) => {
 	});
 };
 
-const UserSingle = ({ user, userMeId }) => {
+const UserSingle = ({ user, userMeId, handleOpenChatBox }) => {
 	// if my profile :
 	const isMyProfile = user._id === userMeId;
 	const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 ? `/uploads/${user.avatarMainSrc.avatar150}` : defaultAvatar;
@@ -43,7 +43,7 @@ const UserSingle = ({ user, userMeId }) => {
 					</Grid.Column>
 					<Grid.Column width={6}>
 						{ !isMyProfile ? <Button size="mini" primary><Icon name="add user" />Add</Button> : ''}
-						{ !isMyProfile ? <Button size="mini" primary><Icon name="talk" />Message</Button> : ''}
+						{ !isMyProfile ? <Button size="mini" primary onClick={handleOpenChatBox} ><Icon name="talk" />Message</Button> : ''}
 						{ isMyProfile ? <Button as={Link} to="/settings" size="mini" primary><Icon name="settings" />Edit my profile</Button> : ''}
 					</Grid.Column>
 				</Grid.Row>
@@ -96,6 +96,7 @@ UserSingle.propTypes = {
 		password: PropTypes.string
 	}).isRequired,
 
+	handleOpenChatBox: PropTypes.func.isRequired,
 	userMeId: PropTypes.string
 };
 
