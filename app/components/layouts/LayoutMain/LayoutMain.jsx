@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import NavMain from '../../navigations/NavMain/NavMain';
@@ -11,13 +12,13 @@ import styles from '../../../css/main.scss';
 const cx = classNames.bind(styles);
 const socket = io('', { path: '/api/tchat' });
 
-const App = ({ children }) => {
+const App = ({ children, isBoxOpen }) => {
   return (
     <div className={cx('myClass', 'myOtherClass')}>
       <NavMain />
       {children}
 			<ToastContainer />
-			<Chat socket={socket} />
+			{ isBoxOpen && <Chat socket={socket} /> }
 
 			<Segment inverted vertical style={{ padding: '5em 0em' }}>
 				<Container text>
@@ -57,4 +58,10 @@ App.propTypes = {
   children: PropTypes.object
 };
 
-export default App;
+function mapStateToProps(state) {
+	return {
+		isBoxOpen: state.tchat.isBoxOpen
+	};
+}
+
+export default connect(mapStateToProps, null)(App);
