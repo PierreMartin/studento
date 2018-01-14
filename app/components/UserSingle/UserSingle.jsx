@@ -8,10 +8,10 @@ import styles from './css/userSingle.scss';
 
 const cx = classNames.bind(styles);
 
-const renderAvatarsList = (user) => {
-	if (!user.avatarsSrc) return '';
+const renderAvatarsList = (userFront) => {
+	if (!userFront.avatarsSrc) return '';
 
-	return user.avatarsSrc.map((avatar, key) => {
+	return userFront.avatarsSrc.map((avatar, key) => {
 		return (
 			<a href={`/uploads/${avatar.avatar150}`} key={key} className={cx('thumbnails')} >
 				<Image src={`/uploads/${avatar.avatar80}`} />
@@ -20,11 +20,11 @@ const renderAvatarsList = (user) => {
 	});
 };
 
-const UserSingle = ({ user, userMeId, handleOpenChatBox }) => {
+const UserSingle = ({ userFront, userMeId, handleOpenChatBox }) => {
 	// if my profile :
-	const isMyProfile = user._id === userMeId;
-	const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 ? `/uploads/${user.avatarMainSrc.avatar150}` : defaultAvatar;
-	const avatarsList = renderAvatarsList(user);
+	const isMyProfile = userFront._id === userMeId;
+	const src = userFront.avatarMainSrc && userFront.avatarMainSrc.avatar150 ? `/uploads/${userFront.avatarMainSrc.avatar150}` : defaultAvatar;
+	const avatarsList = renderAvatarsList(userFront);
 
 	return (
 		<div>
@@ -34,12 +34,12 @@ const UserSingle = ({ user, userMeId, handleOpenChatBox }) => {
 						<Image src={src} />
 					</Grid.Column>
 					<Grid.Column width={6}>
-						<Header as="h2" >{user.username}</Header>
-						{user.city ? user.city + ', ' : ''} {user.country}
+						<Header as="h2" >{userFront.username}</Header>
+						{userFront.city ? userFront.city + ', ' : ''} {userFront.country}
 						<br />
-						{user.domain} {user.position ? '(' + user.position + ')' : ''}
+						{userFront.domain} {userFront.position ? '(' + userFront.position + ')' : ''}
 						<br />
-						{user.schoolName ? 'At ' + user.schoolName : ''}
+						{userFront.schoolName ? 'At ' + userFront.schoolName : ''}
 					</Grid.Column>
 					<Grid.Column width={6}>
 						{ !isMyProfile ? <Button size="mini" primary><Icon name="add user" />Add</Button> : ''}
@@ -59,10 +59,10 @@ const UserSingle = ({ user, userMeId, handleOpenChatBox }) => {
 
 				<Grid.Row>
 					<Grid.Column width={8}>
-						Contact: {user.email}
+						Contact: {userFront.email}
 					</Grid.Column>
 					<Grid.Column width={8}>
-						{user.age ? 'Age: ' + user.age : ''}
+						{userFront.age ? 'Age: ' + userFront.age : ''}
 					</Grid.Column>
 				</Grid.Row>
 			</Grid>
@@ -72,16 +72,16 @@ const UserSingle = ({ user, userMeId, handleOpenChatBox }) => {
 			<div>
 				<Header as="h3" attached="top">Infos</Header>
 				<Segment attached>
-					<div>firstName: {user.firstName}</div>
-					<div>lastName: {user.lastName}</div>
-					<div>genre: {user.gender}</div>
+					<div>firstName: {userFront.firstName}</div>
+					<div>lastName: {userFront.lastName}</div>
+					<div>genre: {userFront.gender}</div>
 				</Segment>
 			</div>
 
 			<div>
 				<Header as="h3" attached="top">About</Header>
 				<Segment attached>
-					{user.about}
+					{userFront.about}
 				</Segment>
 			</div>
 		</div>
@@ -89,7 +89,7 @@ const UserSingle = ({ user, userMeId, handleOpenChatBox }) => {
 };
 
 UserSingle.propTypes = {
-	user: PropTypes.shape({
+	userFront: PropTypes.shape({
 		username: PropTypes.string,
 		email: PropTypes.string,
 		_id: PropTypes.string,

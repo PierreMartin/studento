@@ -14,7 +14,7 @@ class User extends Component {
 	}
 
 	componentDidMount() {
-		// this.props.fetchCoursesByUserIdAction(this.props.user._id);
+		// this.props.fetchCoursesByUserIdAction(this.props.userFront._id);
 	}
 
 	getMetaData() {
@@ -26,11 +26,36 @@ class User extends Component {
 	}
 
 	handleOpenChatBox() {
+		const { channelsList, userFront, userMeId } = this.props;
+
+		// Get channel / create new channel :
+		let channel = null;
+		if (channelsList && channelsList.length > 0) {
+			for (let i = 0; i < channelsList.length; i++) {
+				const chan = channelsList[i];
+				if (chan.userFrontId === userFront._id) {
+					channel = chan;
+					break;
+				}
+			}
+		}
+
+		console.log('channel = ', channel);
+
+		// if channel already exist :
+		if (channel) {
+			console.log('Channel already exist!');
+			// this.props.fetchMessagesByChannelIdAction(channel.id); // OU channel._id
+		} else {
+			console.log('Channel must to be create!');
+			// this.props.createNewChannelAction(userFront._id, userMeId);
+		}
+
 		this.props.isBoxOpenAction(true);
 	}
 
 	render() {
-		const { user, userMeId } = this.props;
+		const { userFront, userMeId } = this.props;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -38,7 +63,7 @@ class User extends Component {
 				<Segment vertical>
 					<Container text>
 						<Header as="h2" icon="user circle" content="User profile" />
-						<UserSingle user={user} userMeId={userMeId} handleOpenChatBox={this.handleOpenChatBox} />
+						<UserSingle userFront={userFront} userMeId={userMeId} handleOpenChatBox={this.handleOpenChatBox} />
 					</Container>
 				</Segment>
 
@@ -56,7 +81,7 @@ class User extends Component {
 }
 
 User.propTypes = {
-	user: PropTypes.shape({
+	userFront: PropTypes.shape({
 		username: PropTypes.string,
 		email: PropTypes.string,
 		_id: PropTypes.string,
@@ -69,7 +94,7 @@ User.propTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		user: state.users.one,
+		userFront: state.users.one,
 		userMeId: state.userMe.data._id
 	};
 };
