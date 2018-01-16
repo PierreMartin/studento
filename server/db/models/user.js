@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
 	schoolName: { type: String, default: '' },
 
 	channelsList: [{
-		id: { type: String },
+		channelId: { type: String },
 		userFrontId: { type: String }
 	}],
 

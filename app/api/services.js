@@ -67,6 +67,13 @@ export function api() {
 			method: 'PUT',
 			url: '/api/setdefaultavatar/' + idUser,
 			data: { avatarId }
+		}),
+
+		// User - Tchat
+		addChannel: (userFrontId, userMeId) => localClient.request({
+			method: 'PUT',
+			url: '/api/addchannel',
+			data: { userFrontId, userMeId }
 		})
 	};
 }

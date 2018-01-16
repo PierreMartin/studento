@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isBoxOpenAction } from '../actions/tchat';
+import { isBoxOpenAction, addNewChannelAction } from '../actions/tchat';
 import { Header, Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import UserSingle from '../components/UserSingle/UserSingle';
@@ -40,15 +40,13 @@ class User extends Component {
 			}
 		}
 
-		console.log('channel = ', channel);
-
 		// if channel already exist :
 		if (channel) {
 			console.log('Channel already exist!');
-			// this.props.fetchMessagesByChannelIdAction(channel.id); // OU channel._id
+			// this.props.fetchMessagesByChannelIdAction(channel.channelId);
 		} else {
 			console.log('Channel must to be create!');
-			// this.props.createNewChannelAction(userFront._id, userMeId);
+			this.props.addNewChannelAction(userFront._id, userMeId);
 		}
 
 		this.props.isBoxOpenAction(true);
@@ -88,15 +86,22 @@ User.propTypes = {
 		password: PropTypes.string
 	}).isRequired,
 
+	channelsList: PropTypes.arrayOf(PropTypes.shape({
+		channelId: PropTypes.string,
+		userFrontId: PropTypes.string
+	})),
+
 	isBoxOpenAction: PropTypes.func,
+	addNewChannelAction: PropTypes.func,
 	userMeId: PropTypes.string
 };
 
 const mapStateToProps = (state) => {
 	return {
 		userFront: state.users.one,
-		userMeId: state.userMe.data._id
+		userMeId: state.userMe.data._id,
+		channelsList: state.userMe.data.channelsList // TODO changer en 'userMe' (userMe.channelsList)
 	};
 };
 
-export default connect(mapStateToProps, { isBoxOpenAction })(User);
+export default connect(mapStateToProps, { isBoxOpenAction, addNewChannelAction })(User);

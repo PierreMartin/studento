@@ -30,6 +30,7 @@ export default (app) => {
 		app.put('/api/updateuser/:id', usersController.update);
 		app.post('/api/addavatar/:id/:avatarId', usersController.uploadAvatarMulter, usersController.uploadAvatar);
 		app.put('/api/setdefaultavatar/:idUser/', usersController.setDefaultAvatar);
+		app.put('/api/addchannel', usersController.addChannelTchat);
 	} else {
 		console.warn('users routes');
 	}

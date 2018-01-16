@@ -30,7 +30,7 @@ export function createCourseAction(title) {
 	return (dispatch/*, getState*/) => {
 		if (title.trim().length <= 0) return;
 
-		const id = new Date().getTime();
+		const id = new Date().getTime(); // TODO id sert strictement a rien
 		const data = {id, title};
 
 		createCourseRequest(data)

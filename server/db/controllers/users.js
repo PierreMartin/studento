@@ -230,11 +230,35 @@ export function setDefaultAvatar(req, res) {
 	});
 }
 
+/**
+ * PUT /api/addchannel
+ */
+export function addChannelTchat(req, res) {
+	const { userMeId, userFrontId } = req.body;
+	const channelId = userMeId + userFrontId;
+
+	const channelForUserMe = { channelId, userFrontId };
+	const channelForUserFront = { channelId, userFrontId: userMeId };
+
+	// update userMe :
+	User.findOneAndUpdate({_id: userMeId}, {$push: { channelsList: channelForUserMe } }, (err) => {
+		if (err) return res.status(500).json({message: 'A error happen at the adding channel'});
+
+		// update userFront :
+		User.findOneAndUpdate({_id: userFrontId}, {$push: { channelsList: channelForUserFront } }, (err) => {
+			if (err) return res.status(500).json({message: 'A error happen at the adding channel'});
+
+			return res.status(200).json({message: 'Channel create', channelForUserMe});
+		});
+	});
+}
+
 export default {
 	all,
 	oneById,
 	update,
 	uploadAvatarMulter,
 	uploadAvatar,
-	setDefaultAvatar
+	setDefaultAvatar,
+	addChannelTchat
 };

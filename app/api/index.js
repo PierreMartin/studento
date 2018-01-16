@@ -124,3 +124,14 @@ export const defaultAvatarUserRequest = (avatarId, idUser) => {
 			return Promise.reject(err);
 		});
 };
+
+// Chat
+export const addNewChannelRequest = (userFrontId, userMeId) => {
+	return api().addChannel(userFrontId, userMeId)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
