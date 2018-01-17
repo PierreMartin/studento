@@ -20,9 +20,9 @@ const renderAvatarsList = (userFront) => {
 	});
 };
 
-const UserSingle = ({ userFront, userMeId, handleOpenChatBox }) => {
+const UserSingle = ({ userFront, userMe, handleOpenChatBox }) => {
 	// if my profile :
-	const isMyProfile = userFront._id === userMeId;
+	const isMyProfile = userFront._id === userMe._id;
 	const src = userFront.avatarMainSrc && userFront.avatarMainSrc.avatar150 ? `/uploads/${userFront.avatarMainSrc.avatar150}` : defaultAvatar;
 	const avatarsList = renderAvatarsList(userFront);
 
@@ -89,6 +89,10 @@ const UserSingle = ({ userFront, userMeId, handleOpenChatBox }) => {
 };
 
 UserSingle.propTypes = {
+	userMe: PropTypes.shape({
+		_id: PropTypes.string
+	}),
+
 	userFront: PropTypes.shape({
 		username: PropTypes.string,
 		email: PropTypes.string,
@@ -96,8 +100,7 @@ UserSingle.propTypes = {
 		password: PropTypes.string
 	}).isRequired,
 
-	handleOpenChatBox: PropTypes.func.isRequired,
-	userMeId: PropTypes.string
+	handleOpenChatBox: PropTypes.func.isRequired
 };
 
 export default UserSingle;

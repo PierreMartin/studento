@@ -26,13 +26,13 @@ class User extends Component {
 	}
 
 	handleOpenChatBox() {
-		const { channelsList, userFront, userMeId } = this.props;
+		const { userMe, userFront } = this.props;
 
 		// Get channel / create new channel :
 		let channel = null;
-		if (channelsList && channelsList.length > 0) {
-			for (let i = 0; i < channelsList.length; i++) {
-				const chan = channelsList[i];
+		if (userMe.channelsList && userMe.channelsList.length > 0) {
+			for (let i = 0; i < userMe.channelsList.length; i++) {
+				const chan = userMe.channelsList[i];
 				if (chan.userFrontId === userFront._id) {
 					channel = chan;
 					break;
@@ -43,17 +43,17 @@ class User extends Component {
 		// if channel already exist :
 		if (channel) {
 			console.log('Channel already exist!');
-			// this.props.fetchMessagesByChannelIdAction(channel.channelId);
+			// this.props.fetchMessagesAction(userMe._id, channel.channelId);
 		} else {
 			console.log('Channel must to be create!');
-			this.props.addNewChannelAction(userFront._id, userMeId);
+			this.props.addNewChannelAction(userFront._id, userMe._id);
 		}
 
 		this.props.isBoxOpenAction(true);
 	}
 
 	render() {
-		const { userFront, userMeId } = this.props;
+		const { userFront, userMe } = this.props;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -61,7 +61,7 @@ class User extends Component {
 				<Segment vertical>
 					<Container text>
 						<Header as="h2" icon="user circle" content="User profile" />
-						<UserSingle userFront={userFront} userMeId={userMeId} handleOpenChatBox={this.handleOpenChatBox} />
+						<UserSingle userFront={userFront} userMe={userMe} handleOpenChatBox={this.handleOpenChatBox} />
 					</Container>
 				</Segment>
 
@@ -79,6 +79,17 @@ class User extends Component {
 }
 
 User.propTypes = {
+	userMe: PropTypes.shape({
+		username: PropTypes.string,
+		email: PropTypes.string,
+		_id: PropTypes.string,
+		password: PropTypes.string,
+		channelsList: PropTypes.arrayOf(PropTypes.shape({
+			channelId: PropTypes.string,
+			userFrontId: PropTypes.string
+		}))
+	}),
+
 	userFront: PropTypes.shape({
 		username: PropTypes.string,
 		email: PropTypes.string,
@@ -86,21 +97,14 @@ User.propTypes = {
 		password: PropTypes.string
 	}).isRequired,
 
-	channelsList: PropTypes.arrayOf(PropTypes.shape({
-		channelId: PropTypes.string,
-		userFrontId: PropTypes.string
-	})),
-
 	isBoxOpenAction: PropTypes.func,
 	addNewChannelAction: PropTypes.func,
-	userMeId: PropTypes.string
 };
 
 const mapStateToProps = (state) => {
 	return {
 		userFront: state.users.one,
-		userMeId: state.userMe.data._id,
-		channelsList: state.userMe.data.channelsList // TODO changer en 'userMe' (userMe.channelsList)
+		userMe: state.userMe.data
 	};
 };
 
