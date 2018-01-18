@@ -19,6 +19,7 @@ const App = ({ children, isBoxOpen }) => {
       {children}
 			<ToastContainer />
 			{ isBoxOpen && <Chat socket={socket} /> }
+			{/* boxsOpen.map((box) => { box.isOpen && <Chat socket={socket} channelId={box.channelId} /> } )  */}
 
 			<Segment inverted vertical style={{ padding: '5em 0em' }}>
 				<Container text>

@@ -40,16 +40,13 @@ class User extends Component {
 			}
 		}
 
-		// if channel already exist :
-		if (channel) {
-			console.log('Channel already exist!');
-			this.props.fetchMessagesAction(userMe._id, channel.channelId);
-		} else {
+		// if channel doens't exist :
+		if (!channel) {
 			console.log('Channel must to be create!');
 			this.props.addNewChannelAction(userFront._id, userMe._id);
 		}
 
-		this.props.isBoxOpenAction(true);
+		this.props.isBoxOpenAction(true); // boxsOpenAction [{channelId: channel.channelId, isOpen: true}]
 	}
 
 	render() {

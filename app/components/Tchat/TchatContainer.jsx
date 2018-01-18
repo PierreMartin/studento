@@ -27,7 +27,7 @@ class TchatContainer extends Component {
 	}
 
 	componentDidMount() {
-		// ...
+		// this.props.fetchMessagesAction(this.props.userMe._id, this.props.channelId);
 	}
 
 	handleClickCloseChatBox() {
