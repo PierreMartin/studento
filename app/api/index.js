@@ -125,9 +125,19 @@ export const defaultAvatarUserRequest = (avatarId, idUser) => {
 		});
 };
 
-// Chat
+/********************************************** Tchat ***********************************************/
 export const addNewChannelRequest = (userFrontId, userMeId) => {
 	return api().addChannel(userFrontId, userMeId)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
+export const fetchMessagesRequest = (userMeId, channelId) => {
+	return api().getMessages(userMeId, channelId)
 		.then((res) => {
 			return Promise.resolve(res);
 		})

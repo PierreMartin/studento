@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isBoxOpenAction, addNewChannelAction } from '../actions/tchat';
+import { isBoxOpenAction, addNewChannelAction, fetchMessagesAction } from '../actions/tchat';
 import { Header, Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import UserSingle from '../components/UserSingle/UserSingle';
@@ -43,7 +43,7 @@ class User extends Component {
 		// if channel already exist :
 		if (channel) {
 			console.log('Channel already exist!');
-			// this.props.fetchMessagesAction(userMe._id, channel.channelId);
+			this.props.fetchMessagesAction(userMe._id, channel.channelId);
 		} else {
 			console.log('Channel must to be create!');
 			this.props.addNewChannelAction(userFront._id, userMe._id);
@@ -99,6 +99,7 @@ User.propTypes = {
 
 	isBoxOpenAction: PropTypes.func,
 	addNewChannelAction: PropTypes.func,
+	fetchMessagesAction: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
@@ -108,4 +109,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { isBoxOpenAction, addNewChannelAction })(User);
+export default connect(mapStateToProps, { isBoxOpenAction, addNewChannelAction, fetchMessagesAction })(User);

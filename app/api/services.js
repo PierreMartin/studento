@@ -69,11 +69,15 @@ export function api() {
 			data: { avatarId }
 		}),
 
-		// User - Tchat
+		// Tchat
 		addChannel: (userFrontId, userMeId) => localClient.request({
 			method: 'PUT',
 			url: '/api/addchannel',
 			data: { userFrontId, userMeId }
+		}),
+		getMessages: (userMeId, channelId) => localClient.request({
+			method: 'GET',
+			url: '/api/getmessages/' + userMeId + '/' + channelId
 		})
 	};
 }

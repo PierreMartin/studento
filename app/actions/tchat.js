@@ -1,4 +1,4 @@
-import { addNewChannelRequest } from './../api';
+import { addNewChannelRequest, fetchMessagesRequest } from './../api';
 import * as types from 'types';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
@@ -37,6 +37,36 @@ export function addNewChannelAction(userFrontId, userMeId) {
 			})
 			.catch((err) => {
 				if (err.message) return dispatch(addNewChannelFailure(getMessage(err)));
+			});
+	};
+}
+
+/***************************************** Fetch messages *****************************************/
+export function fetchMessagesSuccess(res) {
+	return {
+		type: types.GET_TCHAT_MESSAGES_SUCCESS,
+		message: res.message,
+		newMessage: res.newMessage
+	};
+}
+
+export function fetchMessagesFailure(messageError) {
+	return {
+		type: types.GET_TCHAT_MESSAGE_FAILURE,
+		messageError
+	};
+}
+
+export function fetchMessagesAction(userMeId, channelId) {
+	return (dispatch) => {
+		if (!userMeId || !channelId) return;
+
+		fetchMessagesRequest(userMeId, channelId)
+			.then((res) => {
+				if (res.status === 200) return dispatch(fetchMessagesSuccess(res.data));
+			})
+			.catch((err) => {
+				if (err.message) return dispatch(fetchMessagesFailure(getMessage(err)));
 			});
 	};
 }
