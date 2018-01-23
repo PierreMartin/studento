@@ -12,14 +12,21 @@ import styles from '../../../css/main.scss';
 const cx = classNames.bind(styles);
 const socket = io('', { path: '/api/tchat' });
 
-const App = ({ children, isBoxOpen }) => {
+const renderTchatBoxs = (boxsOpen) => {
+	if (boxsOpen.length > 0) {
+		return boxsOpen.map((box, index) => {
+			return (box.channelId && <Chat key={index} socket={socket} channelId={box.channelId} position={index} />);
+		});
+	}
+};
+
+const App = ({ children, boxsOpen }) => {
   return (
     <div className={cx('myClass', 'myOtherClass')}>
       <NavMain />
       {children}
 			<ToastContainer />
-			{ isBoxOpen && <Chat socket={socket} /> }
-			{/* boxsOpen.map((box) => { box.isOpen && <Chat socket={socket} channelId={box.channelId} /> } )  */}
+			{ renderTchatBoxs(boxsOpen) }
 
 			<Segment inverted vertical style={{ padding: '5em 0em' }}>
 				<Container text>
@@ -56,12 +63,15 @@ const App = ({ children, isBoxOpen }) => {
 };
 
 App.propTypes = {
-  children: PropTypes.object
+  children: PropTypes.object,
+	boxsOpen: PropTypes.arrayOf(PropTypes.shape({
+		channelId: PropTypes.string
+	}))
 };
 
 function mapStateToProps(state) {
 	return {
-		isBoxOpen: state.tchat.isBoxOpen
+		boxsOpen: state.tchat.boxsOpen
 	};
 }
 

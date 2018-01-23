@@ -66,7 +66,8 @@ export const SET_MAIN_USER_AVATAR_SUCCESS = 'SET_MAIN_USER_AVATAR_SUCCESS';
 export const SET_MAIN_USER_AVATAR_FAILURE = 'SET_MAIN_USER_AVATAR_FAILURE';
 
 /***************************************** Tchat ********************************************/
-export const TCHATBOX_MODAL_ISOPEN_ACTION = 'TCHATBOX_MODAL_ISOPEN_ACTION';
+export const ADD_TCHATBOX = 'ADD_TCHATBOX';
+export const REMOVE_TCHATBOX = 'REMOVE_TCHATBOX';
 
 export const RECEIVE_SOCKET = 'RECEIVE_SOCKET';
 

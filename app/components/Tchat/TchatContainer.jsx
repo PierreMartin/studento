@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isBoxOpenAction } from '../../actions/tchat';
+import { closeTchatboxAction } from '../../actions/tchat';
 // import { getChannels } from './../../api';
 import ChatHeader from './TchatHeader';
 import ChatMessages from './TchatMessages';
@@ -16,9 +16,9 @@ const cx = classNames.bind(styles);
 class TchatContainer extends Component {
 	constructor(props) {
 		super(props);
-		this.handleClickCloseChatBox 	= this.handleClickCloseChatBox.bind(this);
-		this.handleChangeSendMessage 	= this.handleChangeSendMessage.bind(this);
-		this.handleSubmitSendMessage 	= this.handleSubmitSendMessage.bind(this);
+		this.handleClickCloseChatBox = this.handleClickCloseChatBox.bind(this);
+		this.handleChangeSendMessage = this.handleChangeSendMessage.bind(this);
+		this.handleSubmitSendMessage = this.handleSubmitSendMessage.bind(this);
 
 		this.state = {
 			text: '',
@@ -27,11 +27,13 @@ class TchatContainer extends Component {
 	}
 
 	componentDidMount() {
-		// this.props.fetchMessagesAction(this.props.userMe._id, this.props.channelId);
+		const { userMe, channelId} = this.props;
+		// this.props.fetchMessagesAction(userMe._id, channelId);
 	}
 
 	handleClickCloseChatBox() {
-		this.props.isBoxOpenAction(false);
+		const { closeTchatboxAction, channelId} = this.props;
+		closeTchatboxAction(channelId);
 	}
 
 	handleChangeSendMessage(event) {
@@ -52,12 +54,12 @@ class TchatContainer extends Component {
 
 	handleSubmitSendMessage(event) {
 		event.preventDefault();
-		const { userMe, userFront, socket } = this.props;
+		const { userMe, userFront, socket, channelId } = this.props;
 		const text = this.state.text;
 
 		const newMessage = {
 			id: Date.now(),
-			channelId: '123',
+			channelId,
 			text,
 			userAuthorId: userMe._id,
 			userTargetedId: userFront._id,
@@ -72,10 +74,10 @@ class TchatContainer extends Component {
 	}
 
 	render() {
-		const { userFront, userMe, isBoxOpen } = this.props;
+		const { userFront, userMe, position } = this.props;
 
 		return (
-			<Card className={cx('chatbox-container', { show: isBoxOpen })} style={{ right: '30px' }}>
+			<Card className={cx('chatbox-container', 'show')} style={{ right: (position * 290) + 'px' }}>
 				<ChatHeader userFront={userFront} handleClickCloseChatBox={this.handleClickCloseChatBox} />
 				<Card.Content>
 					<ChatMessages newMessageState="hjh jhjhjhjhk jk" userFront={userFront} userMe={userMe} />
@@ -87,14 +89,13 @@ class TchatContainer extends Component {
 }
 
 TchatContainer.propTypes = {
-	isBoxOpenAction: PropTypes.func,
-	isBoxOpen: PropTypes.bool,
+	closeTchatboxAction: PropTypes.func,
 
 	// receiveSocketAction: PropTypes.func,
 	// createNewChannelAction: PropTypes.func,
 	// createNewMessageAction: PropTypes.func,
 	// receiveNewMessageAction: PropTypes.func,
-	// newMessageState: PropTypes.string,
+	// messagesList: PropTypes.string, // TODO   messagesList.userFront.username | messagesList.userFront.avatar80 |        messagesList.userFront.message | messagesList.userMe.message
 	// channelsList: PropTypes.array,
 
 	userMe: PropTypes.shape({
@@ -111,17 +112,17 @@ TchatContainer.propTypes = {
 		password: PropTypes.string
 	}).isRequired,
 
-	socket: PropTypes.object.isRequired
+	socket: PropTypes.object.isRequired,
+	channelId: PropTypes.string,
+	position: PropTypes.number
 };
 
 function mapStateToProps(state) {
 	return {
-		isBoxOpen: state.tchat.isBoxOpen,
-		// newMessageState: state.tchat.newMessage,
-		// channelsList: state.tchat.channelsList,
+		// messagesList: state.tchat.messagesList,
 		userMe: state.userMe.data,
 		userFront: state.users.one
 	};
 }
 
-export default connect(mapStateToProps, { isBoxOpenAction })(TchatContainer);
+export default connect(mapStateToProps, { closeTchatboxAction })(TchatContainer);

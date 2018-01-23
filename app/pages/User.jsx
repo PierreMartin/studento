@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isBoxOpenAction, addNewChannelAction, fetchMessagesAction } from '../actions/tchat';
+import { openTchatboxAction, addNewChannelAction } from '../actions/tchat';
 import { Header, Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import UserSingle from '../components/UserSingle/UserSingle';
@@ -26,7 +26,7 @@ class User extends Component {
 	}
 
 	handleOpenChatBox() {
-		const { userMe, userFront } = this.props;
+		const { addNewChannelAction, openTchatboxAction, userMe, userFront, boxsOpen } = this.props;
 
 		// Get channel / create new channel :
 		let channel = null;
@@ -43,10 +43,23 @@ class User extends Component {
 		// if channel doens't exist :
 		if (!channel) {
 			console.log('Channel must to be create!');
-			this.props.addNewChannelAction(userFront._id, userMe._id);
+			addNewChannelAction(userFront._id, userMe._id);
 		}
 
-		this.props.isBoxOpenAction(true); // boxsOpenAction [{channelId: channel.channelId, isOpen: true}]
+		// check if the current tchatbox is already opened :
+		let isAlreadyOpened = false;
+		for (let i = 0; boxsOpen.length > 0 && i < boxsOpen.length; i++) {
+			const boxOpen = boxsOpen[i];
+			if (channel.channelId === boxOpen.channelId) {
+				isAlreadyOpened = true;
+				break;
+			}
+		}
+
+		// open a new instance of tchatbox :
+		if (!isAlreadyOpened) {
+			openTchatboxAction(channel.channelId); // TODO fetcher les messages ici ??? comme ca on met direct les datas dans le reducer au 'ADD_TCHATBOX'
+		}
 	}
 
 	render() {
@@ -94,16 +107,20 @@ User.propTypes = {
 		password: PropTypes.string
 	}).isRequired,
 
-	isBoxOpenAction: PropTypes.func,
-	addNewChannelAction: PropTypes.func,
-	fetchMessagesAction: PropTypes.func
+	boxsOpen: PropTypes.arrayOf(PropTypes.shape({
+		channelId: PropTypes.string
+	})),
+
+	openTchatboxAction: PropTypes.func,
+	addNewChannelAction: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
 	return {
 		userFront: state.users.one,
-		userMe: state.userMe.data
+		userMe: state.userMe.data,
+		boxsOpen: state.tchat.boxsOpen
 	};
 };
 
-export default connect(mapStateToProps, { isBoxOpenAction, addNewChannelAction, fetchMessagesAction })(User);
+export default connect(mapStateToProps, { openTchatboxAction, addNewChannelAction })(User);

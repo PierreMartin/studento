@@ -4,10 +4,17 @@ import * as types from 'types';
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 
 /***************************************** Open / close tchat box *****************************************/
-export function isBoxOpenAction(isOpen) {
+export function openTchatboxAction(channelId) {
 	return {
-		type: types.TCHATBOX_MODAL_ISOPEN_ACTION,
-		isOpen
+		type: types.ADD_TCHATBOX,
+		channelId
+	};
+}
+
+export function closeTchatboxAction(channelId) {
+	return {
+		type: types.REMOVE_TCHATBOX,
+		channelId
 	};
 }
 

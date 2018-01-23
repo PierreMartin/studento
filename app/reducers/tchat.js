@@ -1,17 +1,23 @@
 import * as types from 'types';
 import { combineReducers } from 'redux';
 
-const isBoxOpen = (state = false, action) => {
+// boxsOpen = [{channelId= '454545989', message: [{id: '', authorId: '', message: '', time: ''}, ... ] }, ...]
+
+const boxsOpen = (state = [], action) => {
 	switch (action.type) {
-		case types.TCHATBOX_MODAL_ISOPEN_ACTION:
-			return action.isOpen;
+		case types.ADD_TCHATBOX:
+			if (action.channelId) return [...state, { channelId: action.channelId }];
+			return state;
+		case types.REMOVE_TCHATBOX:
+			if (action.channelId) return state.filter(t => t.channelId !== action.channelId); // action.channelId => box to remove
+			return state;
 		default:
 			return state;
 	}
 };
 
 const tchatReducer = combineReducers({
-	isBoxOpen
+	boxsOpen
 });
 
 export default tchatReducer;

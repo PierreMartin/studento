@@ -39,6 +39,20 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - deplacer getChannels() à l'ouverture de la chatbox
 - keep data in state redux
 
-- user : [ {id: '123488', socketID: 'AA789456', username: 'PierreMrt'}, {id: '874446', socketID: 'BB789456', username: 'PaulMrt'}, {id: '584566', socketID: 'CC789456', username: 'PierreMrt'} ]
-- channel: [ {id: '123456', between: [userID, userID]}, {id: '789456', between: ['123488', '874446']} ]
-- message: [ {id: '523476', channelID: '123456', authorID: '123488', message: 'Salut', time: ''}, {id: '523476', channelID: '123456', authorID: '874446', message: 'ca va?', time: ''}} ]
+- user : [ {
+    id: '123488',                   // <= userMe
+    socketID: 'AA789456', 
+    username: 'PierreMrt',
+    channelsList: [{
+        channelId: '11222888999,    // <=
+        userFrontId: '11222'        // <= userFront
+    }],
+}, ... ]
+
+- message: [ {
+    id: '523476', 
+    channelId: '11222888999', 
+    authorId: '123488',             // <= user??     if (authorId === user.id) ? userMe : userFront
+    message: 'Salut kjkj koo jkjkjk',              
+    time: ''
+}, ... ]
