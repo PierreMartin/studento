@@ -6,10 +6,10 @@ import Message from '../models/message';
 export function allByChannelId(req, res) {
 	const { channelid } = req.params;
 
-	Message.find({ channelId: channelid }).exec((err, messagesListTchat) => {
+	Message.find({ channelId: channelid }).exec((err, messagesListForChannelId) => {
 		if (err) return res.status(500).json({message: 'Something went wrong getting the data'});
 
-		return res.status(200).json({message: 'messages fetched', messagesListTchat}); // TODO rename messagesListForChannelId
+		return res.status(200).json({message: 'messages fetched', messagesListForChannelId});
 	});
 }
 

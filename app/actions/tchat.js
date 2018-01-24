@@ -53,7 +53,7 @@ export function fetchMessagesSuccess(res) {
 	return {
 		type: types.GET_MESSAGES_TCHAT_SUCCESS,
 		message: res.message,
-		messagesList: res.messagesListTchat
+		messagesListForChannelId: res.messagesListForChannelId
 	};
 }
 

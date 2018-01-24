@@ -32,7 +32,7 @@ const messagesList = (state = [], action) => {
 		case types.GET_MESSAGES_TCHAT_SUCCESS:
 			// TODO voir ici
 			// for => if (state.messagesList[i].channelId === action.messagesListForChannelId.channelId) ? [...state[...state[i].messages, action.messagesListForChannelId]] :  '';
-			if (action.messagesList) return action.messagesList;
+			if (action.messagesListForChannelId) return action.messagesListForChannelId;
 			return state;
 		case types.GET_MESSAGE_TCHAT_FAILURE:
 			return state;

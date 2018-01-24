@@ -97,8 +97,8 @@ TchatContainer.propTypes = {
 	messagesList: PropTypes.arrayOf(PropTypes.shape({
 		authorId: PropTypes.string,
 		content: PropTypes.string,
-		created_at: PropTypes.number,
-		read_at: PropTypes.number
+		created_at: PropTypes.string,
+		read_at: PropTypes.string
 	})),
 
 	userMe: PropTypes.shape({
