@@ -9,18 +9,19 @@ export function allByChannelId(req, res) {
 	Message.find({ channelId: channelid }).exec((err, messagesListTchat) => {
 		if (err) return res.status(500).json({message: 'Something went wrong getting the data'});
 
-		return res.status(200).json({message: 'messages fetched', messagesListTchat});
+		return res.status(200).json({message: 'messages fetched', messagesListTchat}); // TODO rename messagesListForChannelId
 	});
 }
 
 /**
- * POST /api/addmessages/:channelid
+ * POST /api/addmessage
  */
 export function add(req, res) {
-	Message.create(req.body, (err) => {
+	const newMessageData = req.body;
+	Message.create(newMessageData, (err) => {
 		if (err) return res.status(500).json({message: 'add messages ko'});
 
-		return res.status(200).json({message: 'You have added a messages', messageTchat: req.body});
+		return res.status(200).json({message: 'You have added a new message', newMessageData});
 	});
 }
 

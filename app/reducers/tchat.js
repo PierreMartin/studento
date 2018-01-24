@@ -30,12 +30,16 @@ const boxsOpen = (state = [], action) => {
 const messagesList = (state = [], action) => {
 	switch (action.type) {
 		case types.GET_MESSAGES_TCHAT_SUCCESS:
+			// TODO voir ici
+			// for => if (state.messagesList[i].channelId === action.messagesListForChannelId.channelId) ? [...state[...state[i].messages, action.messagesListForChannelId]] :  '';
 			if (action.messagesList) return action.messagesList;
 			return state;
 		case types.GET_MESSAGE_TCHAT_FAILURE:
 			return state;
-		case types.CREATE_NEW_MESSAGE_TCHAT_:
-			if (action.data) return [...state, action.data];
+		case types.CREATE_NEW_MESSAGE_TCHAT_SUCCESS:
+			if (action.newMessageData) return [...state, action.newMessageData];
+			return state;
+		case types.CREATE_NEW_MESSAGE_TCHAT_FAILURE:
 			return state;
 		default:
 			return state;

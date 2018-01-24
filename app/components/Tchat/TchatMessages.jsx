@@ -9,6 +9,7 @@ import avatar2 from '../../images/jenny.jpg';
 const cx = classNames.bind(styles);
 
 // juste un bouchon :
+/*
 const renderItemsMessage = (userFront, userMe) => {
 	const nodeItemsMessages = [];
 
@@ -29,11 +30,34 @@ const renderItemsMessage = (userFront, userMe) => {
 
 	return nodeItemsMessages;
 };
+*/
 
-const TchatMessages = ({ newMessageState, userFront, userMe }) => {
+const renderMessages = (messagesList) => {
+	let messagesNode = 'no yet messages';
+
+	if (messagesList.length > 0) {
+		messagesNode = messagesList.map((message, key) => {
+			return (
+				<Comment key={key}>
+					<Comment.Avatar className={cx('avatar')} src="" />
+					<Comment.Content className={cx('content')}>
+						<Comment.Author as="a">test</Comment.Author>
+						<Comment.Metadata><div>5 days ago</div></Comment.Metadata>
+						<Comment.Text>{message.content}</Comment.Text>
+					</Comment.Content>
+				</Comment>
+			);
+		});
+	}
+
+	return messagesNode;
+};
+
+const TchatMessages = ({ messagesList, userFront, userMe }) => {
 	return (
 		<Comment.Group className={cx('chatbox-messages-container')}>
-			{ renderItemsMessage(userFront, userMe) }
+			{/*{ renderItemsMessage(userFront, userMe) }*/}
+			{ renderMessages(messagesList) }
 		</Comment.Group>
 	);
 };
@@ -42,7 +66,12 @@ const TchatMessages = ({ newMessageState, userFront, userMe }) => {
 TchatMessages.propTypes = {
 	userFront: PropTypes.object,
 	userMe: PropTypes.object,
-	newMessageState: PropTypes.string
+	messagesList: PropTypes.arrayOf(PropTypes.shape({
+		authorId: PropTypes.string,
+		content: PropTypes.string,
+		created_at: PropTypes.number,
+		read_at: PropTypes.number
+	}))
 };
 
 export default TchatMessages;

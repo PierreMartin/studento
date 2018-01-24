@@ -78,6 +78,11 @@ export function api() {
 		getMessages: channelId => localClient.request({
 			method: 'GET',
 			url: '/api/getmessages/' + channelId
+		}),
+		createMessage: newMessageData => localClient.request({
+			method: 'POST',
+			url: '/api/addmessage',
+			data: newMessageData
 		})
 	};
 }

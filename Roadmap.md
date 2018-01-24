@@ -56,3 +56,26 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
     content: 'Salut kjkj koo jkjkjk',              
     created_at: Date()
 }, ... ]
+
+
+// IDEA : créer collection 'channelslist' ??
+
+channelslist: [                 // la requete serait faite au click dans Page User
+    {
+        id: '42454';            // <= 1props channeId
+        messages: [             // <= 1props messagesList
+            {
+                id: '1';
+                content: 'salut ...',
+                channelId: '' // PLUS BESOIN
+                ...
+            },
+            {
+                id: '2';
+                content: 'salut ...',
+                channelId: '' // PLUS BESOIN
+                ...
+            }
+        ]
+    }
+]

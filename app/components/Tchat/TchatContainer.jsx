@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeTchatboxAction, fetchMessagesAction } from '../../actions/tchat';
+import { closeTchatboxAction, fetchMessagesAction, createNewMessageAction } from '../../actions/tchat';
 import ChatHeader from './TchatHeader';
 import ChatMessages from './TchatMessages';
 import ChatInput from './TchatInput';
@@ -20,7 +20,7 @@ class TchatContainer extends Component {
 		this.handleSubmitSendMessage = this.handleSubmitSendMessage.bind(this);
 
 		this.state = {
-			text: '',
+			content: '',
 			typing: false
 		};
 	}
@@ -38,7 +38,7 @@ class TchatContainer extends Component {
 	handleChangeSendMessage(event) {
 		const { socket } = this.props;
 
-		this.setState({ text: event.target.value });
+		this.setState({ content: event.target.value });
 
 		if (event.target.value.length > 0 && !this.state.typing) {
 			// socket.emit('typing', { user: userObj.username, channel: 'ezeze' });
@@ -53,34 +53,32 @@ class TchatContainer extends Component {
 
 	handleSubmitSendMessage(event) {
 		event.preventDefault();
-		const { userMe, userFront, socket, channelId } = this.props;
-		const text = this.state.text;
+		const { createNewMessageAction, userMe, socket, channelId } = this.props;
 
-		const newMessage = {
-			id: Date.now(),
+		const newMessageData = {
 			channelId,
-			text,
-			userAuthorId: userMe._id,
-			userTargetedId: userFront._id,
-			time: Date.now()
+			content: this.state.content,
+			authorId: userMe._id,
+			created_at: Date.now()
+			// read_at: Date.now()
 		};
 
-		console.log(newMessage);
+		console.log(newMessageData);
 
 		// socket.emit('new message', newMessage); // send to sockets
-		// createNewMessageAction(newMessage.text); // send to state redux - for the re-render React
-		this.setState({ text: '', typing: false });
+		createNewMessageAction(newMessageData);
+		this.setState({ content: '', typing: false });
 	}
 
 	render() {
-		const { userFront, userMe, position } = this.props;
+		const { userFront, userMe, position, messagesList } = this.props;
 
 		return (
 			<Card className={cx('chatbox-container', 'show')} style={{ right: (position * 290) + 'px' }}>
 				<ChatHeader userFront={userFront} handleClickCloseChatBox={this.handleClickCloseChatBox} />
 				<Card.Content>
-					<ChatMessages newMessageState="hjh jhjhjhjhk jk" userFront={userFront} userMe={userMe} />
-					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.text} />
+					<ChatMessages messagesList={messagesList} userFront={userFront} userMe={userMe} />
+					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} />
 				</Card.Content>
 			</Card>
 		);
@@ -90,12 +88,18 @@ class TchatContainer extends Component {
 TchatContainer.propTypes = {
 	closeTchatboxAction: PropTypes.func,
 	fetchMessagesAction: PropTypes.func,
+	createNewMessageAction: PropTypes.func,
 
 	// receiveSocketAction: PropTypes.func,
-	// createNewMessageAction: PropTypes.func,
 	// receiveNewMessageAction: PropTypes.func,
-	// messagesList: PropTypes.string, // TODO   messagesList.userFront.username | messagesList.userFront.avatar80 |        messagesList.userFront.message | messagesList.userMe.message
 	// channelsList: PropTypes.array,
+
+	messagesList: PropTypes.arrayOf(PropTypes.shape({
+		authorId: PropTypes.string,
+		content: PropTypes.string,
+		created_at: PropTypes.number,
+		read_at: PropTypes.number
+	})),
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
@@ -118,10 +122,10 @@ TchatContainer.propTypes = {
 
 function mapStateToProps(state) {
 	return {
-		// messagesList: state.tchat.messagesList,
+		messagesList: state.tchat.messagesList,
 		userMe: state.userMe.data,
 		userFront: state.users.one
 	};
 }
 
-export default connect(mapStateToProps, { closeTchatboxAction, fetchMessagesAction })(TchatContainer);
+export default connect(mapStateToProps, { closeTchatboxAction, fetchMessagesAction, createNewMessageAction })(TchatContainer);

@@ -39,6 +39,7 @@ export default (app) => {
 	// messages tchat routes
 	if (messagesController) {
 		app.get('/api/getmessages/:channelid', messagesController.allByChannelId);
+		app.post('/api/addmessage', messagesController.add);
 	} else {
 		console.warn('messages tchat routes');
 	}
