@@ -4,6 +4,7 @@ import { controllers, passport as passportConfig } from '../db';
 const authController = controllers && controllers.auth;
 const usersController = controllers && controllers.users;
 const coursesController = controllers && controllers.courses;
+const messagesController = controllers && controllers.messages;
 
 export default (app) => {
 	// courses routes
@@ -33,6 +34,13 @@ export default (app) => {
 		app.put('/api/addchannel', usersController.addChannelTchat);
 	} else {
 		console.warn('users routes');
+	}
+
+	// messages tchat routes
+	if (messagesController) {
+		app.get('/api/getmessages/:channelid', messagesController.allByChannelId);
+	} else {
+		console.warn('messages tchat routes');
 	}
 
   /*

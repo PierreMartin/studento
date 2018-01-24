@@ -5,10 +5,11 @@ import { combineReducers } from 'redux';
 messagesList = [{
 	channelId: '454545989',
 	messages: [{
-		id: '',
+		_id: '',
 		authorId: '',
-		message: '',
-		time: ''
+		content: '',
+	  created_at: '',
+	  read_at: '',
 	}]
 }]
 */
@@ -28,13 +29,12 @@ const boxsOpen = (state = [], action) => {
 
 const messagesList = (state = [], action) => {
 	switch (action.type) {
-		case types.GET_MESSAGES_SUCCESS:
-			if (action.data) return action.data;
+		case types.GET_MESSAGES_TCHAT_SUCCESS:
+			if (action.messagesList) return action.messagesList;
 			return state;
-		case types.GET_MESSAGES_FAILURE:
-			if (action.data) return action.data;
+		case types.GET_MESSAGE_TCHAT_FAILURE:
 			return state;
-		case types.CREATE_NEW_MESSAGE:
+		case types.CREATE_NEW_MESSAGE_TCHAT_:
 			if (action.data) return [...state, action.data];
 			return state;
 		default:

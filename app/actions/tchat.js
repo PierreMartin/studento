@@ -51,24 +51,24 @@ export function addNewChannelAction(userFrontId, userMeId) {
 /***************************************** Fetch messages *****************************************/
 export function fetchMessagesSuccess(res) {
 	return {
-		type: types.GET_TCHAT_MESSAGES_SUCCESS,
+		type: types.GET_MESSAGES_TCHAT_SUCCESS,
 		message: res.message,
-		newMessage: res.newMessage
+		messagesList: res.messagesListTchat
 	};
 }
 
 export function fetchMessagesFailure(messageError) {
 	return {
-		type: types.GET_TCHAT_MESSAGE_FAILURE,
+		type: types.GET_MESSAGE_TCHAT_FAILURE,
 		messageError
 	};
 }
 
-export function fetchMessagesAction(userMeId, channelId) {
+export function fetchMessagesAction(channelId) {
 	return (dispatch) => {
-		if (!userMeId || !channelId) return;
+		if (!channelId) return;
 
-		fetchMessagesRequest(userMeId, channelId)
+		fetchMessagesRequest(channelId)
 			.then((res) => {
 				if (res.status === 200) return dispatch(fetchMessagesSuccess(res.data));
 			})

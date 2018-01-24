@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeTchatboxAction } from '../../actions/tchat';
-// import { getChannels } from './../../api';
+import { closeTchatboxAction, fetchMessagesAction } from '../../actions/tchat';
 import ChatHeader from './TchatHeader';
 import ChatMessages from './TchatMessages';
 import ChatInput from './TchatInput';
@@ -27,8 +26,8 @@ class TchatContainer extends Component {
 	}
 
 	componentDidMount() {
-		const { userMe, channelId} = this.props;
-		// this.props.fetchMessagesAction(userMe._id, channelId);
+		const { fetchMessagesAction, channelId } = this.props;
+		fetchMessagesAction(channelId);
 	}
 
 	handleClickCloseChatBox() {
@@ -90,9 +89,9 @@ class TchatContainer extends Component {
 
 TchatContainer.propTypes = {
 	closeTchatboxAction: PropTypes.func,
+	fetchMessagesAction: PropTypes.func,
 
 	// receiveSocketAction: PropTypes.func,
-	// createNewChannelAction: PropTypes.func,
 	// createNewMessageAction: PropTypes.func,
 	// receiveNewMessageAction: PropTypes.func,
 	// messagesList: PropTypes.string, // TODO   messagesList.userFront.username | messagesList.userFront.avatar80 |        messagesList.userFront.message | messagesList.userMe.message
@@ -125,4 +124,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, { closeTchatboxAction })(TchatContainer);
+export default connect(mapStateToProps, { closeTchatboxAction, fetchMessagesAction })(TchatContainer);

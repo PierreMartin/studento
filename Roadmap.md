@@ -53,6 +53,6 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
     id: '523476', 
     channelId: '11222888999', 
     authorId: '123488',             // <= user??     if (authorId === user.id) ? userMe : userFront
-    message: 'Salut kjkj koo jkjkjk',              
-    time: ''
+    content: 'Salut kjkj koo jkjkjk',              
+    created_at: Date()
 }, ... ]
