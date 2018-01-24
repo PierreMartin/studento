@@ -49,8 +49,8 @@ class User extends Component {
 		// check if the current tchatbox is already opened :
 		let isAlreadyOpened = false;
 		for (let i = 0; boxsOpen.length > 0 && i < boxsOpen.length; i++) {
-			const boxOpen = boxsOpen[i];
-			if (channel.channelId === boxOpen.channelId) {
+			const channelIdFromBoxsOpen = boxsOpen[i];
+			if (channel.channelId === channelIdFromBoxsOpen) {
 				isAlreadyOpened = true;
 				break;
 			}
@@ -58,7 +58,7 @@ class User extends Component {
 
 		// open a new instance of tchatbox :
 		if (!isAlreadyOpened) {
-			openTchatboxAction(channel.channelId); // TODO fetcher les messages ici ??? comme ca on met direct les datas dans le reducer au 'ADD_TCHATBOX'
+			openTchatboxAction(channel.channelId);
 		}
 	}
 
@@ -107,9 +107,7 @@ User.propTypes = {
 		password: PropTypes.string
 	}).isRequired,
 
-	boxsOpen: PropTypes.arrayOf(PropTypes.shape({
-		channelId: PropTypes.string
-	})),
+	boxsOpen: PropTypes.array,
 
 	openTchatboxAction: PropTypes.func,
 	addNewChannelAction: PropTypes.func

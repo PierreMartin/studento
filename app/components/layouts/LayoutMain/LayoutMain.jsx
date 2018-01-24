@@ -14,8 +14,8 @@ const socket = io('', { path: '/api/tchat' });
 
 const renderTchatBoxs = (boxsOpen) => {
 	if (boxsOpen.length > 0) {
-		return boxsOpen.map((box, index) => {
-			return (box.channelId && <Chat key={index} socket={socket} channelId={box.channelId} position={index} />);
+		return boxsOpen.map((channelIdOfBoxOpen, index) => {
+			return (channelIdOfBoxOpen && <Chat key={index} socket={socket} channelId={channelIdOfBoxOpen} position={index} />);
 		});
 	}
 };
@@ -64,9 +64,7 @@ const App = ({ children, boxsOpen }) => {
 
 App.propTypes = {
   children: PropTypes.object,
-	boxsOpen: PropTypes.arrayOf(PropTypes.shape({
-		channelId: PropTypes.string
-	}))
+	boxsOpen: PropTypes.array
 };
 
 function mapStateToProps(state) {
