@@ -37,7 +37,8 @@ const messagesList = (state = {}, action) => {
 		case types.REMOVE_TCHATBOX:
 			return state; // TODO finir la -> faire un filter
 		case types.CREATE_NEW_MESSAGE_TCHAT_SUCCESS:
-			if (action.newMessageData) return [...state, action.newMessageData];
+			// state.messagesList.[channelId].messages.push(action.newMessageData);
+			if (action.newMessageData) return {...state, ...action.newMessageData}; // TODO pas bon
 			return state;
 		case types.CREATE_NEW_MESSAGE_TCHAT_FAILURE:
 			return state;
