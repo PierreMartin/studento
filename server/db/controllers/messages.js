@@ -6,10 +6,17 @@ import Message from '../models/message';
 export function allByChannelId(req, res) {
 	const { channelid } = req.params;
 
-	Message.find({ channelId: channelid }).exec((err, messagesListForChannelId) => {
+	Message.find({ channelId: channelid }).exec((err, messagesList) => {
 		if (err) return res.status(500).json({message: 'Something went wrong getting the data'});
 
-		return res.status(200).json({message: 'messages fetched', messagesListForChannelId});
+		const getMessagesListForChannel = {
+			[channelid]: {
+				channelId: channelid,
+				messages: messagesList
+			}
+		};
+
+		return res.status(200).json({message: 'messages fetched', getMessagesListForChannel});
 	});
 }
 

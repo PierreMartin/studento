@@ -33,10 +33,10 @@ const renderItemsMessage = (userFront, userMe) => {
 */
 
 const renderMessages = (messagesList) => {
-	let messagesNode = 'no yet messages';
+	let messagesNode = 'No yet messages';
 
-	if (messagesList.length > 0) {
-		messagesNode = messagesList.map((message, key) => {
+	if (messagesList && messagesList.messages) {
+		messagesNode = messagesList.messages.map((message, key) => {
 			return (
 				<Comment key={key}>
 					<Comment.Avatar className={cx('avatar')} src="" />
@@ -53,10 +53,9 @@ const renderMessages = (messagesList) => {
 	return messagesNode;
 };
 
-const TchatMessages = ({ messagesList, userFront, userMe }) => {
+const TchatMessages = ({ messagesList, userMe }) => {
 	return (
 		<Comment.Group className={cx('chatbox-messages-container')}>
-			{/*{ renderItemsMessage(userFront, userMe) }*/}
 			{ renderMessages(messagesList) }
 		</Comment.Group>
 	);
@@ -64,14 +63,18 @@ const TchatMessages = ({ messagesList, userFront, userMe }) => {
 
 
 TchatMessages.propTypes = {
-	userFront: PropTypes.object,
 	userMe: PropTypes.object,
-	messagesList: PropTypes.arrayOf(PropTypes.shape({
-		authorId: PropTypes.string,
-		content: PropTypes.string,
-		created_at: PropTypes.string,
-		read_at: PropTypes.string
-	}))
+
+	messagesList: PropTypes.shape({
+		channelId: PropTypes.string,
+		messages: PropTypes.arrayOf(PropTypes.shape({
+			_id: PropTypes.string,
+			authorId: PropTypes.string,
+			content: PropTypes.string,
+			created_at: PropTypes.string,
+			read_at: PropTypes.string
+		}))
+	})
 };
 
 export default TchatMessages;

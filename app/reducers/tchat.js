@@ -2,16 +2,16 @@ import * as types from 'types';
 import { combineReducers } from 'redux';
 
 /*
-messagesList = [{
-	channelId: '454545989',
-	messages: [{
-		_id: '',
-		authorId: '',
-		content: '',
-	  created_at: '',
-	  read_at: '',
-	}]
-}]
+messagesList = {
+	'454545989': {
+		channelId: '454545989',
+		messages: [{_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}]
+	},
+	'454545989': {
+		channelId: '454545990',
+		messages: [{_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}]
+	}
+}
 */
 
 const boxsOpen = (state = [], action) => {
@@ -27,15 +27,15 @@ const boxsOpen = (state = [], action) => {
 	}
 };
 
-const messagesList = (state = [], action) => {
+const messagesList = (state = {}, action) => {
 	switch (action.type) {
 		case types.GET_MESSAGES_TCHAT_SUCCESS:
-			// TODO voir ici
-			// for => if (state.messagesList[i].channelId === action.messagesListForChannelId.channelId) ? [...state[...state[i].messages, action.messagesListForChannelId]] :  '';
-			if (action.messagesListForChannelId) return action.messagesListForChannelId;
+			if (action.getMessagesListForChannel) return {...state, ...action.getMessagesListForChannel};
 			return state;
 		case types.GET_MESSAGE_TCHAT_FAILURE:
 			return state;
+		case types.REMOVE_TCHATBOX:
+			return state; // TODO finir la -> faire un filter
 		case types.CREATE_NEW_MESSAGE_TCHAT_SUCCESS:
 			if (action.newMessageData) return [...state, action.newMessageData];
 			return state;

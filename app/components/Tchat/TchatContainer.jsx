@@ -71,13 +71,13 @@ class TchatContainer extends Component {
 	}
 
 	render() {
-		const { userFront, userMe, position, messagesList } = this.props;
+		const { userFront, userMe, position, messagesList, channelId } = this.props;
 
 		return (
 			<Card className={cx('chatbox-container', 'show')} style={{ right: (position * 290) + 'px' }}>
 				<ChatHeader userFront={userFront} handleClickCloseChatBox={this.handleClickCloseChatBox} />
 				<Card.Content>
-					<ChatMessages messagesList={messagesList} userFront={userFront} userMe={userMe} />
+					<ChatMessages messagesList={messagesList[channelId]} userFront={userFront} userMe={userMe} />
 					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} />
 				</Card.Content>
 			</Card>
@@ -94,12 +94,16 @@ TchatContainer.propTypes = {
 	// receiveNewMessageAction: PropTypes.func,
 	// channelsList: PropTypes.array,
 
-	messagesList: PropTypes.arrayOf(PropTypes.shape({
-		authorId: PropTypes.string,
-		content: PropTypes.string,
-		created_at: PropTypes.string,
-		read_at: PropTypes.string
-	})),
+	messagesList: PropTypes.shape({
+		channelId: PropTypes.string,
+		messages: PropTypes.arrayOf(PropTypes.shape({
+			_id: PropTypes.string,
+			authorId: PropTypes.string,
+			content: PropTypes.string,
+			created_at: PropTypes.string,
+			read_at: PropTypes.string
+		}))
+	}),
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
