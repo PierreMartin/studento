@@ -48,6 +48,7 @@
     "react/no-unescaped-entities": "off",
     "no-shadow": "off",
     "no-plusplus": "off",
+    "no-case-declarations": "off",
     "object-curly-spacing" : 0,
     "arrow-body-style": 0,
     "no-console": 0,

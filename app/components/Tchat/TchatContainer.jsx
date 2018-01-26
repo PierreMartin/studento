@@ -59,8 +59,8 @@ class TchatContainer extends Component {
 			channelId,
 			content: this.state.content,
 			authorId: userMe._id,
-			created_at: Date.now()
-			// read_at: Date.now()
+			created_at: new Date().toISOString()
+			// read_at: new Date().toISOString()
 		};
 
 		console.log(newMessageData);

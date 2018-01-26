@@ -7,7 +7,7 @@ messagesList = {
 		channelId: '454545989',
 		messages: [{_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}]
 	},
-	'454545989': {
+	'454545990': {
 		channelId: '454545990',
 		messages: [{_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}]
 	}
@@ -35,10 +35,28 @@ const messagesList = (state = {}, action) => {
 		case types.GET_MESSAGE_TCHAT_FAILURE:
 			return state;
 		case types.REMOVE_TCHATBOX:
-			return state; // TODO finir la -> faire un filter
+			if (action.channelId) {
+				const newState = Object.assign({}, state); // clone state
+				delete newState[action.channelId]; // delete all messages of the box removed
+				return newState;
+			}
+
+			return state;
 		case types.CREATE_NEW_MESSAGE_TCHAT_SUCCESS:
-			// state.messagesList.[channelId].messages.push(action.newMessageData);
-			if (action.newMessageData) return {...state, ...action.newMessageData}; // TODO pas bon
+			const channelId = action.newMessageData && action.newMessageData.channelId;
+			if (channelId) {
+				return {
+					...state,
+					[channelId]: {
+						...state[channelId],
+						messages: [
+							...state[channelId].messages, // ...arr => obj
+							action.newMessageData // obj
+						]
+					}
+				};
+			}
+
 			return state;
 		case types.CREATE_NEW_MESSAGE_TCHAT_FAILURE:
 			return state;
