@@ -13,12 +13,12 @@ const renderMessages = (messagesList, userMe) => {
 
 	if (messagesList && messagesList.length > 0) {
 		messagesNode = messagesList.map((message, key) => {
-			const senderIsMe = message.authorId === userMe._id;
+			const senderIsMe = message.author._id === userMe._id;
 			return (
 				<Comment className={cx({sent: senderIsMe})} key={key}>
 					<Comment.Avatar className={cx('avatar')} src={senderIsMe ? avatar1 : avatar2} />
 					<Comment.Content className={cx('content')}>
-						<Comment.Author as="a">{senderIsMe ? userMe.username : 'message.authorId.username'}</Comment.Author>
+						<Comment.Author as="a">{senderIsMe ? userMe.username : message.author.username}</Comment.Author>
 						<Comment.Metadata><div>{message.created_at}</div></Comment.Metadata>
 						<Comment.Text>{message.content}</Comment.Text>
 					</Comment.Content>
@@ -47,7 +47,7 @@ TchatMessages.propTypes = {
 
 	messagesList: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
-		authorId: PropTypes.string,
+		author: PropTypes.object, // populate
 		content: PropTypes.string,
 		created_at: PropTypes.string,
 		read_at: PropTypes.string

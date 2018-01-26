@@ -58,7 +58,7 @@ class TchatContainer extends Component {
 		const newMessageData = {
 			channelId,
 			content: this.state.content,
-			authorId: userMe._id,
+			author: userMe._id,
 			created_at: new Date().toISOString()
 			// read_at: new Date().toISOString()
 		};
@@ -100,7 +100,7 @@ TchatContainer.propTypes = {
 		between: PropTypes.array,
 		messages: PropTypes.arrayOf(PropTypes.shape({
 			_id: PropTypes.string,
-			authorId: PropTypes.string,
+			author: PropTypes.object, // populate
 			content: PropTypes.string,
 			created_at: PropTypes.string,
 			read_at: PropTypes.string

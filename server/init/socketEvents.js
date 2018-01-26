@@ -22,7 +22,7 @@ export default (io) => {
 		 * 		id: {String}
 		 * 		channelID: {String}
 		 * 		text: {String}
-		 * 		authorID: {String}
+		 * 		author: {Object}
 		 * 		targetedUserID: {String}
 		 * }
 		 * */
