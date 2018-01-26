@@ -5,10 +5,12 @@ import { combineReducers } from 'redux';
 messagesList = {
 	'454545989': {
 		channelId: '454545989',
+		between: ['', ''],
 		messages: [{_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}]
 	},
 	'454545990': {
 		channelId: '454545990',
+ 		between: ['', ''],
 		messages: [{_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}]
 	}
 }

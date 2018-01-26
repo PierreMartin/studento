@@ -71,13 +71,15 @@ class TchatContainer extends Component {
 	}
 
 	render() {
-		const { userFront, userMe, position, messagesList, channelId } = this.props;
+		const { userMe, position, messagesList, channelId } = this.props;
+		const participants = (messagesList[channelId] && messagesList[channelId].between) ? messagesList[channelId].between : [];
+		const messages = (messagesList[channelId] && messagesList[channelId].messages) ? messagesList[channelId].messages : [];
 
 		return (
 			<Card className={cx('chatbox-container', 'show')} style={{ right: (position * 290) + 'px' }}>
-				<ChatHeader userFront={userFront} handleClickCloseChatBox={this.handleClickCloseChatBox} />
+				<ChatHeader participants={participants} userMe={userMe} handleClickCloseChatBox={this.handleClickCloseChatBox} />
 				<Card.Content>
-					<ChatMessages messagesList={messagesList[channelId]} userFront={userFront} userMe={userMe} />
+					<ChatMessages messagesList={messages} userMe={userMe} />
 					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} />
 				</Card.Content>
 			</Card>
@@ -92,10 +94,10 @@ TchatContainer.propTypes = {
 
 	// receiveSocketAction: PropTypes.func,
 	// receiveNewMessageAction: PropTypes.func,
-	// channelsList: PropTypes.array,
 
 	messagesList: PropTypes.shape({
 		channelId: PropTypes.string,
+		between: PropTypes.array,
 		messages: PropTypes.arrayOf(PropTypes.shape({
 			_id: PropTypes.string,
 			authorId: PropTypes.string,
@@ -112,13 +114,6 @@ TchatContainer.propTypes = {
 		password: PropTypes.string
 	}).isRequired,
 
-	userFront: PropTypes.shape({
-		username: PropTypes.string,
-		email: PropTypes.string,
-		_id: PropTypes.string,
-		password: PropTypes.string
-	}).isRequired,
-
 	socket: PropTypes.object.isRequired,
 	channelId: PropTypes.string,
 	position: PropTypes.number
@@ -127,8 +122,7 @@ TchatContainer.propTypes = {
 function mapStateToProps(state) {
 	return {
 		messagesList: state.tchat.messagesList,
-		userMe: state.userMe.data,
-		userFront: state.users.one
+		userMe: state.userMe.data
 	};
 }
 
