@@ -67,9 +67,20 @@ const messagesList = (state = {}, action) => {
 	}
 };
 
+// all the channels list already create
+const channelsList = (state = {}, action) => {
+	switch (action.type) {
+		case types.GET_MESSAGES_TCHAT_SUCCESS:
+			return state;
+		default:
+			return state;
+	}
+};
+
 const tchatReducer = combineReducers({
 	boxsOpen,
-	messagesList
+	messagesList,
+	channelsList
 });
 
 export default tchatReducer;

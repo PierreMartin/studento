@@ -28,7 +28,15 @@ class User extends Component {
 	handleOpenChatBox() {
 		const { addNewChannelAction, openTchatboxAction, userMe, userFront, boxsOpen } = this.props;
 
-		// Get channel / create new channel :
+		// 1) REQ - get all channels by userMe
+		// 2) matching for get the channel nedeed for open the box
+		// 		a) COND REQ - create new channel if doesn't exist
+		// 		b) COND REQ - get all channels by (with new channel)
+		// 3) open box with the channel
+
+		// getChannelsByUserIdAction(userMe._id);
+
+		// Get the channel nedeed for open the box :
 		let channel = null;
 		if (userMe.channelsList && userMe.channelsList.length > 0) {
 			for (let i = 0; i < userMe.channelsList.length; i++) {
@@ -44,6 +52,8 @@ class User extends Component {
 		if (!channel) {
 			console.log('Channel must to be create!');
 			addNewChannelAction(userFront._id, userMe._id);
+			// createNewChannelAction(userFront._id, userMe._id);
+			// getChannelsByUserIdAction(userMe._id);
 		}
 
 		// check if the current tchatbox is already opened :
