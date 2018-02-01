@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getChannelsByUserIdAction, openTchatboxAction, createNewChannelAction } from '../actions/tchat';
+import { openTchatboxAction } from '../actions/tchat';
 import { Header, Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import UserSingle from '../components/UserSingle/UserSingle';
@@ -25,78 +25,9 @@ class User extends Component {
 		};
 	}
 
-	/**
-	 * Get the channel if already created
-	 * @return {null | object} null if no matching - the object of the channel if matching
-	 **/
-	getChannelByUserFrontId() {
-		const { channelsList, userFront } = this.props;
-		let channel = null;
-
-		if (channelsList && channelsList.length > 0) {
-			for (let i = 0; i < channelsList.length; i++) {
-				for (let j = 0; j < channelsList[i].users.length; j++) {
-					if (channelsList[i].users[j]._id === userFront._id) {
-						channel = channelsList[i];
-						break;
-					}
-				}
-				if (channel) break;
-			}
-		}
-
-		return channel;
-	}
-
-	/**
-	 * Check if the current tchatbox is already opened :
-	 * @return {boolean} true if already opened
-	 **/
-	isTchatboxAlreadyOpened(channel) {
-		if (!channel) return true;
-
-		const { boxsOpen } = this.props;
-		let isAlreadyOpened = false;
-
-		for (let i = 0; boxsOpen.length > 0 && i < boxsOpen.length; i++) {
-			const channelIdFromBoxsOpen = boxsOpen[i];
-			if (channel.id === channelIdFromBoxsOpen) {
-				isAlreadyOpened = true;
-				break;
-			}
-		}
-
-		return isAlreadyOpened;
-	}
-
 	handleOpenChatBox() {
-		const { getChannelsByUserIdAction, createNewChannelAction, openTchatboxAction, userMe, userFront } = this.props;
-
-		// 1) REQ - get all channels by userMe
-		// 2) matching for get the channel nedeed for open the box
-		// 		a) COND REQ - create new channel if doesn't exist
-		// 		b) COND REQ - get all channels by (with new channel)
-		// 3) open box with the channel
-
-		// TODO tout faire dans une fonction dans action   openTchatboxAction();   et juste dispatcher 'getChannelsByUserIdAction' et 'openTchatboxAction'
-
-		getChannelsByUserIdAction(userMe._id);
-
-		// Get the channel nedeed for open the box :
-		let channel = this.getChannelByUserFrontId();
-
-		// if channel doens't exist :
-		if (!channel) {
-			console.log('Channel must to be create!');
-			createNewChannelAction(userFront._id, userMe._id);
-			getChannelsByUserIdAction(userMe._id);
-			channel = this.getChannelByUserFrontId();
-		}
-
-		// open a new instance of tchatbox :
-		if (!this.isTchatboxAlreadyOpened(channel)) {
-			openTchatboxAction(channel.id);
-		}
+		const { openTchatboxAction, userMe, userFront, boxsOpen } = this.props;
+		openTchatboxAction(userMe, userFront, boxsOpen);
 	}
 
 	render() {
@@ -142,9 +73,7 @@ User.propTypes = {
 
 	boxsOpen: PropTypes.array,
 
-	getChannelsByUserIdAction: PropTypes.func,
-	openTchatboxAction: PropTypes.func,
-	createNewChannelAction: PropTypes.func
+	openTchatboxAction: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
@@ -156,4 +85,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { getChannelsByUserIdAction, openTchatboxAction, createNewChannelAction })(User);
+export default connect(mapStateToProps, { openTchatboxAction })(User);
