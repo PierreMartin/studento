@@ -1,4 +1,4 @@
-import { addNewChannelRequest, fetchMessagesRequest, createNewMessageRequest } from './../api';
+import { getChannelsByUserIdRequest, createNewChannelRequest, fetchMessagesRequest, createNewMessageRequest } from './../api';
 import * as types from 'types';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
@@ -18,32 +18,62 @@ export function closeTchatboxAction(channelId) {
 	};
 }
 
-/***************************************** Add new channel *****************************************/
-export function addNewChannelSuccess(res) {
+/***************************************** Get channels *****************************************/
+export function getChannelsByUserIdSuccess(res) {
 	return {
-		type: types.ADD_NEW_CHANNEL_SUCCESS,
+		type: types.GET_CHANNELS_TCHAT_SUCCESS,
 		message: res.message,
-		newChannel: res.channelForUserMe
+		channelsList: res.channelsList
 	};
 }
 
-export function addNewChannelFailure(messageError) {
+export function getChannelsByUserIdFailure(messageError) {
 	return {
-		type: types.ADD_NEW_CHANNEL_FAILURE,
+		type: types.GET_CHANNELS_TCHAT_FAILURE,
 		messageError
 	};
 }
 
-export function addNewChannelAction(userFrontId, userMeId) {
+export function getChannelsByUserIdAction(userMeId) {
+	return (dispatch) => {
+		if (!userMeId) return;
+
+		getChannelsByUserIdRequest(userMeId)
+			.then((res) => {
+				if (res.status === 200) return dispatch(getChannelsByUserIdSuccess(res.data));
+			})
+			.catch((err) => {
+				if (err.message) return dispatch(getChannelsByUserIdFailure(getMessage(err)));
+			});
+	};
+}
+
+/***************************************** Create new channel *****************************************/
+export function createNewChannelSuccess(res) {
+	return {
+		type: types.CREATE_NEW_CHANNEL_SUCCESS,
+		message: res.message,
+		newChannel: res.newChannel
+	};
+}
+
+export function createNewChannelFailure(messageError) {
+	return {
+		type: types.CREATE_NEW_CHANNEL_FAILURE,
+		messageError
+	};
+}
+
+export function createNewChannelAction(userFrontId, userMeId) {
 	return (dispatch) => {
 		if (!userFrontId || !userMeId) return;
 
-		addNewChannelRequest(userFrontId, userMeId)
+		createNewChannelRequest(userFrontId, userMeId)
 			.then((res) => {
-				if (res.status === 200) return dispatch(addNewChannelSuccess(res.data));
+				if (res.status === 200) return dispatch(createNewChannelSuccess(res.data));
 			})
 			.catch((err) => {
-				if (err.message) return dispatch(addNewChannelFailure(getMessage(err)));
+				if (err.message) return dispatch(createNewChannelFailure(getMessage(err)));
 			});
 	};
 }

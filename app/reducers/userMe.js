@@ -57,14 +57,14 @@ const data = (state = {}, action) => {
 			return state;
 		case types.SET_MAIN_USER_AVATAR_FAILURE:
 			return state;
-		case types.ADD_NEW_CHANNEL_SUCCESS:
+		case types.CREATE_NEW_CHANNEL_SUCCESS:
 			if (typeof action.newChannel !== 'undefined') {
 				const channelsList = state.channelsList || [];
 				channelsList.push(action.newChannel);
 				return {...state, channelsList};
 			}
 			return state;
-		case types.ADD_NEW_CHANNEL_FAILURE:
+		case types.CREATE_NEW_CHANNEL_FAILURE:
 			return state;
 		default:
 			return state;

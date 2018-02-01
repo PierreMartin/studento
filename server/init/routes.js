@@ -4,6 +4,7 @@ import { controllers, passport as passportConfig } from '../db';
 const authController = controllers && controllers.auth;
 const usersController = controllers && controllers.users;
 const coursesController = controllers && controllers.courses;
+const channelsController = controllers && controllers.channels;
 const messagesController = controllers && controllers.messages;
 
 export default (app) => {
@@ -31,9 +32,16 @@ export default (app) => {
 		app.put('/api/updateuser/:id', usersController.update);
 		app.post('/api/addavatar/:id/:avatarId', usersController.uploadAvatarMulter, usersController.uploadAvatar);
 		app.put('/api/setdefaultavatar/:idUser/', usersController.setDefaultAvatar);
-		app.put('/api/addchannel', usersController.addChannelTchat);
 	} else {
 		console.warn('users routes');
+	}
+
+	// channels tchat routes
+	if (channelsController) {
+		app.get('/api/getchannels/:usermeid', channelsController.allByUserId);
+		app.post('/api/addchannel', channelsController.add);
+	} else {
+		console.warn('channels tchat routes');
 	}
 
 	// messages tchat routes

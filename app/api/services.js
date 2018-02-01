@@ -70,8 +70,12 @@ export function api() {
 		}),
 
 		// Tchat
-		addChannel: (userFrontId, userMeId) => localClient.request({
-			method: 'PUT',
+		getChannels: userMeId => localClient.request({
+			method: 'GET',
+			url: '/api/getchannels/' + userMeId
+		}),
+		createChannel: (userFrontId, userMeId) => localClient.request({
+			method: 'POST',
 			url: '/api/addchannel',
 			data: { userFrontId, userMeId }
 		}),

@@ -12,7 +12,6 @@ export function allByChannelId(req, res) {
 		const getMessagesListForChannel = {
 			[channelid]: {
 				channelId: channelid,
-				between: [],
 				messages: messagesList
 			}
 		};

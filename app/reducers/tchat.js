@@ -5,12 +5,10 @@ import { combineReducers } from 'redux';
 messagesList = {
 	'454545989': {
 		channelId: '454545989',
-		between: ['', ''],
 		messages: [{_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}]
 	},
 	'454545990': {
 		channelId: '454545990',
- 		between: ['', ''],
 		messages: [{_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}]
 	}
 }
@@ -68,9 +66,12 @@ const messagesList = (state = {}, action) => {
 };
 
 // all the channels list already create
-const channelsList = (state = {}, action) => {
+const channelsList = (state = [], action) => {
 	switch (action.type) {
-		case types.GET_MESSAGES_TCHAT_SUCCESS:
+		case types.GET_CHANNELS_TCHAT_SUCCESS:
+			if (action.channelsList) return [...state, ...action.channelsList];
+			return state;
+		case types.GET_CHANNELS_TCHAT_FAILURE:
 			return state;
 		default:
 			return state;
