@@ -26,8 +26,8 @@ class User extends Component {
 	}
 
 	handleOpenChatBox() {
-		const { openTchatboxAction, userMe, userFront, boxsOpen } = this.props;
-		openTchatboxAction(userMe, userFront, boxsOpen);
+		const { openTchatboxAction, userMe, userFront, channelsListOpen } = this.props;
+		openTchatboxAction(userMe, userFront, channelsListOpen);
 	}
 
 	render() {
@@ -71,7 +71,10 @@ User.propTypes = {
 		password: PropTypes.string
 	}).isRequired,
 
-	boxsOpen: PropTypes.array,
+	channelsListOpen: PropTypes.shape({
+		id: PropTypes.string,
+		users: PropTypes.object // populate
+	}),
 
 	openTchatboxAction: PropTypes.func
 };
@@ -80,8 +83,7 @@ const mapStateToProps = (state) => {
 	return {
 		userFront: state.users.one,
 		userMe: state.userMe.data,
-		boxsOpen: state.tchat.boxsOpen,
-		channelsList: state.tchat.channelsList
+		channelsListOpen: state.tchat.channelsListOpen
 	};
 };
 

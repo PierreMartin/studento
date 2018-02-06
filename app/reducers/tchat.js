@@ -2,32 +2,50 @@ import * as types from 'types';
 import { combineReducers } from 'redux';
 
 /*
-messagesList = {
-	'454545989': {
-		channelId: '454545989',
-		messages: [{_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}]
+channelsListOpen = {
+	'454548989': {
+		id: '454548989',
+ 		users: [{POPULATE}, {POPULATE}, {POPULATE}]
 	},
-	'454545990': {
-		channelId: '454545990',
-		messages: [{_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}, {_id: '', authorId: '', content: '', created_at: '', read_at: ''}]
+	'454548990': {
+		id: '454548990',
+ 		users: [{POPULATE}, {POPULATE}, {POPULATE}]
 	}
 }
 */
 
-const boxsOpen = (state = [], action) => {
+/*
+messagesListOpen = {
+	'454545989': {
+		channelId: '454545989',
+		messages: [{_id: '', author: {POPULATE}, content: '', created_at: '', read_at: ''}, {_id: '', author: {POPULATE}, content: '', created_at: '', read_at: ''}, {_id: '', author: {POPULATE}, content: '', created_at: '', read_at: ''}]
+	},
+	'454545990': {
+		channelId: '454545990',
+		messages: [{_id: '', author: {POPULATE}, content: '', created_at: '', read_at: ''}, {_id: '', author: {POPULATE}, content: '', created_at: '', read_at: ''}, {_id: '', author: {POPULATE}, content: '', created_at: '', read_at: ''}]
+	}
+}
+*/
+
+const channelsListOpen = (state = {}, action) => {
 	switch (action.type) {
 		case types.ADD_TCHATBOX:
-			if (action.channelId) return [...state, action.channelId];
+			if (action.getChannel) return {...state, ...action.getChannel};
 			return state;
 		case types.REMOVE_TCHATBOX:
-			if (action.channelId) return state.filter(channelId => channelId !== action.channelId); // action.channelId => box to remove
+			if (action.channelId) {
+				const newState = Object.assign({}, state); // clone state
+				delete newState[action.channelId]; // delete channel of the box removed
+				return newState;
+			}
+
 			return state;
 		default:
 			return state;
 	}
 };
 
-const messagesList = (state = {}, action) => {
+const messagesListOpen = (state = {}, action) => {
 	switch (action.type) {
 		case types.GET_MESSAGES_TCHAT_SUCCESS:
 			if (action.getMessagesListForChannel) return {...state, ...action.getMessagesListForChannel};
@@ -65,23 +83,9 @@ const messagesList = (state = {}, action) => {
 	}
 };
 
-// all the channels list already create
-const channelsList = (state = [], action) => {
-	switch (action.type) {
-		case types.GET_CHANNELS_TCHAT_SUCCESS:
-			if (action.channelsList) return [...state, ...action.channelsList];
-			return state;
-		case types.GET_CHANNELS_TCHAT_FAILURE:
-			return state;
-		default:
-			return state;
-	}
-};
-
 const tchatReducer = combineReducers({
-	boxsOpen,
-	messagesList,
-	channelsList
+	channelsListOpen,
+	messagesListOpen
 });
 
 export default tchatReducer;

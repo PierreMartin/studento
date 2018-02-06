@@ -21,11 +21,6 @@ const UserSchema = new mongoose.Schema({
 	domain: { type: String, default: '' },
 	schoolName: { type: String, default: '' },
 
-	channelsList: [{
-		channelId: { type: String },
-		userFrontId: { type: String }
-	}],
-
 	avatarsSrc: [{
 		avatarId: { type: Number },
 		avatar80: String,

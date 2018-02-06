@@ -71,13 +71,13 @@ class TchatContainer extends Component {
 	}
 
 	render() {
-		const { userMe, position, messagesList, channelId } = this.props;
-		const participants = (messagesList[channelId] && messagesList[channelId].between) ? messagesList[channelId].between : [];
-		const messages = (messagesList[channelId] && messagesList[channelId].messages) ? messagesList[channelId].messages : [];
+		const { userMe, position, messagesListOpen, channelId, channelsListOpen } = this.props;
+		const users = (channelsListOpen && channelsListOpen[channelId] && channelsListOpen[channelId].users) ? channelsListOpen[channelId].users : [];
+		const messages = (messagesListOpen && messagesListOpen[channelId] && messagesListOpen[channelId].messages) ? messagesListOpen[channelId].messages : [];
 
 		return (
 			<Card className={cx('chatbox-container', 'show')} style={{ right: (position * 290) + 'px' }}>
-				<ChatHeader participants={participants} userMe={userMe} handleClickCloseChatBox={this.handleClickCloseChatBox} />
+				<ChatHeader participants={users} userMe={userMe} handleClickCloseChatBox={this.handleClickCloseChatBox} />
 				<Card.Content>
 					<ChatMessages messagesList={messages} userMe={userMe} />
 					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} />
@@ -95,9 +95,13 @@ TchatContainer.propTypes = {
 	// receiveSocketAction: PropTypes.func,
 	// receiveNewMessageAction: PropTypes.func,
 
-	messagesList: PropTypes.shape({
+	channelsListOpen: PropTypes.shape({
+		id: PropTypes.string,
+		users: PropTypes.object // populate
+	}),
+
+	messagesListOpen: PropTypes.shape({
 		channelId: PropTypes.string,
-		between: PropTypes.array,
 		messages: PropTypes.arrayOf(PropTypes.shape({
 			_id: PropTypes.string,
 			author: PropTypes.object, // populate
@@ -121,7 +125,8 @@ TchatContainer.propTypes = {
 
 function mapStateToProps(state) {
 	return {
-		messagesList: state.tchat.messagesList,
+		channelsListOpen: state.tchat.channelsListOpen,
+		messagesListOpen: state.tchat.messagesListOpen,
 		userMe: state.userMe.data
 	};
 }

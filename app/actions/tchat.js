@@ -4,6 +4,7 @@ import * as types from 'types';
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 
 /***************************************** Get channels *****************************************/
+/*
 export function getChannelsByUserIdSuccess(res) {
 	return {
 		type: types.GET_CHANNELS_TCHAT_SUCCESS,
@@ -32,8 +33,10 @@ export function getChannelsByUserIdAction(userMeId) {
 			});
 	};
 }
+*/
 
 /***************************************** Create new channel *****************************************/
+/*
 export function createNewChannelSuccess(res) {
 	return {
 		type: types.CREATE_NEW_CHANNEL_SUCCESS,
@@ -62,6 +65,7 @@ export function createNewChannelAction(userFrontId, userMeId) {
 			});
 	};
 }
+*/
 
 /***************************************** Open / close tchat box *****************************************/
 /**
@@ -88,32 +92,35 @@ function getChannelByUserFrontId(channelsList, userFront) {
 }
 
 /**
- * Check if the current tchatbox is already opened :
+ * Check if the current tchatbox is already opened
  * @return {boolean} true if already opened
  **/
-function isTchatboxAlreadyOpened(channel, boxsOpen) {
-	if (!channel) return true;
+function isTchatboxAlreadyOpened(channelFind, channelsListOpen) {
+	if (!channelFind) return true;
 	let isAlreadyOpened = false;
 
-	for (let i = 0; boxsOpen.length > 0 && i < boxsOpen.length; i++) {
-		const channelIdFromBoxsOpen = boxsOpen[i];
-		if (channel.id === channelIdFromBoxsOpen) {
-			isAlreadyOpened = true;
-			break;
+	if (Object.keys(channelsListOpen).length > 0) {
+		for (const key in channelsListOpen) {
+			if (channelsListOpen[key]) {
+				if (channelFind.id === channelsListOpen[key].id) {
+					isAlreadyOpened = true;
+					break;
+				}
+			}
 		}
 	}
 
 	return isAlreadyOpened;
 }
 
-export function openTchatboxSuccess(channelId) {
+export function openTchatboxSuccess(channel) {
 	return {
 		type: types.ADD_TCHATBOX,
-		channelId
+		getChannel: { [channel.id]: channel } // TODO faire ca coté BE pour avoir direct : 'getChannel' comme les messages
 	};
 }
 
-export function openTchatboxAction(userMe, userFront, boxsOpen) {
+export function openTchatboxAction(userMe, userFront, channelsListOpen) {
 	return (dispatch) => {
 		if (!userMe || !userFront) return;
 
@@ -124,17 +131,13 @@ export function openTchatboxAction(userMe, userFront, boxsOpen) {
 		// 3) open box with the channel
 
 		let channelToFind;
-		let resFirstReq = {};
-
-		// TODO here import the state.channelsList for tests before make requests
 
 		// get all channels
 		getChannelsByUserIdRequest(userMe._id)
 			.then((res) => {
 				if (res && res.data && res.data.channelsList) {
 					// Get the channel nedeed for open the box :
-					channelToFind = getChannelByUserFrontId(res.data.channelsList, userFront);
-					resFirstReq = res;
+					channelToFind = getChannelByUserFrontId(res.data.channelsList, userFront); // TODO voir pour faire ca dans une request   getChannelByUserFrontId(userMe._id, userFront._id)
 				}
 
 				// create new channel if needed :
@@ -150,12 +153,9 @@ export function openTchatboxAction(userMe, userFront, boxsOpen) {
 					channelToFind = getChannelByUserFrontId(res.data.channelsList, userFront);
 				}
 
-				const dataChannels = (res && res.status === 200) ? res.data : resFirstReq.data;
-				dispatch(getChannelsByUserIdSuccess(dataChannels));
-
 				// ALL THE CASES : open a new instance of tchatbox :
-				if (!isTchatboxAlreadyOpened(channelToFind, boxsOpen)) {
-					dispatch(openTchatboxSuccess(channelToFind.id));
+				if (!isTchatboxAlreadyOpened(channelToFind, channelsListOpen)) {
+					dispatch(openTchatboxSuccess(channelToFind));
 				}
 			});
 	};

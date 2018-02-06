@@ -12,21 +12,21 @@ import styles from '../../../css/main.scss';
 const cx = classNames.bind(styles);
 const socket = io('', { path: '/api/tchat' });
 
-const renderTchatBoxs = (boxsOpen) => {
-	if (boxsOpen.length > 0) {
-		return boxsOpen.map((channelIdOfBoxOpen, index) => {
-			return (channelIdOfBoxOpen && <Chat key={index} socket={socket} channelId={channelIdOfBoxOpen} position={index} />);
+const renderTchatBoxs = (channelsListOpen) => {
+	if (Object.keys(channelsListOpen).length > 0) {
+		return Object.values(channelsListOpen).map((channelOfBoxOpen, index) => {
+			return (channelOfBoxOpen.id && <Chat key={index} socket={socket} channelId={channelOfBoxOpen.id} position={index} />);
 		});
 	}
 };
 
-const App = ({ children, boxsOpen }) => {
+const App = ({ children, channelsListOpen }) => {
   return (
     <div className={cx('myClass', 'myOtherClass')}>
       <NavMain />
       {children}
 			<ToastContainer />
-			{ renderTchatBoxs(boxsOpen) }
+			{ renderTchatBoxs(channelsListOpen) }
 
 			<Segment inverted vertical style={{ padding: '5em 0em' }}>
 				<Container text>
@@ -64,12 +64,16 @@ const App = ({ children, boxsOpen }) => {
 
 App.propTypes = {
   children: PropTypes.object,
-	boxsOpen: PropTypes.array
+
+	channelsListOpen: PropTypes.shape({
+		id: PropTypes.string,
+		users: PropTypes.object // populate
+	})
 };
 
 function mapStateToProps(state) {
 	return {
-		boxsOpen: state.tchat.boxsOpen
+		channelsListOpen: state.tchat.channelsListOpen
 	};
 }
 
