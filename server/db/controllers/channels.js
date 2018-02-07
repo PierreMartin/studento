@@ -15,6 +15,22 @@ export function allByUserId(req, res) {
 }
 
 /**
+ * GET /api/getchannelbyuserfrontid/:usermeid/:userfrontid
+ */
+export function allByUserFrontId(req, res) {
+	const { usermeid, userfrontid } = req.params;
+
+	// find by 'users[i]._id'
+	Channel.findOne({ users: { $all: [usermeid, userfrontid] } }).populate('users', '_id username').exec((err, chan) => {
+		if (err) return res.status(500).json({message: 'Something went wrong getting the data'});
+
+		const getChannel = (chan && chan.id) ? { [chan.id]: chan } : false;
+
+		return res.status(200).json({message: 'channel fetched', getChannel});
+	});
+}
+
+/**
  * POST /api/addchannel/
  */
 export function add(req, res) {
@@ -34,5 +50,6 @@ export function add(req, res) {
 
 export default {
 	allByUserId,
+	allByUserFrontId,
 	add
 };

@@ -74,6 +74,10 @@ export function api() {
 			method: 'GET',
 			url: '/api/getchannels/' + userMeId
 		}),
+		getChannelByUserFrontId: (userMeId, userFrontId) => localClient.request({
+			method: 'GET',
+			url: '/api/getchannelbyuserfrontid/' + userMeId + '/' + userFrontId
+		}),
 		createChannel: (userFrontId, userMeId) => localClient.request({
 			method: 'POST',
 			url: '/api/addchannel',

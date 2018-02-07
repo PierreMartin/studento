@@ -38,7 +38,8 @@ export default (app) => {
 
 	// channels tchat routes
 	if (channelsController) {
-		app.get('/api/getchannels/:usermeid', channelsController.allByUserId);
+		app.get('/api/getchannels/:usermeid', channelsController.allByUserId); // By userMe
+		app.get('/api/getchannelbyuserfrontid/:usermeid/:userfrontid', channelsController.allByUserFrontId); // By userFront
 		app.post('/api/addchannel', channelsController.add);
 	} else {
 		console.warn('channels tchat routes');
