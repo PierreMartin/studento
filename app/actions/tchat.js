@@ -80,9 +80,10 @@ function isTchatboxAlreadyOpened(getChannel, channelsListOpen) {
 	let isAlreadyOpened = false;
 
 	if (Object.keys(channelsListOpen).length > 0) {
-		for (const key in channelsListOpen) {
-			if (channelsListOpen[key]) {
-				if (getChannel.id === channelsListOpen[key].id) {
+		for (const keyOfChannelList in channelsListOpen) {
+			if (channelsListOpen[keyOfChannelList]) {
+				// if key of channel to try to open === key of channelslist (info: key === id)
+				if (Object.keys(getChannel)[0] === keyOfChannelList) {
 					isAlreadyOpened = true;
 					break;
 				}
