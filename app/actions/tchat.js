@@ -71,22 +71,24 @@ export function createNewChannelAction(userFrontId, userMeId) {
 
 /**
  * Check if the current tchatbox is already opened
- * @param {object} getChannel - the channel find by back-end
+ * @param {string} userFrontId - the id of the user front
  * @param {object} channelsListOpen - the list of the channels open (from the state)
  * @return {boolean} true if already opened
  **/
-function isTchatboxAlreadyOpened(getChannel, channelsListOpen) {
-	if (!getChannel) return true;
+function isTchatboxAlreadyOpened(userFrontId, channelsListOpen) {
+	if (!userFrontId) return true;
 	let isAlreadyOpened = false;
 
 	if (Object.keys(channelsListOpen).length > 0) {
 		for (const keyOfChannelList in channelsListOpen) {
 			if (channelsListOpen[keyOfChannelList]) {
-				// if key of channel to try to open === key of channelslist (info: key === id)
-				if (Object.keys(getChannel)[0] === keyOfChannelList) {
-					isAlreadyOpened = true;
-					break;
+				for (let i = 0; i < channelsListOpen[keyOfChannelList].users.length; i++) {
+					if (userFrontId === channelsListOpen[keyOfChannelList].users[i]._id) {
+						isAlreadyOpened = true;
+						break;
+					}
 				}
+				if (isAlreadyOpened) break;
 			}
 		}
 	}
@@ -103,7 +105,7 @@ export function openTchatboxSuccess(getChannel) {
 
 export function openTchatboxAction(userMe, userFront, channelsListOpen) {
 	return (dispatch) => {
-		if (!userMe || !userFront) return;
+		if (!userMe || !userFront || isTchatboxAlreadyOpened(userFront._id, channelsListOpen)) return;
 
 		let getChannel;
 		getChannelByUserFrontIdRequest(userMe._id, userFront._id)
@@ -117,9 +119,7 @@ export function openTchatboxAction(userMe, userFront, channelsListOpen) {
 				}
 
 				// Open a new instance of tchatbox :
-				if (!isTchatboxAlreadyOpened(getChannel, channelsListOpen)) {
-					dispatch(openTchatboxSuccess(getChannel));
-				}
+				dispatch(openTchatboxSuccess(getChannel));
 		});
 	};
 }
