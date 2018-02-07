@@ -44,7 +44,13 @@ export function add(req, res) {
 	Channel.create(newChannel, (err) => {
 		if (err) return res.status(500).json({message: 'add channel ko'});
 
-		return res.status(200).json({message: 'You have added a new channel', newChannel});
+		Channel.findOne({ users: { $all: [userMeId, userFrontId] } }).populate('users', '_id username').exec((err, chan) => {
+			if (err) return res.status(500).json({message: 'Something went wrong getting the data'});
+
+			const newChannel = (chan && chan.id) ? { [chan.id]: chan } : false;
+
+			return res.status(200).json({message: 'New channel fetched', newChannel});
+		});
 	});
 }
 

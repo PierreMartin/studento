@@ -109,11 +109,11 @@ export function openTchatboxAction(userMe, userFront, channelsListOpen) {
 		getChannelByUserFrontIdRequest(userMe._id, userFront._id)
 			.then((res) => {
 				getChannel = res && res.data && res.data.getChannel;
-				if (!getChannel) return createNewChannelRequest(userFront._id, userMe._id); // TODO return new channel populate
+				if (!getChannel) return createNewChannelRequest(userFront._id, userMe._id);
 			})
 			.then((res) => {
 				if (!getChannel) {
-					getChannel = res && res.data && res.data.getChannel; // data from channel create
+					getChannel = res && res.data && res.data.newChannel; // data from channel create
 				}
 
 				// Open a new instance of tchatbox :
