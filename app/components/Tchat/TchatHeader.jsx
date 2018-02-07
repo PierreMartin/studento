@@ -2,27 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Icon, Button } from 'semantic-ui-react';
 
-const renderParticipants = (participants, userMe) => {
-	let participantsToDisplay = 'No yet participant';
+const renderUsersInChannel = (usersInChannel, userMe) => {
+	let usersToDisplay = '';
 
-	if (participants && participants.length > 0) {
-		for (let i = 0; i < participants.length; i++) {
-			const participant = participants[i];
-			if (participant !== userMe._id) {
-				const manyParticipants = (participants.length > 1) ? ', ' : ''; // if many participants
-				participantsToDisplay += participant + manyParticipants; // TODO pas bon, populer et mettre 'participant.username'
+	if (usersInChannel && usersInChannel.length > 0) {
+		for (let i = 0; i < usersInChannel.length; i++) {
+			const userInChan = usersInChannel[i];
+			if (userInChan._id !== userMe._id) {
+				const multiUsers = (usersInChannel.length > 2 && i < usersInChannel.length) ? ', ' : '';
+				usersToDisplay += userInChan.username + multiUsers;
 			}
 		}
 	}
 
-	return participantsToDisplay;
+	return usersToDisplay;
 };
 
-const TchatHeader = ({ participants, userMe, handleClickCloseChatBox }) => {
+const TchatHeader = ({ usersInChannel, userMe, handleClickCloseChatBox }) => {
 	return (
 		<Card.Content>
 			<Card.Header>
-				{ renderParticipants(participants, userMe) }
+				{ renderUsersInChannel(usersInChannel, userMe) }
 				<Button icon size="mini" floated="right" onClick={handleClickCloseChatBox} ><Icon name="close" /></Button>
 			</Card.Header>
 		</Card.Content>
@@ -35,7 +35,11 @@ TchatHeader.propTypes = {
 		username: PropTypes.string
 	}),
 
-	participants: PropTypes.array,
+	usersInChannel: PropTypes.arrayOf(PropTypes.shape({
+		_id: PropTypes.string,
+		username: PropTypes.object
+	})),
+
 	handleClickCloseChatBox: PropTypes.func
 };
 

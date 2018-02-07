@@ -77,7 +77,7 @@ class TchatContainer extends Component {
 
 		return (
 			<Card className={cx('chatbox-container', 'show')} style={{ right: (position * 290) + 'px' }}>
-				<ChatHeader participants={users} userMe={userMe} handleClickCloseChatBox={this.handleClickCloseChatBox} />
+				<ChatHeader usersInChannel={users} userMe={userMe} handleClickCloseChatBox={this.handleClickCloseChatBox} />
 				<Card.Content>
 					<ChatMessages messagesList={messages} userMe={userMe} />
 					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} />
