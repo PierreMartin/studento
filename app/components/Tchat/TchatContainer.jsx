@@ -53,9 +53,10 @@ class TchatContainer extends Component {
 
 	handleSubmitSendMessage(event) {
 		event.preventDefault();
-		const { createNewMessageAction, userMe, socket, channelId } = this.props;
+		const { createNewMessageAction, userMe, channelId } = this.props;
 
 		const newMessageData = {
+			id: new Date().getTime() + '-' + userMe._id,
 			channelId,
 			content: this.state.content,
 			author: userMe._id,
@@ -63,9 +64,6 @@ class TchatContainer extends Component {
 			// read_at: new Date().toISOString()
 		};
 
-		console.log(newMessageData);
-
-		// socket.emit('new message', newMessage); // send to sockets
 		createNewMessageAction(newMessageData);
 		this.setState({ content: '', typing: false });
 	}

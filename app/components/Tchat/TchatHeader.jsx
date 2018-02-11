@@ -37,7 +37,7 @@ TchatHeader.propTypes = {
 
 	usersInChannel: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
-		username: PropTypes.object
+		username: PropTypes.string
 	})),
 
 	handleClickCloseChatBox: PropTypes.func

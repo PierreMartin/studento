@@ -24,11 +24,14 @@ export function allByChannelId(req, res) {
  * POST /api/addmessage
  */
 export function add(req, res) {
-	const newMessageData = req.body;
-	Message.create(newMessageData, (err) => {
+	const message = new Message(req.body);
+
+	message.save((err) => {
 		if (err) return res.status(500).json({message: 'add messages ko'});
 
-		return res.status(200).json({message: 'You have added a new message', newMessageData});
+		Message.populate(message, { path: 'author', select: '_id username' }, (err, newMessageData) => {
+			return res.status(200).json({message: 'You have added a new message', newMessageData});
+		});
 	});
 }
 

@@ -31,6 +31,8 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 
 
 ### TODO :
+- tchat - socket (créer reducer qui ajoute les messages reçu - receiveNewMessageSockets() )
+
 
 - refacto les notifications + gerer toutes les erreurs
 - check si un username / email est deja utilisé

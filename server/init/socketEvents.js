@@ -19,19 +19,18 @@ export default (io) => {
 		/**
 		 * @param {object}
 		 * {
-		 * 		id: {String}
-		 * 		channelID: {String}
+		 * 		_id: {String}
+		 * 		channelId: {String}
 		 * 		text: {String}
 		 * 		author: {Object}
-		 * 		targetedUserID: {String}
 		 * }
 		 * */
-		socket.on('new message', (param) => {
-			const channelID = param.channelID;
-			console.log('channelID ', channelID);
+		socket.on('new_message', (param) => {
+			const channelId = param.channelId;
+			console.log('new_message param ', param);
 
-			socket.join(channelID);
-			socket.broadcast.to(channelID).emit('new bc message', param);
+			socket.join(channelId);
+			socket.broadcast.to(channelId).emit('new_message_server', param);
 			// OU // socket.broadcast.to(targeted_socketID).emit('new bc message', param);
 		});
 

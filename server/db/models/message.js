@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const MessageSchema = new mongoose.Schema({
+	id: { type: String, unique: true },
 	author: { type: String, ref: 'User' },
 	channelId: { type: String },
 	content: { type: String, default: '' },

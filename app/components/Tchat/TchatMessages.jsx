@@ -18,7 +18,7 @@ const renderMessages = (messagesList, userMe) => {
 				<Comment className={cx({sent: senderIsMe})} key={key}>
 					<Comment.Avatar className={cx('avatar')} src={senderIsMe ? avatar1 : avatar2} />
 					<Comment.Content className={cx('content')}>
-						<Comment.Author as="a">{senderIsMe ? userMe.username : message.author.username}</Comment.Author>
+						<Comment.Author as="a">{message.author.username}</Comment.Author>
 						<Comment.Metadata><div>{message.created_at}</div></Comment.Metadata>
 						<Comment.Text>{message.content}</Comment.Text>
 					</Comment.Content>

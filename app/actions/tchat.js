@@ -1,6 +1,8 @@
 import { getChannelByUserFrontIdRequest, createNewChannelRequest, fetchMessagesRequest, createNewMessageRequest } from './../api';
 import * as types from 'types';
+import io from 'socket.io-client';
 
+const socket = io('', { path: '/api/tchat' });
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 
 /***************************************** Get channels *****************************************/
@@ -183,7 +185,10 @@ export function createNewMessageAction(newMessageData) {
 
 		createNewMessageRequest(newMessageData)
 			.then((res) => {
-				if (res.status === 200) return dispatch(createNewMessageSuccess(res.data));
+				if (res.status === 200) {
+					// socket.emit('new_message', res.data);
+					return dispatch(createNewMessageSuccess(res.data));
+				}
 			})
 			.catch((err) => {
 				if (err.message) return dispatch(createNewMessageFailure(getMessage(err)));
