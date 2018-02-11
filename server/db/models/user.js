@@ -23,14 +23,16 @@ const UserSchema = new mongoose.Schema({
 
 	avatarsSrc: [{
 		avatarId: { type: Number },
+		avatar150: String,
 		avatar80: String,
-		avatar150: String
+		avatar28: String
 	}],
 
 	avatarMainSrc: {
 		avatarId: { type: Number, default: -1 },
+		avatar150: { type: String, default: '' },
 		avatar80: { type: String, default: '' },
-		avatar150: { type: String, default: '' }
+		avatar28: { type: String, default: '' }
 	},
 
   tokens: Array,

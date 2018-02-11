@@ -145,11 +145,12 @@ export const uploadAvatarMulter = upload.single('formAvatar');
 export function uploadAvatar(req, res) {
 	const id = req.params.id;
 	const filename = req.file.filename;
-	const sizes = [150, 80];
+	const sizes = [150, 80, 28];
 	const avatar150 = sizes[0] + '_' + filename;
 	const avatar80 = sizes[1] + '_' + filename;
+	const avatar28 = sizes[2] + '_' + filename;
 	const avatarId = parseInt(req.params.avatarId, 10);
-	const avatarSrc = { avatarId, avatar150, avatar80 };
+	const avatarSrc = { avatarId, avatar150, avatar80, avatar28 };
 
 	if (!id || !filename) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
 
@@ -175,7 +176,8 @@ export function uploadAvatar(req, res) {
 					$set: {
 						'avatarsSrc.$.avatarId': avatarId,
 						'avatarsSrc.$.avatar150': avatar150,
-						'avatarsSrc.$.avatar80': avatar80
+						'avatarsSrc.$.avatar80': avatar80,
+						'avatarsSrc.$.avatar28': avatar28
 					}
 				}, (err) => {
 					if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});

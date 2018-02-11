@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Comment } from 'semantic-ui-react';
 import styles from './css/tchat.scss';
-import avatar1 from '../../images/elliot.jpg';
-import avatar2 from '../../images/jenny.jpg';
+import defaultAvatar from '../../images/default-avatar.png'; // TODO trouver une image de 28 pixels + fixer css
 
 const cx = classNames.bind(styles);
 
@@ -14,9 +13,11 @@ const renderMessages = (messagesList, userMe) => {
 	if (messagesList && messagesList.length > 0) {
 		messagesNode = messagesList.map((message, key) => {
 			const senderIsMe = message.author._id === userMe._id;
+			const src = message.author.avatarMainSrc && message.author.avatarMainSrc.avatar28 ? `/uploads/${message.author.avatarMainSrc.avatar28}` : defaultAvatar;
+
 			return (
 				<Comment className={cx({sent: senderIsMe})} key={key}>
-					<Comment.Avatar className={cx('avatar')} src={senderIsMe ? avatar1 : avatar2} />
+					<Comment.Avatar className={cx('avatar')} src={src} />
 					<Comment.Content className={cx('content')}>
 						<Comment.Author as="a">{message.author.username}</Comment.Author>
 						<Comment.Metadata><div>{message.created_at}</div></Comment.Metadata>
