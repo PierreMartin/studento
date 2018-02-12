@@ -6,7 +6,7 @@ import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Button, Grid, Modal, Header, Popup, Icon } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
-import defaultAvatar from '../images/default-avatar.png';
+import defaultAvatar150 from '../images/default-avatar-150.png';
 import classNames from 'classnames/bind';
 import styles from './css/settingsAvatar.scss';
 
@@ -163,7 +163,7 @@ class SettingsAvatar extends Component {
 
 		for (let i = 0; i <= this.numberItems; i++) {
 			const avatarObj = this.getAvatarById(i, avatarsSrc);
-			const src = avatarObj ? `/uploads/${avatarObj.avatar150}` : defaultAvatar;
+			const src = avatarObj ? `/uploads/${avatarObj.avatar150}` : defaultAvatar150;
 			const isSettableMainAvatar = avatarObj && i !== avatarMainSrc.avatarId;
 			const isMainAvatar = avatarObj && i === avatarMainSrc.avatarId;
 
@@ -185,7 +185,7 @@ class SettingsAvatar extends Component {
 
 	render() {
 		// const { avatarMainSrc } = this.props;
-		// const src = avatarMainSrc.avatar150 ? `/uploads/${avatarMainSrc.avatar150}` : defaultAvatar;
+		// const src = avatarMainSrc.avatar150 ? `/uploads/${avatarMainSrc.avatar150}` : defaultAvatar150;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>

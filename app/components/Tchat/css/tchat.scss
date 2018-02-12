@@ -16,7 +16,16 @@
 /********************** MESSAGES COMPONENT **********************/
 .chatbox-messages-container {
   height: 350px;
-  overflow-y: auto;
+  overscroll-behavior: contain contain;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.chatbox-messages-container .avatar,
+.chatbox-messages-container .avatar img {
+  width: 28px !important;
+  height: 28px !important;
 }
 
 /* Send messages */

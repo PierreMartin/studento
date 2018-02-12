@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Comment } from 'semantic-ui-react';
 import styles from './css/tchat.scss';
-import defaultAvatar from '../../images/default-avatar.png'; // TODO trouver une image de 28 pixels + fixer css
+import defaultAvatar28 from '../../images/default-avatar-28.png';
 
 const cx = classNames.bind(styles);
 
@@ -13,7 +13,7 @@ const renderMessages = (messagesList, userMe) => {
 	if (messagesList && messagesList.length > 0) {
 		messagesNode = messagesList.map((message, key) => {
 			const senderIsMe = message.author._id === userMe._id;
-			const src = message.author.avatarMainSrc && message.author.avatarMainSrc.avatar28 ? `/uploads/${message.author.avatarMainSrc.avatar28}` : defaultAvatar;
+			const src = message.author.avatarMainSrc && message.author.avatarMainSrc.avatar28 ? `/uploads/${message.author.avatarMainSrc.avatar28}` : defaultAvatar28;
 
 			return (
 				<Comment className={cx({sent: senderIsMe})} key={key}>
