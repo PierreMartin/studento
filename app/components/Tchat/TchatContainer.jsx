@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeTchatboxAction, fetchMessagesAction, createNewMessageAction } from '../../actions/tchat';
+import { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, receiveNewMessageSocketAction } from '../../actions/tchat';
 import ChatHeader from './TchatHeader';
 import ChatMessages from './TchatMessages';
 import ChatInput from './TchatInput';
@@ -26,8 +26,17 @@ class TchatContainer extends Component {
 	}
 
 	componentDidMount() {
-		const { fetchMessagesAction, channelId } = this.props;
+		const { fetchMessagesAction, channelId, socket, receiveNewMessageSocketAction } = this.props;
 		fetchMessagesAction(channelId);
+
+		// join channel when tchatbox ready :
+		socket.emit('join_channel', channelId);
+
+		// receives messages sockets from user(s) front :
+		socket.on('new_message_server', (messageReceive) => {
+			console.log('receives messages sockets');
+			receiveNewMessageSocketAction(messageReceive);
+		});
 	}
 
 	handleClickCloseChatBox() {
@@ -53,7 +62,7 @@ class TchatContainer extends Component {
 
 	handleSubmitSendMessage(event) {
 		event.preventDefault();
-		const { createNewMessageAction, userMe, channelId } = this.props;
+		const { createNewMessageAction, userMe, channelId, socket } = this.props;
 
 		const newMessageData = {
 			id: new Date().getTime() + '-' + userMe._id,
@@ -64,6 +73,14 @@ class TchatContainer extends Component {
 			// read_at: new Date().toISOString()
 		};
 
+		// action for send socket - We need to create a object for simulate the payload of Mongo population : // TODO voir si on peux recuperer le new message du store et faire un socket.emit dans componentDidUpdate()
+		const newMessageSocket = {};
+		newMessageSocket.message = 'You have added a new message';
+		newMessageSocket.newMessageData = newMessageData;
+		newMessageSocket.newMessageData.author = { avatarMainSrc: { avatar28: userMe.avatarMainSrc.avatar28 }, username: userMe.username, _id: userMe._id };
+		socket.emit('new_message', newMessageSocket);
+
+		// action for persiste in database :
 		createNewMessageAction(newMessageData);
 		this.setState({ content: '', typing: false });
 	}
@@ -89,6 +106,7 @@ TchatContainer.propTypes = {
 	closeTchatboxAction: PropTypes.func,
 	fetchMessagesAction: PropTypes.func,
 	createNewMessageAction: PropTypes.func,
+	receiveNewMessageSocketAction: PropTypes.func,
 
 	// receiveSocketAction: PropTypes.func,
 	// receiveNewMessageAction: PropTypes.func,
@@ -129,4 +147,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, { closeTchatboxAction, fetchMessagesAction, createNewMessageAction })(TchatContainer);
+export default connect(mapStateToProps, { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, receiveNewMessageSocketAction })(TchatContainer);
