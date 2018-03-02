@@ -34,8 +34,10 @@ class TchatContainer extends Component {
 
 		// receives messages sockets from user(s) front :
 		socket.on('new_message_server', (messageReceive) => {
-			console.log('receives messages sockets');
-			receiveNewMessageSocketAction(messageReceive);
+			if (channelId === messageReceive.newMessageData.channelId) {
+				console.log('### receives messages sockets');
+				receiveNewMessageSocketAction(messageReceive);
+			}
 		});
 	}
 
@@ -65,7 +67,6 @@ class TchatContainer extends Component {
 		const { createNewMessageAction, userMe, channelId, socket } = this.props;
 
 		const newMessageData = {
-			id: new Date().getTime() + '-' + userMe._id,
 			channelId,
 			content: this.state.content,
 			author: userMe._id,
@@ -73,7 +74,7 @@ class TchatContainer extends Component {
 			// read_at: new Date().toISOString()
 		};
 
-		// action for send socket - We need to create a object for simulate the payload of Mongo population : // TODO voir si on peux recuperer le new message du store et faire un socket.emit dans componentDidUpdate()
+		// action for send socket - We need to create a object for simulate the payload of Mongo population :
 		const newMessageSocket = {};
 		newMessageSocket.message = 'You have added a new message';
 		newMessageSocket.newMessageData = newMessageData;
