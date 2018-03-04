@@ -6,7 +6,11 @@ const MessageSchema = new mongoose.Schema({
 	channelId: { type: String },
 	content: { type: String, default: '' },
 	created_at: { type: Date },
-	read_at: { type: Date }
+
+	readBy: [{
+		username: { type: String, default: '' },
+		at: { type: Date, default: null }
+	}]
 });
 
 export default mongoose.model('Message', MessageSchema);

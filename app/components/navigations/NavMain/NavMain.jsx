@@ -54,6 +54,8 @@ class NavigationMain extends Component {
 						<Menu.Item position="right">
 							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
 
+							{/* TODO HERE créer un component  'UnreadNotifMessages'  'UnreadModalMessages'  qui fetchera les unreadMessages dans componentDidMount() */}
+							{/* TODO ET fera un emit.on('new_message_server') des news messages qu'on les ajoutera au store */}
 							{ authentification.authenticated ? (<Menu.Item as="a"><Icon name="mail" /><Label circular color="red" size="mini" floating>22</Label></Menu.Item>) : ''}
 							{ authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''}
 							{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" name="login" active={activeItem === 'login'} onClick={this.handleItemClick}>Log in</Menu.Item>) : ''}

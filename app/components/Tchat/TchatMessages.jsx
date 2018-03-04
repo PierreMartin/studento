@@ -51,7 +51,7 @@ TchatMessages.propTypes = {
 		author: PropTypes.object, // populate
 		content: PropTypes.string,
 		created_at: PropTypes.string,
-		read_at: PropTypes.string
+		readBy: PropTypes.array
 	}))
 };
 

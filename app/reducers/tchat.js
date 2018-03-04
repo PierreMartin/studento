@@ -83,9 +83,21 @@ const messagesListOpen = (state = {}, action) => {
 	}
 };
 
+const unreadMessages = (state = {}, action) => {
+	switch (action.type) {
+		case types.GET_NB_UNREAD_MESSAGES_TCHAT_SUCCESS:
+			return state;
+		case types.GET_NB_UNREAD_MESSAGE_TCHAT_FAILURE:
+			return state;
+		default:
+			return state;
+	}
+};
+
 const tchatReducer = combineReducers({
 	channelsListOpen,
-	messagesListOpen
+	messagesListOpen,
+	unreadMessages
 });
 
 export default tchatReducer;

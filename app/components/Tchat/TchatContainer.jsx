@@ -89,7 +89,7 @@ class TchatContainer extends Component {
 			content: this.state.content,
 			author: userMe._id,
 			created_at: new Date().toISOString()
-			// read_at: new Date().toISOString()
+			// readBy: new Date().toISOString()
 		};
 
 		// action for send socket - We need to create a object for simulate the payload of Mongo population :
@@ -144,7 +144,7 @@ TchatContainer.propTypes = {
 			author: PropTypes.object, // populate
 			content: PropTypes.string,
 			created_at: PropTypes.string,
-			read_at: PropTypes.string
+			readBy: PropTypes.array
 		}))
 	}),
 
