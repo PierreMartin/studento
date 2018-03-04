@@ -21,7 +21,8 @@ class TchatContainer extends Component {
 
 		this.state = {
 			content: '',
-			typing: false
+			isTyping: false,
+			typingArr: []
 		};
 	}
 
@@ -32,33 +33,50 @@ class TchatContainer extends Component {
 		// join channel when tchatbox ready :
 		socket.emit('join_channel', channelId);
 
-		// receives messages sockets from user(s) front :
+		// receives messages sockets from user(s) in channel :
 		socket.on('new_message_server', (messageReceive) => {
 			if (channelId === messageReceive.newMessageData.channelId) {
 				console.log('### receives messages sockets');
 				receiveNewMessageSocketAction(messageReceive);
 			}
 		});
+
+		// receives typing start from user(s) in channel :
+		socket.on('start_typing_server', (typingReceive) => {
+			const newTypingArr = JSON.parse(JSON.stringify(this.state.typingArr));
+			newTypingArr.push(typingReceive);
+
+			if (channelId === typingReceive.channelId) this.setState({ typingArr: newTypingArr });
+		});
+
+		// receives typing stop from user(s) in channel :
+		socket.on('stop_typing_server', (typingReceive) => {
+			const newTypingArr = this.state.typingArr.filter(typing => typing.username !== typingReceive.username);
+
+			if (channelId === typingReceive.channelId) this.setState({ typingArr: newTypingArr });
+		});
 	}
 
 	handleClickCloseChatBox() {
-		const { closeTchatboxAction, channelId} = this.props;
+		const { closeTchatboxAction, channelId, socket, userMe } = this.props;
+
+		socket.emit('stop_typing', { username: userMe.username, channelId });
 		closeTchatboxAction(channelId);
 	}
 
 	handleChangeSendMessage(event) {
-		const { socket } = this.props;
+		const { socket, channelId, userMe } = this.props;
 
 		this.setState({ content: event.target.value });
 
-		if (event.target.value.length > 0 && !this.state.typing) {
-			// socket.emit('typing', { user: userObj.username, channel: 'ezeze' });
-			this.setState({ typing: true });
+		if (event.target.value.length > 0 && !this.state.isTyping) {
+			socket.emit('start_typing', { username: userMe.username, channelId });
+			this.setState({ isTyping: true });
 		}
 
-		if (event.target.value.length === 0 && this.state.typing) {
-			// socket.emit('stop typing', { user: userObj.username, channel: 'dsdssd' });
-			this.setState({ typing: false });
+		if (event.target.value.length === 0 && this.state.isTyping) {
+			socket.emit('stop_typing', { username: userMe.username, channelId });
+			this.setState({ isTyping: false });
 		}
 	}
 
@@ -83,7 +101,9 @@ class TchatContainer extends Component {
 
 		// action for persiste in database :
 		createNewMessageAction(newMessageData);
-		this.setState({ content: '', typing: false });
+
+		socket.emit('stop_typing', { username: userMe.username, channelId });
+		this.setState({ content: '', isTyping: false});
 	}
 
 	render() {
@@ -96,7 +116,7 @@ class TchatContainer extends Component {
 				<ChatHeader usersInChannel={users} userMe={userMe} handleClickCloseChatBox={this.handleClickCloseChatBox} />
 				<Card.Content>
 					<ChatMessages messagesList={messages} userMe={userMe} />
-					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} />
+					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} typings={this.state.typingArr} />
 				</Card.Content>
 			</Card>
 		);

@@ -24,19 +24,25 @@ export default (io) => {
 		/**
 		 * @param {object}
 		 * {
+		 * 		username: {String}
+		 * 		channelId: {String}
+		 * 		isTyping: {Boolean}
 		 * }
 		 * */
-		socket.on('typing', (data) => {
-			socket.broadcast.to(data.channel).emit('typing bc', data.user);
+		socket.on('start_typing', (param) => {
+			socket.broadcast.to(param.channelId).emit('start_typing_server', param);
 		});
 
 		/**
 		 * @param {object}
 		 * {
+		 * 		username: {String}
+		 * 		channelId: {String}
+		 * 		isTyping: {Boolean}
 		 * }
 		 * */
-		socket.on('stop typing', (data) => {
-			socket.broadcast.to(data.channel).emit('stop typing bc', data.user);
+		socket.on('stop_typing', (param) => {
+			socket.broadcast.to(param.channelId).emit('stop_typing_server', param);
 		});
 	});
 };
