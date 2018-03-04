@@ -23,7 +23,7 @@ const renderTchatBoxs = (channelsListOpen) => {
 const App = ({ children, channelsListOpen }) => {
   return (
     <div className={cx('myClass', 'myOtherClass')}>
-      <NavMain />
+      <NavMain socket={socket} />
       {children}
 			<ToastContainer />
 			{ renderTchatBoxs(channelsListOpen) }

@@ -1,4 +1,4 @@
-import { getChannelByUserFrontIdRequest, createNewChannelRequest, fetchMessagesRequest, createNewMessageRequest } from './../api';
+import { getChannelByUserFrontIdRequest, createNewChannelRequest, fetchMessagesRequest, createNewMessageRequest, fetchUnreadMessagesRequest } from './../api';
 import * as types from 'types';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
@@ -199,3 +199,36 @@ export function receiveNewMessageSocketAction(messageReceive) {
 		return dispatch(createNewMessageSuccess(messageReceive));
 	};
 }
+
+/***************************************** Fetch unread messages *****************************************/
+export function fetchUnreadMessagesSuccess(res) {
+	return {
+		type: types.GET_NB_UNREAD_MESSAGES_TCHAT_SUCCESS,
+		message: res.message,
+		unreadMessagesList: res.unreadMessagesList
+	};
+}
+
+export function fetchUnreadMessagesFailure(messageError) {
+	return {
+		type: types.GET_NB_UNREAD_MESSAGE_TCHAT_FAILURE,
+		messageError
+	};
+}
+
+export function fetchUnreadMessagesAction(userId) {
+	return (dispatch) => {
+		if (!userId) return;
+
+		fetchUnreadMessagesRequest(userId)
+			.then((res) => {
+				if (res.status === 200) return dispatch(fetchUnreadMessagesSuccess(res.data));
+			})
+			.catch((err) => {
+				if (err.message) return dispatch(fetchUnreadMessagesFailure(getMessage(err)));
+			});
+	};
+}
+
+/***************************************** Set as read messages *****************************************/
+// export function setReadMessagesAction(userId) { ... }

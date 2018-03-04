@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import UnreadNotifMessages from '../../UnreadMessages/UnreadNotifMessages';
 import { logoutAction } from '../../../actions/authentification';
 import { Button, Container, Menu, Segment, Dropdown, Label, Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
@@ -41,7 +42,7 @@ class NavigationMain extends Component {
 
 	render() {
 		const { activeItem } = this.state;
-		const { authentification, logoutAction, userMe } = this.props;
+		const { authentification, logoutAction, userMe, socket } = this.props;
 
 		return (
 			<Segment inverted>
@@ -54,9 +55,7 @@ class NavigationMain extends Component {
 						<Menu.Item position="right">
 							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
 
-							{/* TODO HERE créer un component  'UnreadNotifMessages'  'UnreadModalMessages'  qui fetchera les unreadMessages dans componentDidMount() */}
-							{/* TODO ET fera un emit.on('new_message_server') des news messages qu'on les ajoutera au store */}
-							{ authentification.authenticated ? (<Menu.Item as="a"><Icon name="mail" /><Label circular color="red" size="mini" floating>22</Label></Menu.Item>) : ''}
+							{ authentification.authenticated ? (<Menu.Item as="a"><UnreadNotifMessages socket={socket} /></Menu.Item>) : ''}
 							{ authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''}
 							{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" name="login" active={activeItem === 'login'} onClick={this.handleItemClick}>Log in</Menu.Item>) : ''}
 							{ !authentification.authenticated ? (<Button as={Link} to="/signup" name="signup" active={activeItem === 'signup'} inverted style={{marginLeft: '0.5em'}} onClick={this.handleItemClick}>Sign Up</Button>) : ''}
@@ -70,6 +69,7 @@ class NavigationMain extends Component {
 
 NavigationMain.propTypes = {
 	authentification: PropTypes.object,
+	socket: PropTypes.object,
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,

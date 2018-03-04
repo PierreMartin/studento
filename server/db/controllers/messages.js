@@ -1,4 +1,5 @@
 import Message from '../models/message';
+import Channel from '../models/channel';
 
 /**
  * GET /api/getmessages/:channelid
@@ -26,21 +27,46 @@ export function allByChannelId(req, res) {
 export function allUnreadByUserId(req, res) {
 	const { userid } = req.params;
 
-	Message.find({ author: userid, 'readBy.at': null }).populate('author', '_id username avatarMainSrc.avatar28').exec((err, messagesList) => {
-		if (err) return res.status(500).json({message: 'Something went wrong getting the data'});
+	// 1) Get all channelId of ME
+	// 2) find all unread messages by allchannelId
+	// 3) populate for get the users infos
 
-		// TODO trouver une facon de compter tous les messages non lu par channel
-		console.log('messagesList ==> ', messagesList);
+	Channel.find({ users: userid }).distinct('id').exec((err, channelIdArr) => {
+		if (err) return res.status(500).json({ message: 'Something went wrong getting the data' });
 
-		/*
-		const getUnreadMessagesListForUser = {
-			[messagesList.channelid]: {
-				messages: messagesList
+		const pipeline = [
+			{
+				$match:
+					{
+						channelId: { $in: channelIdArr },
+						'readBy.at': null
+					}
+			},
+			{
+				$group:
+					{
+						_id: '$channelId',
+						author: { $addToSet: '$author' },
+						count: { $sum: 1 }
+					}
+			},
+			{
+				$sort: { count: -1 }
+			},
+			{
+				$limit: 100
 			}
-		};
-		*/
+		];
 
-		return res.status(200).json({message: 'unread messages fetched', messagesList});
+		Message.aggregate(pipeline).exec((errAgg, unreadMessagesRaw) => {
+			if (errAgg) return res.status(500).json({ message: 'Something went wrong getting the data' });
+
+			Message.populate(unreadMessagesRaw, { path: 'author', select: '_id username avatarMainSrc.avatar28' }, (errPop, unreadMessagesList) => {
+				if (errPop) return res.status(500).json({ message: 'Something went wrong getting the data' });
+
+				return res.status(200).json({ message: 'unread messages fetched', unreadMessagesList });
+			});
+		});
 	});
 }
 
@@ -61,5 +87,6 @@ export function add(req, res) {
 
 export default {
 	allByChannelId,
+	allUnreadByUserId,
 	add
 };

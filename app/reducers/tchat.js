@@ -86,6 +86,7 @@ const messagesListOpen = (state = {}, action) => {
 const unreadMessages = (state = {}, action) => {
 	switch (action.type) {
 		case types.GET_NB_UNREAD_MESSAGES_TCHAT_SUCCESS:
+			if (action.unreadMessagesList) return action.unreadMessagesList;
 			return state;
 		case types.GET_NB_UNREAD_MESSAGE_TCHAT_FAILURE:
 			return state;

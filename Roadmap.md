@@ -68,3 +68,5 @@ unreadMessages = {
     content: 'Salut kjkj koo jkjkjk',              
     created_at: Date()
 }, ... ]
+
+db.messages.distinct('channelId');

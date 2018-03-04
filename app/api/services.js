@@ -87,6 +87,10 @@ export function api() {
 			method: 'GET',
 			url: '/api/getmessages/' + channelId
 		}),
+		getUnreadMessagesByUserId: userId => localClient.request({
+			method: 'GET',
+			url: '/api/getunreadmessages/' + userId
+		}),
 		createMessage: newMessageData => localClient.request({
 			method: 'POST',
 			url: '/api/addmessage',
