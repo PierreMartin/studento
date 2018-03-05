@@ -20,12 +20,10 @@ class UnreadNotifMessages extends Component {
 	renderNbUnreadMessages(unreadMessages) {
 		let nbUnreadMessages = 0;
 
-		if (Object.keys(unreadMessages).length > 0) {
-			for (const key in unreadMessages) {
-				if (unreadMessages[key]) {
-					const unreadMessage = unreadMessages[key];
-					if (unreadMessage.count) nbUnreadMessages += unreadMessage.count;
-				}
+		if (unreadMessages.length > 0) {
+			for (let i = 0; i < unreadMessages.length; i++) {
+				const unreadMessage = unreadMessages[i];
+				if (unreadMessage.count) nbUnreadMessages += unreadMessage.count;
 			}
 		}
 
@@ -48,6 +46,12 @@ class UnreadNotifMessages extends Component {
 UnreadNotifMessages.propTypes = {
 	socket: PropTypes.object.isRequired,
 	fetchUnreadMessagesAction: PropTypes.func,
+
+	unreadMessages: PropTypes.arrayOf(PropTypes.shape({
+		_id: PropTypes.string,
+		author: PropTypes.array, // populate
+		count: PropTypes.number
+	})),
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
