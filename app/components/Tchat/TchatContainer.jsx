@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, receiveNewMessageSocketAction } from '../../actions/tchat';
+import { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, receiveNewMessageSocketAction, setReadMessagesAction } from '../../actions/tchat';
 import ChatHeader from './TchatHeader';
 import ChatMessages from './TchatMessages';
 import ChatInput from './TchatInput';
@@ -18,6 +18,7 @@ class TchatContainer extends Component {
 		this.handleClickCloseChatBox = this.handleClickCloseChatBox.bind(this);
 		this.handleChangeSendMessage = this.handleChangeSendMessage.bind(this);
 		this.handleSubmitSendMessage = this.handleSubmitSendMessage.bind(this);
+		this.handleClickMakeReadMessages = this.handleClickMakeReadMessages.bind(this);
 
 		this.state = {
 			content: '',
@@ -106,15 +107,20 @@ class TchatContainer extends Component {
 		this.setState({ content: '', isTyping: false});
 	}
 
+	handleClickMakeReadMessages() {
+		const { setReadMessagesAction, channelId, userMe } = this.props;
+		setReadMessagesAction(channelId, { username: userMe.username, userId: userMe._id });
+	}
+
 	render() {
 		const { userMe, position, messagesListOpen, channelId, channelsListOpen } = this.props;
 		const users = (channelsListOpen && channelsListOpen[channelId] && channelsListOpen[channelId].users) ? channelsListOpen[channelId].users : [];
 		const messages = (messagesListOpen && messagesListOpen[channelId] && messagesListOpen[channelId].messages) ? messagesListOpen[channelId].messages : [];
 
 		return (
-			<Card className={cx('chatbox-container', 'show')} style={{ right: (position * 290) + 'px' }}>
+			<Card className={cx('chatbox-container', 'show')} style={{ right: (position * 290) + 'px' }} >
 				<ChatHeader usersInChannel={users} userMe={userMe} handleClickCloseChatBox={this.handleClickCloseChatBox} />
-				<Card.Content>
+				<Card.Content onClick={this.handleClickMakeReadMessages} >
 					<ChatMessages messagesList={messages} userMe={userMe} />
 					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} typings={this.state.typingArr} />
 				</Card.Content>
@@ -128,6 +134,7 @@ TchatContainer.propTypes = {
 	fetchMessagesAction: PropTypes.func,
 	createNewMessageAction: PropTypes.func,
 	receiveNewMessageSocketAction: PropTypes.func,
+	setReadMessagesAction: PropTypes.func,
 
 	// receiveSocketAction: PropTypes.func,
 	// receiveNewMessageAction: PropTypes.func,
@@ -168,4 +175,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, receiveNewMessageSocketAction })(TchatContainer);
+export default connect(mapStateToProps, { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, receiveNewMessageSocketAction, setReadMessagesAction })(TchatContainer);

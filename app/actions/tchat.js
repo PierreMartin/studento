@@ -1,4 +1,4 @@
-import { getChannelByUserFrontIdRequest, createNewChannelRequest, fetchMessagesRequest, createNewMessageRequest, fetchUnreadMessagesRequest } from './../api';
+import { getChannelByUserFrontIdRequest, createNewChannelRequest, fetchMessagesRequest, createNewMessageRequest, fetchUnreadMessagesRequest, setReadMessagesRequest } from './../api';
 import * as types from 'types';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
@@ -231,4 +231,31 @@ export function fetchUnreadMessagesAction(userId) {
 }
 
 /***************************************** Set as read messages *****************************************/
-// export function setReadMessagesAction(userId) { ... }
+export function setReadMessagesSuccess(res) {
+	return {
+		type: types.SET_READ_MESSAGES_TCHAT_SUCCESS,
+		message: res.message
+	};
+}
+
+export function setReadMessagesFailure(messageError) {
+	return {
+		type: types.SET_READ_MESSAGE_TCHAT_FAILURE,
+		messageError
+	};
+}
+
+export function setReadMessagesAction(channelId, userMeData) {
+	return (dispatch) => {
+		if (!channelId || !userMeData.username || !userMeData.userId) return;
+
+		// TODO conditionner ca dans un setInterval de 4s
+		setReadMessagesRequest(channelId, userMeData)
+			.then((res) => {
+				if (res.status === 200) return dispatch(setReadMessagesSuccess(res.data));
+			})
+			.catch((err) => {
+				if (err.message) return dispatch(setReadMessagesFailure(getMessage(err)));
+			});
+	};
+}

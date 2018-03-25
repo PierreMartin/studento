@@ -91,6 +91,11 @@ export function api() {
 			method: 'GET',
 			url: '/api/getunreadmessages/' + userId
 		}),
+		setReadMessagesByChannelId: (channelId, userMeData) => localClient.request({
+			method: 'PUT',
+			url: '/api/setreadmessages/' + channelId,
+			data: userMeData
+		}),
 		createMessage: newMessageData => localClient.request({
 			method: 'POST',
 			url: '/api/addmessage',

@@ -49,6 +49,7 @@ unreadMessages = [
 
 - A chaque fois qu'on click sur la tchatBox => faire requete PUT sur tout les messages du channel    WHERE 'author._id !== userMe._id' && 'readBy: { user: me, time: null}'   UPDATE 'readBy: { user: me, time: date.now()}'
 - faire la popup pour lister les messages non lu par channelId (afficher les usernames) et ouvrir la tchatBox au click
+- autoscrol + pagination au scroll (limite 20 messages)
 
 
 

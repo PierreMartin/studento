@@ -178,6 +178,16 @@ export const fetchUnreadMessagesRequest = (userId) => {
 		});
 };
 
+export const setReadMessagesRequest = (channelId, userMeData) => {
+	return api().setReadMessagesByChannelId(channelId, userMeData)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
 export const createNewMessageRequest = (newMessageData) => {
 	return api().createMessage(newMessageData)
 		.then((res) => {

@@ -71,6 +71,21 @@ export function allUnreadByUserId(req, res) {
 }
 
 /**
+ * PUT /api/setreadmessages/:channelid
+ */
+export function setReadMessages(req, res) {
+	const { username, userId } = req.body;
+	const { channelid } = req.params;
+	const dataObj = { at: Date.now(), username };
+
+	Message.update({ channelId: channelid, author: { $ne: userId }, 'readBy.at': null }, {$push: { readBy: dataObj } }, { multi: true }).exec((err) => {
+		if (err) return res.status(500).json({ message: 'Something went wrong getting the data' });
+
+		return res.status(200).json({ message: 'messages make as read', channelId: channelid });
+	});
+}
+
+/**
  * POST /api/addmessage
  */
 export function add(req, res) {
@@ -88,5 +103,6 @@ export function add(req, res) {
 export default {
 	allByChannelId,
 	allUnreadByUserId,
+	setReadMessages,
 	add
 };
