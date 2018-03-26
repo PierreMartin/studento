@@ -33,21 +33,7 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 ### TODO :
 - this.state.typingArr => le mettre dans le store de redux (gerer les cas ou l'un ecrit, l'autre a pas encore ouvert la popup)
 
-- UNREAD => dans le store :
-unreadMessages = [
-	{
-	    _id: '5a441104ec5383268e0e7ffe5a443797a2127d2cfa849b5e'
-	    author: [{...}, {...}],
-		count: 3
-	},
-	{
-        _id: '5a441104ec5383268e0e7ffe5a443797a2127d2cfa849b5f'
-	    author: [{...}, {...}],
-		count: 6
-	}
-]
 
-- A chaque fois qu'on click sur la tchatBox => faire requete PUT sur tout les messages du channel    WHERE 'author._id !== userMe._id' && 'readBy: { user: me, time: null}'   UPDATE 'readBy: { user: me, time: date.now()}'
 - faire la popup pour lister les messages non lu par channelId (afficher les usernames) et ouvrir la tchatBox au click
 - autoscrol + pagination au scroll (limite 20 messages)
 
