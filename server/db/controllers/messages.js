@@ -39,7 +39,8 @@ export function allUnreadByUserId(req, res) {
 				$match:
 					{
 						channelId: { $in: channelIdArr },
-						'readBy.at': null
+						'readBy.at': null,
+						author: { $ne: userid }
 					}
 			},
 			{
@@ -78,7 +79,7 @@ export function setReadMessages(req, res) {
 	const { channelid } = req.params;
 	const dataObj = { at: Date.now(), username };
 
-	Message.update({ channelId: channelid, author: { $ne: userId }, 'readBy.at': null }, {$push: { readBy: dataObj } }, { multi: true }).exec((err) => {
+	Message.update({ channelId: channelid, author: { $ne: userId }, 'readBy.username': { $ne: username } }, {$push: { readBy: dataObj } }, { multi: true }).exec((err) => {
 		if (err) return res.status(500).json({ message: 'Something went wrong getting the data' });
 
 		return res.status(200).json({ message: 'messages make as read', channelId: channelid });

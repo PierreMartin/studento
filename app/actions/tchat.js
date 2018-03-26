@@ -2,6 +2,7 @@ import { getChannelByUserFrontIdRequest, createNewChannelRequest, fetchMessagesR
 import * as types from 'types';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
+let numberClickOnTchatBox = 0;
 
 /***************************************** Get channels *****************************************/
 /*
@@ -234,7 +235,8 @@ export function fetchUnreadMessagesAction(userId) {
 export function setReadMessagesSuccess(res) {
 	return {
 		type: types.SET_READ_MESSAGES_TCHAT_SUCCESS,
-		message: res.message
+		message: res.message,
+		channelId: res.channelId
 	};
 }
 
@@ -248,14 +250,23 @@ export function setReadMessagesFailure(messageError) {
 export function setReadMessagesAction(channelId, userMeData) {
 	return (dispatch) => {
 		if (!channelId || !userMeData.username || !userMeData.userId) return;
+		numberClickOnTchatBox++;
 
-		// TODO conditionner ca dans un setInterval de 4s
-		setReadMessagesRequest(channelId, userMeData)
-			.then((res) => {
-				if (res.status === 200) return dispatch(setReadMessagesSuccess(res.data));
-			})
-			.catch((err) => {
-				if (err.message) return dispatch(setReadMessagesFailure(getMessage(err)));
-			});
+		// For prevent the multiple requests for actions lower to 2s:
+		if (numberClickOnTchatBox === 1) {
+			const readMessagesInterval = setInterval(() => {
+				setReadMessagesRequest(channelId, userMeData)
+					.then((res) => {
+						numberClickOnTchatBox = 0;
+						clearInterval(readMessagesInterval);
+						if (res.status === 200) return dispatch(setReadMessagesSuccess(res.data));
+					})
+					.catch((err) => {
+						numberClickOnTchatBox = 0;
+						clearInterval(readMessagesInterval);
+						if (err.message) return dispatch(setReadMessagesFailure(getMessage(err)));
+					});
+			}, 2000);
+		}
 	};
 }

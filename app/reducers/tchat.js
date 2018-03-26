@@ -90,6 +90,12 @@ const unreadMessages = (state = [], action) => {
 			return state;
 		case types.GET_NB_UNREAD_MESSAGE_TCHAT_FAILURE:
 			return state;
+		case types.SET_READ_MESSAGES_TCHAT_SUCCESS:
+			const newState = JSON.parse(JSON.stringify(state)); // clone state
+			if (state.length > 0 && action.channelId) return newState.filter(s => s._id !== action.channelId);
+			return state;
+		case types.SET_READ_MESSAGE_TCHAT_FAILURE:
+			return state;
 		default:
 			return state;
 	}
