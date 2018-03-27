@@ -217,11 +217,11 @@ export function fetchUnreadMessagesFailure(messageError) {
 	};
 }
 
-export function fetchUnreadMessagesAction(userId) {
+export function fetchUnreadMessagesAction(userId, username) {
 	return (dispatch) => {
-		if (!userId) return;
+		if (!userId || !username) return;
 
-		fetchUnreadMessagesRequest(userId)
+		fetchUnreadMessagesRequest(userId, username)
 			.then((res) => {
 				if (res.status === 200) return dispatch(fetchUnreadMessagesSuccess(res.data));
 			})

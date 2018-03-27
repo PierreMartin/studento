@@ -13,8 +13,8 @@ class UnreadNotifMessages extends Component {
 
 	componentDidMount() {
 		const { userMe, fetchUnreadMessagesAction, socket } = this.props;
-		fetchUnreadMessagesAction(userMe._id); // update store
-		// socket.on('new_message_server', () => {}); // update store
+		fetchUnreadMessagesAction(userMe._id, userMe.username); // update store
+		// socket.on('new_message_server', () => {}); // update store 		// TODO next step here
 	}
 
 	renderNbUnreadMessages(unreadMessages) {

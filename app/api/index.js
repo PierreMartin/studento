@@ -168,8 +168,8 @@ export const fetchMessagesRequest = (channelId) => {
 		});
 };
 
-export const fetchUnreadMessagesRequest = (userId) => {
-	return api().getUnreadMessagesByUserId(userId)
+export const fetchUnreadMessagesRequest = (userId, username) => {
+	return api().getUnreadMessagesByUserId(userId, username)
 		.then((res) => {
 			return Promise.resolve(res);
 		})

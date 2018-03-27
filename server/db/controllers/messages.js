@@ -25,7 +25,7 @@ export function allByChannelId(req, res) {
  * GET /api/getunreadmessages/:userid
  */
 export function allUnreadByUserId(req, res) {
-	const { userid } = req.params;
+	const { userid, username } = req.params;
 
 	// 1) Get all channelId of ME
 	// 2) find all unread messages by allchannelId
@@ -39,7 +39,7 @@ export function allUnreadByUserId(req, res) {
 				$match:
 					{
 						channelId: { $in: channelIdArr },
-						'readBy.at': null,
+						'readBy.username': { $ne: username },
 						author: { $ne: userid }
 					}
 			},
