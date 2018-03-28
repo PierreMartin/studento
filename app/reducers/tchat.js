@@ -90,6 +90,25 @@ const unreadMessages = (state = [], action) => {
 			return state;
 		case types.GET_NB_UNREAD_MESSAGE_TCHAT_FAILURE:
 			return state;
+		case types.RECEIVE_UNREAD_MESSAGE_TCHAT:
+			const newStateForUnreadMessages = JSON.parse(JSON.stringify(state)) || []; // clone state
+
+			for (let i = 0; i < newStateForUnreadMessages.length; i++) {
+				// if channel already exist:
+				if (newStateForUnreadMessages[i]._id === action.newMessageData.channelId) {
+					newStateForUnreadMessages[i].count++;
+					return newStateForUnreadMessages;
+				}
+			}
+
+			// if channel don't exist in unreadMessages:
+			newStateForUnreadMessages.push({
+				...action.newMessageData.author,
+				count: 1,
+				_id: action.newMessageData.channelId
+			});
+
+			return newStateForUnreadMessages;
 		case types.SET_READ_MESSAGES_TCHAT_SUCCESS:
 			const newState = JSON.parse(JSON.stringify(state)); // clone state
 			if (state.length > 0 && action.channelId) return newState.filter(s => s._id !== action.channelId);

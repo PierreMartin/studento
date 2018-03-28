@@ -231,6 +231,16 @@ export function fetchUnreadMessagesAction(userId, username) {
 	};
 }
 
+/********************************* Receive unread message (by sockets) ***********************************/
+export function receiveUnreadMessagesAction(messageReceive) {
+	if (!messageReceive || !messageReceive.newMessageData) return;
+
+	return {
+		type: types.RECEIVE_UNREAD_MESSAGE_TCHAT,
+		newMessageData: messageReceive.newMessageData
+	};
+}
+
 /***************************************** Set as read messages *****************************************/
 export function setReadMessagesSuccess(res) {
 	return {
