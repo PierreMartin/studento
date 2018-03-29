@@ -1,11 +1,10 @@
-import { getChannelByUserFrontIdRequest, createNewChannelRequest, fetchMessagesRequest, createNewMessageRequest, fetchUnreadMessagesRequest, setReadMessagesRequest } from './../api';
+import { getChannelsByUserIdRequest, getChannelByUserFrontIdRequest, createNewChannelRequest, fetchMessagesRequest, createNewMessageRequest, fetchUnreadMessagesRequest, setReadMessagesRequest } from './../api';
 import * as types from 'types';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 let numberClickOnTchatBox = 0;
 
 /***************************************** Get channels *****************************************/
-/*
 export function getChannelsByUserIdSuccess(res) {
 	return {
 		type: types.GET_CHANNELS_TCHAT_SUCCESS,
@@ -34,7 +33,6 @@ export function getChannelsByUserIdAction(userMeId) {
 			});
 	};
 }
-*/
 
 /***************************************** Create new channel *****************************************/
 /*
@@ -112,7 +110,12 @@ export function openTchatboxAction(userMe, userFront, channelsListOpen) {
 		getChannelByUserFrontIdRequest(userMe._id, userFront._id)
 			.then((res) => {
 				getChannel = res && res.data && res.data.getChannel;
-				if (!getChannel) return createNewChannelRequest(userFront._id, userMe._id);
+				if (!getChannel) {
+					const newChannelResponse = createNewChannelRequest(userFront._id, userMe._id);
+					const newChannel = newChannelResponse && newChannelResponse.data && newChannelResponse.data.newChannel;
+					// dispatch(updateChannelsListAll(newChannel.id));
+					return newChannelResponse;
+				}
 			})
 			.then((res) => {
 				if (!getChannel) {

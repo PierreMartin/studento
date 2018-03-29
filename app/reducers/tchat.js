@@ -27,6 +27,18 @@ messagesListOpen = {
 }
 */
 
+const channelsListAll = (state = [], action) => {
+	switch (action.type) {
+		case types.GET_CHANNELS_TCHAT_SUCCESS:
+			console.log(action.channelsList);
+			return state;
+		case types.GET_CHANNELS_TCHAT_FAILURE:
+			return state;
+		default:
+			return state;
+	}
+};
+
 const channelsListOpen = (state = {}, action) => {
 	switch (action.type) {
 		case types.ADD_TCHATBOX:
@@ -121,6 +133,7 @@ const unreadMessages = (state = [], action) => {
 };
 
 const tchatReducer = combineReducers({
+	channelsListAll,
 	channelsListOpen,
 	messagesListOpen,
 	unreadMessages
