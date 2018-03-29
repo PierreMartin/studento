@@ -14,17 +14,28 @@ class UnreadNotifMessages extends Component {
 	componentDidMount() {
 		const { userMe, fetchUnreadMessagesAction, receiveUnreadMessagesAction, socket } = this.props;
 
-		// update store if open component (reload in this context):
+		// unreadMessages - update store first time:
 		fetchUnreadMessagesAction(userMe._id, userMe.username);
 
-		// update store if receive sockets:
+		// unreadMessages - 1) join channels for receive sockets:
+		// 1) fetchAllMyChannels (1X)
+		// 2) add my news channels (from me) + update store
+		// 3) reveice news channels (from others) + update store
+		// 4) ICI on fera   socket.emit('join_channel', this.props.channelsListArr);
+
+		/*
+		### Seul solution trouvé pour le 3) :
+		receiveAllSocketsWhenAChannelCreate = {
+			newChannelId: '123456789',
+			userIdDestination: '559'
+		}
+		if (receiveAllSocketsWhenAChannelCreate.userIdDestination === userMe._id) { Update store ( state.push(newChannelId) ) }
+		*/
+
+		// unreadMessages - 2) update store if receive sockets:
 		socket.on('new_message_server', (messageReceive) => {
-			// if (channelId === messageReceive.newMessageData.channelId) {
 			console.log('### receives messages sockets ', messageReceive);
-			// TODO MERDE ICI psk on fais un 'join_channel' uniquement quand la tchatBox est open
-			// il faut souscrire tout MES channels quand CE component is componentDidMount
 			receiveUnreadMessagesAction(messageReceive);
-			// }
 		});
 	}
 
