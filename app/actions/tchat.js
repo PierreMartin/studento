@@ -102,6 +102,13 @@ export function openTchatboxSuccess(getChannel) {
 	};
 }
 
+export function updateChannelsList(channelId) {
+	return {
+		type: types.UPDATE_CHANNELS_LIST_TCHAT,
+		channelId
+	};
+}
+
 export function openTchatboxAction(userMe, userFront, channelsListOpen) {
 	return (dispatch) => {
 		if (!userMe || !userFront || isTchatboxAlreadyOpened(userFront._id, channelsListOpen)) return;
@@ -110,16 +117,15 @@ export function openTchatboxAction(userMe, userFront, channelsListOpen) {
 		getChannelByUserFrontIdRequest(userMe._id, userFront._id)
 			.then((res) => {
 				getChannel = res && res.data && res.data.getChannel;
-				if (!getChannel) {
-					const newChannelResponse = createNewChannelRequest(userFront._id, userMe._id);
-					const newChannel = newChannelResponse && newChannelResponse.data && newChannelResponse.data.newChannel;
-					// dispatch(updateChannelsListAll(newChannel.id));
-					return newChannelResponse;
-				}
+				if (!getChannel) return createNewChannelRequest(userFront._id, userMe._id);
 			})
-			.then((res) => {
+			.then((resNewChannel) => {
+				// if channel create:
 				if (!getChannel) {
-					getChannel = res && res.data && res.data.newChannel; // data from channel create
+					getChannel = resNewChannel && resNewChannel.data && resNewChannel.data.newChannel;
+
+					// update the channelsListAll store:
+					if (getChannel && Object.keys(getChannel)[0]) dispatch(updateChannelsList(Object.keys(getChannel)[0]));
 				}
 
 				// Open a new instance of tchatbox :

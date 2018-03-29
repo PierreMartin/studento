@@ -34,6 +34,9 @@ const channelsListAll = (state = [], action) => {
 			return state;
 		case types.GET_CHANNELS_TCHAT_FAILURE:
 			return state;
+		case types.UPDATE_CHANNELS_LIST_TCHAT:
+			if (action.channelId) return [...state, action.channelId];
+			return state;
 		default:
 			return state;
 	}
