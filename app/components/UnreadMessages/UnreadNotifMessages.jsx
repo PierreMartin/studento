@@ -12,14 +12,14 @@ class UnreadNotifMessages extends Component {
 	}
 
 	componentDidMount() {
-		const { userMe, fetchUnreadMessagesAction, receiveUnreadMessagesAction, getChannelsByUserIdAction, socket } = this.props;
+		const { userMe, fetchUnreadMessagesAction, receiveUnreadMessagesAction, getChannelsByUserIdAction, socket, channelsListAll } = this.props;
 
 		// unreadMessages - update store first time:
 		fetchUnreadMessagesAction(userMe._id, userMe.username);
 
 		// unreadMessages - 1) join channels for receive sockets:
 		// a) fetchAllMyChannels (one time):
-		getChannelsByUserIdAction(userMe._id); // TODO finir ca
+		getChannelsByUserIdAction(userMe._id);
 
 		// b) add my new channels (from me) + update store => in action
 
@@ -33,7 +33,7 @@ class UnreadNotifMessages extends Component {
 		*/
 
 		// d) join channel:
-		// socket.emit('join_channel', this.props.channelsListArr);
+		// socket.emit('join_channel', channelsListAll);
 
 		// unreadMessages - 2) update store if receive sockets:
 		socket.on('new_message_server', (messageReceive) => {
@@ -80,6 +80,8 @@ UnreadNotifMessages.propTypes = {
 		count: PropTypes.number
 	})),
 
+	channelsListAll: PropTypes.array,
+
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
 		email: PropTypes.string,
@@ -91,6 +93,7 @@ UnreadNotifMessages.propTypes = {
 function mapStateToProps(state) {
 	return {
 		userMe: state.userMe.data,
+		channelsListAll: state.tchat.channelsListAll,
 		unreadMessages: state.tchat.unreadMessages
 	};
 }

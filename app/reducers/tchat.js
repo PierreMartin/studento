@@ -30,7 +30,7 @@ messagesListOpen = {
 const channelsListAll = (state = [], action) => {
 	switch (action.type) {
 		case types.GET_CHANNELS_TCHAT_SUCCESS:
-			console.log(action.channelsList);
+			if (action.channelsList && action.channelsList.length > 0) return action.channelsList;
 			return state;
 		case types.GET_CHANNELS_TCHAT_FAILURE:
 			return state;

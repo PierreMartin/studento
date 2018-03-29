@@ -7,8 +7,13 @@ export function allByUserId(req, res) {
 	const { usermeid } = req.params;
 
 	// find by 'users[i]._id'
-	Channel.find({ users: usermeid }).populate('users', '_id username').exec((err, channelsList) => {
+	Channel.find({ users: usermeid }).exec((err, channelsListRaw) => {
 		if (err) return res.status(500).json({message: 'Something went wrong getting the data'});
+
+		const channelsList = [];
+		for (let i = 0; i < channelsListRaw.length; i++) {
+			channelsList.push(channelsListRaw[i].id);
+		}
 
 		return res.status(200).json({message: 'channels fetched', channelsList});
 	});
