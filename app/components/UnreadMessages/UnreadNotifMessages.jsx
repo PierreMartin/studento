@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchUnreadMessagesAction, receiveUnreadMessagesAction, getChannelsByUserIdAction } from '../../actions/tchat';
+import { fetchUnreadMessagesAction, receiveUnreadMessagesAction, fetchChannelsByUserIdAction, updateChannelsListAction } from '../../actions/tchat';
 import { Label, Icon } from 'semantic-ui-react';
 
 
@@ -12,25 +12,28 @@ class UnreadNotifMessages extends Component {
 	}
 
 	componentDidMount() {
-		const { userMe, fetchUnreadMessagesAction, receiveUnreadMessagesAction, getChannelsByUserIdAction, socket, channelsListAll } = this.props;
+		const { userMe, fetchUnreadMessagesAction, receiveUnreadMessagesAction, fetchChannelsByUserIdAction, updateChannelsListAction, socket, channelsListAll } = this.props;
 
 		// unreadMessages - update store first time:
 		fetchUnreadMessagesAction(userMe._id, userMe.username);
 
 		// unreadMessages - 1) join channels for receive sockets:
 		// a) fetchAllMyChannels (one time):
-		getChannelsByUserIdAction(userMe._id);
+		fetchChannelsByUserIdAction(userMe._id);
 
 		// b) add my new channels (from me) + update store => in action
 
 		// c) receive new channels (from others) + update store:
-		/*
-		socket.on('new_channel_server', (channelReceive) => { 	// channelReceive => { newChannelId: '123456789', userIdDestination: '559' };
-			if (channelReceive.userIdDestination === userMe._id) {
-				// dispatch(updateChannelsListAll(channelReceive.newChannelId));
+		socket.on('new_channel_server', (channelReceive) => {
+			if (channelReceive.usersIdDestination && channelReceive.newChannelId) {
+				for (let i = 0; i < channelReceive.usersIdDestination.length; i++) {
+					if (channelReceive.usersIdDestination[i] === userMe._id) {
+						updateChannelsListAction(channelReceive.newChannelId);
+						break;
+					}
+				}
 			}
 		});
-		*/
 
 		// d) join channel:
 		// socket.emit('join_channel', channelsListAll);
@@ -72,7 +75,8 @@ UnreadNotifMessages.propTypes = {
 	socket: PropTypes.object.isRequired,
 	fetchUnreadMessagesAction: PropTypes.func,
 	receiveUnreadMessagesAction: PropTypes.func,
-	getChannelsByUserIdAction: PropTypes.func,
+	fetchChannelsByUserIdAction: PropTypes.func,
+	updateChannelsListAction: PropTypes.func,
 
 	unreadMessages: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
@@ -98,4 +102,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, { fetchUnreadMessagesAction, receiveUnreadMessagesAction, getChannelsByUserIdAction })(UnreadNotifMessages);
+export default connect(mapStateToProps, { fetchUnreadMessagesAction, receiveUnreadMessagesAction, fetchChannelsByUserIdAction, updateChannelsListAction })(UnreadNotifMessages);

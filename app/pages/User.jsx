@@ -5,12 +5,13 @@ import { openTchatboxAction } from '../actions/tchat';
 import { Header, Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import UserSingle from '../components/UserSingle/UserSingle';
-
+import io from 'socket.io-client';
 
 class User extends Component {
 	constructor(props) {
 		super(props);
 		this.handleOpenChatBox = this.handleOpenChatBox.bind(this);
+		this.socket = io('', { path: '/api/tchat' });
 	}
 
 	componentDidMount() {
@@ -27,7 +28,7 @@ class User extends Component {
 
 	handleOpenChatBox() {
 		const { openTchatboxAction, userMe, userFront, channelsListOpen } = this.props;
-		openTchatboxAction(userMe, userFront, channelsListOpen);
+		openTchatboxAction(userMe, userFront, channelsListOpen, this.socket);
 	}
 
 	render() {

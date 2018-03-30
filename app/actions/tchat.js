@@ -4,6 +4,31 @@ import * as types from 'types';
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 let numberClickOnTchatBox = 0;
 
+/**
+ * formate an object for send to socket
+ * @param {object} getChannel - the datas of the new channel just created
+ * @param {object} userMe - the datas of my infos as user
+ * @return {object} newChannelId and usersIdDestination
+ **/
+function formateGetChannel(getChannel, userMe) {
+	const objChannel = Object.values(getChannel)[0];
+
+	let newChannelId = '';
+	const usersIdDestination = [];
+
+	if (objChannel) {
+		for (let i = 0; i < objChannel.users.length; i++) {
+			if (objChannel.users[i]._id !== userMe._id) {
+				usersIdDestination.push(objChannel.users[i]._id);
+			}
+		}
+
+		newChannelId = objChannel.id;
+	}
+
+	return { newChannelId, usersIdDestination };
+}
+
 /***************************************** Get channels *****************************************/
 export function getChannelsByUserIdSuccess(res) {
 	return {
@@ -20,7 +45,7 @@ export function getChannelsByUserIdFailure(messageError) {
 	};
 }
 
-export function getChannelsByUserIdAction(userMeId) {
+export function fetchChannelsByUserIdAction(userMeId) {
 	return (dispatch) => {
 		if (!userMeId) return;
 
@@ -102,14 +127,14 @@ export function openTchatboxSuccess(getChannel) {
 	};
 }
 
-export function updateChannelsList(channelId) {
+export function updateChannelsListAction(channelId) {
 	return {
 		type: types.UPDATE_CHANNELS_LIST_TCHAT,
 		channelId
 	};
 }
 
-export function openTchatboxAction(userMe, userFront, channelsListOpen) {
+export function openTchatboxAction(userMe, userFront, channelsListOpen, socket) {
 	return (dispatch) => {
 		if (!userMe || !userFront || isTchatboxAlreadyOpened(userFront._id, channelsListOpen)) return;
 
@@ -125,7 +150,10 @@ export function openTchatboxAction(userMe, userFront, channelsListOpen) {
 					getChannel = resNewChannel && resNewChannel.data && resNewChannel.data.newChannel;
 
 					// update the channelsListAll store:
-					if (getChannel && Object.keys(getChannel)[0]) dispatch(updateChannelsList(Object.keys(getChannel)[0]));
+					if (getChannel && Object.keys(getChannel)[0]) dispatch(updateChannelsListAction(Object.keys(getChannel)[0]));
+
+					// send new channel via sockets:
+					socket.emit('new_channel', formateGetChannel(getChannel, userMe));
 				}
 
 				// Open a new instance of tchatbox :

@@ -10,6 +10,18 @@ export default (io) => {
 		/**
 		 * @param {object}
 		 * {
+		 * 		newChannelId: {Object}
+		 * 		usersIdDestination: {Object}
+		 * }
+		 * */
+		socket.on('new_channel', (param) => {
+			// sending to all clients except sender :
+			socket.broadcast.emit('new_channel_server', param);
+		});
+
+		/**
+		 * @param {object}
+		 * {
 		 * 		newMessageData: {Object}
 		 * 		message: {String}
 		 * }
