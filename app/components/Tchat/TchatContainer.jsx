@@ -32,7 +32,7 @@ class TchatContainer extends Component {
 		fetchMessagesAction(channelId);
 
 		// join channel when tchatbox ready :
-		socket.emit('join_channel', channelId);
+		// socket.emit('join_channel', channelId); // already do in UnreadNotifMessages
 
 		// receives messages sockets from user(s) in channel :
 		socket.on('new_message_server', (messageReceive) => {

@@ -1,10 +1,12 @@
 export default (io) => {
 	io.on('connection', (socket) => {
 		/**
-		 * @param {String} channelId - id of the channel to join
+		 * @param {Array} channelsList - list of the id of the channels to join
 		 * */
-		socket.on('join_channel', (channelId) => {
-			socket.join(channelId);
+		socket.on('join_channel', (channelsList) => {
+			for (let i = 0; i < channelsList.length; i++) {
+				socket.join(channelsList[i]);
+			}
 		});
 
 		/**

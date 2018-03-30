@@ -12,12 +12,12 @@ class UnreadNotifMessages extends Component {
 	}
 
 	componentDidMount() {
-		const { userMe, fetchUnreadMessagesAction, receiveUnreadMessagesAction, fetchChannelsByUserIdAction, updateChannelsListAction, socket, channelsListAll } = this.props;
+		const { userMe, fetchUnreadMessagesAction, receiveUnreadMessagesAction, fetchChannelsByUserIdAction, updateChannelsListAction, socket } = this.props;
 
 		// unreadMessages - update store first time:
 		fetchUnreadMessagesAction(userMe._id, userMe.username);
 
-		// unreadMessages - 1) join channels for receive sockets:
+		/********************* Join all channels *********************/
 		// a) fetchAllMyChannels (one time):
 		fetchChannelsByUserIdAction(userMe._id);
 
@@ -35,14 +35,22 @@ class UnreadNotifMessages extends Component {
 			}
 		});
 
-		// d) join channel:
-		// socket.emit('join_channel', channelsListAll);
+		// d) join channels => in componentDidUpdate()
 
-		// unreadMessages - 2) update store if receive sockets:
+		/********************* Receive all messages by sockets:  *********************/
 		socket.on('new_message_server', (messageReceive) => {
 			console.log('### receives messages sockets ', messageReceive);
 			receiveUnreadMessagesAction(messageReceive);
 		});
+	}
+
+	componentDidUpdate(prevProps) {
+		const { socket, channelsListAll } = this.props;
+
+		if (prevProps.channelsListAll !== channelsListAll) {
+			// join channels:
+			socket.emit('join_channel', channelsListAll);
+		}
 	}
 
 	renderNbUnreadMessages(unreadMessages) {
