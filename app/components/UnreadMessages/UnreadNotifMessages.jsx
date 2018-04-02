@@ -73,7 +73,7 @@ class UnreadNotifMessages extends Component {
 		return (
 			<span>
 				<Icon name="mail" />
-				<Label circular color="red" size="mini" floating>{nbUnreadMessages}</Label>
+				{nbUnreadMessages > 0 ? <Label circular color="red" size="mini" floating>{nbUnreadMessages}</Label> : ''}
 			</span>
 		);
 	}

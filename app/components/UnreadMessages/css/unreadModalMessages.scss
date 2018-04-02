@@ -1,0 +1,27 @@
+.unreadModalMessagesContainer {
+  position: absolute;
+  right: 18px;
+  z-index: 9;
+
+  .content {
+    position: relative;
+
+    .header {
+      font-size: 14px !important;
+    }
+
+    .meta {
+      font-size: 10px !important;
+    }
+
+    .description {
+      display: inline-block;
+    }
+
+    .label {
+      position: absolute;
+      top: 20px;
+      right: 5px;
+    }
+  }
+}

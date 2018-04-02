@@ -3,7 +3,9 @@ import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import UnreadNotifMessages from '../../UnreadMessages/UnreadNotifMessages';
+import UnreadModalMessages from '../../UnreadMessages/UnreadModalMessages';
 import { logoutAction } from '../../../actions/authentification';
+import { openTchatboxSuccess } from '../../../actions/tchat';
 import { Button, Container, Menu, Segment, Dropdown, Label, Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from '../../../css/main.scss';
@@ -15,16 +17,36 @@ class NavigationMain extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			activeItem: 'home'
+			activeItem: 'home',
+			openModalUnreadNotifMessages: false
 		};
 
 		this.handleItemClick = this.handleItemClick.bind(this);
 		this.renderDropdownProfile = this.renderDropdownProfile.bind(this);
+		this.handleClickOpenModalUnreadMessages = this.handleClickOpenModalUnreadMessages.bind(this);
+		this.handleClickOpenTchatBox = this.handleClickOpenTchatBox.bind(this);
 	}
 
 	handleItemClick = (e, { name }) => {
 		this.setState({ activeItem: name });
 	};
+
+	handleClickOpenModalUnreadMessages() {
+		this.setState({ openModalUnreadNotifMessages: !this.state.openModalUnreadNotifMessages });
+	}
+
+	handleClickOpenTchatBox(unreadMessageClicked) {
+		const { openTchatboxSuccess } = this.props;
+
+		// formate for compatibility with the openTchatboxSuccess() action:
+		const getChannelFormated = { [unreadMessageClicked._id]: {
+			id: unreadMessageClicked._id,
+			users: unreadMessageClicked.author
+		} };
+
+		this.setState({ openModalUnreadNotifMessages: false }); // TODO a remplacer par une action Redux
+		openTchatboxSuccess(getChannelFormated);
+	}
 
 	renderDropdownProfile(userMe, authentification, logoutAction) {
 		if (authentification.authenticated) {
@@ -42,7 +64,7 @@ class NavigationMain extends Component {
 
 	render() {
 		const { activeItem } = this.state;
-		const { authentification, logoutAction, userMe, socket } = this.props;
+		const { unreadMessages, authentification, logoutAction, userMe, socket } = this.props;
 
 		return (
 			<Segment inverted>
@@ -55,7 +77,13 @@ class NavigationMain extends Component {
 						<Menu.Item position="right">
 							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
 
-							{ authentification.authenticated ? (<Menu.Item as="a"><UnreadNotifMessages socket={socket} /></Menu.Item>) : ''}
+							{ authentification.authenticated ? (
+								<div>
+									<Menu.Item onClick={this.handleClickOpenModalUnreadMessages} ><UnreadNotifMessages socket={socket} /></Menu.Item>
+									{ this.state.openModalUnreadNotifMessages && <UnreadModalMessages handleClickOpenTchatBox={this.handleClickOpenTchatBox} unreadMessages={unreadMessages} /> }
+								</div>
+								) : ''}
+
 							{ authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''}
 							{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" name="login" active={activeItem === 'login'} onClick={this.handleItemClick}>Log in</Menu.Item>) : ''}
 							{ !authentification.authenticated ? (<Button as={Link} to="/signup" name="signup" active={activeItem === 'signup'} inverted style={{marginLeft: '0.5em'}} onClick={this.handleItemClick}>Sign Up</Button>) : ''}
@@ -78,14 +106,22 @@ NavigationMain.propTypes = {
 		password: PropTypes.string
 	}),
 
-	logoutAction: PropTypes.func.isRequired
+	unreadMessages: PropTypes.arrayOf(PropTypes.shape({
+		_id: PropTypes.string,
+		author: PropTypes.array, // populate
+		count: PropTypes.number
+	})),
+
+	logoutAction: PropTypes.func.isRequired,
+	openTchatboxSuccess: PropTypes.func
 };
 
 function mapStateToProps(state) {
 	return {
 		authentification: state.authentification,
-		userMe: state.userMe.data
+		userMe: state.userMe.data,
+		unreadMessages: state.tchat.unreadMessages
 	};
 }
 
-export default connect(mapStateToProps, { logoutAction })(NavigationMain);
+export default connect(mapStateToProps, { logoutAction, openTchatboxSuccess })(NavigationMain);
