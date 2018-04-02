@@ -9,11 +9,13 @@ const cx = classNames.bind(styles);
 
 
 const renderThreadsList = (handleClickOpenTchatBox, unreadMessages) => {
-	if (unreadMessages.length === 0) return 'No thread(s)';
+	if (unreadMessages.length === 0) {
+		return (<Card.Content className={cx('content')} ><Card.Header as="span" className={cx('header')} >No thread(s)</Card.Header></Card.Content>);
+	}
 
 	return unreadMessages.map((thread, key) => {
 		// TODO gerer les multiples users
-		const src = thread.author[0].avatarMainSrc && thread.author[0].avatarMainSrc.avatar28 ? `/uploads/${thread.author[0].avatarMainSrc.avatar28}` : defaultAvatar28;
+		const src = thread.author && thread.author[0].avatarMainSrc && thread.author[0].avatarMainSrc.avatar28 ? `/uploads/${thread.author[0].avatarMainSrc.avatar28}` : defaultAvatar28;
 		return (
 			<Card.Content className={cx('content')} key={key} as="a" onClick={handleClickOpenTchatBox.bind(this, thread)} >
 				<Image circular floated="left" size="mini" src={src} />

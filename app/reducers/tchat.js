@@ -118,7 +118,7 @@ const unreadMessages = (state = [], action) => {
 
 			// if channel don't exist in unreadMessages:
 			newStateForUnreadMessages.push({
-				...action.newMessageData.author,
+				author: [action.newMessageData.author],
 				count: 1,
 				_id: action.newMessageData.channelId
 			});
