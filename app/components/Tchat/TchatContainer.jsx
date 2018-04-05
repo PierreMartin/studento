@@ -38,7 +38,7 @@ class TchatContainer extends Component {
 		socket.on('new_message_server', (messageReceive) => {
 			if (channelId === messageReceive.newMessageData.channelId) {
 				console.log('### receives messages sockets - tchatBox');
-				receiveNewMessageSocketAction(messageReceive);
+				receiveNewMessageSocketAction(messageReceive); // TODO enlever ca - on le gerera dans UnreadNotifMessages
 			}
 		});
 
