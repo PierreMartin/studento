@@ -37,7 +37,7 @@ class TchatContainer extends Component {
 		// receives messages sockets from user(s) in channel :
 		socket.on('new_message_server', (messageReceive) => {
 			if (channelId === messageReceive.newMessageData.channelId) {
-				console.log('### receives messages sockets');
+				console.log('### receives messages sockets - tchatBox');
 				receiveNewMessageSocketAction(messageReceive);
 			}
 		});
@@ -56,6 +56,10 @@ class TchatContainer extends Component {
 
 			if (channelId === typingReceive.channelId) this.setState({ typingArr: newTypingArr });
 		});
+	}
+
+	componentWillUnmount() {
+		// TODO prevent the   receiveNewMessageSocketAction(messageReceive);
 	}
 
 	handleClickCloseChatBox() {

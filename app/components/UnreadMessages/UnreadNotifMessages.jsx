@@ -39,7 +39,7 @@ class UnreadNotifMessages extends Component {
 
 		/********************* Receive all messages by sockets:  *********************/
 		socket.on('new_message_server', (messageReceive) => {
-			console.log('### receives messages sockets ', messageReceive);
+			console.log('### receives messages sockets - unreadmessage', messageReceive);
 			receiveUnreadMessagesAction(messageReceive);
 		});
 	}

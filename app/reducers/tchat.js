@@ -77,7 +77,7 @@ const messagesListOpen = (state = {}, action) => {
 			return state;
 		case types.CREATE_NEW_MESSAGE_TCHAT_SUCCESS:
 			const channelId = action.newMessageData && action.newMessageData.channelId;
-			if (channelId) {
+			if (channelId && state[channelId]) {
 				return {
 					...state,
 					[channelId]: {

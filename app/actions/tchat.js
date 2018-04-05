@@ -200,9 +200,9 @@ export function fetchMessagesAction(channelId) {
 }
 
 /***************************************** Create new message *****************************************/
-export function createNewMessageSuccess(res) {
+export function createNewMessageSuccess(res) { // RENAME TO :  addOrReceiveNewMessage(res)
 	return {
-		type: types.CREATE_NEW_MESSAGE_TCHAT_SUCCESS,
+		type: types.CREATE_NEW_MESSAGE_TCHAT_SUCCESS, // TODO    ADD_OR_RECEIVE_NEW_MESSAGE_TCHAT
 		message: res.message,
 		newMessageData: res.newMessageData
 	};
@@ -273,7 +273,7 @@ export function receiveUnreadMessagesAction(messageReceive) {
 	if (!messageReceive || !messageReceive.newMessageData) return;
 
 	return {
-		type: types.RECEIVE_UNREAD_MESSAGE_TCHAT,
+		type: types.RECEIVE_UNREAD_MESSAGE_TCHAT, // TODO   ADD_OR_RECEIVE_NEW_MESSAGE_TCHAT
 		newMessageData: messageReceive.newMessageData
 	};
 }
