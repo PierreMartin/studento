@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchUnreadMessagesAction, receiveUnreadMessagesAction, fetchChannelsByUserIdAction, updateChannelsListAction } from '../../actions/tchat';
+import { fetchUnreadMessagesAction, addOrReceiveNewMessageAction, fetchChannelsByUserIdAction, updateChannelsListAction } from '../../actions/tchat';
 import { Label, Icon } from 'semantic-ui-react';
 
 
@@ -12,7 +12,7 @@ class UnreadNotifMessages extends Component {
 	}
 
 	componentDidMount() {
-		const { userMe, fetchUnreadMessagesAction, receiveUnreadMessagesAction, fetchChannelsByUserIdAction, updateChannelsListAction, socket } = this.props;
+		const { userMe, fetchUnreadMessagesAction, addOrReceiveNewMessageAction, fetchChannelsByUserIdAction, updateChannelsListAction, socket } = this.props;
 
 		// unreadMessages - update store first time:
 		fetchUnreadMessagesAction(userMe._id, userMe.username);
@@ -39,8 +39,8 @@ class UnreadNotifMessages extends Component {
 
 		/********************* Receive all messages by sockets:  *********************/
 		socket.on('new_message_server', (messageReceive) => {
-			console.log('### receives messages sockets - unreadmessage', messageReceive);
-			receiveUnreadMessagesAction(messageReceive);
+			console.log('### receives messages sockets - unread message', messageReceive);
+			addOrReceiveNewMessageAction(messageReceive);
 		});
 	}
 
@@ -82,7 +82,7 @@ class UnreadNotifMessages extends Component {
 UnreadNotifMessages.propTypes = {
 	socket: PropTypes.object.isRequired,
 	fetchUnreadMessagesAction: PropTypes.func,
-	receiveUnreadMessagesAction: PropTypes.func,
+	addOrReceiveNewMessageAction: PropTypes.func,
 	fetchChannelsByUserIdAction: PropTypes.func,
 	updateChannelsListAction: PropTypes.func,
 
@@ -110,4 +110,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, { fetchUnreadMessagesAction, receiveUnreadMessagesAction, fetchChannelsByUserIdAction, updateChannelsListAction })(UnreadNotifMessages);
+export default connect(mapStateToProps, { fetchUnreadMessagesAction, addOrReceiveNewMessageAction, fetchChannelsByUserIdAction, updateChannelsListAction })(UnreadNotifMessages);

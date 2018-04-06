@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, receiveNewMessageSocketAction, setReadMessagesAction } from '../../actions/tchat';
+import { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, setReadMessagesAction } from '../../actions/tchat';
 import ChatHeader from './TchatHeader';
 import ChatMessages from './TchatMessages';
 import ChatInput from './TchatInput';
@@ -28,19 +28,22 @@ class TchatContainer extends Component {
 	}
 
 	componentDidMount() {
-		const { fetchMessagesAction, channelId, socket, receiveNewMessageSocketAction } = this.props;
+		const { fetchMessagesAction, channelId, socket } = this.props;
 		fetchMessagesAction(channelId);
 
-		// join channel when tchatbox ready :
-		// socket.emit('join_channel', channelId); // already do in UnreadNotifMessages
+		// join channel when tchatbox ready :  // already do in UnreadNotifMessages
+		/*
+		socket.emit('join_channel', channelId);
+		*/
 
-		// receives messages sockets from user(s) in channel :
+		// receives messages sockets from user(s) in channel : // already do in UnreadNotifMessages
+		/*
 		socket.on('new_message_server', (messageReceive) => {
 			if (channelId === messageReceive.newMessageData.channelId) {
-				console.log('### receives messages sockets - tchatBox');
-				receiveNewMessageSocketAction(messageReceive); // TODO enlever ca - on le gerera dans UnreadNotifMessages
+				addOrReceiveNewMessageAction(messageReceive);
 			}
 		});
+		*/
 
 		// receives typing start from user(s) in channel :
 		socket.on('start_typing_server', (typingReceive) => {
@@ -59,7 +62,7 @@ class TchatContainer extends Component {
 	}
 
 	componentWillUnmount() {
-		// TODO prevent the   receiveNewMessageSocketAction(messageReceive);
+		// TODO prevent the   addOrReceiveNewMessageAction(messageReceive);
 	}
 
 	handleClickCloseChatBox() {
@@ -94,8 +97,10 @@ class TchatContainer extends Component {
 			content: this.state.content,
 			author: userMe._id,
 			created_at: new Date().toISOString()
-			// readBy: new Date().toISOString()
 		};
+
+		// action for persiste in database :
+		createNewMessageAction(newMessageData);
 
 		// action for send socket - We need to create a object for simulate the payload of Mongo population :
 		const newMessageSocket = {};
@@ -104,9 +109,7 @@ class TchatContainer extends Component {
 		newMessageSocket.newMessageData.author = { avatarMainSrc: { avatar28: userMe.avatarMainSrc.avatar28 }, username: userMe.username, _id: userMe._id };
 		socket.emit('new_message', newMessageSocket);
 
-		// action for persiste in database :
-		createNewMessageAction(newMessageData);
-
+		// action for send stop_typing via socket :
 		socket.emit('stop_typing', { username: userMe.username, channelId });
 		this.setState({ content: '', isTyping: false});
 	}
@@ -137,7 +140,6 @@ TchatContainer.propTypes = {
 	closeTchatboxAction: PropTypes.func,
 	fetchMessagesAction: PropTypes.func,
 	createNewMessageAction: PropTypes.func,
-	receiveNewMessageSocketAction: PropTypes.func,
 	setReadMessagesAction: PropTypes.func,
 
 	// receiveSocketAction: PropTypes.func,
@@ -179,4 +181,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, receiveNewMessageSocketAction, setReadMessagesAction })(TchatContainer);
+export default connect(mapStateToProps, { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, setReadMessagesAction })(TchatContainer);

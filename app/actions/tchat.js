@@ -199,15 +199,18 @@ export function fetchMessagesAction(channelId) {
 	};
 }
 
-/***************************************** Create new message *****************************************/
-export function createNewMessageSuccess(res) { // RENAME TO :  addOrReceiveNewMessage(res)
+/********************************* Receive all message (by sockets) ***********************************/
+export function addOrReceiveNewMessageAction(messageReceive) {
+	if (!messageReceive || !messageReceive.newMessageData) return;
+
 	return {
-		type: types.CREATE_NEW_MESSAGE_TCHAT_SUCCESS, // TODO    ADD_OR_RECEIVE_NEW_MESSAGE_TCHAT
-		message: res.message,
-		newMessageData: res.newMessageData
+		type: types.ADD_OR_RECEIVE_NEW_MESSAGE_TCHAT,
+		message: messageReceive.message || '',
+		newMessageData: messageReceive.newMessageData
 	};
 }
 
+/***************************************** Create new message *****************************************/
 export function createNewMessageFailure(messageError) {
 	return {
 		type: types.CREATE_NEW_MESSAGE_TCHAT_FAILURE,
@@ -221,7 +224,7 @@ export function createNewMessageAction(newMessageData) {
 
 		createNewMessageRequest(newMessageData)
 			.then((res) => {
-				if (res.status === 200) return dispatch(createNewMessageSuccess(res.data));
+				if (res.status === 200) return dispatch(addOrReceiveNewMessageAction(res.data));
 			})
 			.catch((err) => {
 				if (err.message) return dispatch(createNewMessageFailure(getMessage(err)));
@@ -229,16 +232,7 @@ export function createNewMessageAction(newMessageData) {
 	};
 }
 
-/***************************************** Receive new message socket *****************************************/
-export function receiveNewMessageSocketAction(messageReceive) {
-	return (dispatch) => {
-		if (!messageReceive) return;
-
-		return dispatch(createNewMessageSuccess(messageReceive));
-	};
-}
-
-/***************************************** Fetch unread messages *****************************************/
+/***************************************** Fetch number unread messages *****************************************/
 export function fetchUnreadMessagesSuccess(res) {
 	return {
 		type: types.GET_NB_UNREAD_MESSAGES_TCHAT_SUCCESS,
@@ -265,16 +259,6 @@ export function fetchUnreadMessagesAction(userId, username) {
 			.catch((err) => {
 				if (err.message) return dispatch(fetchUnreadMessagesFailure(getMessage(err)));
 			});
-	};
-}
-
-/********************************* Receive unread message (by sockets) ***********************************/
-export function receiveUnreadMessagesAction(messageReceive) {
-	if (!messageReceive || !messageReceive.newMessageData) return;
-
-	return {
-		type: types.RECEIVE_UNREAD_MESSAGE_TCHAT, // TODO   ADD_OR_RECEIVE_NEW_MESSAGE_TCHAT
-		newMessageData: messageReceive.newMessageData
 	};
 }
 

@@ -75,7 +75,7 @@ const messagesListOpen = (state = {}, action) => {
 			}
 
 			return state;
-		case types.CREATE_NEW_MESSAGE_TCHAT_SUCCESS:
+		case types.ADD_OR_RECEIVE_NEW_MESSAGE_TCHAT:
 			const channelId = action.newMessageData && action.newMessageData.channelId;
 			if (channelId && state[channelId]) {
 				return {
@@ -105,7 +105,7 @@ const unreadMessages = (state = [], action) => {
 			return state;
 		case types.GET_NB_UNREAD_MESSAGE_TCHAT_FAILURE:
 			return state;
-		case types.RECEIVE_UNREAD_MESSAGE_TCHAT:
+		case types.ADD_OR_RECEIVE_NEW_MESSAGE_TCHAT:
 			const newStateForUnreadMessages = JSON.parse(JSON.stringify(state)) || []; // clone state
 
 			for (let i = 0; i < newStateForUnreadMessages.length; i++) {
