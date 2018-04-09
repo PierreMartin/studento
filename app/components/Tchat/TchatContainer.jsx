@@ -31,6 +31,9 @@ class TchatContainer extends Component {
 		const { fetchMessagesAction, channelId, socket } = this.props;
 		fetchMessagesAction(channelId);
 
+		// we need to check if the current component is mounted when we use socket.on:
+		this.isComponentMounted = true;
+
 		// join channel when tchatbox ready :  // already do in UnreadNotifMessages
 		/*
 		socket.emit('join_channel', channelId);
@@ -50,19 +53,19 @@ class TchatContainer extends Component {
 			const newTypingArr = JSON.parse(JSON.stringify(this.state.typingArr));
 			newTypingArr.push(typingReceive);
 
-			if (channelId === typingReceive.channelId) this.setState({ typingArr: newTypingArr });
+			if (this.isComponentMounted && channelId === typingReceive.channelId) this.setState({ typingArr: newTypingArr });
 		});
 
 		// receives typing stop from user(s) in channel :
 		socket.on('stop_typing_server', (typingReceive) => {
 			const newTypingArr = this.state.typingArr.filter(typing => typing.username !== typingReceive.username);
 
-			if (channelId === typingReceive.channelId) this.setState({ typingArr: newTypingArr });
+			if (this.isComponentMounted && channelId === typingReceive.channelId) this.setState({ typingArr: newTypingArr });
 		});
 	}
 
 	componentWillUnmount() {
-		// TODO prevent the   addOrReceiveNewMessageAction(messageReceive);
+		this.isComponentMounted = false;
 	}
 
 	handleClickCloseChatBox() {
