@@ -7,7 +7,7 @@ import Channel from '../models/channel';
 export function allByChannelId(req, res) {
 	const { channelid } = req.params;
 
-	Message.find({ channelId: channelid }).sort({ created_at: 1 }).limit(30).populate('author', '_id username avatarMainSrc.avatar28').exec((err, messagesList) => {
+	Message.find({ channelId: channelid }).sort({ created_at: -1 }).limit(30).populate('author', '_id username avatarMainSrc.avatar28').exec((err, messagesList) => {
 		if (err) return res.status(500).json({message: 'Something went wrong getting the data'});
 
 		const getMessagesListForChannel = {
