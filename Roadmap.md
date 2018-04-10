@@ -33,6 +33,7 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 ### TODO :
 - this.state.typingArr => le mettre dans le store de redux (gerer les cas ou l'un ecrit, l'autre a pas encore ouvert la popup)
 
+- display dates in unreadModalMessages
 - close popup unread message (addEventListener on body)
 - pagination au scroll (limite 30 messages)
 
