@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { closeTchatboxAction, fetchMessagesAction, createNewMessageAction, setReadMessagesAction } from '../../actions/tchat';
@@ -64,8 +65,17 @@ class TchatContainer extends Component {
 		});
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.messagesListOpen !== this.props.messagesListOpen) this.scrollToBottom();
+	}
+
 	componentWillUnmount() {
 		this.isComponentMounted = false;
+	}
+
+	scrollToBottom() {
+		const chatMessagesNode = ReactDOM.findDOMNode(this.chatMessagesRef); // No yet the 16.3 for use the ref DOM
+		chatMessagesNode.scrollTop = chatMessagesNode.scrollHeight;
 	}
 
 	handleClickCloseChatBox() {
@@ -131,7 +141,7 @@ class TchatContainer extends Component {
 			<Card className={cx('chatbox-container', 'show')} style={{ right: (position * 290) + 'px' }} >
 				<ChatHeader usersInChannel={users} userMe={userMe} handleClickCloseChatBox={this.handleClickCloseChatBox} />
 				<Card.Content onClick={this.handleClickMakeReadMessages} >
-					<ChatMessages messagesList={messages} userMe={userMe} />
+					<ChatMessages messagesList={messages} userMe={userMe} ref={(el) => { this.chatMessagesRef = el; }} />
 					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} typings={this.state.typingArr} />
 				</Card.Content>
 			</Card>
