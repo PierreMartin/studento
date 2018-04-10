@@ -13,7 +13,7 @@ export function allByChannelId(req, res) {
 		const getMessagesListForChannel = {
 			[channelid]: {
 				channelId: channelid,
-				messages: messagesList
+				messages: messagesList.reverse()
 			}
 		};
 
