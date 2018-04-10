@@ -47,6 +47,7 @@ export function allUnreadByUserId(req, res) {
 				$group:
 					{
 						_id: '$channelId',
+						lastMessageDate: { $last: '$created_at' },
 						author: { $addToSet: '$author' },
 						count: { $sum: 1 }
 					}

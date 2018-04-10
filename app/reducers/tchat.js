@@ -112,6 +112,7 @@ const unreadMessages = (state = [], action) => {
 				// if channel already exist:
 				if (newStateForUnreadMessages[i]._id === action.newMessageData.channelId) {
 					newStateForUnreadMessages[i].count++;
+					newStateForUnreadMessages[i].lastMessageDate = action.newMessageData.created_at;
 					return newStateForUnreadMessages;
 				}
 			}
@@ -120,7 +121,8 @@ const unreadMessages = (state = [], action) => {
 			newStateForUnreadMessages.push({
 				author: [action.newMessageData.author],
 				count: 1,
-				_id: action.newMessageData.channelId
+				_id: action.newMessageData.channelId,
+				lastMessageDate: action.newMessageData.created_at
 			});
 
 			return newStateForUnreadMessages;
