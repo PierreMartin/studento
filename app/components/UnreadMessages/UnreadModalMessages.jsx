@@ -8,6 +8,18 @@ import styles from './css/unreadModalMessages.scss';
 
 const cx = classNames.bind(styles);
 
+const renderUsersInChannel = (usersInChannel) => {
+	let usersToDisplay = '';
+
+	if (usersInChannel && usersInChannel.length > 0) {
+		for (let i = 0; i < usersInChannel.length; i++) {
+			const multiUsers = (usersInChannel.length > 1 && i < usersInChannel.length - 1) ? ', ' : '';
+			usersToDisplay += usersInChannel[i].username + multiUsers;
+		}
+	}
+
+	return usersToDisplay;
+};
 
 const renderThreadsList = (handleClickOpenTchatBox, unreadMessages) => {
 	if (unreadMessages.length === 0) {
@@ -15,14 +27,13 @@ const renderThreadsList = (handleClickOpenTchatBox, unreadMessages) => {
 	}
 
 	return unreadMessages.map((thread, key) => {
-		// TODO gerer les multiples users
 		const src = thread.author && thread.author[0].avatarMainSrc && thread.author[0].avatarMainSrc.avatar28 ? `/uploads/${thread.author[0].avatarMainSrc.avatar28}` : defaultAvatar28;
 		const lastMessageDate = moment(thread.lastMessageDate).format('MMMM Do LT');
 
 		return (
 			<Card.Content className={cx('content')} key={key} as="a" onClick={handleClickOpenTchatBox.bind(this, thread)} >
 				<Image circular floated="left" size="mini" src={src} />
-				<Card.Header as="span" className={cx('header')} >{thread.author[0].username}</Card.Header>
+				<Card.Header as="span" className={cx('header')} >{ renderUsersInChannel(thread.author) }</Card.Header>
 				<Card.Meta as="span" className={cx('meta')} >{lastMessageDate}</Card.Meta>
 				{/*<Card.Description className={cx('description')} >Lorem ipsum dolor sit amet...</Card.Description>*/}
 				<Label className={cx('label')} color="red" size="mini">{thread.count}</Label>
