@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -23,18 +24,60 @@ class NavigationMain extends Component {
 
 		this.handleItemClick = this.handleItemClick.bind(this);
 		this.renderDropdownProfile = this.renderDropdownProfile.bind(this);
+
+		// handle open modal:
 		this.handleClickOpenModalUnreadMessages = this.handleClickOpenModalUnreadMessages.bind(this);
+		this.handleClickOutsideUnreadContent = this.handleClickOutsideUnreadContent.bind(this);
+
+		// handle open tchatBox:
 		this.handleClickOpenTchatBox = this.handleClickOpenTchatBox.bind(this);
 	}
 
+	componentDidMount() {
+		// Obliged to use addEventListener for handle the events outside a element
+		document.addEventListener('mousedown', this.handleClickOutsideUnreadContent);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('mousedown', this.handleClickOutsideUnreadContent);
+	}
+
+	/**
+	 * When click on a item of the menu - for set a active class
+	 * @param {object} e - the event datas
+	 * @return {void}
+	 * */
 	handleItemClick = (e, { name }) => {
 		this.setState({ activeItem: name });
 	};
 
+	/**
+	 * When click on <UnreadNotifMessages /> for open/close the UnreadModalMessages
+	 * @return {void}
+	 * */
 	handleClickOpenModalUnreadMessages() {
 		this.setState({ openModalUnreadNotifMessages: !this.state.openModalUnreadNotifMessages });
 	}
 
+	/**
+	 * When <UnreadNotifMessages /> is opened and clicked outside of him
+	 * @param {object} event - the event datas
+	 * @return {void}
+	 * */
+	handleClickOutsideUnreadContent(event) {
+		const unreadContentNode = ReactDOM.findDOMNode(this.unreadContentRef); // No yet the 16.3 for use the ref DOM
+
+		// If don't click on unreadContentNode:
+		if (this.state.openModalUnreadNotifMessages && unreadContentNode && !unreadContentNode.contains(event.target)) {
+			this.setState({ openModalUnreadNotifMessages: false });
+		}
+	}
+
+	/**
+	 * When click on a item in UnreadModalMessages for open the contextual tchatBox
+	 * @param {object} unreadMessageClicked - the datas of the thread clicked
+	 * @return {void}
+	 * */
 	handleClickOpenTchatBox(unreadMessageClicked) {
 		const { openTchatboxSuccess } = this.props;
 
@@ -44,7 +87,7 @@ class NavigationMain extends Component {
 			users: unreadMessageClicked.author
 		} };
 
-		this.setState({ openModalUnreadNotifMessages: false }); // TODO a remplacer par une action Redux
+		this.setState({ openModalUnreadNotifMessages: false });
 		openTchatboxSuccess(getChannelFormated);
 	}
 
@@ -78,7 +121,7 @@ class NavigationMain extends Component {
 							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
 
 							{ authentification.authenticated ? (
-								<div>
+								<div ref={(el) => { this.unreadContentRef = el; }} >
 									<Menu.Item onClick={this.handleClickOpenModalUnreadMessages} ><UnreadNotifMessages socket={socket} /></Menu.Item>
 									{ this.state.openModalUnreadNotifMessages && <UnreadModalMessages handleClickOpenTchatBox={this.handleClickOpenTchatBox} unreadMessages={unreadMessages} /> }
 								</div>
