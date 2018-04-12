@@ -38,8 +38,11 @@ class UnreadNotifMessages extends Component {
 		// d) join channels => in componentDidUpdate()
 
 		/********************* Receive all messages by sockets:  *********************/
-		socket.on('new_message_server', (messageReceive) => {
-			console.log('### receives messages sockets - unread message', messageReceive);
+		socket.on('new_message_server', (messageReceiveRaw) => {
+			console.log('### receives all messages via sockets', messageReceiveRaw);
+
+			const messageReceive = messageReceiveRaw || {};
+			messageReceive.receiveFromSockets = true;
 			addOrReceiveNewMessageAction(messageReceive);
 		});
 	}

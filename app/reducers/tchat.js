@@ -106,6 +106,8 @@ const unreadMessages = (state = [], action) => {
 		case types.GET_NB_UNREAD_MESSAGE_TCHAT_FAILURE:
 			return state;
 		case types.ADD_OR_RECEIVE_NEW_MESSAGE_TCHAT:
+			// Do nothing if the message has been create by the user:
+			if (!action.receiveFromSockets) return state;
 			const newStateForUnreadMessages = JSON.parse(JSON.stringify(state)) || []; // clone state
 
 			for (let i = 0; i < newStateForUnreadMessages.length; i++) {

@@ -206,7 +206,8 @@ export function addOrReceiveNewMessageAction(messageReceive) {
 	return {
 		type: types.ADD_OR_RECEIVE_NEW_MESSAGE_TCHAT,
 		message: messageReceive.message || '',
-		newMessageData: messageReceive.newMessageData
+		newMessageData: messageReceive.newMessageData,
+		receiveFromSockets: !!messageReceive.receiveFromSockets
 	};
 }
 
