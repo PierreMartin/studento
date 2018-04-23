@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Emojify from 'react-emojione';
 import classNames from 'classnames/bind';
 import { Comment } from 'semantic-ui-react';
 import moment from 'moment';
@@ -29,7 +30,7 @@ class TchatMessages extends Component {
 						<Comment.Content className={cx('content')}>
 							<Comment.Author as="a">{message.author.username}</Comment.Author>
 							<Comment.Metadata><div>{dateCreatedAtFormated}</div></Comment.Metadata>
-							<Comment.Text>{message.content}</Comment.Text>
+							<Comment.Text><Emojify output="unicode">{message.content}</Emojify></Comment.Text>
 						</Comment.Content>
 					</Comment>
 				);
