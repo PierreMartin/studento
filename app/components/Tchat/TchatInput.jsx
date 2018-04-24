@@ -1,32 +1,94 @@
-import React from 'react';
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { Form } from 'semantic-ui-react';
+import { Form, Icon, Button } from 'semantic-ui-react';
+import { Picker } from 'emoji-mart';
+import styles from './css/tchat.scss';
+import classNames from 'classnames/bind';
 
-const renderUsersTyping = (typings) => {
-	let usersToDisplay = '';
+const cx = classNames.bind(styles);
 
-	if (typings.length > 0) {
-		for (let i = 0; i < typings.length; i++) {
-			const typing = typings[i];
-			if (typing.username) {
-				const multiUsers = (typings.length > 1 && i + 1 < typings.length) ? ', ' : '';
-				usersToDisplay += `${typing.username} is typing...` + multiUsers;
-			}
+class TchatInput extends Component {
+	constructor(props) {
+		super(props);
+
+		// handle open modal emoji:
+		this.handleClickOpenModalEmoji = this.handleClickOpenModalEmoji.bind(this);
+		this.handleClickOutsideModalEmoji = this.handleClickOutsideModalEmoji.bind(this);
+
+		this.handleClickOnEmoji = this.handleClickOnEmoji.bind(this);
+
+		this.state = {
+			openModalEmoji: false
+		};
+	}
+
+	componentDidMount() {
+		// Obliged to use addEventListener for handle the events outside a element
+		document.addEventListener('mousedown', this.handleClickOutsideModalEmoji);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('mousedown', this.handleClickOutsideModalEmoji);
+	}
+
+	handleClickOpenModalEmoji() {
+		this.setState({ openModalEmoji: !this.state.openModalEmoji });
+	}
+
+	handleClickOutsideModalEmoji(event) {
+		const contentEmojiNode = ReactDOM.findDOMNode(this.contentEmojiRef); // No yet the 16.3 for use the ref DOM
+
+		// If don't click on contentEmojiNode:
+		if (this.state.openModalEmoji && contentEmojiNode && !contentEmojiNode.contains(event.target)) {
+			this.setState({ openModalEmoji: false });
 		}
 	}
 
-	return usersToDisplay;
-};
+	handleClickOnEmoji(emoji) {
+		if (!emoji.colons && emoji.colons === '') return;
+		// this.props.handleSubmitEmoji(emoji.colons);
 
-const TchatInput = ({ handleChangeSendMessage, handleSubmitSendMessage, value, typings }) => {
-	const usersTyping = renderUsersTyping(typings);
+		this.setState({ openModalEmoji: false });
+	}
 
-	return (
-		<Form onSubmit={handleSubmitSendMessage}>
-			<Form.Input placeholder={usersTyping || 'Your message...'} action={{ icon: 'edit', color: 'teal' }} value={value || ''} onChange={handleChangeSendMessage} />
-		</Form>
-	);
-};
+	renderUsersTyping(typings) {
+		let usersToDisplay = '';
+
+		if (typings.length > 0) {
+			for (let i = 0; i < typings.length; i++) {
+				const typing = typings[i];
+				if (typing.username) {
+					const multiUsers = (typings.length > 1 && i + 1 < typings.length) ? ', ' : '';
+					usersToDisplay += `${typing.username} is typing...` + multiUsers;
+				}
+			}
+		}
+
+		return usersToDisplay;
+	}
+
+	render() {
+		const { handleChangeSendMessage, handleSubmitSendMessage, value, typings } = this.props;
+		const usersTyping = this.renderUsersTyping(typings);
+
+		return (
+			<Form onSubmit={handleSubmitSendMessage}>
+				<Form.Input placeholder={usersTyping || 'Your message...'} >
+					<input value={value || ''} onChange={handleChangeSendMessage} />
+
+					<span ref={(el) => { this.contentEmojiRef = el; }} >
+						<Icon size="big" name="smile" color="grey" link onClick={this.handleClickOpenModalEmoji} className={cx('picto-emoji')} >
+							{ this.state.openModalEmoji && <Picker set="apple" emojiSize={20} onClick={this.handleClickOnEmoji} /> }
+						</Icon>
+					</span>
+
+					<Button icon="send" color="teal" type="submit" />
+				</Form.Input>
+			</Form>
+		);
+	}
+}
 
 
 TchatInput.propTypes = {
