@@ -4,6 +4,7 @@
 # production
 /build
 /compiled
+/public/assets/*
 /public/uploads/*
 /public/uploadsRaw/*
 
