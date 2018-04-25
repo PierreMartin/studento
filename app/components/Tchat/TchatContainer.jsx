@@ -20,6 +20,7 @@ class TchatContainer extends Component {
 		this.handleChangeSendMessage = this.handleChangeSendMessage.bind(this);
 		this.handleSubmitSendMessage = this.handleSubmitSendMessage.bind(this);
 		this.handleClickMakeReadMessages = this.handleClickMakeReadMessages.bind(this);
+		this.addEmoji = this.addEmoji.bind(this);
 
 		this.state = {
 			content: '',
@@ -132,6 +133,20 @@ class TchatContainer extends Component {
 		setReadMessagesAction(channelId, { username: userMe.username, userId: userMe._id });
 	}
 
+	addEmoji(emoji) {
+		const { content } = this.state;
+		const inputNode = this.inputComponentRef && this.inputComponentRef.inputRef;
+		let start = content.substring(0, inputNode.selectionStart);
+		let end = content.substring(inputNode.selectionStart);
+
+		// handle the spaces :
+		if (start.indexOf(' ', start.length - 1) === -1) start += ' ';
+		if (end.indexOf(' ', 0) === -1) end = ' ' + end;
+
+		this.setState({ content: start + emoji + end });
+		inputNode.focus();
+	}
+
 	render() {
 		const { userMe, position, messagesListOpen, channelId, channelsListOpen } = this.props;
 		const users = (channelsListOpen && channelsListOpen[channelId] && channelsListOpen[channelId].users) ? channelsListOpen[channelId].users : [];
@@ -142,7 +157,7 @@ class TchatContainer extends Component {
 				<ChatHeader usersInChannel={users} userMe={userMe} handleClickCloseChatBox={this.handleClickCloseChatBox} />
 				<Card.Content onClick={this.handleClickMakeReadMessages} >
 					<ChatMessages messagesList={messages} userMe={userMe} ref={(el) => { this.chatMessagesRef = el; }} />
-					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} typings={this.state.typingArr} />
+					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} typings={this.state.typingArr} ref={(el) => { this.inputComponentRef = el; }} addEmoji={this.addEmoji} />
 				</Card.Content>
 			</Card>
 		);

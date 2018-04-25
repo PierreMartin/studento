@@ -47,8 +47,8 @@ class TchatInput extends Component {
 
 	handleSubmitEmoji(emoji) {
 		if (!emoji.colons || emoji.colons === '') return;
-		// this.props.handleSubmitEmoji(emoji.colons);
 
+		this.props.addEmoji(emoji.colons);
 		this.setState({ openModalEmoji: false });
 	}
 
@@ -75,7 +75,7 @@ class TchatInput extends Component {
 		return (
 			<Form onSubmit={handleSubmitSendMessage}>
 				<Form.Input placeholder={usersTyping || 'Your message...'} >
-					<input value={value || ''} onChange={handleChangeSendMessage} />
+					<input value={value || ''} onChange={handleChangeSendMessage} ref={(el) => { this.inputRef = el; }} />
 
 					<span ref={(el) => { this.contentEmojiRef = el; }} >
 						{ this.state.openModalEmoji && <Picker set="apple" emojiSize={20} onClick={this.handleSubmitEmoji} /> }
@@ -93,6 +93,7 @@ class TchatInput extends Component {
 TchatInput.propTypes = {
 	handleChangeSendMessage: PropTypes.func,
 	handleSubmitSendMessage: PropTypes.func,
+	addEmoji: PropTypes.func,
 	value: PropTypes.string,
 
 	typings: PropTypes.arrayOf(PropTypes.shape({
