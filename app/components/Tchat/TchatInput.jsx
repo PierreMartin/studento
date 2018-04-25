@@ -16,7 +16,7 @@ class TchatInput extends Component {
 		this.handleClickOpenModalEmoji = this.handleClickOpenModalEmoji.bind(this);
 		this.handleClickOutsideModalEmoji = this.handleClickOutsideModalEmoji.bind(this);
 
-		this.handleClickOnEmoji = this.handleClickOnEmoji.bind(this);
+		this.handleSubmitEmoji = this.handleSubmitEmoji.bind(this);
 
 		this.state = {
 			openModalEmoji: false
@@ -37,16 +37,16 @@ class TchatInput extends Component {
 	}
 
 	handleClickOutsideModalEmoji(event) {
-		const contentEmojiNode = ReactDOM.findDOMNode(this.contentEmojiRef); // No yet the 16.3 for use the ref DOM
+		const contentEmojiNode = ReactDOM.findDOMNode(this.contentEmojiRef);
 
-		// If don't click on contentEmojiNode:
+		// If picker open and click ouside him:
 		if (this.state.openModalEmoji && contentEmojiNode && !contentEmojiNode.contains(event.target)) {
 			this.setState({ openModalEmoji: false });
 		}
 	}
 
-	handleClickOnEmoji(emoji) {
-		if (!emoji.colons && emoji.colons === '') return;
+	handleSubmitEmoji(emoji) {
+		if (!emoji.colons || emoji.colons === '') return;
 		// this.props.handleSubmitEmoji(emoji.colons);
 
 		this.setState({ openModalEmoji: false });
@@ -78,9 +78,8 @@ class TchatInput extends Component {
 					<input value={value || ''} onChange={handleChangeSendMessage} />
 
 					<span ref={(el) => { this.contentEmojiRef = el; }} >
-						<Icon size="big" name="smile" color="grey" link onClick={this.handleClickOpenModalEmoji} className={cx('picto-emoji')} >
-							{ this.state.openModalEmoji && <Picker set="apple" emojiSize={20} onClick={this.handleClickOnEmoji} /> }
-						</Icon>
+						{ this.state.openModalEmoji && <Picker set="apple" emojiSize={20} onClick={this.handleSubmitEmoji} /> }
+						<Icon size="big" name="smile" color="grey" link onClick={this.handleClickOpenModalEmoji} className={cx('picto-emoji')} />
 					</span>
 
 					<Button icon="send" color="teal" type="submit" />
