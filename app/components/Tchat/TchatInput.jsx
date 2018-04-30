@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Form, Icon, Button } from 'semantic-ui-react';
 import { Picker } from 'emoji-mart';
+import { emojify } from 'react-emojione';
 import styles from './css/tchat.scss';
 import classNames from 'classnames/bind';
 
@@ -46,9 +47,9 @@ class TchatInput extends Component {
 	}
 
 	handleSubmitEmoji(emoji) {
-		if (!emoji.colons || emoji.colons === '') return;
+		if (!emoji.native) return;
 
-		this.props.addEmoji(emoji.colons);
+		this.props.addEmoji(emoji.native);
 		this.setState({ openModalEmoji: false });
 	}
 
@@ -71,11 +72,12 @@ class TchatInput extends Component {
 	render() {
 		const { handleChangeSendMessage, handleSubmitSendMessage, value, typings } = this.props;
 		const usersTyping = this.renderUsersTyping(typings);
+		const valueEmojify = emojify(value, {output: 'unicode'});
 
 		return (
 			<Form onSubmit={handleSubmitSendMessage}>
 				<Form.Input placeholder={usersTyping || 'Your message...'} >
-					<input value={value || ''} onChange={handleChangeSendMessage} ref={(el) => { this.inputRef = el; }} />
+					<input value={valueEmojify || ''} onChange={handleChangeSendMessage} ref={(el) => { this.inputRef = el; }} />
 
 					<span ref={(el) => { this.contentEmojiRef = el; }} >
 						{ this.state.openModalEmoji && <Picker set="apple" emojiSize={20} onClick={this.handleSubmitEmoji} /> }

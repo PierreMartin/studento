@@ -146,9 +146,9 @@ class TchatContainer extends Component {
 		if (start.length > 0 && start.indexOf(' ', start.length - 1) === -1) start += ' ';
 		if (end.indexOf(' ', 0) === -1) end = ' ' + end;
 
-		const emojiWithoutSkin = emoji.replace(/::.*/i, ':');
+		// const emojiWithoutSkin = emoji.replace(/::.*/i, ':');
 
-		this.setState({ content: start + emojiWithoutSkin + end });
+		this.setState({ content: start + emoji + end });
 		inputNode.focus();
 	}
 
