@@ -140,7 +140,7 @@ class TchatContainer extends Component {
 		let end = content.substring(inputNode.selectionStart);
 
 		// handle the spaces :
-		if (start.indexOf(' ', start.length - 1) === -1) start += ' ';
+		if (start.length > 0 && start.indexOf(' ', start.length - 1) === -1) start += ' ';
 		if (end.indexOf(' ', 0) === -1) end = ' ' + end;
 
 		const emojiWithoutSkin = emoji.replace(/::.*/i, ':');
