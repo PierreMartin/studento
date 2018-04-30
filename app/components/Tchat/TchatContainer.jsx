@@ -104,11 +104,14 @@ class TchatContainer extends Component {
 
 	handleSubmitSendMessage(event) {
 		event.preventDefault();
+		const content = this.state.content.trim();
+		if (content === '') return;
+
 		const { createNewMessageAction, userMe, channelId, socket } = this.props;
 
 		const newMessageData = {
 			channelId,
-			content: this.state.content,
+			content,
 			author: userMe._id,
 			created_at: new Date().toISOString()
 		};
