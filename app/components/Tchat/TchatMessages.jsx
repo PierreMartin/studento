@@ -41,10 +41,10 @@ class TchatMessages extends Component {
 	}
 
 	render() {
-		const { messagesList, userMe } = this.props;
+		const { messagesList, userMe, handleOnScroll } = this.props;
 
 		return (
-			<Comment.Group className={cx('chatbox-messages-container')}>
+			<Comment.Group className={cx('chatbox-messages-container')} onScroll={handleOnScroll}>
 				{ this.renderMessages(messagesList, userMe) }
 			</Comment.Group>
 		);
@@ -53,6 +53,8 @@ class TchatMessages extends Component {
 
 
 TchatMessages.propTypes = {
+	handleOnScroll: PropTypes.func,
+
 	userMe: PropTypes.shape({
 		_id: PropTypes.string,
 		username: PropTypes.string

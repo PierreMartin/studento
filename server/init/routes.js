@@ -47,7 +47,7 @@ export default (app) => {
 
 	// messages tchat routes
 	if (messagesController) {
-		app.get('/api/getmessages/:channelid', messagesController.allByChannelId);
+		app.get('/api/getmessages/:channelid/:page', messagesController.allByChannelId);
 		app.get('/api/getunreadmessages/:userid/:username', messagesController.allUnreadByUserId);
 		app.put('/api/setreadmessages/:channelid', messagesController.setReadMessages);
 		app.post('/api/addmessage', messagesController.add);

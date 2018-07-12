@@ -21,17 +21,23 @@ class TchatContainer extends Component {
 		this.handleSubmitSendMessage = this.handleSubmitSendMessage.bind(this);
 		this.handleClickMakeReadMessages = this.handleClickMakeReadMessages.bind(this);
 		this.addEmoji = this.addEmoji.bind(this);
+		this.handleOnScroll = this.handleOnScroll.bind(this);
 
 		this.state = {
 			content: '',
 			isTyping: false,
-			typingArr: []
+			typingArr: [],
+
+			page: 0,
+			isLoading: false,
+			hasMore: true,
+			preventScrollToBottom: false
 		};
 	}
 
 	componentDidMount() {
 		const { fetchMessagesAction, channelId, socket } = this.props;
-		fetchMessagesAction(channelId);
+		fetchMessagesAction(channelId, 0);
 
 		// we need to check if the current component is mounted when we use socket.on:
 		this.isComponentMounted = true;
@@ -152,6 +158,35 @@ class TchatContainer extends Component {
 		inputNode.focus();
 	}
 
+	reFetchMessages() {
+		if (this.state.isLoading || !this.state.hasMore) return;
+
+		const { fetchMessagesAction, channelId } = this.props;
+		this.setState({isLoading: true});
+
+		// startKey = page * 20,    endKey = (page * 20) + 20
+		// fetchMessagesAction(channelId, this.state.page + 1);
+
+		/*
+		$.ajax({
+			url: "#",
+			data: null,
+			method: "GET",
+			success: (data) => {
+				const newData = this.state.data.concat(data);
+				this.setState({data: newData, isLoading: false: page: page++, preventScrollToBottom: true});
+			}
+		});
+		*/
+	}
+
+	handleOnScroll() {
+		const chatMessagesNode = ReactDOM.findDOMNode(this.chatMessagesRef);
+		const scrolledToTop = chatMessagesNode.scrollTop > 0 && chatMessagesNode.scrollTop <= 5;
+
+		if (scrolledToTop) this.reFetchMessages();
+	}
+
 	render() {
 		const { userMe, position, messagesListOpen, channelId, channelsListOpen } = this.props;
 		const users = (channelsListOpen && channelsListOpen[channelId] && channelsListOpen[channelId].users) ? channelsListOpen[channelId].users : [];
@@ -161,7 +196,7 @@ class TchatContainer extends Component {
 			<Card className={cx('chatbox-container', 'show')} style={{ right: (position * 290) + 'px' }} >
 				<ChatHeader usersInChannel={users} userMe={userMe} handleClickCloseChatBox={this.handleClickCloseChatBox} />
 				<Card.Content onClick={this.handleClickMakeReadMessages} >
-					<ChatMessages messagesList={messages} userMe={userMe} ref={(el) => { this.chatMessagesRef = el; }} />
+					<ChatMessages messagesList={messages} userMe={userMe} handleOnScroll={this.handleOnScroll} ref={(el) => { this.chatMessagesRef = el; }} />
 					<ChatInput handleChangeSendMessage={this.handleChangeSendMessage} handleSubmitSendMessage={this.handleSubmitSendMessage} value={this.state.content} typings={this.state.typingArr} ref={(el) => { this.inputComponentRef = el; }} addEmoji={this.addEmoji} />
 				</Card.Content>
 			</Card>

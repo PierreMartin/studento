@@ -2,10 +2,10 @@ import Message from '../models/message';
 import Channel from '../models/channel';
 
 /**
- * GET /api/getmessages/:channelid
+ * GET /api/getmessages/:channelid/:page
  */
 export function allByChannelId(req, res) {
-	const { channelid } = req.params;
+	const { channelid, page } = req.params;
 
 	Message.find({ channelId: channelid }).sort({ created_at: -1 }).limit(30).populate('author', '_id username avatarMainSrc.avatar28').exec((err, messagesList) => {
 		if (err) return res.status(500).json({message: 'Something went wrong getting the data'});

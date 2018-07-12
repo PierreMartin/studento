@@ -83,9 +83,9 @@ export function api() {
 			url: '/api/addchannel',
 			data: { userFrontId, userMeId }
 		}),
-		getMessages: channelId => localClient.request({
+		getMessages: (channelId, page) => localClient.request({
 			method: 'GET',
-			url: '/api/getmessages/' + channelId
+			url: '/api/getmessages/' + channelId + '/' + page
 		}),
 		getUnreadMessagesByUserId: (userId, username) => localClient.request({
 			method: 'GET',
