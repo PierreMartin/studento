@@ -156,8 +156,8 @@ export const createNewChannelRequest = (userFrontId, userMeId) => {
 		});
 };
 
-export const fetchMessagesRequest = (channelId, page) => {
-	return api().getMessages(channelId, page)
+export const fetchMessagesRequest = (channelId, lastMessageId) => {
+	return api().getMessages(channelId, lastMessageId)
 		.then((res) => {
 			return Promise.resolve(res);
 		})

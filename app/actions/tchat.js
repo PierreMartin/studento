@@ -185,11 +185,11 @@ export function fetchMessagesFailure(messageError) {
 	};
 }
 
-export function fetchMessagesAction(channelId, page) {
+export function fetchMessagesAction(channelId, lastMessageId) {
 	return (dispatch) => {
 		if (!channelId) return;
 
-		fetchMessagesRequest(channelId, page)
+		fetchMessagesRequest(channelId, lastMessageId)
 			.then((res) => {
 				if (res.status === 200) return dispatch(fetchMessagesSuccess(res.data));
 			})

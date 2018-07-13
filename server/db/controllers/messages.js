@@ -2,13 +2,34 @@ import Message from '../models/message';
 import Channel from '../models/channel';
 
 /**
- * GET /api/getmessages/:channelid/:page
+ * POST /api/getmessages/:channelid
  */
 export function allByChannelId(req, res) {
-	const { channelid, page } = req.params;
+	const { channelid } = req.params;
+	const lastMessageId = req.body;
+	const numberOfMessagesPerPage = 10;
 
-	Message.find({ channelId: channelid }).sort({ created_at: -1 }).limit(30).populate('author', '_id username avatarMainSrc.avatar28').exec((err, messagesList) => {
+	console.log('channelid :', channelid, 'lastId ==> ', lastMessageId[channelid]);
+
+	if (typeof lastMessageId[channelid] !== 'undefined') {
+		return Message.find({ channelId: channelid, _id: { $gt: lastMessageId[channelid]} }).sort({ created_at: -1 }).limit(numberOfMessagesPerPage).populate('author', '_id username avatarMainSrc.avatar28').exec((err, messagesList) => {
+			if (err) return res.status(500).json({message: 'Something went wrong getting the data'});
+			console.log('re-load');
+
+			const getMessagesListForChannel = {
+				[channelid]: {
+					channelId: channelid,
+					messages: messagesList.reverse()
+				}
+			};
+
+			return res.status(200).json({message: 'messages fetched', getMessagesListForChannel});
+		});
+	}
+
+	Message.find({ channelId: channelid }).sort({ created_at: -1 }).limit(numberOfMessagesPerPage).populate('author', '_id username avatarMainSrc.avatar28').exec((err, messagesList) => {
 		if (err) return res.status(500).json({message: 'Something went wrong getting the data'});
+		console.log('1st load');
 
 		const getMessagesListForChannel = {
 			[channelid]: {
