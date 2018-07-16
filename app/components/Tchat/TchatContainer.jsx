@@ -182,7 +182,7 @@ class TchatContainer extends Component {
 
 	handleOnScroll() {
 		const chatMessagesNode = ReactDOM.findDOMNode(this.chatMessagesRef);
-		const scrolledToTop = chatMessagesNode.scrollTop > 0 && chatMessagesNode.scrollTop <= 5;
+		const scrolledToTop = chatMessagesNode.scrollTop > 0 && chatMessagesNode.scrollTop <= 20;
 
 		if (scrolledToTop) this.reFetchMessages();
 	}

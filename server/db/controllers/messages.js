@@ -7,7 +7,7 @@ import Channel from '../models/channel';
 export function allByChannelId(req, res) {
 	const { channelid } = req.params;
 	const lastMessageId = req.body;
-	const numberOfMessagesPerPage = 10;
+	const numberOfMessagesPerPage = 30;
 
 	// console.log('channelid :', channelid, 'lastId ==> ', lastMessageId[channelid]);
 
