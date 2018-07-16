@@ -28,10 +28,10 @@ class TchatContainer extends Component {
 			isTyping: false,
 			typingArr: [],
 
-			page: 0,
 			isLoading: false,
 			hasMore: true,
-			preventScrollToBottom: false
+			preventScrollToBottom: false,
+			lastScrollHeight: 0
 		};
 	}
 
@@ -82,7 +82,15 @@ class TchatContainer extends Component {
 
 	scrollToBottom() {
 		const chatMessagesNode = ReactDOM.findDOMNode(this.chatMessagesRef); // No yet the 16.3 for use the ref DOM
+		this.setState({lastScrollHeight: chatMessagesNode.scrollHeight});
+
 		chatMessagesNode.scrollTop = chatMessagesNode.scrollHeight;
+	}
+
+	scrollToBottomAtLastLoad() {
+		// Used after reFetching messages:
+		const chatMessagesNode = ReactDOM.findDOMNode(this.chatMessagesRef);
+		chatMessagesNode.scrollTop = this.state.lastScrollHeight;
 	}
 
 	handleClickCloseChatBox() {
@@ -167,14 +175,19 @@ class TchatContainer extends Component {
 		this.setState({isLoading: true, preventScrollToBottom: true});
 		fetchMessagesAction(channelId, lastMessageId);
 
+		// just for tests:
+		setTimeout(() => {
+			this.scrollToBottomAtLastLoad();
+		}, 200);
+
 		/*
 		$.ajax({
 			url: "#",
 			data: null,
 			method: "GET",
 			success: (data) => {
-				const newData = this.state.data.concat(data);
-				this.setState({data: newData, isLoading: false: page: page++, preventScrollToBottom: false});
+				this.setState({isLoading: false, preventScrollToBottom: false});
+				this.scrollToBottomAtLastLoad();
 			}
 		});
 		*/

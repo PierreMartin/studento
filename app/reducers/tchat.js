@@ -63,7 +63,18 @@ const channelsListOpen = (state = {}, action) => {
 const messagesListOpen = (state = {}, action) => {
 	switch (action.type) {
 		case types.GET_MESSAGES_TCHAT_SUCCESS:
-			if (action.getMessagesListForChannel) return {...state, ...action.getMessagesListForChannel};
+			if (action.getMessagesListForChannel) {
+				let newMessagesListForChannel = {};
+
+				const cId = Object.keys(action.getMessagesListForChannel)[0];
+				const oldMsgs = state[cId] ? state[cId].messages : [];
+				const newMsgs = action.getMessagesListForChannel[cId].messages;
+
+				newMessagesListForChannel = action.getMessagesListForChannel;
+				newMessagesListForChannel[cId].messages = [...newMsgs, ...oldMsgs];
+
+				return {...state, ...newMessagesListForChannel};
+			}
 			return state;
 		case types.GET_MESSAGE_TCHAT_FAILURE:
 			return state;
