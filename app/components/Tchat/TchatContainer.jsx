@@ -173,24 +173,11 @@ class TchatContainer extends Component {
 		const lastMessageId = {[channelId]: messagesListOpen[channelId].messages[0]._id};
 
 		this.setState({isLoading: true, preventScrollToBottom: true});
-		fetchMessagesAction(channelId, lastMessageId);
 
-		// just for tests:
-		setTimeout(() => {
+		fetchMessagesAction(channelId, lastMessageId).then((res) => {
 			this.scrollToBottomAtLastLoad();
-		}, 200);
-
-		/*
-		$.ajax({
-			url: "#",
-			data: null,
-			method: "GET",
-			success: (data) => {
-				this.setState({isLoading: false, preventScrollToBottom: false});
-				this.scrollToBottomAtLastLoad();
-			}
+			this.setState({isLoading: false, preventScrollToBottom: false, hasMore: res.hasMore});
 		});
-		*/
 	}
 
 	handleOnScroll() {

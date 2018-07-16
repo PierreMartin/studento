@@ -170,11 +170,12 @@ export function closeTchatboxAction(channelId) {
 }
 
 /***************************************** Fetch messages *****************************************/
-export function fetchMessagesSuccess(res) {
+export function fetchMessagesSuccess(res, hasMore) {
 	return {
 		type: types.GET_MESSAGES_TCHAT_SUCCESS,
 		message: res.message,
-		getMessagesListForChannel: res.getMessagesListForChannel
+		getMessagesListForChannel: res.getMessagesListForChannel,
+		hasMore
 	};
 }
 
@@ -189,9 +190,10 @@ export function fetchMessagesAction(channelId, lastMessageId) {
 	return (dispatch) => {
 		if (!channelId) return;
 
-		fetchMessagesRequest(channelId, lastMessageId)
+		return fetchMessagesRequest(channelId, lastMessageId)
 			.then((res) => {
-				if (res.status === 200) return dispatch(fetchMessagesSuccess(res.data));
+				const hasMore = res.data.getMessagesListForChannel[channelId] && res.data.getMessagesListForChannel[channelId].messages.length > 0;
+				if (res.status === 200) return dispatch(fetchMessagesSuccess(res.data, hasMore));
 			})
 			.catch((err) => {
 				if (err.message) return dispatch(fetchMessagesFailure(getMessage(err)));
