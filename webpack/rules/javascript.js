@@ -3,7 +3,7 @@ const PATHS = require('../paths');
 module.exports = ({ production = false, browser = false } = {}) => {
   const enableHotModuleReplacement = !production && browser;
   const createPresets = enableHotModuleReplacement => {
-    const presets = ['es2015', 'react', 'stage-0'];
+    const presets = ['env', 'react', 'stage-2'];
     return enableHotModuleReplacement ? ['react-hmre', ...presets]: presets;
   };
   const presets = createPresets(enableHotModuleReplacement);
@@ -18,7 +18,7 @@ module.exports = ({ production = false, browser = false } = {}) => {
 		{
 			loader: 'babel-loader',
 			options: {
-				presets,
+				// presets, // TODO We use .babelrc
 				plugins
 			}
 		}
