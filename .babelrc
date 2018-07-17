@@ -3,8 +3,9 @@
     ["env", {
       "targets": {
         "browsers": [
-          "last 2 version",
-          "> 1%"
+          "last 4 versions",
+          "safari >= 7",
+          "ie >= 9"
         ]
       }
     }],
