@@ -24,6 +24,9 @@ export const DESTROY_COURSE_FAILURE = 'DESTROY_COURSE_FAILURE';
 export const RATING_COURSE_SUCCESS = 'RATING_COURSE_SUCCESS';
 export const RATING_COURSE_FAILURE = 'RATING_COURSE_FAILURE';
 
+// Empty the course in store
+export const EMPTY_COURSE = 'EMPTY_COURSE';
+
 /***************************************** Authentification ********************************************/
 export const LOGIN_BEGIN_USER = 'LOGIN_BEGIN_USER';
 export const SIGNUP_BEGIN_USER = 'SIGNUP_BEGIN_USER';

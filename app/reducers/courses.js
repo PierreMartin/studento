@@ -1,26 +1,17 @@
 import { combineReducers } from 'redux';
 import * as types from './../types';
 
-const addCourse = (state = {}, action) => {
-	switch (action.type) {
-		case types.CREATE_COURSE_SUCCESS:
-			return action.data;
-		default:
-			return state;
-	}
-};
 
-
-const courses = (state = [], action) => {
+const all = (state = [], action) => {
 	switch (action.type) {
 		case types.GET_COURSES_SUCCESS:
-			if (action.data) return action.data;
+			if (action.courses) return action.courses;
 			return state;
 		case types.GET_COURSES_FAILURE:
-			if (action.data) return action.data; // I add 'data' just for example
 			return state;
 		case types.CREATE_COURSE_SUCCESS:
-			return [...state, addCourse(undefined, action)];
+			if (action.course) return [...state, action.course];
+			return state;
 		case types.CREATE_COURSE_FAILURE:
 			return state.filter(t => t.id !== action.id);
 		default:
@@ -28,21 +19,23 @@ const courses = (state = [], action) => {
 	}
 };
 
-
-const typingCreateCourseState = (state = '', action) => {
+const one = (state = {}, action) => {
 	switch (action.type) {
-		case types.TYPING_CREATE_COURSE_ACTION:
-			return action.typingCurrentValue;
-		case types.CREATE_COURSE_SUCCESS:
-			return '';
+		case types.GET_COURSE_SUCCESS:
+			if (action.course) return action.course;
+			return state;
+		case types.GET_COURSE_FAILURE:
+			return state;
+		case types.EMPTY_COURSE:
+			return {};
 		default:
 			return state;
 	}
 };
 
 const coursesReducer = combineReducers({
-	courses, // TODO rename to 'all'
-	typingCreateCourseState
+	all,
+	one
 });
 
 export default coursesReducer;

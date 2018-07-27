@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { updateUserAction } from '../actions/userMe';
+// import { createCourseAction } from '../actions/courses';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Container, Form, Message } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
@@ -18,6 +18,8 @@ class CourseAddOrEdit extends Component {
 		this.state = {
 			fieldsTyping: {}
 		};
+
+		this.isEditing = typeof this.props.course._id !== 'undefined';
 	}
 
 	getOptionsFormsSelect() {
@@ -56,10 +58,16 @@ class CourseAddOrEdit extends Component {
 	handleOnSubmit(event) {
 		event.preventDefault();
 
-		const { course, updateUserAction, userMe } = this.props;
+		const { course, userMe } = this.props;
 		const fields = this.getFieldsVal(this.state.fieldsTyping, course);
 
-		// updateUserAction(fields, userMe._id);
+		/*
+		if (this.isEditing) {
+			updateCourseAction(fields);
+		} else {
+			createCourseAction(fields, userMe._id);
+		}
+		*/
 	}
 
 	handleInputChange(event, field) {
@@ -102,7 +110,7 @@ class CourseAddOrEdit extends Component {
 			<LayoutPage {...this.getMetaData()}>
 				<Segment vertical>
 					<Container>
-						<h4>{ course ? 'Edit a course' : 'Add a course' }</h4>
+						<h4>{ this.isEditing ? 'Edit a course' : 'Add a course' }</h4>
 
 						<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
 							<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={updateMissingRequiredField.title} onChange={this.handleInputChange} />
@@ -128,7 +136,8 @@ class CourseAddOrEdit extends Component {
 }
 
 CourseAddOrEdit.propTypes = {
-	updateUserAction: PropTypes.func.isRequired,
+	// createCourseAction: PropTypes.func.isRequired,
+	// updateCourseAction: PropTypes.func.isRequired,
 	updateMissingRequiredField: PropTypes.object,
 	updateMessageError: PropTypes.string,
 
@@ -150,4 +159,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { updateUserAction })(CourseAddOrEdit);
+export default connect(mapStateToProps, null)(CourseAddOrEdit);

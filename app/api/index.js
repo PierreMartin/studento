@@ -8,17 +8,17 @@ export const fetchCoursesRequest = (params, store) => {
 	return api().getCourses()
 		.then((res) => {
 			if (res.status === 200) {
-				store.dispatch({type: types.GET_COURSES_SUCCESS, data: res.data});
+				store.dispatch({type: types.GET_COURSES_SUCCESS, courses: res.data});
 			}
 		})
 		.catch((err) => {
-			store.dispatch({type: types.GET_COURSES_FAILURE, message: err.message });
+			store.dispatch({type: types.GET_COURSES_FAILURE, message: getMessage(err) });
 		});
 };
 
 export const fetchCourseRequest = (params, store) => {
 	if (params && params.action === 'create') {
-		// store.dispatch({type: types.RESET_COURSE});
+		store.dispatch({type: types.EMPTY_COURSE});
 		return;
 	}
 
@@ -26,11 +26,11 @@ export const fetchCourseRequest = (params, store) => {
 		return api().getCourseById(params.id)
 			.then((res) => {
 				if (res.status === 200) {
-					store.dispatch({type: types.GET_COURSE_SUCCESS, data: res.data});
+					store.dispatch({type: types.GET_COURSE_SUCCESS, course: res.data});
 				}
 			})
 			.catch((err) => {
-				store.dispatch({type: types.GET_COURSE_FAILURE, message: err.message});
+				store.dispatch({type: types.GET_COURSE_FAILURE, message: getMessage(err)});
 			});
 	}
 };
