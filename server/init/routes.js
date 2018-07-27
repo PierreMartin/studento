@@ -11,6 +11,7 @@ export default (app) => {
 	// courses routes
 	if (coursesController) {
 		app.get('/api/getcourses', coursesController.all);
+		app.get('/api/getcourse/:id', coursesController.oneById);
 		app.post('/api/addcourse/:id', coursesController.add);
 	} else {
 		console.warn('courses routes');

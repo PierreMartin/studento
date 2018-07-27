@@ -26,7 +26,7 @@ export const fetchCourseRequest = (params, store) => {
 		return api().getCourseById(params.id)
 			.then((res) => {
 				if (res.status === 200) {
-					store.dispatch({type: types.GET_COURSE_SUCCESS, course: res.data});
+					store.dispatch({type: types.GET_COURSE_SUCCESS, course: res.data.course});
 				}
 			})
 			.catch((err) => {

@@ -19,7 +19,7 @@ class CourseAddOrEdit extends Component {
 			fieldsTyping: {}
 		};
 
-		this.isEditing = typeof this.props.course._id !== 'undefined';
+		this.isEditing = this.props.course && typeof this.props.course._id !== 'undefined';
 	}
 
 	getOptionsFormsSelect() {
