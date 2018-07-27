@@ -19,7 +19,7 @@ export const fetchCoursesRequest = (params, store) => {
 export const fetchCourseRequest = (params, store) => {
 	if (params && params.action === 'create') {
 		store.dispatch({type: types.EMPTY_COURSE});
-		return;
+		return Promise.resolve({});
 	}
 
 	if (params && (params.action === 'edit' || params.action === 'view')) {
