@@ -17,6 +17,11 @@ export const fetchCoursesRequest = (params, store) => {
 };
 
 export const fetchCourseRequest = (params, store) => {
+	if (params && params.id === 'create') {
+		// store.dispatch({type: types.RESET_COURSE});
+		return;
+	}
+
 	return api().getCourseById(params.id)
 		.then((res) => {
 			if (res.status === 200) {

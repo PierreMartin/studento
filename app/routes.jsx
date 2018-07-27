@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import { fetchCoursesRequest, fetchUsersRequest, fetchUserRequest } from './api';
+import { fetchCoursesRequest, fetchCourseRequest, fetchUsersRequest, fetchUserRequest } from './api';
 import App from './pages/App';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -53,7 +53,7 @@ export default (store) => {
         <Route path="password" component={SettingsPassword} onEnter={requireAuth} />
       </Route>
 
-      <Route path="/course_add_or_edit/:id" component={CourseAddOrEdit} />
+      <Route path="/course_add_or_edit/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} />
 
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Login} />

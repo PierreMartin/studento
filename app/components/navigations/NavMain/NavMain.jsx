@@ -120,7 +120,7 @@ class NavigationMain extends Component {
 						<Menu.Item position="right">
 							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
 
-							{ authentification.authenticated ? (<Menu.Item as={Link} to="/course_add_or_edit/noid"><Icon name="add" />Add a course</Menu.Item>) : ''}
+							{ authentification.authenticated ? (<Menu.Item as={Link} to="/course_add_or_edit/create"><Icon name="add" />Add a course</Menu.Item>) : ''}
 
 							{ authentification.authenticated ? (
 								<div ref={(el) => { this.unreadContentRef = el; }} >
