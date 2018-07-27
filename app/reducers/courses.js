@@ -41,7 +41,7 @@ const typingCreateCourseState = (state = '', action) => {
 };
 
 const coursesReducer = combineReducers({
-	courses,
+	courses, // TODO rename to 'all'
 	typingCreateCourseState
 });
 

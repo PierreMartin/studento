@@ -12,6 +12,7 @@ import SettingsPassword from './pages/SettingsPassword';
 import Login from './pages/Login';
 import Users from './pages/Users';
 import User from './pages/User';
+import CourseAddOrEdit from './pages/CourseAddOrEdit';
 
 
 export default (store) => {
@@ -51,6 +52,8 @@ export default (store) => {
         <Route path="mail" component={SettingsMail} onEnter={requireAuth} />
         <Route path="password" component={SettingsPassword} onEnter={requireAuth} />
       </Route>
+
+      <Route path="/course_add_or_edit/:id" component={CourseAddOrEdit} />
 
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Login} />

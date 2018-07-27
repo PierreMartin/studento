@@ -10,8 +10,8 @@ $> show dbs
 $> use studento
 $> show collections
 
-db.cours.find()
-db.cours.find({"text": "test 1"} , {_id:0}) 
+db.courses.find()
+db.courses.find({"text": "test 1"} , {_id:0}) 
 
 db.users.remove({})
 db.users.update({}, {$unset: {avatarsSrc: 1}}, false, true)
@@ -31,6 +31,34 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 
 
 ### TODO :
+- fetchCourseRequest
+
+- page 'dashboard'    -> coursesListDashBoard(Uid) (buttons: [view | edit | delete])  -> page 'course' | page 'courseEdit' | popup 'delete'
+- page 'courses'      -> coursesList(all)                                             -> page 'course'
+- page 'course'       -> courseSingle(one)
+- page 'courseAdd'
+- page 'courseEdit'
+
+Course: {
+    uId, (author)
+    category, (one possible : informatique, education, sport)
+    subCategory, (many possible : javascript, web, front-end, ...)
+    title,
+    content,
+    created_at,
+    isPrivate,
+    
+    staredBy: [{
+        username: { type: String, default: '' },
+        at: { type: Date, default: null }
+    }]
+    
+    commentedBy: [{
+        username: { type: String, default: '' },
+        at: { type: Date, default: null }
+    }]
+}
+
 - this.state.typingArr => le mettre dans le store de redux (gerer les cas ou l'un ecrit, l'autre a pas encore ouvert la popup)
 - ajouter lastMessageContent
 
@@ -38,20 +66,3 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - refacto les notifications + gerer toutes les erreurs
 - check si un username / email est deja utilisé
 - supprimer le fichier de l'avatar si update
-
-
-- user : [ {
-    id: '123488',                   // <= userMe
-    socketID: 'AA789456', 
-    username: 'PierreMrt'
-}, ... ]
-
-- message: [ {
-    id: '523476', 
-    channelId: '11222888999', 
-    authorId: '123488',             // <= user??     if (authorId === user.id) ? userMe : userFront
-    content: 'Salut kjkj koo jkjkjk',              
-    created_at: Date()
-}, ... ]
-
-db.messages.distinct('channelId');

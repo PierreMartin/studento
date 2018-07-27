@@ -120,6 +120,8 @@ class NavigationMain extends Component {
 						<Menu.Item position="right">
 							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
 
+							{ authentification.authenticated ? (<Menu.Item as={Link} to="/course_add_or_edit/noid"><Icon name="add" />Add a course</Menu.Item>) : ''}
+
 							{ authentification.authenticated ? (
 								<div ref={(el) => { this.unreadContentRef = el; }} >
 									<Menu.Item onClick={this.handleClickOpenModalUnreadMessages} ><UnreadNotifMessages socket={socket} /></Menu.Item>
@@ -127,7 +129,7 @@ class NavigationMain extends Component {
 								</div>
 								) : ''}
 
-							{ authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''}
+							{/* authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''*/}
 							{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" name="login" active={activeItem === 'login'} onClick={this.handleItemClick}>Log in</Menu.Item>) : ''}
 							{ !authentification.authenticated ? (<Button as={Link} to="/signup" name="signup" active={activeItem === 'signup'} inverted style={{marginLeft: '0.5em'}} onClick={this.handleItemClick}>Sign Up</Button>) : ''}
 						</Menu.Item>
