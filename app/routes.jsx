@@ -53,7 +53,7 @@ export default (store) => {
         <Route path="password" component={SettingsPassword} onEnter={requireAuth} />
       </Route>
 
-      <Route path="/course_add_or_edit/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} />
+      <Route path="/course/:action/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} />
 
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Login} />

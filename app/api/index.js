@@ -17,20 +17,22 @@ export const fetchCoursesRequest = (params, store) => {
 };
 
 export const fetchCourseRequest = (params, store) => {
-	if (params && params.id === 'create') {
+	if (params && params.action === 'create') {
 		// store.dispatch({type: types.RESET_COURSE});
 		return;
 	}
 
-	return api().getCourseById(params.id)
-		.then((res) => {
-			if (res.status === 200) {
-				store.dispatch({type: types.GET_COURSE_SUCCESS, data: res.data});
-			}
-		})
-		.catch((err) => {
-			store.dispatch({type: types.GET_COURSE_FAILURE, message: err.message});
-		});
+	if (params && (params.action === 'edit' || params.action === 'view')) {
+		return api().getCourseById(params.id)
+			.then((res) => {
+				if (res.status === 200) {
+					store.dispatch({type: types.GET_COURSE_SUCCESS, data: res.data});
+				}
+			})
+			.catch((err) => {
+				store.dispatch({type: types.GET_COURSE_FAILURE, message: err.message});
+			});
+	}
 };
 
 export const createCourseRequest = (data) => {

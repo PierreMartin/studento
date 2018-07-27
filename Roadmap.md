@@ -31,7 +31,10 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 
 
 ### TODO :
-- fetchCourseRequest
+- /course/create/new
+- /course/edit/${course._id}
+- /course/view/${course._id}
+
 
 - page 'dashboard'    -> coursesListDashBoard(Uid) (buttons: [view | edit | delete])  -> page 'course' | page 'courseEdit' | popup 'delete'
 - page 'courses'      -> coursesList(all)                                             -> page 'course'
