@@ -56,7 +56,7 @@ export function add(req, res) {
 		}
 	}
 
-	if (!userMeId) return res.status(400).json({ message: 'A error happen at the creating new course, no data' });
+	if (!userMeId) return res.status(500).json({ message: 'A error happen at the creating new course, no userMeId' });
 
 	// If all good:
 	const course = new Course(query);
@@ -64,7 +64,7 @@ export function add(req, res) {
 	course.save((err) => {
 		if (err) {
 			console.error(err);
-			return res.status(500).json({ message: err });
+			return res.status(500).json({ message: 'A error happen at the creating new course', err });
 		}
 
 		return res.status(200).json({ message: 'You have create a course', newCourse: query }); // TODO remplacer query par la réponse BE (pour avoir _id)

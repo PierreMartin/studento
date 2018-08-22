@@ -31,6 +31,10 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 
 
 ### TODO :
+- Afficher notif success
+- Redirection
+- population
+
 - /course/create/new
 - /course/edit/${course._id}
 - /course/${course._id}
