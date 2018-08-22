@@ -15,7 +15,7 @@ export function api() {
 		}),
 		createCourse: data => localClient.request({
 			method: 'POST',
-			url: '/api/addcourse/' + data.id,
+			url: '/api/addcourse',
 			data
 		}),
 		deleteCourse: id => localClient.request({

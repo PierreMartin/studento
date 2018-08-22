@@ -9,11 +9,11 @@ const all = (state = [], action) => {
 			return state;
 		case types.GET_COURSES_FAILURE:
 			return state;
-		case types.CREATE_COURSE_SUCCESS:
+		case types.CREATE_OR_EDIT_COURSE_SUCCESS: // TODO gerer cas edit   for( state.course[i]._id === action.course._id )
 			if (action.course) return [...state, action.course];
 			return state;
-		case types.CREATE_COURSE_FAILURE:
-			return state.filter(t => t.id !== action.id);
+		case types.CREATE_OR_EDIT_COURSE_FAILURE:
+			return state;
 		default:
 			return state;
 	}
@@ -33,9 +33,31 @@ const one = (state = {}, action) => {
 	}
 };
 
+const addOrEditMissingField = (state = {}, action) => {
+	switch (action.type) {
+		case types.CREATE_OR_EDIT_COURSE_MISSING_FIELDS:
+			if (action.fields) return action.fields;
+			return state;
+		default:
+			return state;
+	}
+};
+
+const addOrEditFailure = (state = '', action) => {
+	switch (action.type) {
+		case types.CREATE_OR_EDIT_COURSE_FAILURE:
+			if (action.messageError) return action.messageError;
+			return state;
+		default:
+			return state;
+	}
+};
+
 const coursesReducer = combineReducers({
 	all,
-	one
+	one,
+	addOrEditMissingField,
+	addOrEditFailure
 });
 
 export default coursesReducer;

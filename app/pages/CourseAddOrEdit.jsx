@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import { createCourseAction } from '../actions/courses';
+import { createCourseAction } from '../actions/courses';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Container, Form, Message } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
@@ -16,10 +16,9 @@ class CourseAddOrEdit extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 
 		this.state = {
-			fieldsTyping: {}
+			fieldsTyping: {},
+			isEditing: this.props.course && typeof this.props.course._id !== 'undefined'
 		};
-
-		this.isEditing = this.props.course && typeof this.props.course._id !== 'undefined';
 	}
 
 	getOptionsFormsSelect() {
@@ -58,16 +57,19 @@ class CourseAddOrEdit extends Component {
 	handleOnSubmit(event) {
 		event.preventDefault();
 
-		const { course, userMe } = this.props;
-		const fields = this.getFieldsVal(this.state.fieldsTyping, course);
+		const { course, userMe, createCourseAction } = this.props;
+		const data = {
+			fields: this.getFieldsVal(this.state.fieldsTyping, course),
+			userMeId: userMe._id
+		};
 
-		/*
-		if (this.isEditing) {
-			updateCourseAction(fields);
+		if (this.state.isEditing) {
+			data.modifiedAt = new Date().toISOString();
+			// updateCourseAction(data);
 		} else {
-			createCourseAction(fields, userMe._id);
+			data.createdAt = new Date().toISOString();
+			createCourseAction(data);
 		}
-		*/
 	}
 
 	handleInputChange(event, field) {
@@ -77,19 +79,18 @@ class CourseAddOrEdit extends Component {
 
 	/**
 	 * Display a error if a field is wrong
-	 * @param {object} missingRequiredField - object with true as key if a field is missing
-	 * @param {string} messageErrorState - message from back-end
+	 * @param {object} missingField - object with true as key if a field is missing
+	 * @param {string} messageErrorBe - message from back-end
 	 * @return {HTML} the final message if error
 	 * */
-	dispayFieldsErrors(missingRequiredField, messageErrorState) {
+	dispayFieldsErrors(missingField, messageErrorBe) {
 		const errorsField = [];
-		if (missingRequiredField.title) {
-			errorsField.push({message: 'the title is required ', key: 'title'});
-		}
+		if (missingField.title) errorsField.push({message: 'the title is required ', key: 'title'});
+		if (missingField.category) errorsField.push({message: 'the category is required ', key: 'category'});
+		if (missingField.content) errorsField.push({message: 'the content is required ', key: 'content'});
 
-		if (messageErrorState && messageErrorState.length > 0) {
-			errorsField.push({message: messageErrorState, key: 'backendError'});
-		}
+		// Pas obligé d'afficher les erreurs back-end dans le form, on devrait plutôt les aficher dans une notification
+		if (messageErrorBe && messageErrorBe.length > 0) errorsField.push({message: messageErrorBe, key: 'backendError'});
 
 		const messagesListNode = errorsField.map((errorField, key) => {
 			return (
@@ -101,29 +102,28 @@ class CourseAddOrEdit extends Component {
 	}
 
 	render() {
-		const { course, updateMissingRequiredField, updateMessageError } = this.props;
+		const { course, addOrEditMissingField, addOrEditFailure } = this.props;
 		const fields = this.getFieldsVal(this.state.fieldsTyping, course);
-		const messagesError = this.dispayFieldsErrors(updateMissingRequiredField, updateMessageError);
+		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const options = this.getOptionsFormsSelect();
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<Segment vertical>
 					<Container>
-						<h4>{ this.isEditing ? 'Edit a course' : 'Add a course' }</h4>
+						<h4>{ this.state.isEditing ? 'Edit a course' : 'Add a course' }</h4>
 
 						<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
-							<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={updateMissingRequiredField.title} onChange={this.handleInputChange} />
-							<Form.TextArea label="Content" placeholder="The content of your course..." name="content" value={fields.content || ''} onChange={this.handleInputChange} />
+							<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={this.handleInputChange} />
+							<Form.TextArea required label="Content" placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} />
 
 							<Form.Group widths="equal">
-								<Form.Input required list="category" label="Category" name="category" placeholder="Choose the category" value={fields.category || ''} onChange={this.handleInputChange} />
+								<Form.Input required list="category" label="Category" name="category" placeholder="Choose the category" value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
 								<datalist id="category">{ options.categories.map((cat, i) => (<option key={i} value={cat.text} />))}</datalist>
 								<Form.Input label="Sub Categories" placeholder="Sub Categories" name="subCategories" value={fields.subCategories || ''} onChange={this.handleInputChange} />
 							</Form.Group>
 
 							<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={this.handleInputChange} />
-
 							<Message error content={messagesError} />
 
 							<Form.Button>Submit</Form.Button>
@@ -136,13 +136,18 @@ class CourseAddOrEdit extends Component {
 }
 
 CourseAddOrEdit.propTypes = {
-	// createCourseAction: PropTypes.func.isRequired,
+	createCourseAction: PropTypes.func.isRequired,
 	// updateCourseAction: PropTypes.func.isRequired,
-	updateMissingRequiredField: PropTypes.object,
-	updateMessageError: PropTypes.string,
+	addOrEditMissingField: PropTypes.object,
+	addOrEditFailure: PropTypes.string,
 
 	course: PropTypes.shape({
-		_id: PropTypes.string
+		_id: PropTypes.string,
+		title: PropTypes.string,
+		category: PropTypes.string,
+		subCategories: PropTypes.array,
+		isPrivate: PropTypes.bool,
+		content: PropTypes.string
 	}),
 
 	userMe: PropTypes.shape({
@@ -154,9 +159,9 @@ const mapStateToProps = (state) => {
 	return {
 		course: state.courses.one,
 		userMe: state.userMe.data,
-		updateMissingRequiredField: state.userMe.updateMissingRequiredField, // state.courses.addOrEditMissingField
-		updateMessageError: state.userMe.updateMessageError // state.courses.addOrEditErrorHappen
+		addOrEditMissingField: state.courses.addOrEditMissingField,
+		addOrEditFailure: state.courses.addOrEditFailure
 	};
 };
 
-export default connect(mapStateToProps, null)(CourseAddOrEdit);
+export default connect(mapStateToProps, { createCourseAction })(CourseAddOrEdit);
