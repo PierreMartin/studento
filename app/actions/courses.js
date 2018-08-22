@@ -1,5 +1,7 @@
 import * as types from './../types';
 import { createCourseRequest } from './../api';
+import { toast } from 'react-toastify';
+import { push } from 'react-router-redux';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 const getFieldsMissing = res => res.response && res.response.data && res.response.data.errorField;
@@ -31,7 +33,11 @@ export function createCourseAction(data) {
 	return (dispatch) => {
 		createCourseRequest(data)
 			.then((res) => {
-				if (res.status === 200) return dispatch(addOrEditCourseSuccess(res.data));
+				if (res.status === 200) {
+					dispatch(push('/course/edit/' + res.data.newCourse._id)); // redirection
+					toast.success(res.data.message);
+					return dispatch(addOrEditCourseSuccess(res.data));
+				}
 			})
 			.catch((err) => {
 				if (err.response.data.errorField) {

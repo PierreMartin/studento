@@ -42,8 +42,6 @@ export function add(req, res) {
 		created_at: createdAt
 	};
 
-	console.log('newCourse ==> ', query);
-
 	// handling required fields :
 	errorField.title = (typeof fields.title === 'undefined' || fields.title === '') ? true : undefined;
 	errorField.category = (typeof fields.category === 'undefined' || fields.category === '') ? true : undefined;
@@ -67,13 +65,9 @@ export function add(req, res) {
 			return res.status(500).json({ message: 'A error happen at the creating new course', err });
 		}
 
-		return res.status(200).json({ message: 'You have create a course', newCourse: query }); // TODO remplacer query par la réponse BE (pour avoir _id)
-
-		/*
-		Message.populate(message, { path: 'author', select: '_id username avatarMainSrc.avatar28' }, (err, newMessageData) => {
-			return res.status(200).json({message: '', newCourseData});
+		Course.populate(course, { path: 'uId', select: '_id username avatarMainSrc.avatar28' }, (err, newCourse) => {
+			return res.status(200).json({ message: 'You have create a course', newCourse });
 		});
-		*/
 	});
 }
 
