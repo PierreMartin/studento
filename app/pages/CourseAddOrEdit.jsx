@@ -21,6 +21,12 @@ class CourseAddOrEdit extends Component {
 		};
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.course !== this.props.course) {
+			this.setState({isEditing: this.props.course && typeof this.props.course._id !== 'undefined'});
+		}
+	}
+
 	getOptionsFormsSelect() {
 		const options = {};
 
