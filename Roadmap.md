@@ -34,8 +34,6 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - /course/${course._id}
 
 ### TODO :
-- editing => ne pas soumettre le form si on a rien changé ! et griser le boutton
-- editing => passer QUE les champs changé, à la requete
 - editing/create => changer 'uId' en 'author' ?
 - editing/create => créer une collection 'categories' (et subCategories ?)
 

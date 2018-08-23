@@ -133,7 +133,7 @@ class CourseAddOrEdit extends Component {
 							<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={this.handleInputChange} />
 							<Message error content={messagesError} />
 
-							<Form.Button>Submit</Form.Button>
+							{ this.state.isEditing && Object.keys(this.state.fieldsTyping).length === 0 ? <Form.Button disabled>Submit</Form.Button> : <Form.Button>Submit</Form.Button>}
 						</Form>
 					</Container>
 				</Segment>
