@@ -13,6 +13,7 @@ export default (app) => {
 		app.get('/api/getcourses', coursesController.all);
 		app.get('/api/getcourse/:id', coursesController.oneById);
 		app.post('/api/addcourse', coursesController.add);
+		app.put('/api/updatecourse', coursesController.update);
 	} else {
 		console.warn('courses routes');
 	}

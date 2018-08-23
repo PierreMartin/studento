@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createCourseAction } from '../actions/courses';
+import { createCourseAction, updateCourseAction } from '../actions/courses';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Container, Form, Message } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
@@ -63,7 +63,7 @@ class CourseAddOrEdit extends Component {
 	handleOnSubmit(event) {
 		event.preventDefault();
 
-		const { course, userMe, createCourseAction } = this.props;
+		const { course, userMe, createCourseAction, updateCourseAction } = this.props;
 		const data = {
 			fields: this.getFieldsVal(this.state.fieldsTyping, course),
 			userMeId: userMe._id
@@ -71,7 +71,8 @@ class CourseAddOrEdit extends Component {
 
 		if (this.state.isEditing) {
 			data.modifiedAt = new Date().toISOString();
-			// updateCourseAction(data);
+			data.courseId = course._id;
+			updateCourseAction(data);
 		} else {
 			data.createdAt = new Date().toISOString();
 			createCourseAction(data);
@@ -142,8 +143,8 @@ class CourseAddOrEdit extends Component {
 }
 
 CourseAddOrEdit.propTypes = {
-	createCourseAction: PropTypes.func.isRequired,
-	// updateCourseAction: PropTypes.func.isRequired,
+	createCourseAction: PropTypes.func,
+	updateCourseAction: PropTypes.func,
 	addOrEditMissingField: PropTypes.object,
 	addOrEditFailure: PropTypes.string,
 
@@ -170,4 +171,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { createCourseAction })(CourseAddOrEdit);
+export default connect(mapStateToProps, { createCourseAction, updateCourseAction })(CourseAddOrEdit);

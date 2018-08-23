@@ -45,6 +45,16 @@ export const createCourseRequest = (data) => {
 		});
 };
 
+export const updateCourseRequest = (data) => {
+	return api().updateCourse(data)
+		.then((res) => {
+			if (res.status === 200) return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
 /********************************************** Authentification ***********************************************/
 export const loginRequest = (data) => {
 	return api().login(data)

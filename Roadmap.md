@@ -29,40 +29,24 @@ db.users.find()
 db.users.findOne( { _id: ObjectId("59b923d8fe2c95d70482145f") } )
 db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: { $elemMatch: { avatarId: 'avatar1' } } } )
 
-
-### TODO :
-- edition
-
-
 - /course/create/new
 - /course/edit/${course._id}
 - /course/${course._id}
 
+### TODO :
+- editing => ne pas soumettre le form si on a rien changé ! et griser le boutton
+- editing => passer QUE les champs changé, à la requete
+- editing/create => changer 'uId' en 'author' ?
+- editing/create => créer une collection 'categories' (et subCategories ?)
 
 - page 'dashboard'    -> coursesListDashBoard(Uid) (buttons: [view | edit | delete])  -> page 'course' | page 'courseEdit' | popup 'delete'
-- page 'courses'      -> coursesList(all)                                             -> page 'course'
+- page 'Home'         -> coursesList(all)
 - page 'course'       -> courseSingle(one)
-- page 'courseAddOrEdit'
 
-Course: {
-    uId, (author)
-    category, (one possible : informatique, education, sport)
-    subCategory, (many possible : javascript, web, front-end, ...)
-    title,
-    content,
-    created_at,
-    isPrivate,
-    
-    staredBy: [{
-        username: { type: String, default: '' },
-        at: { type: Date, default: null }
-    }]
-    
-    commentedBy: [{
-        username: { type: String, default: '' },
-        at: { type: Date, default: null }
-    }]
-}
+- staredBy
+- commentedBy
+
+
 
 - this.state.typingArr => le mettre dans le store de redux (gerer les cas ou l'un ecrit, l'autre a pas encore ouvert la popup)
 - ajouter lastMessageContent

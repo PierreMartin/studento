@@ -18,14 +18,14 @@ export function api() {
 			url: '/api/addcourse',
 			data
 		}),
+		updateCourse: data => localClient.request({
+			method: 'PUT',
+			url: '/api/updatecourse',
+			data
+		}),
 		deleteCourse: id => localClient.request({
 			method: 'DELETE',
 			url: '/api/course/' + id
-		}),
-		updateCourse: (id, data) => localClient.request({
-			method: 'PUT',
-			url: '/api/course/' + id,
-			data
 		}),
 
 		// Authentification

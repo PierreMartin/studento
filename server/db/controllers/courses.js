@@ -36,11 +36,7 @@ export function oneById(req, res) {
 export function add(req, res) {
 	const { fields, userMeId, createdAt } = req.body;
 	const errorField = {};
-	const query = {
-		...fields,
-		uId: userMeId,
-		created_at: createdAt
-	};
+	const data = { ...fields, uId: userMeId, created_at: createdAt };
 
 	// handling required fields :
 	errorField.title = (typeof fields.title === 'undefined' || fields.title === '') ? true : undefined;
@@ -57,7 +53,7 @@ export function add(req, res) {
 	if (!userMeId) return res.status(500).json({ message: 'A error happen at the creating new course, no userMeId' });
 
 	// If all good:
-	const course = new Course(query);
+	const course = new Course(data);
 
 	course.save((err) => {
 		if (err) {
@@ -71,8 +67,49 @@ export function add(req, res) {
 	});
 }
 
+/**
+ * PUT /api/updatecourse
+ */
+export function update(req, res) {
+	const { fields, modifiedAt, courseId } = req.body;
+	const errorField = {};
+	const data = { ...fields, modified_at: modifiedAt };
+
+	// handling required fields :
+	errorField.title = (typeof fields.title === 'undefined' || fields.title === '') ? true : undefined;
+	errorField.category = (typeof fields.category === 'undefined' || fields.category === '') ? true : undefined;
+	errorField.content = (typeof fields.content === 'undefined' || fields.content === '') ? true : undefined;
+
+	// displaying required fields :
+	for (const key in errorField) {
+		if (errorField[key] === true) {
+			return res.status(400).json({errorField});
+		}
+	}
+
+	if (!courseId) return res.status(500).json({ message: 'A error happen at the updating course, no courseId' });
+
+	// If all good:
+	Course.findOneAndUpdate({ _id: courseId }, data).exec((err) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ message: 'A error happen at the updating course', err });
+		}
+
+		Course.findOne({ _id: courseId }).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, course) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ message: 'A error happen at the get course', err });
+			}
+
+			return res.status(200).json({ message: 'You\'re course as been updated!', newCourse: course });
+		});
+	});
+}
+
 export default {
   all,
 	oneById,
-  add
+  add,
+	update
 };

@@ -1,5 +1,5 @@
 import * as types from './../types';
-import { createCourseRequest } from './../api';
+import { createCourseRequest, updateCourseRequest } from './../api';
 import { toast } from 'react-toastify';
 import { push } from 'react-router-redux';
 
@@ -35,6 +35,27 @@ export function createCourseAction(data) {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch(push('/course/edit/' + res.data.newCourse._id)); // redirection
+					toast.success(res.data.message);
+					return dispatch(addOrEditCourseSuccess(res.data));
+				}
+			})
+			.catch((err) => {
+				if (err.response.data.errorField) {
+					// Missing required fields to dispay in form :
+					dispatch(addOrEditMissingField(getFieldsMissing(err)));
+				} else {
+					// Back-end errors to dispay in notification :
+					dispatch(addOrEditCourseFailure(getMessage(err)));
+				}
+			});
+	};
+}
+
+export function updateCourseAction(data) {
+	return (dispatch) => {
+		updateCourseRequest(data)
+			.then((res) => {
+				if (res.status === 200) {
 					toast.success(res.data.message);
 					return dispatch(addOrEditCourseSuccess(res.data));
 				}
