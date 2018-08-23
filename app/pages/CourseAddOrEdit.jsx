@@ -64,16 +64,16 @@ class CourseAddOrEdit extends Component {
 		event.preventDefault();
 
 		const { course, userMe, createCourseAction, updateCourseAction } = this.props;
-		const data = {
-			fields: this.getFieldsVal(this.state.fieldsTyping, course),
-			userMeId: userMe._id
-		};
+		const data = {};
 
 		if (this.state.isEditing) {
+			data.fields = this.state.fieldsTyping;
 			data.modifiedAt = new Date().toISOString();
 			data.courseId = course._id;
 			updateCourseAction(data);
 		} else {
+			data.fields = this.getFieldsVal(this.state.fieldsTyping, course);
+			data.userMeId = userMe._id;
 			data.createdAt = new Date().toISOString();
 			createCourseAction(data);
 		}

@@ -76,9 +76,9 @@ export function update(req, res) {
 	const data = { ...fields, modified_at: modifiedAt };
 
 	// handling required fields :
-	errorField.title = (typeof fields.title === 'undefined' || fields.title === '') ? true : undefined;
-	errorField.category = (typeof fields.category === 'undefined' || fields.category === '') ? true : undefined;
-	errorField.content = (typeof fields.content === 'undefined' || fields.content === '') ? true : undefined;
+	errorField.title = fields.title === '' ? true : undefined;
+	errorField.category = fields.category === '' ? true : undefined;
+	errorField.content = fields.content === '' ? true : undefined;
 
 	// displaying required fields :
 	for (const key in errorField) {
