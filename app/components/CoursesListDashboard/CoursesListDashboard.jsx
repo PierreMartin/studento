@@ -1,40 +1,69 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import moment from 'moment';
-import { Icon, Item, Image } from 'semantic-ui-react';
-import defaultAvatar28 from '../../images/default-avatar-28.png';
-
+import { Icon, Table, Button, Menu, Header } from 'semantic-ui-react';
 
 const renderCoursesList = (courses) => {
-	if (courses.length === 0) {
-		return (<div>no yet courses</div>);
-	}
+	if (courses.length === 0) return 'No yet courses';
 
 	return courses.map((course, key) => {
-		const src = course.uId && course.uId.avatarMainSrc && course.uId.avatarMainSrc.avatar28 ? `/uploads/${course.uId.avatarMainSrc.avatar28}` : defaultAvatar28;
-		const courseDate = moment(course.created_at).format('MMMM Do LT');
+		const courseDate = moment(course.created_at).format('L');
 
 		return (
-			<Item key={key} style={{ marginBottom: '40px' }}>
-				<Item.Content>
-					<Image circular floated="left" size="mini" src={src} />
-					<Item.Header as="a" style={{ fontSize: '1.4em' }}>{course.title}</Item.Header>
-					<Item.Description>{course.content}</Item.Description>
-					<Item.Extra><Icon color="red" name="star" /> 121 stars</Item.Extra>
-					<Item.Extra>Create at: {courseDate}</Item.Extra>
-				</Item.Content>
-			</Item>
+			<Table.Row key={key}>
+				<Table.Cell>
+					<Header as="h4" image>
+						<Header.Content><Header.Subheader>{course.uId.username}</Header.Subheader></Header.Content>
+					</Header>
+				</Table.Cell>
+				<Table.Cell><a href={`/course/${course._id}`}>{course.title}</a></Table.Cell>
+				<Table.Cell>
+					<Header as="h4" image>
+						<Header.Content><Header.Subheader>{courseDate}</Header.Subheader></Header.Content>
+					</Header>
+				</Table.Cell>
+				<Table.Cell><Icon color="red" name="star" /> 121</Table.Cell>
+				<Table.Cell><Button color="grey" content="Edit" icon="settings" size="tiny" as={Link} to={`/course/edit/${course._id}`} /></Table.Cell>
+				<Table.Cell><Button inverted color="red" content="Delete" icon="remove" size="tiny" /></Table.Cell>
+			</Table.Row>
 		);
 	});
 };
 
 const CoursesListDashboard = ({ courses }) => {
 	return (
-		<div>
-			<Item.Group>
+		<Table celled>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell>Author</Table.HeaderCell>
+					<Table.HeaderCell>Title</Table.HeaderCell>
+					<Table.HeaderCell>Date</Table.HeaderCell>
+					<Table.HeaderCell>Stars</Table.HeaderCell>
+					<Table.HeaderCell>Edit</Table.HeaderCell>
+					<Table.HeaderCell>Delete</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+
+			<Table.Body>
 				{ renderCoursesList(courses) }
-			</Item.Group>
-		</div>
+			</Table.Body>
+
+			<Table.Footer fullWidth>
+				<Table.Row>
+					<Table.HeaderCell colSpan="6">
+						<Button basic color="grey" content="Add new course" floated="right" icon="add" as={Link} to="/course/create/new" />
+
+						<Menu pagination>
+							<Menu.Item as="a" icon><Icon name="chevron left" /></Menu.Item>
+							<Menu.Item as="a">1</Menu.Item>
+							<Menu.Item as="a">2</Menu.Item>
+							<Menu.Item as="a" icon><Icon name="chevron right" /></Menu.Item>
+						</Menu>
+					</Table.HeaderCell>
+				</Table.Row>
+			</Table.Footer>
+		</Table>
 	);
 };
 

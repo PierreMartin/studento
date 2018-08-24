@@ -34,12 +34,13 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - /course/${course._id}
 
 ### TODO :
-- editing/create => changer 'uId' en 'author' ?
-- editing/create => créer une collection 'categories' (et subCategories ?)
-
-- page 'dashboard'    -> coursesListDashBoard(Uid) (buttons: [view | edit | delete])  -> page 'course' | page 'courseEdit' | popup 'delete'
+- popup 'delete'
 - page 'Home'         -> coursesList(all)
 - page 'course'       -> courseSingle(one)
+
+
+- editing/create => changer 'uId' en 'author' ?
+- editing/create => créer une collection 'categories' (et subCategories ?)
 
 - staredBy
 - commentedBy
