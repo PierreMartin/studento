@@ -13,13 +13,13 @@ const renderCoursesList = (courses) => {
 		return (
 			<Table.Row key={key}>
 				<Table.Cell>
-					<Header as="h4" image>
+					<Header as="h4">
 						<Header.Content><Header.Subheader>{course.uId.username}</Header.Subheader></Header.Content>
 					</Header>
 				</Table.Cell>
 				<Table.Cell><a href={`/course/${course._id}`}>{course.title}</a></Table.Cell>
 				<Table.Cell>
-					<Header as="h4" image>
+					<Header as="h4">
 						<Header.Content><Header.Subheader>{courseDate}</Header.Subheader></Header.Content>
 					</Header>
 				</Table.Cell>
