@@ -4,7 +4,7 @@ import Course from '../models/courses';
  * Get /api/getcourses
  */
 export function all(req, res) {
-	Course.find({}).exec((err, courses) => {
+	Course.find({}).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, courses) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: err });
@@ -20,7 +20,7 @@ export function all(req, res) {
 export function oneById(req, res) {
 	const { id } = req.params;
 
-	Course.findOne({ _id: id }).exec((err, course) => {
+	Course.findOne({ _id: id }).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, course) => {
 		if (err) {
 			console.error(err);
 			return res.status(500).json({ message: err });
