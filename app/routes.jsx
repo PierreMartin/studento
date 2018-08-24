@@ -12,6 +12,7 @@ import SettingsPassword from './pages/SettingsPassword';
 import Login from './pages/Login';
 import Users from './pages/Users';
 import User from './pages/User';
+import Dashboard from './pages/Dashboard';
 import CourseAddOrEdit from './pages/CourseAddOrEdit';
 
 
@@ -53,6 +54,7 @@ export default (store) => {
         <Route path="password" component={SettingsPassword} onEnter={requireAuth} />
       </Route>
 
+      <Route path="/dashboard" component={Dashboard} onEnter={requireAuth} />
       <Route path="/course/:action/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} onEnter={requireAuth} />
 
       <Route path="/login" component={Login} />

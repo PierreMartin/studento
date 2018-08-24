@@ -1,10 +1,38 @@
 import * as types from './../types';
-import { createCourseRequest, updateCourseRequest } from './../api';
+import { createCourseRequest, updateCourseRequest, fetchCoursesByIdRequest } from './../api';
 import { toast } from 'react-toastify';
 import { push } from 'react-router-redux';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 const getFieldsMissing = res => res.response && res.response.data && res.response.data.errorField;
+
+/************************ Get courses by id ***********************/
+export function fetchCoursesByIdSuccess(res) {
+	return {
+		type: types.GET_COURSES_SUCCESS,
+		messageSuccess: res.message,
+		courses: res.courses
+	};
+}
+
+export function fetchCoursesByIdFailure(messageError) {
+	return {
+		type: types.GET_COURSES_FAILURE,
+		messageError
+	};
+}
+
+export function fetchCoursesByIdAction(data) {
+	return (dispatch) => {
+		fetchCoursesByIdRequest(data)
+			.then((res) => {
+				if (res.status === 200) return dispatch(fetchCoursesByIdSuccess(res.data));
+			})
+			.catch((err) => {
+				dispatch(fetchCoursesByIdFailure(getMessage(err)));
+			});
+	};
+}
 
 /************************ Create or edit course ***********************/
 export function addOrEditCourseSuccess(res) {

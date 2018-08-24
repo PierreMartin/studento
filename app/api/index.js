@@ -4,6 +4,7 @@ import * as types from 'types';
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 
 /********************************************** Courses ***********************************************/
+// All
 export const fetchCoursesRequest = (params, store) => {
 	return api().getCourses()
 		.then((res) => {
@@ -16,6 +17,18 @@ export const fetchCoursesRequest = (params, store) => {
 		});
 };
 
+// All by id or by field
+export const fetchCoursesByIdRequest = (userMeId) => {
+	return api().getCoursesById(userMeId)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
+// One by id
 export const fetchCourseRequest = (params, store) => {
 	if (params && params.action === 'create') {
 		store.dispatch({type: types.EMPTY_COURSE});

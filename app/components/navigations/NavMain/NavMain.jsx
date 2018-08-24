@@ -113,7 +113,8 @@ class NavigationMain extends Component {
 			<Segment inverted>
 				<Container>
 					<Menu inverted pointing secondary className={cx('myClass')}>
-						<Menu.Item as={Link} to="/" name="home" active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item>
+						<Menu.Item as={Link} to="/" name="home" active={activeItem === 'home'} onClick={this.handleItemClick}>Home</Menu.Item> {/* TODO cacher ce menu si autentifié (mais laisser pour le moment pour dev) */}
+						{ authentification.authenticated ? (<Menu.Item as={Link} name="dashboard" active={activeItem === 'dashboard'} to="/dashboard" onClick={this.handleItemClick}>Dashboard</Menu.Item>) : ''}
 						<Menu.Item as={Link} to="/about" name="about" active={activeItem === 'about'} onClick={this.handleItemClick}>About</Menu.Item>
 						{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" name="users" active={activeItem === 'users'} onClick={this.handleItemClick}>Users</Menu.Item>) : ''}
 

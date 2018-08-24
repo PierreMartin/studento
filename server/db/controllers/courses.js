@@ -15,6 +15,22 @@ export function all(req, res) {
 }
 
 /**
+ * Get /api/getcourses/:id
+ */
+export function allById(req, res) {
+	const { id } = req.params;
+
+	Course.find({ uId: id }).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, courses) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'A error happen at the fetching courses by id', err });
+    }
+
+		return res.status(200).json({ message: 'courses by id fetched', courses });
+  });
+}
+
+/**
  * Get /api/getcourse/:id
  */
 export function oneById(req, res) {
@@ -109,6 +125,7 @@ export function update(req, res) {
 
 export default {
   all,
+	allById,
 	oneById,
   add,
 	update
