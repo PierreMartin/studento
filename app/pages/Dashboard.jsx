@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchCoursesByIdAction } from '../actions/courses';
+import CoursesListDashboard from '../components/CoursesListDashboard/CoursesListDashboard';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Container, Header } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
@@ -33,16 +34,14 @@ class Dashboard extends Component {
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<Segment vertical>
-					<Header as="h1" content="Dashboard" style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '1em' }} />
-
 					<Container text>
-						<Header as="h2" content="Stats (coming soon)" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
+						<Header as="h2" icon="pie graph" content="Stats (coming soon)" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
 						<div>...</div>
 					</Container>
 
 					<Container text>
-						<Header as="h2" content="My courses" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
-						<div>coursesListDashBoard</div>
+						<Header as="h2" icon="list" content="My courses" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
+						<CoursesListDashboard courses={courses} />
 					</Container>
 				</Segment>
 			</LayoutPage>
