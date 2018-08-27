@@ -1,5 +1,5 @@
 import * as types from './../types';
-import { createCourseRequest, updateCourseRequest, fetchCoursesByIdRequest } from './../api';
+import { createCourseRequest, updateCourseRequest, fetchCoursesByIdRequest, deleteCourseRequest } from './../api';
 import { toast } from 'react-toastify';
 import { push } from 'react-router-redux';
 
@@ -96,6 +96,33 @@ export function updateCourseAction(data) {
 					// Back-end errors to dispay in notification :
 					dispatch(addOrEditCourseFailure(getMessage(err)));
 				}
+			});
+	};
+}
+
+/************************ Delete course ***********************/
+export function deleteCourseSuccess(res) {
+	return {
+		type: types.DELETE_COURSE_SUCCESS,
+		messageSuccess: res.message
+	};
+}
+
+export function deleteCourseFailure(messageError) {
+	return {
+		type: types.DELETE_COURSE_FAILURE,
+		messageError
+	};
+}
+
+export function deleteCourseAction(courseId) {
+	return (dispatch) => {
+		deleteCourseRequest(courseId)
+			.then((res) => {
+				if (res.status === 200) return dispatch(deleteCourseSuccess(res.data));
+			})
+			.catch((err) => {
+				dispatch(deleteCourseFailure(getMessage(err)));
 			});
 	};
 }

@@ -34,7 +34,6 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - /course/${course._id}
 
 ### TODO :
-- popup 'delete'
 - page 'Home'         -> coursesList(all)
 - page 'course'       -> courseSingle(one)
 
