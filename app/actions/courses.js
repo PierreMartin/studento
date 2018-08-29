@@ -126,7 +126,7 @@ export function deleteCourseAction(param) {
 		return deleteCourseRequest(courseId)
 			.then((res) => {
 				toast.success(`course '${courseTitle}' deleted`);
-				if (res.status === 200) return dispatch(deleteCourseSuccess(res.data, { courseId, courseTitle }));
+				if (res.status === 200) return dispatch(deleteCourseSuccess(res.data, param));
 			})
 			.catch((err) => {
 				const messageError = getMessage(err);
