@@ -33,7 +33,7 @@ const renderCoursesList = (courses, handleOpenModalForDeleteCourse) => {
 
 const CoursesListDashboard = ({ courses, handleOpenModalForDeleteCourse }) => {
 	return (
-		<Table celled>
+		<Table celled unstackable compact="very">
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell>Author</Table.HeaderCell>

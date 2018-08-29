@@ -34,8 +34,10 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - /course/${course._id}
 
 ### TODO :
+- Dashboard sortable
 - page 'Home'         -> coursesList(all)
 - page 'course'       -> courseSingle(one)
+- gerer les paginations (sur Home et Dashboard)
 
 
 - editing/create => changer 'uId' en 'author' ?
