@@ -7,7 +7,11 @@ const all = (state = [], action) => {
 		case types.GET_COURSES_SUCCESS:
 			if (action.courses) return action.courses;
 			return state;
+		case types.DELETE_COURSE_SUCCESS:
+			if (action.courseId) return state.filter(s => s._id !== action.courseId);
+			return state;
 		case types.GET_COURSES_FAILURE:
+		case types.DELETE_COURSE_FAILURE:
 			return state;
 		default:
 			return state;

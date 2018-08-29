@@ -27,9 +27,9 @@ export function api() {
 			url: '/api/updatecourse',
 			data
 		}),
-		deleteCourse: id => localClient.request({
+		deleteCourse: courseId => localClient.request({
 			method: 'DELETE',
-			url: '/api/course/' + id
+			url: '/api/deletecourse/' + courseId
 		}),
 
 		// Authentification

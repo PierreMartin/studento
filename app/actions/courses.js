@@ -101,10 +101,12 @@ export function updateCourseAction(data) {
 }
 
 /************************ Delete course ***********************/
-export function deleteCourseSuccess(res) {
+export function deleteCourseSuccess(res, course) {
 	return {
 		type: types.DELETE_COURSE_SUCCESS,
-		messageSuccess: res.message
+		messageSuccess: res.message,
+		courseId: course.courseId,
+		courseTitle: course.courseTitle
 	};
 }
 
@@ -115,14 +117,21 @@ export function deleteCourseFailure(messageError) {
 	};
 }
 
-export function deleteCourseAction(courseId) {
+export function deleteCourseAction(param) {
+	const { courseId, courseTitle } = param;
+
+	if (!courseId || courseId.length < 1) return;
+
 	return (dispatch) => {
-		deleteCourseRequest(courseId)
+		return deleteCourseRequest(courseId)
 			.then((res) => {
-				if (res.status === 200) return dispatch(deleteCourseSuccess(res.data));
+				toast.success(`course '${courseTitle}' deleted`);
+				if (res.status === 200) return dispatch(deleteCourseSuccess(res.data, { courseId, courseTitle }));
 			})
 			.catch((err) => {
-				dispatch(deleteCourseFailure(getMessage(err)));
+				const messageError = getMessage(err);
+				toast.error(messageError);
+				dispatch(deleteCourseFailure(messageError));
 			});
 	};
 }

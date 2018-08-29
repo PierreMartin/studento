@@ -5,10 +5,10 @@ import { fetchCoursesByIdAction, deleteCourseAction } from '../actions/courses';
 import CoursesListDashboard from '../components/CoursesListDashboard/CoursesListDashboard';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Container, Header, Modal, Button } from 'semantic-ui-react';
-import classNames from 'classnames/bind';
-import styles from '../css/main.scss';
+// import classNames from 'classnames/bind';
+// import styles from '../css/main.scss';
 
-const cx = classNames.bind(styles);
+// const cx = classNames.bind(styles);
 
 class Dashboard extends Component {
 	constructor(props) {
@@ -48,7 +48,7 @@ class Dashboard extends Component {
 			}
 
 			// Close modal :
-			return this.setState({ deleteCourse: { isModalOpened: false, courseId: '', courseTitle: '' } });
+			this.setState({ deleteCourse: { isModalOpened: false, courseId: '', courseTitle: '' } });
 		};
 	};
 
@@ -56,7 +56,12 @@ class Dashboard extends Component {
 		const { deleteCourseAction } = this.props;
 		const { deleteCourse } = this.state;
 
-		if (deleteCourse && deleteCourse.courseId) deleteCourseAction(deleteCourse.courseId);
+		if (deleteCourse && deleteCourse.courseId) {
+			deleteCourseAction(deleteCourse).then(() => {
+				// Close modal :
+				this.setState({ deleteCourse: { isModalOpened: false, courseId: '', courseTitle: '' } });
+			});
+		}
 	}
 
 	render() {
@@ -86,7 +91,7 @@ class Dashboard extends Component {
 						</Modal.Content>
 						<Modal.Actions>
 							<Button color="black" onClick={this.handleOpenModalForDeleteCourse({})}>Cancel</Button>
-							<Button positive icon="checkmark" color="red" labelPosition="right" content="Ok" onClick={this.handleSubmitDeleteCourse} />
+							<Button icon="checkmark" color="red" labelPosition="right" content="Ok" onClick={this.handleSubmitDeleteCourse} />
 						</Modal.Actions>
 					</Modal>
 

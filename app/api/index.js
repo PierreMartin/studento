@@ -68,6 +68,16 @@ export const updateCourseRequest = (data) => {
 		});
 };
 
+export const deleteCourseRequest = (courseId) => {
+	return api().deleteCourse(courseId)
+		.then((res) => {
+			if (res.status === 200) return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
 /********************************************** Authentification ***********************************************/
 export const loginRequest = (data) => {
 	return api().login(data)

@@ -15,6 +15,7 @@ export default (app) => {
 		app.get('/api/getcourse/:id', coursesController.oneById);
 		app.post('/api/addcourse', coursesController.add);
 		app.put('/api/updatecourse', coursesController.update);
+		app.delete('/api/deletecourse/:courseid', coursesController.deleteOne);
 	} else {
 		console.warn('courses routes');
 	}

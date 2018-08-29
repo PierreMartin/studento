@@ -123,10 +123,27 @@ export function update(req, res) {
 	});
 }
 
+/**
+ * DELETE /api/deletecourse/:courseid
+ */
+export function deleteOne(req, res) {
+	const { courseid } = req.params;
+
+	Course.deleteOne({ _id: courseid }).exec((err) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ message: 'A error happen at the deleting course', err });
+		}
+
+		return res.status(200).json({ message: 'course deleted' });
+	});
+}
+
 export default {
   all,
 	allById,
 	oneById,
   add,
-	update
+	update,
+	deleteOne
 };
