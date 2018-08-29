@@ -13,7 +13,7 @@ const cx = classNames.bind(styles);
 class Dashboard extends Component {
 	constructor(props) {
 		super(props);
-		this.handleOpenModal = this.handleOpenModal.bind(this);
+		this.handleOpenModalForDeleteCourse = this.handleOpenModalForDeleteCourse.bind(this);
 		this.handleSubmitDeleteCourse = this.handleSubmitDeleteCourse.bind(this);
 
 		this.state = {
@@ -38,7 +38,7 @@ class Dashboard extends Component {
 		};
 	}
 
-	handleOpenModal = (param) => {
+	handleOpenModalForDeleteCourse = (param) => {
 		return () => {
 			const { courseId, courseTitle } = param;
 
@@ -73,10 +73,10 @@ class Dashboard extends Component {
 
 					<Container text>
 						<Header as="h2" icon="list" content="My courses" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
-						<CoursesListDashboard courses={courses} handleOpenModal={this.handleOpenModal} />
+						<CoursesListDashboard courses={courses} handleOpenModalForDeleteCourse={this.handleOpenModalForDeleteCourse} />
 					</Container>
 
-					<Modal open={deleteCourse.isModalOpened} onClose={this.handleOpenModal({})}>
+					<Modal open={deleteCourse.isModalOpened} onClose={this.handleOpenModalForDeleteCourse({})}>
 						<Modal.Header>Delete a course</Modal.Header>
 						<Modal.Content image>
 							<Modal.Description>
@@ -85,7 +85,7 @@ class Dashboard extends Component {
 							</Modal.Description>
 						</Modal.Content>
 						<Modal.Actions>
-							<Button color="black" onClick={this.handleOpenModal({})}>Cancel</Button>
+							<Button color="black" onClick={this.handleOpenModalForDeleteCourse({})}>Cancel</Button>
 							<Button positive icon="checkmark" color="red" labelPosition="right" content="Ok" onClick={this.handleSubmitDeleteCourse} />
 						</Modal.Actions>
 					</Modal>

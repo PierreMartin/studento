@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import { Icon, Table, Button, Menu, Header } from 'semantic-ui-react';
 
-const renderCoursesList = (courses, handleOpenModal) => {
+const renderCoursesList = (courses, handleOpenModalForDeleteCourse) => {
 	if (courses.length === 0) return 'No yet courses';
 
 	return courses.map((course, key) => {
@@ -25,13 +25,13 @@ const renderCoursesList = (courses, handleOpenModal) => {
 				</Table.Cell>
 				<Table.Cell><Icon color="red" name="star" /> 121</Table.Cell>
 				<Table.Cell><Button color="grey" content="Edit" icon="settings" size="tiny" as={Link} to={`/course/edit/${course._id}`} /></Table.Cell>
-				<Table.Cell><Button inverted color="red" content="Delete" icon="remove" size="tiny" onClick={handleOpenModal({ courseId: course._id, courseTitle: course.title })} /></Table.Cell>
+				<Table.Cell><Button inverted color="red" content="Delete" icon="remove" size="tiny" onClick={handleOpenModalForDeleteCourse({ courseId: course._id, courseTitle: course.title })} /></Table.Cell>
 			</Table.Row>
 		);
 	});
 };
 
-const CoursesListDashboard = ({ courses, handleOpenModal }) => {
+const CoursesListDashboard = ({ courses, handleOpenModalForDeleteCourse }) => {
 	return (
 		<Table celled>
 			<Table.Header>
@@ -46,7 +46,7 @@ const CoursesListDashboard = ({ courses, handleOpenModal }) => {
 			</Table.Header>
 
 			<Table.Body>
-				{ renderCoursesList(courses, handleOpenModal) }
+				{ renderCoursesList(courses, handleOpenModalForDeleteCourse) }
 			</Table.Body>
 
 			<Table.Footer fullWidth>
@@ -68,7 +68,7 @@ const CoursesListDashboard = ({ courses, handleOpenModal }) => {
 };
 
 CoursesListDashboard.propTypes = {
-	handleOpenModal: PropTypes.func,
+	handleOpenModalForDeleteCourse: PropTypes.func,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
