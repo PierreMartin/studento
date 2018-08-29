@@ -17,7 +17,9 @@ class CoursesListDashboard extends Component {
 				isModalOpened: false,
 				courseId: '',
 				courseTitle: ''
-			}
+			},
+			lastColumnClicked: null,
+			direction: null
 		};
 	}
 
@@ -47,11 +49,32 @@ class CoursesListDashboard extends Component {
 		}
 	}
 
+	/**
+	 * Handle the sorting when click on the columns in the table
+	 * NOTE : See for prefer do in constructeur   this.state.data = this.props.courses
+	 *
+	 * @param {string} clickedColumn - the name of the colmun, it must match with the name of the field in the store
+	 * @return {void}
+	 * */
+	handleSort = clickedColumn => () => {
+		const { courses } = this.props;
+		const { lastColumnClicked, direction } = this.state;
+
+		// If 1st time we click on the column:
+		if (lastColumnClicked !== clickedColumn) {
+			courses.sort((a, b) => a[clickedColumn] - b[clickedColumn]);
+			return this.setState({ lastColumnClicked: clickedColumn, direction: 'ascending' });
+		}
+
+		courses.reverse();
+		this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' });
+	}
+
 	renderCoursesList(courses) {
 		if (courses.length === 0) return 'No yet courses';
 
 		return courses.map((course, key) => {
-			const courseDate = moment(course.created_at).format('L');
+			const courseDate = moment(course.created_at).format('L, h:mm:ss a');
 
 			return (
 				<Table.Row key={key}>
@@ -76,16 +99,16 @@ class CoursesListDashboard extends Component {
 
 	render() {
 		const { courses } = this.props;
-		const { deleteCourse } = this.state;
+		const { deleteCourse, lastColumnClicked, direction } = this.state;
 
 		return (
 			<div>
-				<Table celled unstackable compact="very">
+				<Table celled unstackable compact="very" sortable fixed>
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell>Author</Table.HeaderCell>
-							<Table.HeaderCell>Title</Table.HeaderCell>
-							<Table.HeaderCell>Date</Table.HeaderCell>
+							<Table.HeaderCell sorted={lastColumnClicked === 'title' ? direction : null} onClick={this.handleSort('title')}>Title</Table.HeaderCell>
+							<Table.HeaderCell sorted={lastColumnClicked === 'created_at' ? direction : null} onClick={this.handleSort('created_at')}>Date</Table.HeaderCell>
 							<Table.HeaderCell>Stars</Table.HeaderCell>
 							<Table.HeaderCell>Edit</Table.HeaderCell>
 							<Table.HeaderCell>Delete</Table.HeaderCell>
