@@ -18,7 +18,7 @@ const all = (state = [], action) => {
 			const { doReverse, clickedColumn } = action.param;
 
 			if (doReverse) return state.reverse();
-			if (clickedColumn) return _.orderBy(state, [clickedColumn, 'created_at']);
+			if (clickedColumn) return _.orderBy(state, [s => s[clickedColumn].toLowerCase(), 'create_at']);
 			return state;
 		default:
 			return state;
