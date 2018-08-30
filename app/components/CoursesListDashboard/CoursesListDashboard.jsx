@@ -166,10 +166,4 @@ CoursesListDashboard.propTypes = {
 	})).isRequired
 };
 
-const mapStateToProps = (state) => {
-	return {
-		courses: state.courses.all
-	};
-};
-
-export default connect(mapStateToProps, { deleteCourseAction, doSortCoursesAction })(CoursesListDashboard);
+export default connect(null, { deleteCourseAction, doSortCoursesAction })(CoursesListDashboard);
