@@ -51,7 +51,6 @@ class CoursesListDashboard extends Component {
 
 	/**
 	 * Handle the sorting when click on the columns in the table
-	 * NOTE : See for prefer do in constructeur   this.state.data = this.props.courses
 	 *
 	 * @param {string} clickedColumn - the name of the colmun, it must match with the name of the field in the store
 	 * @return {void}
