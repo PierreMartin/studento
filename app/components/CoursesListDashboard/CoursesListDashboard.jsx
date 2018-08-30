@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import { Icon, Table, Button, Menu, Header, Modal } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { deleteCourseAction } from '../../actions/courses';
+import { deleteCourseAction, doSortCoursesAction } from '../../actions/courses';
 
 class CoursesListDashboard extends Component {
 	constructor(props) {
@@ -57,16 +57,16 @@ class CoursesListDashboard extends Component {
 	 * @return {void}
 	 * */
 	handleSort = clickedColumn => () => {
-		const { courses } = this.props;
+		const { doSortCoursesAction } = this.props;
 		const { lastColumnClicked, direction } = this.state;
 
-		// If 1st time we click on the column:
+		// If clicked on a new column:
 		if (lastColumnClicked !== clickedColumn) {
-			courses.sort((a, b) => a[clickedColumn] - b[clickedColumn]);
+			doSortCoursesAction({ clickedColumn, doReverse: false });
 			return this.setState({ lastColumnClicked: clickedColumn, direction: 'ascending' });
 		}
 
-		courses.reverse();
+		doSortCoursesAction({ clickedColumn, doReverse: true });
 		this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' });
 	}
 
@@ -155,6 +155,7 @@ class CoursesListDashboard extends Component {
 
 CoursesListDashboard.propTypes = {
 	deleteCourseAction: PropTypes.func,
+	doSortCoursesAction: PropTypes.func,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
@@ -172,4 +173,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { deleteCourseAction })(CoursesListDashboard);
+export default connect(mapStateToProps, { deleteCourseAction, doSortCoursesAction })(CoursesListDashboard);

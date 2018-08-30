@@ -135,3 +135,8 @@ export function deleteCourseAction(param) {
 			});
 	};
 }
+
+/************************ Handle sort courses ***********************/
+export function doSortCoursesAction(param) {
+	return { type: types.DO_SORT_COURSES, param };
+}

@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import _ from 'lodash';
 import * as types from './../types';
 
 
@@ -12,6 +13,12 @@ const all = (state = [], action) => {
 			return state;
 		case types.GET_COURSES_FAILURE:
 		case types.DELETE_COURSE_FAILURE:
+			return state;
+		case types.DO_SORT_COURSES:
+			const { doReverse, clickedColumn } = action.param;
+
+			if (doReverse) return state.reverse();
+			if (clickedColumn) return _.orderBy(state, [clickedColumn, 'created_at']);
 			return state;
 		default:
 			return state;

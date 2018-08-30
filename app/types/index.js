@@ -26,6 +26,9 @@ export const RATING_COURSE_FAILURE = 'RATING_COURSE_FAILURE';
 // Empty the course in store
 export const EMPTY_COURSE = 'EMPTY_COURSE';
 
+// Do sort on courses list:
+export const DO_SORT_COURSES = 'DO_SORT_COURSES';
+
 /***************************************** Authentification ********************************************/
 export const LOGIN_BEGIN_USER = 'LOGIN_BEGIN_USER';
 export const SIGNUP_BEGIN_USER = 'SIGNUP_BEGIN_USER';
