@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Container, Header, Icon, Segment } from 'semantic-ui-react';
+import { Button, Container, Header, Icon, Segment, Divider, Input, Dropdown } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
 import classNames from 'classnames/bind';
@@ -16,6 +16,17 @@ class Home extends Component {
 			meta: [{ name: 'description', content: 'react stater' }],
 			link: []
 		};
+	}
+
+	getOptionsFormsSelect() {
+		return [
+			{ key: 'all', text: 'All', value: 'all' },
+			{ key: 'technology', text: 'Technology', value: 'technology' },
+			{ key: 'life', text: 'Life / Arts', value: 'life' },
+			{ key: 'culture', text: 'Culture / Recreation', value: 'culture' },
+			{ key: 'science', text: 'Science', value: 'science' },
+			{ key: 'other', text: 'Other', value: 'other' }
+		];
 	}
 
   render() {
@@ -33,6 +44,30 @@ class Home extends Component {
 
 				<Segment vertical>
 					<Container text>
+						<Header as="h2" content="Courses list" />
+
+						<Divider horizontal>
+							<Button.Group basic size="tiny">
+								<Button>Technology</Button>
+								<Button>Life / Arts</Button>
+								<Button>Culture / Recreation</Button>
+								<Button>Science</Button>
+								<Button>Other</Button>
+							</Button.Group>
+						</Divider>
+
+						<Container textAlign="center">
+							<Input
+								size="mini"
+								action={<Dropdown button basic floating options={this.getOptionsFormsSelect()} defaultValue="all" />}
+								icon="search"
+								iconPosition="left"
+								placeholder="Search"
+							/>
+						</Container>
+
+						<br />
+
 						<CoursesList courses={courses} />
 					</Container>
 				</Segment>
