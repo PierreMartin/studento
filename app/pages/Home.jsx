@@ -56,7 +56,7 @@ class Home extends Component {
 							</Button.Group>
 						</Divider>
 
-						<Container textAlign="center">
+						<div style={{textAlign: 'center'}}>
 							<Input
 								size="mini"
 								action={<Dropdown button basic floating options={this.getOptionsFormsSelect()} defaultValue="all" />}
@@ -64,7 +64,7 @@ class Home extends Component {
 								iconPosition="left"
 								placeholder="Search"
 							/>
-						</Container>
+						</div>
 
 						<br />
 
