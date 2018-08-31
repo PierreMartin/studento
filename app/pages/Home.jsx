@@ -43,12 +43,13 @@ class Home extends Component {
 				</Segment>
 
 				<Segment vertical>
-					<Container text>
+					<Container text className={cx('courses-container')}>
 						<Header as="h2" content="Courses list" />
 
-						<Divider horizontal>
+						<Divider horizontal className={cx('categories')}>
+							{/* use a Toggle buttons */}
 							<Button.Group basic size="tiny">
-								<Button>Technology</Button>
+								<Button active>Technology</Button>
 								<Button>Life / Arts</Button>
 								<Button>Culture / Recreation</Button>
 								<Button>Science</Button>
@@ -56,7 +57,18 @@ class Home extends Component {
 							</Button.Group>
 						</Divider>
 
-						<div style={{textAlign: 'center'}}>
+						<div style={{textAlign: 'center'}} className={cx('sub-categories')}>
+							<Button basic size="tiny">Web development</Button>
+							<Button basic size="tiny">Administrators</Button>
+							<Button basic size="tiny">Linux</Button>
+							<Button basic size="tiny" active>Game development</Button>
+							<Button basic size="tiny">Software ingineering</Button>
+							<Button basic size="tiny">RaspBerry Pi</Button>
+							<Button basic size="tiny">Aduino</Button>
+							<Button basic size="tiny">Bitcoin and Cryptocurrencies</Button>
+						</div>
+
+						<div style={{textAlign: 'center'}} className={cx('search')}>
 							<Input
 								size="mini"
 								action={<Dropdown button basic floating options={this.getOptionsFormsSelect()} defaultValue="all" />}

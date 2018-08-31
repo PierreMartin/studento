@@ -4,3 +4,13 @@
   text-align: center;
   color: $colorBombay !important;
 }
+
+.courses-container {
+  .sub-categories {
+    button { margin: 2px !important; }
+  }
+
+  .search {
+    margin-top: 8px;
+  }
+}
