@@ -90,7 +90,7 @@ class Home extends Component {
 							</Button.Group>
 						</Divider>
 
-						{ lastCategoryClicked.length > 0 ? this.renderSubCategories() : ''}
+						{ lastCategoryClicked && lastCategoryClicked.length > 0 ? this.renderSubCategories() : ''}
 
 						<div style={{textAlign: 'center'}} className={cx('search')}>
 							<Input
