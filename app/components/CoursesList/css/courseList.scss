@@ -1,23 +1,55 @@
-.table-container {
-  margin-top: 30px;
+@import '../../../css/common/transitions.scss';
 
-  border-left: none !important;
-  font-weight: 400 !important;
-  font-size: 1rem !important;
-  line-height: 1.2em !important;
-  color: rgba(0,0,0,.6) !important;
+.course-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-flow: row wrap;
+  align-content: flex-end;
 
-  .table-header th {
-    border-left: none !important;
-    color: rgba(0,0,0,.5) !important;
-  }
+  a.course-container-item {
+    display: block;
+    position: relative;
+    margin: 0 15px 15px 0;
+    width: 216px;
+    height: 290px;
+    box-shadow: 0 0 1px 1px rgba(20,23,28,.1), 0 3px 1px 0 rgba(20,23,28,.1);
 
-  .table-body td {
-    border-top: 2px solid rgba(34,36,38,.1) !important;
-  }
+    &:link, &:visited { text-decoration: none; color: rgba(0,0,0,.6); @include transition(all .2s); }
+    &:hover, &:focus  { text-decoration: none; color: rgba(92, 92, 92, 0.6); box-shadow: 0 2px 8px 2px rgba(20,23,28,.15);  }
+    &:active          { text-decoration: none; color: rgba(92, 92, 92, 0.6); }
 
-  .title {
-    color: rgba(0,0,0,1);
-    font-weight: bold;
+    .course-header {
+      height: 122px;
+      text-align: center;
+      font-size: 25px;
+      border-bottom: 1px solid rgba(0,0,0,.1);
+      padding: 35px 15px 15px 15px;
+    }
+
+    .course-body {
+      padding: 15px 15px 0 15px;
+      .subcat { font-size: 12px; }
+
+      .title {
+        text-overflow: ellipsis;
+        white-space: normal;
+        margin-bottom: 8px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .username { font-size: 12px; }
+      .date { font-size: 12px; }
+    }
+
+    .course-footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      padding: 0 15px 15px 15px;
+    }
   }
 }
