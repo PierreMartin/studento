@@ -13,7 +13,7 @@ import { Segment, Container, Header } from 'semantic-ui-react';
 class Dashboard extends Component {
 	componentDidMount() {
 		const { userMe, fetchCoursesByIdAction } = this.props;
-		fetchCoursesByIdAction(userMe._id);
+		fetchCoursesByIdAction(userMe._id, 'uId'); // 'uId' => name of field in Model to find
 	}
 
 	getMetaData() {

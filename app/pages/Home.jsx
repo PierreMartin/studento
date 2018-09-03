@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { fetchCoursesByIdAction } from '../actions/courses';
 import { Button, Container, Header, Icon, Segment, Divider, Input, Dropdown } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
@@ -10,6 +11,15 @@ import styles from './css/home.scss';
 const cx = classNames.bind(styles);
 
 class Home extends Component {
+	constructor(props) {
+		super(props);
+		this.handleSelectCategory = this.handleSelectCategory.bind(this);
+
+		this.state = {
+			lastCategoryClicked: null
+		};
+	}
+
 	getMetaData() {
 		return {
 			title: 'Home | react stater',
@@ -29,7 +39,31 @@ class Home extends Component {
 		];
 	}
 
+	handleSelectCategory = clickedCategory => () => {
+		const { fetchCoursesByIdAction } = this.props;
+		this.setState({ lastCategoryClicked: clickedCategory });
+		// fetchCoursesByIdAction(clickedCategory, 'category'); // 'category' => name of field in Model to find
+	}
+
+	renderSubCategories() {
+		// const { subCategories } = this.props;
+
+		return (
+			<div style={{textAlign: 'center'}} className={cx('sub-categories')}>
+				<Button basic size="tiny">Web development</Button>
+				<Button basic size="tiny">Administrators</Button>
+				<Button basic size="tiny">Linux</Button>
+				<Button basic size="tiny">Game development</Button>
+				<Button basic size="tiny">Software ingineering</Button>
+				<Button basic size="tiny">RaspBerry Pi</Button>
+				<Button basic size="tiny">Aduino</Button>
+				<Button basic size="tiny">Bitcoin and Cryptocurrencies</Button>
+			</div>
+		);
+	}
+
   render() {
+		const { lastCategoryClicked } = this.state;
 		const { courses } = this.props;
 
     return (
@@ -47,26 +81,16 @@ class Home extends Component {
 						<Header as="h2" content="Courses list" />
 
 						<Divider horizontal className={cx('categories')}>
-							{/* use a Toggle buttons */}
 							<Button.Group basic size="tiny">
-								<Button active>Technology</Button>
-								<Button>Life / Arts</Button>
-								<Button>Culture / Recreation</Button>
-								<Button>Science</Button>
-								<Button>Other</Button>
+								<Button active={lastCategoryClicked === 'technology'} onClick={this.handleSelectCategory('technology')}>Technology</Button>
+								<Button active={lastCategoryClicked === 'life'} onClick={this.handleSelectCategory('life')}>Life / Arts</Button>
+								<Button active={lastCategoryClicked === 'culture'} onClick={this.handleSelectCategory('culture')}>Culture / Recreation</Button>
+								<Button active={lastCategoryClicked === 'science'} onClick={this.handleSelectCategory('science')}>Science</Button>
+								<Button active={lastCategoryClicked === 'other'} onClick={this.handleSelectCategory('other')}>Other</Button>
 							</Button.Group>
 						</Divider>
 
-						<div style={{textAlign: 'center'}} className={cx('sub-categories')}>
-							<Button basic size="tiny">Web development</Button>
-							<Button basic size="tiny">Administrators</Button>
-							<Button basic size="tiny">Linux</Button>
-							<Button basic size="tiny" active>Game development</Button>
-							<Button basic size="tiny">Software ingineering</Button>
-							<Button basic size="tiny">RaspBerry Pi</Button>
-							<Button basic size="tiny">Aduino</Button>
-							<Button basic size="tiny">Bitcoin and Cryptocurrencies</Button>
-						</div>
+						{ lastCategoryClicked.length > 0 ? this.renderSubCategories() : ''}
 
 						<div style={{textAlign: 'center'}} className={cx('search')}>
 							<Input
@@ -103,6 +127,8 @@ class Home extends Component {
 
 
 Home.propTypes = {
+	fetchCoursesByIdAction: PropTypes.func,
+
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
 		id: PropTypes.string,
@@ -117,4 +143,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, null)(Home);
+export default connect(mapStateToProps, { fetchCoursesByIdAction })(Home);
