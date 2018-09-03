@@ -4,6 +4,7 @@ import { controllers, passport as passportConfig } from '../db';
 const authController = controllers && controllers.auth;
 const usersController = controllers && controllers.users;
 const coursesController = controllers && controllers.courses;
+const categoriesController = controllers && controllers.categories;
 const channelsController = controllers && controllers.channels;
 const messagesController = controllers && controllers.messages;
 
@@ -18,6 +19,13 @@ export default (app) => {
 		app.delete('/api/deletecourse/:courseid', coursesController.deleteOne);
 	} else {
 		console.warn('courses routes');
+	}
+
+	// categories routes
+	if (categoriesController) {
+		app.get('/api/getcategories', categoriesController.all);
+	} else {
+		console.warn('categories routes');
 	}
 
   // authentification routes

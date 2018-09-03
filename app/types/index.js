@@ -29,6 +29,11 @@ export const EMPTY_COURSE = 'EMPTY_COURSE';
 // Do sort on courses list:
 export const DO_SORT_COURSES = 'DO_SORT_COURSES';
 
+/***************************************** Categories ********************************************/
+// Get all
+export const GET_CATEGORIES_SUCCESS = 'GET_CATEGORIES_SUCCESS';
+export const GET_CATEGORIES_FAILURE = 'GET_CATEGORIES_FAILURE';
+
 /***************************************** Authentification ********************************************/
 export const LOGIN_BEGIN_USER = 'LOGIN_BEGIN_USER';
 export const SIGNUP_BEGIN_USER = 'SIGNUP_BEGIN_USER';

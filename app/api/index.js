@@ -78,6 +78,18 @@ export const deleteCourseRequest = (courseId) => {
 		});
 };
 
+/********************************************** Categories ***********************************************/
+// All
+export const fetchCategoriesRequest = () => {
+	return api().getCategories()
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
 /********************************************** Authentification ***********************************************/
 export const loginRequest = (data) => {
 	return api().login(data)

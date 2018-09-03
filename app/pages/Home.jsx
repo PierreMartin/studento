@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchCoursesByIdAction } from '../actions/courses';
+import { fetchCategoriesAction } from '../actions/category';
 import { Button, Container, Header, Icon, Segment, Divider, Input, Dropdown } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
@@ -18,6 +19,10 @@ class Home extends Component {
 		this.state = {
 			lastCategoryClicked: null
 		};
+	}
+
+	componentDidMount() {
+		this.props.fetchCategoriesAction();
 	}
 
 	getMetaData() {
@@ -45,16 +50,15 @@ class Home extends Component {
 		// fetchCoursesByIdAction(clickedCategory, 'category'); // 'category' => name of field in Model to find
 	}
 
-	renderSubCategories() {
-		// const { subCategories } = this.props;
-
+	renderSubCategories(categories) {
+		// categories.subCategories.map(...);
 		return (
 			<div style={{textAlign: 'center'}} className={cx('sub-categories')}>
 				<Button basic size="tiny">Web development</Button>
 				<Button basic size="tiny">Administrators</Button>
 				<Button basic size="tiny">Linux</Button>
 				<Button basic size="tiny">Game development</Button>
-				<Button basic size="tiny">Software ingineering</Button>
+				<Button basic size="tiny">Software Engineering</Button>
 				<Button basic size="tiny">RaspBerry Pi</Button>
 				<Button basic size="tiny">Aduino</Button>
 				<Button basic size="tiny">Bitcoin and Cryptocurrencies</Button>
@@ -63,8 +67,8 @@ class Home extends Component {
 	}
 
   render() {
+		const { courses, categories } = this.props;
 		const { lastCategoryClicked } = this.state;
-		const { courses } = this.props;
 
     return (
       <LayoutPage {...this.getMetaData()}>
@@ -90,7 +94,7 @@ class Home extends Component {
 							</Button.Group>
 						</Divider>
 
-						{ lastCategoryClicked && lastCategoryClicked.length > 0 ? this.renderSubCategories() : ''}
+						{ lastCategoryClicked && lastCategoryClicked.length > 0 ? this.renderSubCategories(categories) : ''}
 
 						<div style={{textAlign: 'center'}} className={cx('search')}>
 							<Input
@@ -128,19 +132,28 @@ class Home extends Component {
 
 Home.propTypes = {
 	fetchCoursesByIdAction: PropTypes.func,
+	fetchCategoriesAction: PropTypes.func,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
 		id: PropTypes.string,
 		price: PropTypes.number,
 		title: PropTypes.string
-	})).isRequired
+	})).isRequired,
+
+	categories: PropTypes.arrayOf(PropTypes.shape({
+		description: PropTypes.string,
+		name: PropTypes.string,
+		picto: PropTypes.number,
+		subCategories: PropTypes.array
+	}))
 };
 
 const mapStateToProps = (state) => {
 	return {
-		courses: state.courses.all
+		courses: state.courses.all,
+		categories: state.categories.all
 	};
 };
 
-export default connect(mapStateToProps, { fetchCoursesByIdAction })(Home);
+export default connect(mapStateToProps, { fetchCoursesByIdAction, fetchCategoriesAction })(Home);

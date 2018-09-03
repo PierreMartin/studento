@@ -32,6 +32,12 @@ export function api() {
 			url: '/api/deletecourse/' + courseId
 		}),
 
+		// Categories
+		getCategories: () => localClient.request({
+			method: 'GET',
+			url: '/api/getcategories'
+		}),
+
 		// Authentification
 		login: data => localClient.request({
 			method: 'POST',

@@ -5,6 +5,7 @@ import users from './users';
 import userMe from './userMe';
 import courses from './courses';
 import tchat from './tchat';
+import categories from './categories';
 
 const rootReducer = combineReducers({
 	authentification,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
 	users,
 	userMe,
   courses,
+	categories,
   routing
 });
 
