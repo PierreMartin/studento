@@ -1,0 +1,26 @@
+{
+  "categories": [
+    { "name": "Technology", "description": "Technology blah blah", "picto": "technology", "subCategories": [
+      { "name": "Web development", "description": "Web development blah blah", "picto": "web" },
+      { "name": "Administrators", "description": "Administrators blah blah", "picto": "administrators" },
+      { "name": "Linux", "description": "Linux blah blah", "picto": "linux" },
+      { "name": "Game development", "description": "Game development blah blah", "picto": "game" },
+      { "name": "Software Engineering", "description": "Software Engineering blah blah", "picto": "software-engineering" },
+      { "name": "RaspBerry Pi", "description": "RaspBerry Pi blah blah", "picto": "pi" },
+      { "name": "Aduino", "description": "Aduino blah blah", "picto": "aduino" },
+      { "name": "Bitcoin and Cryptocurrencies", "description": "Bitcoin and Cryptocurrencies blah blah", "picto": "cryptocurrencies" }
+    ]},
+    { "name": "Life / Arts", "description": "Life / Arts blah blah", "picto": "life", "subCategories": [
+      { "name": "", "description": "", "picto": "" }
+    ]},
+    { "name": "Culture / Recreation", "description": "Culture / Recreation blah blah", "picto": "culture", "subCategories": [
+      { "name": "", "description": "", "picto": "" }
+    ]},
+    { "name": "Science", "description": "Science / Recreation blah blah", "picto": "science", "subCategories": [
+      { "name": "", "description": "", "picto": "" }
+    ]},
+    { "name": "Other", "description": "Other blah blah", "picto": "other", "subCategories": [
+      { "name": "", "description": "", "picto": "" }
+    ]}
+  ]
+}
