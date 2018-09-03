@@ -9,6 +9,7 @@
       { "name": "RaspBerry Pi", "description": "RaspBerry Pi blah blah", "picto": "pi" },
       { "name": "Aduino", "description": "Aduino blah blah", "picto": "aduino" },
       { "name": "Bitcoin and Cryptocurrencies", "description": "Bitcoin and Cryptocurrencies blah blah", "picto": "cryptocurrencies" }
+      { "name": "TTT", "description": "TT blah blah", "picto": "tt" }
     ]},
     { "name": "Life / Arts", "description": "Life / Arts blah blah", "picto": "life", "subCategories": [
       { "name": "", "description": "", "picto": "" }

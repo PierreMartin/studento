@@ -69,6 +69,7 @@ class Home extends Component {
   render() {
 		const { courses, categories } = this.props;
 		const { lastCategoryClicked } = this.state;
+		const indexCat = 0;
 
     return (
       <LayoutPage {...this.getMetaData()}>
@@ -86,15 +87,11 @@ class Home extends Component {
 
 						<Divider horizontal className={cx('categories')}>
 							<Button.Group basic size="tiny">
-								<Button active={lastCategoryClicked === 'technology'} onClick={this.handleSelectCategory('technology')}>Technology</Button>
-								<Button active={lastCategoryClicked === 'life'} onClick={this.handleSelectCategory('life')}>Life / Arts</Button>
-								<Button active={lastCategoryClicked === 'culture'} onClick={this.handleSelectCategory('culture')}>Culture / Recreation</Button>
-								<Button active={lastCategoryClicked === 'science'} onClick={this.handleSelectCategory('science')}>Science</Button>
-								<Button active={lastCategoryClicked === 'other'} onClick={this.handleSelectCategory('other')}>Other</Button>
+								{categories.map((cat, indexCat) => (<Button key={indexCat} active={lastCategoryClicked === cat.picto} onClick={this.handleSelectCategory(cat.picto)}>{cat.name}</Button>))}
 							</Button.Group>
 						</Divider>
 
-						{ lastCategoryClicked && lastCategoryClicked.length > 0 ? this.renderSubCategories(categories) : ''}
+						{ lastCategoryClicked && lastCategoryClicked.length > 0 ? this.renderSubCategories(categories[indexCat]) : ''}
 
 						<div style={{textAlign: 'center'}} className={cx('search')}>
 							<Input
@@ -144,7 +141,7 @@ Home.propTypes = {
 	categories: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
 		name: PropTypes.string,
-		picto: PropTypes.number,
+		picto: PropTypes.string,
 		subCategories: PropTypes.array
 	}))
 };
