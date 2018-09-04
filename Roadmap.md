@@ -34,6 +34,7 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - /course/${course._id}
 
 ### TODO :
+- Créer Collection Category pour populer avec les Courses
 - Courses All - requests by search
 - page 'course'       -> courseSingle(one)
 - gerer les paginations (sur Home et Dashboard)

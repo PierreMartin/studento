@@ -18,9 +18,12 @@ class CoursesList extends Component {
 
 			return (
 				<a key={key} href={`/course/${course._id}`} className={cx('course-container-item')}>
-					<div className={cx('course-header')}>{/*course.category.name course.category.picto*/}<Icon name="code" size="big" /></div>
+					<div className={cx('course-header')}><Icon name={course.category.picto || 'code'} size="big" /></div>
 					<div className={cx('course-body')}>
-						<div className={cx('subcat')}>{course.subCategories.map(sb => sb)}</div>
+						<div className={cx('subcat')}>{course.subCategories.map((subCat, i) => {
+							const space = course.subCategories.length - 1 === i ? '' : ', ';
+							return subCat + space;
+						})}</div>
 						<div className={cx('title')}>{course.title}</div>
 						<div className={cx('username')}>{course.uId.username}</div>
 						<div className={cx('date')}>{courseDate}</div>
@@ -44,7 +47,7 @@ CoursesList.propTypes = {
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
 		title: PropTypes.string,
-		category: PropTypes.string,
+		category: PropTypes.string, // TODO il faudra populer ce champ
 		subCategories: PropTypes.array,
 		isPrivate: PropTypes.bool,
 		content: PropTypes.string
