@@ -17,7 +17,13 @@ class Home extends Component {
 		this.handleSelectCategory = this.handleSelectCategory.bind(this);
 
 		this.state = {
-			lastCategoryClicked: null
+			category: {
+				lastClicked: null,
+				clickedIndex: 0
+			},
+			subCategory: {
+				lastClicked: null
+			}
 		};
 	}
 
@@ -34,48 +40,55 @@ class Home extends Component {
 	}
 
 	getOptionsFormsSelect() {
-		return [
-			{ key: 'all', text: 'All', value: 'all' },
-			{ key: 'technology', text: 'Technology', value: 'technology' },
-			{ key: 'life', text: 'Life / Arts', value: 'life' },
-			{ key: 'culture', text: 'Culture / Recreation', value: 'culture' },
-			{ key: 'science', text: 'Science', value: 'science' },
-			{ key: 'other', text: 'Other', value: 'other' }
-		];
+		const { categories } = this.props;
+
+		const arrCatList = [{ key: 'all', text: 'All', value: 'all' }];
+		for (let i = 0; i < categories.length; i++) {
+			arrCatList.push({
+				key: categories[i].key,
+				text: categories[i].name,
+				value: categories[i].key
+			});
+		}
+
+		return arrCatList;
 	}
 
-	handleSelectCategory = clickedCategory => () => {
+	handleSelectCategory = (clickedCategory, clickedIndex) => () => {
 		const { fetchCoursesByIdAction } = this.props;
-		this.setState({ lastCategoryClicked: clickedCategory });
+		this.setState({ category: { lastClicked: clickedCategory, clickedIndex} });
 		// fetchCoursesByIdAction(clickedCategory, 'category'); // 'category' => name of field in Model to find
 	}
 
-	renderSubCategories(categories) {
-		// categories.subCategories.map(...);
+	handleSelectSubCategory = clickedSubCategory => () => {
+		const { fetchCoursesByIdAction } = this.props;
+		this.setState({ subCategory: { lastClicked: clickedSubCategory } });
+		// fetchCoursesByIdAction(clickedSubCategory, 'subCategories'); // 'subCategories' => name of field in Model to find
+	}
+
+	renderSubCategories(categoryParam) {
+		const { subCategory } = this.state;
+
+		const buttonsSubCategoriesNode = categoryParam.subCategories.map((subCat, index) => {
+			return (<Button key={index} basic size="tiny" active={subCategory.lastClicked === subCat.key} onClick={this.handleSelectSubCategory(subCat.key)}>{subCat.name}</Button>);
+		});
+
 		return (
 			<div style={{textAlign: 'center'}} className={cx('sub-categories')}>
-				<Button basic size="tiny">Web development</Button>
-				<Button basic size="tiny">Administrators</Button>
-				<Button basic size="tiny">Linux</Button>
-				<Button basic size="tiny">Game development</Button>
-				<Button basic size="tiny">Software Engineering</Button>
-				<Button basic size="tiny">RaspBerry Pi</Button>
-				<Button basic size="tiny">Aduino</Button>
-				<Button basic size="tiny">Bitcoin and Cryptocurrencies</Button>
+				{buttonsSubCategoriesNode}
 			</div>
 		);
 	}
 
   render() {
 		const { courses, categories } = this.props;
-		const { lastCategoryClicked } = this.state;
-		const indexCat = 0;
+		const { category } = this.state;
 
     return (
       <LayoutPage {...this.getMetaData()}>
 				<Segment inverted textAlign="center" style={{ minHeight: 400, padding: '1em 0em' }} vertical>
 					<Container text>
-						<Header as="h1" content="Hello!" inverted className={cx('myClass')} style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '1em' }} />
+						<Header as="h1" content="Hello!" inverted style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '1em' }} />
 						<Header as="h2" content="Start to share you courses / knowledges with the world." inverted style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
 						<Button primary size="huge">Sign up<Icon name="right arrow" /></Button>
 					</Container>
@@ -87,11 +100,11 @@ class Home extends Component {
 
 						<Divider horizontal className={cx('categories')}>
 							<Button.Group basic size="tiny">
-								{categories.map((cat, indexCat) => (<Button key={indexCat} active={lastCategoryClicked === cat.picto} onClick={this.handleSelectCategory(cat.picto)}>{cat.name}</Button>))}
+								{categories.map((cat, index) => (<Button key={index} active={category.lastClicked === cat.key} onClick={this.handleSelectCategory(cat.key, index)}>{cat.name}</Button>))}
 							</Button.Group>
 						</Divider>
 
-						{ lastCategoryClicked && lastCategoryClicked.length > 0 ? this.renderSubCategories(categories[indexCat]) : ''}
+						{ category.lastClicked && category.lastClicked.length > 0 ? this.renderSubCategories(categories[category.clickedIndex]) : ''}
 
 						<div style={{textAlign: 'center'}} className={cx('search')}>
 							<Input
