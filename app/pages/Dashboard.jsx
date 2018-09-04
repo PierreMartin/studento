@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchCoursesByIdAction } from '../actions/courses';
+import { fetchCoursesByFieldAction } from '../actions/courses';
 import CoursesListDashboard from '../components/CoursesListDashboard/CoursesListDashboard';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Container, Header } from 'semantic-ui-react';
@@ -12,8 +12,8 @@ import { Segment, Container, Header } from 'semantic-ui-react';
 
 class Dashboard extends Component {
 	componentDidMount() {
-		const { userMe, fetchCoursesByIdAction } = this.props;
-		fetchCoursesByIdAction(userMe._id, 'uId'); // 'uId' => name of field in Model to find
+		const { userMe, fetchCoursesByFieldAction } = this.props;
+		fetchCoursesByFieldAction('uId', userMe._id); // 'uId' => name of field in Model to find
 	}
 
 	getMetaData() {
@@ -47,7 +47,7 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-	fetchCoursesByIdAction: PropTypes.func,
+	fetchCoursesByFieldAction: PropTypes.func,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
@@ -70,4 +70,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchCoursesByIdAction })(Dashboard);
+export default connect(mapStateToProps, { fetchCoursesByFieldAction })(Dashboard);

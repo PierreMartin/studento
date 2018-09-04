@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchCoursesByIdAction } from '../actions/courses';
+import { fetchCoursesByFieldAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import { Button, Container, Header, Icon, Segment, Divider, Input, Dropdown } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
@@ -55,15 +55,15 @@ class Home extends Component {
 	}
 
 	handleSelectCategory = (clickedCategory, clickedIndex) => () => {
-		const { fetchCoursesByIdAction } = this.props;
+		const { fetchCoursesByFieldAction } = this.props;
 		this.setState({ category: { lastClicked: clickedCategory, clickedIndex} });
-		// fetchCoursesByIdAction(clickedCategory, 'category'); // 'category' => name of field in Model to find
+		fetchCoursesByFieldAction('category', clickedCategory); // 'category' => name of field in Model to find
 	}
 
 	handleSelectSubCategory = clickedSubCategory => () => {
-		const { fetchCoursesByIdAction } = this.props;
+		const { fetchCoursesByFieldAction } = this.props;
 		this.setState({ subCategory: { lastClicked: clickedSubCategory } });
-		// fetchCoursesByIdAction(clickedSubCategory, 'subCategories'); // 'subCategories' => name of field in Model to find
+		fetchCoursesByFieldAction('subCategories', clickedSubCategory); // 'subCategories' => name of field in Model to find
 	}
 
 	renderSubCategories(categoryParam) {
@@ -96,7 +96,6 @@ class Home extends Component {
 
 				<Segment vertical>
 					<Container text className={cx('courses-container')}>
-						<Header as="h2" content="Courses list" />
 
 						<Divider horizontal className={cx('categories')}>
 							<Button.Group basic size="tiny">
@@ -141,7 +140,7 @@ class Home extends Component {
 
 
 Home.propTypes = {
-	fetchCoursesByIdAction: PropTypes.func,
+	fetchCoursesByFieldAction: PropTypes.func,
 	fetchCategoriesAction: PropTypes.func,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
@@ -166,4 +165,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchCoursesByIdAction, fetchCategoriesAction })(Home);
+export default connect(mapStateToProps, { fetchCoursesByFieldAction, fetchCategoriesAction })(Home);

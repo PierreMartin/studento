@@ -12,7 +12,7 @@ export default (app) => {
 	// courses routes
 	if (coursesController) {
 		app.get('/api/getcourses', coursesController.all);
-		app.get('/api/getcourses/:id', coursesController.allById);
+		app.get('/api/getcourses/:key/:value', coursesController.allByField);
 		app.get('/api/getcourse/:id', coursesController.oneById);
 		app.post('/api/addcourse', coursesController.add);
 		app.put('/api/updatecourse', coursesController.update);

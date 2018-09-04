@@ -34,8 +34,7 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - /course/${course._id}
 
 ### TODO :
-- Créer collections 'categories' 'subCategories'
-- Courses All - requests by search form and by categories
+- Courses All - requests by search
 - page 'course'       -> courseSingle(one)
 - gerer les paginations (sur Home et Dashboard)
 

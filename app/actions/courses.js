@@ -1,5 +1,5 @@
 import * as types from './../types';
-import { createCourseRequest, updateCourseRequest, fetchCoursesByIdRequest, deleteCourseRequest } from './../api';
+import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, deleteCourseRequest } from './../api';
 import { toast } from 'react-toastify';
 import { push } from 'react-router-redux';
 
@@ -22,9 +22,9 @@ export function fetchCoursesByIdFailure(messageError) {
 	};
 }
 
-export function fetchCoursesByIdAction(data) {
+export function fetchCoursesByFieldAction(key, value) {
 	return (dispatch) => {
-		fetchCoursesByIdRequest(data)
+		fetchCoursesByFieldRequest(key, value)
 			.then((res) => {
 				if (res.status === 200) return dispatch(fetchCoursesByIdSuccess(res.data));
 			})

@@ -9,9 +9,9 @@ export function api() {
 			method: 'GET',
 			url: '/api/getcourses'
 		}),
-		getCoursesById: userMeId => localClient.request({
+		getCoursesByField: (key, value) => localClient.request({
 			method: 'GET',
-			url: '/api/getcourses/' + userMeId
+			url: '/api/getcourses/' + key + '/' + value
 		}),
 		getCourseById: id => localClient.request({
 			method: 'GET',

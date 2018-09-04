@@ -15,18 +15,18 @@ export function all(req, res) {
 }
 
 /**
- * Get /api/getcourses/:id
+ * Get /api/getcourses/:key/:value
  */
-export function allById(req, res) {
-	const { id } = req.params;
+export function allByField(req, res) {
+	const { key, value } = req.params;
 
-	Course.find({ uId: id }).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, courses) => {
+	Course.find({ [key]: value }).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, courses) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ message: 'A error happen at the fetching courses by id', err });
+      return res.status(500).json({ message: 'A error happen at the fetching courses by field', err });
     }
 
-		return res.status(200).json({ message: 'courses by id fetched', courses });
+		return res.status(200).json({ message: 'courses by field fetched', courses });
   });
 }
 
@@ -141,7 +141,7 @@ export function deleteOne(req, res) {
 
 export default {
   all,
-	allById,
+	allByField,
 	oneById,
   add,
 	update,
