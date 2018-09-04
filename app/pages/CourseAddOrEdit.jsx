@@ -34,8 +34,14 @@ class CourseAddOrEdit extends Component {
 	}
 
 	getOptionsFormsSelect() {
-		const { categories } = this.props;
-		const { category } = this.state;
+		const { categories, course } = this.props;
+		const { category, isEditing } = this.state;
+		let lastCategorySelected = category.lastSelected;
+
+		// If update and no yet select some Inputs:
+		if (isEditing && category.lastSelected === null) {
+			lastCategorySelected = course.category;
+		}
 
 		// CATEGORIES - Convert to Input formate:
 		const arrCatList = [];
@@ -51,9 +57,9 @@ class CourseAddOrEdit extends Component {
 
 		// SUB CATEGORIES - 1) Get the category selected by the 1st Input:
 		let categorySelected = {};
-		if (categories.length > 0 && category.lastSelected) {
+		if (categories.length > 0 && lastCategorySelected) {
 			for (let i = 0; i < categories.length; i++) {
-				if (categories[i].key === category.lastSelected) {
+				if (categories[i].key === lastCategorySelected) {
 					categorySelected = categories[i];
 					break;
 				}
@@ -87,7 +93,7 @@ class CourseAddOrEdit extends Component {
 		const fields = {};
 		fields.title = ((typeof fieldsTyping.title !== 'undefined') ? fieldsTyping.title : course && course.title) || '';
 		fields.category = ((typeof fieldsTyping.category !== 'undefined') ? fieldsTyping.category : course && course.category) || '';
-		fields.subCategories = ((typeof fieldsTyping.subCategories !== 'undefined') ? fieldsTyping.subCategories : course && course.subCategories) || []; // TODO gerer 'fieldsTyping.subCategories' pour avoir un array
+		fields.subCategories = ((typeof fieldsTyping.subCategories !== 'undefined') ? fieldsTyping.subCategories : course && course.subCategories) || [];
 		fields.isPrivate = ((typeof fieldsTyping.isPrivate !== 'undefined') ? fieldsTyping.isPrivate : course && course.isPrivate) || false;
 		fields.content = ((typeof fieldsTyping.content !== 'undefined') ? fieldsTyping.content : course && course.content) || '';
 
@@ -111,6 +117,8 @@ class CourseAddOrEdit extends Component {
 			data.createdAt = new Date().toISOString();
 			createCourseAction(data);
 		}
+
+		this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 	}
 
 	handleInputChange(event, field) {
@@ -149,7 +157,7 @@ class CourseAddOrEdit extends Component {
 
 	render() {
 		const { course, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category } = this.state;
+		const { category, isEditing } = this.state;
 		const fields = this.getFieldsVal(this.state.fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
@@ -166,7 +174,7 @@ class CourseAddOrEdit extends Component {
 
 							<Form.Group widths="equal">
 								<Form.Select required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
-								{ category.lastSelected && category.lastSelected.length > 0 ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" options={subCategoriesOptions} value={fields.subCategories || ''} onChange={this.handleInputChange} /> : ''}
+								{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={this.handleInputChange} /> : ''}
 							</Form.Group>
 
 							<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={this.handleInputChange} />
