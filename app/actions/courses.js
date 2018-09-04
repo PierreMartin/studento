@@ -34,6 +34,21 @@ export function fetchCoursesByFieldAction(key, value) {
 	};
 }
 
+/************************ Get courses by search ***********************/
+export function fetchCoursesBySearchAction(fieldSearch) {
+	return;
+
+	return (dispatch) => {
+		fetchCoursesByFieldRequest(fieldSearch)
+			.then((res) => {
+				if (res.status === 200) return dispatch(fetchCoursesByIdSuccess(res.data));
+			})
+			.catch((err) => {
+				dispatch(fetchCoursesByIdFailure(getMessage(err)));
+			});
+	};
+}
+
 /************************ Create or edit course ***********************/
 export function addOrEditCourseSuccess(res) {
 	return {

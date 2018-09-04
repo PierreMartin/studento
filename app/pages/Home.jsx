@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchCoursesByFieldAction } from '../actions/courses';
+import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import { Button, Container, Header, Icon, Segment, Divider, Input, Dropdown } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
@@ -15,8 +15,15 @@ class Home extends Component {
 	constructor(props) {
 		super(props);
 		this.handleSelectCategory = this.handleSelectCategory.bind(this);
+		this.handleSelectSubCategory = this.handleSelectSubCategory.bind(this);
+		this.handleSearchInput = this.handleSearchInput.bind(this);
+		this.handleSearchSelect = this.handleSearchSelect.bind(this);
 
 		this.state = {
+			fieldSearch: {
+				select: '',
+				typing: ''
+			},
 			category: {
 				lastClicked: null,
 				clickedIndex: 0
@@ -66,6 +73,17 @@ class Home extends Component {
 		fetchCoursesByFieldAction('subCategories', clickedSubCategory); // 'subCategories' => name of field in Model to find
 	}
 
+	handleSearchSelect = (e, { value }) => {
+		const { fieldSearch } = this.state;
+		this.setState({ fieldSearch: { ...fieldSearch, select: value } });
+	}
+
+	handleSearchInput = (e, { value }) => {
+		const { fieldSearch } = this.state;
+		this.setState({ fieldSearch: { ...fieldSearch, typing: value } });
+		this.props.fetchCoursesBySearchAction(fieldSearch);
+	}
+
 	renderSubCategories(categoryParam) {
 		const { subCategory } = this.state;
 
@@ -82,7 +100,7 @@ class Home extends Component {
 
   render() {
 		const { courses, categories } = this.props;
-		const { category } = this.state;
+		const { category, fieldSearch } = this.state;
 
     return (
       <LayoutPage {...this.getMetaData()}>
@@ -108,10 +126,13 @@ class Home extends Component {
 						<div style={{textAlign: 'center'}} className={cx('search')}>
 							<Input
 								size="mini"
-								action={<Dropdown button basic floating options={this.getOptionsFormsSelect()} defaultValue="all" />}
+								action={<Dropdown button basic floating options={this.getOptionsFormsSelect()} defaultValue="all" onChange={this.handleSearchSelect} />}
 								icon="search"
 								iconPosition="left"
 								placeholder="Search"
+								name="search"
+								value={fieldSearch.typing || ''}
+								onChange={this.handleSearchInput}
 							/>
 						</div>
 
@@ -142,6 +163,7 @@ class Home extends Component {
 Home.propTypes = {
 	fetchCoursesByFieldAction: PropTypes.func,
 	fetchCategoriesAction: PropTypes.func,
+	fetchCoursesBySearchAction: PropTypes.func,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
@@ -165,4 +187,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchCoursesByFieldAction, fetchCategoriesAction })(Home);
+export default connect(mapStateToProps, { fetchCoursesByFieldAction, fetchCategoriesAction, fetchCoursesBySearchAction })(Home);
