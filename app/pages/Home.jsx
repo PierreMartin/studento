@@ -153,7 +153,7 @@ Home.propTypes = {
 	categories: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
 		name: PropTypes.string,
-		picto: PropTypes.string,
+		key: PropTypes.string,
 		subCategories: PropTypes.array
 	}))
 };

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createCourseAction, updateCourseAction } from '../actions/courses';
+import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Container, Form, Message } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
@@ -21,6 +22,10 @@ class CourseAddOrEdit extends Component {
 		};
 	}
 
+	componentDidMount() {
+		this.props.fetchCategoriesAction();
+	}
+
 	componentDidUpdate(prevProps) {
 		if (prevProps.course !== this.props.course) {
 			this.setState({isEditing: this.props.course && typeof this.props.course._id !== 'undefined'});
@@ -28,15 +33,21 @@ class CourseAddOrEdit extends Component {
 	}
 
 	getOptionsFormsSelect() {
+		const { categories } = this.props;
 		const options = {};
+		const arrCatList = [];
 
-		// TODO get existing categories
-		options.categories = [
-			{ key: 'informatique', text: 'Informatique', value: 'informatique' },
-			{ key: 'edu', text: 'Education', value: 'education'},
-			{ key: 'sport', text: 'Sport', value: 'sport' },
-			{ key: 'travel', text: 'Travel', value: 'travel' }
-		];
+		if (categories.length > 0) {
+			for (let i = 0; i < categories.length; i++) {
+				arrCatList.push({
+					key: categories[i].key,
+					text: categories[i].name,
+					value: categories[i].key
+				});
+			}
+		}
+
+		options.categoriesOptions = arrCatList;
 
 		return options;
 	}
@@ -112,7 +123,7 @@ class CourseAddOrEdit extends Component {
 		const { course, addOrEditMissingField, addOrEditFailure } = this.props;
 		const fields = this.getFieldsVal(this.state.fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
-		const options = this.getOptionsFormsSelect();
+		const { categoriesOptions } = this.getOptionsFormsSelect();
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -125,8 +136,7 @@ class CourseAddOrEdit extends Component {
 							<Form.TextArea required label="Content" placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} />
 
 							<Form.Group widths="equal">
-								<Form.Input required list="category" label="Category" name="category" placeholder="Choose the category" value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
-								<datalist id="category">{ options.categories.map((cat, i) => (<option key={i} value={cat.text} />))}</datalist>
+								<Form.Select required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
 								<Form.Input label="Sub Categories" placeholder="Sub Categories" name="subCategories" value={fields.subCategories || ''} onChange={this.handleInputChange} />
 							</Form.Group>
 
@@ -143,6 +153,7 @@ class CourseAddOrEdit extends Component {
 }
 
 CourseAddOrEdit.propTypes = {
+	fetchCategoriesAction: PropTypes.func,
 	createCourseAction: PropTypes.func,
 	updateCourseAction: PropTypes.func,
 	addOrEditMissingField: PropTypes.object,
@@ -159,16 +170,24 @@ CourseAddOrEdit.propTypes = {
 
 	userMe: PropTypes.shape({
 		_id: PropTypes.string
-	})
+	}),
+
+	categories: PropTypes.arrayOf(PropTypes.shape({
+		description: PropTypes.string,
+		name: PropTypes.string,
+		key: PropTypes.string,
+		subCategories: PropTypes.array
+	}))
 };
 
 const mapStateToProps = (state) => {
 	return {
 		course: state.courses.one,
 		userMe: state.userMe.data,
+		categories: state.categories.all,
 		addOrEditMissingField: state.courses.addOrEditMissingField,
 		addOrEditFailure: state.courses.addOrEditFailure
 	};
 };
 
-export default connect(mapStateToProps, { createCourseAction, updateCourseAction })(CourseAddOrEdit);
+export default connect(mapStateToProps, { fetchCategoriesAction, createCourseAction, updateCourseAction })(CourseAddOrEdit);
