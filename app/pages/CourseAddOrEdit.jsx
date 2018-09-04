@@ -18,7 +18,8 @@ class CourseAddOrEdit extends Component {
 
 		this.state = {
 			fieldsTyping: {},
-			isEditing: this.props.course && typeof this.props.course._id !== 'undefined'
+			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
+			category: { lastSelected: null }
 		};
 	}
 
@@ -34,9 +35,10 @@ class CourseAddOrEdit extends Component {
 
 	getOptionsFormsSelect() {
 		const { categories } = this.props;
-		const options = {};
-		const arrCatList = [];
+		const { category } = this.state;
 
+		// CATEGORIES - Convert to Input formate:
+		const arrCatList = [];
 		if (categories.length > 0) {
 			for (let i = 0; i < categories.length; i++) {
 				arrCatList.push({
@@ -47,9 +49,30 @@ class CourseAddOrEdit extends Component {
 			}
 		}
 
-		options.categoriesOptions = arrCatList;
+		// SUB CATEGORIES - 1) Get the category selected by the 1st Input:
+		let categorySelected = {};
+		if (categories.length > 0 && category.lastSelected) {
+			for (let i = 0; i < categories.length; i++) {
+				if (categories[i].key === category.lastSelected) {
+					categorySelected = categories[i];
+					break;
+				}
+			}
+		}
 
-		return options;
+		// SUB CATEGORIES - 2) Convert to Input formate:
+		const arrSubCatList = [];
+		if (categorySelected.subCategories && categorySelected.subCategories.length > 0) {
+			for (let i = 0; i < categorySelected.subCategories.length; i++) {
+				arrSubCatList.push({
+					key: categorySelected.subCategories[i].key,
+					text: categorySelected.subCategories[i].name,
+					value: categorySelected.subCategories[i].key
+				});
+			}
+		}
+
+		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList };
 	}
 
 	getMetaData() {
@@ -92,6 +115,11 @@ class CourseAddOrEdit extends Component {
 
 	handleInputChange(event, field) {
 		const oldStateTyping = this.state.fieldsTyping;
+
+		if (field.name === 'category') {
+			return this.setState({ fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}, category: { lastSelected: field.value} });
+		}
+
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
 	}
 
@@ -121,9 +149,10 @@ class CourseAddOrEdit extends Component {
 
 	render() {
 		const { course, addOrEditMissingField, addOrEditFailure } = this.props;
+		const { category } = this.state;
 		const fields = this.getFieldsVal(this.state.fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
-		const { categoriesOptions } = this.getOptionsFormsSelect();
+		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -137,7 +166,7 @@ class CourseAddOrEdit extends Component {
 
 							<Form.Group widths="equal">
 								<Form.Select required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
-								<Form.Input label="Sub Categories" placeholder="Sub Categories" name="subCategories" value={fields.subCategories || ''} onChange={this.handleInputChange} />
+								{ category.lastSelected && category.lastSelected.length > 0 ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" options={subCategoriesOptions} value={fields.subCategories || ''} onChange={this.handleInputChange} /> : ''}
 							</Form.Group>
 
 							<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={this.handleInputChange} />
