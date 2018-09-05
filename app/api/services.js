@@ -13,6 +13,10 @@ export function api() {
 			method: 'GET',
 			url: '/api/getcourses/' + key + '/' + value
 		}),
+		getCoursesBySearch: fieldSearch => localClient.request({
+			method: 'GET',
+			url: '/api/getcoursesbysearch/' + fieldSearch.select + '/' + fieldSearch.typing
+		}),
 		getCourseById: id => localClient.request({
 			method: 'GET',
 			url: '/api/getcourse/' + id

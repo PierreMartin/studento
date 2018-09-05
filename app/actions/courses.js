@@ -1,5 +1,5 @@
 import * as types from './../types';
-import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, deleteCourseRequest } from './../api';
+import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, fetchCoursesBySearchRequest, fetchCoursesRequest, deleteCourseRequest } from './../api';
 import { toast } from 'react-toastify';
 import { push } from 'react-router-redux';
 
@@ -36,10 +36,11 @@ export function fetchCoursesByFieldAction(key, value) {
 
 /************************ Get courses by search ***********************/
 export function fetchCoursesBySearchAction(fieldSearch) {
-	return;
-
 	return (dispatch) => {
-		fetchCoursesByFieldRequest(fieldSearch)
+		if (typeof fieldSearch.typing === 'undefined' || !fieldSearch.select || fieldSearch.select === '') return;
+		if (fieldSearch.typing.trim() === '') return fetchCoursesRequest({}, { dispatch });
+
+		fetchCoursesBySearchRequest(fieldSearch)
 			.then((res) => {
 				if (res.status === 200) return dispatch(fetchCoursesByIdSuccess(res.data));
 			})

@@ -31,6 +31,31 @@ export function allByField(req, res) {
 }
 
 /**
+ * Get /api/getcoursesbysearch/:select/:typing
+ */
+export function allBySearch(req, res) {
+	const { select, typing } = req.params;
+
+	if (!typing) return;
+
+	const query = {
+		$or: [
+			{ title: { $regex: typing, $options: 'i'} },
+			{ content: { $regex: typing, $options: 'i' } }
+		]
+	};
+
+	Course.find(query).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, courses) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ message: 'A error happen at the fetching courses by search', err });
+		}
+
+		return res.status(200).json({ message: 'Search course fetched', courses });
+	});
+}
+
+/**
  * Get /api/getcourse/:id
  */
 export function oneById(req, res) {
@@ -142,6 +167,7 @@ export function deleteOne(req, res) {
 export default {
   all,
 	allByField,
+	allBySearch,
 	oneById,
   add,
 	update,

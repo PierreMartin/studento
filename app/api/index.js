@@ -28,6 +28,17 @@ export const fetchCoursesByFieldRequest = (key, value) => {
 		});
 };
 
+// All by search
+export const fetchCoursesBySearchRequest = (fieldSearch) => {
+	return api().getCoursesBySearch(fieldSearch)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
 // One by id
 export const fetchCourseRequest = (params, store) => {
 	if (params && params.action === 'create') {

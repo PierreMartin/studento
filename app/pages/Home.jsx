@@ -21,7 +21,7 @@ class Home extends Component {
 
 		this.state = {
 			fieldSearch: {
-				select: '',
+				select: 'all',
 				typing: ''
 			},
 			category: {
@@ -79,9 +79,11 @@ class Home extends Component {
 	}
 
 	handleSearchInput = (e, { value }) => {
-		const { fieldSearch } = this.state;
-		this.setState({ fieldSearch: { ...fieldSearch, typing: value } });
-		this.props.fetchCoursesBySearchAction(fieldSearch);
+		if (value === ' ' || value === '  ') return;
+
+		this.setState({ fieldSearch: { ...this.state.fieldSearch, typing: value } }, () => {
+			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
+		});
 	}
 
 	renderSubCategories(categoryParam) {
