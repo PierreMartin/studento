@@ -74,8 +74,9 @@ class Home extends Component {
 	}
 
 	handleSearchSelect = (e, { value }) => {
-		const { fieldSearch } = this.state;
-		this.setState({ fieldSearch: { ...fieldSearch, select: value } });
+		this.setState({ fieldSearch: { ...this.state.fieldSearch, select: value } }, () => {
+			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
+		});
 	}
 
 	handleSearchInput = (e, { value }) => {

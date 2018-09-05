@@ -45,6 +45,9 @@ export function allBySearch(req, res) {
 		]
 	};
 
+	// Add criteria if user selected a category at search:
+	if (select !== 'all') query.category = select;
+
 	Course.find(query).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, courses) => {
 		if (err) {
 			console.error(err);
