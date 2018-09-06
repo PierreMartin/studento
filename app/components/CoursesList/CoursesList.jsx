@@ -18,7 +18,7 @@ class CoursesList extends Component {
 
 			return (
 				<a key={key} href={`/course/${course._id}`} className={cx('course-container-item')}>
-					<div className={cx('course-header')}><Icon name={course.category.picto || 'code'} size="big" /></div>
+					<div className={cx('course-header')}><Icon name={course.category_info.picto || 'code'} size="big" /></div>
 					<div className={cx('course-body')}>
 						<div className={cx('subcat')}>{course.subCategories.map((subCat, i) => {
 							const space = course.subCategories.length - 1 === i ? '' : ', ';
@@ -47,14 +47,20 @@ CoursesList.propTypes = {
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
 		title: PropTypes.string,
-		category: PropTypes.string, // TODO il faudra populer ce champ
+		category: PropTypes.string,
+		category_info: (PropTypes.shape({
+			description: PropTypes.string,
+			key: PropTypes.string,
+			name: PropTypes.string,
+			picto: PropTypes.string
+		})),
 		subCategories: PropTypes.array,
 		isPrivate: PropTypes.bool,
 		content: PropTypes.string
 	})).isRequired
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (/*state*/) => {
 	return {};
 };
 

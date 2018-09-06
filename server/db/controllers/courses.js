@@ -4,7 +4,7 @@ import Course from '../models/courses';
  * Get /api/getcourses
  */
 export function all(req, res) {
-	Course.find({}).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, courses) => {
+	Course.find({}).populate('uId', '_id username avatarMainSrc.avatar28').populate('category_info', 'name description picto').exec((err, courses) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: err });
@@ -20,7 +20,7 @@ export function all(req, res) {
 export function allByField(req, res) {
 	const { key, value } = req.params;
 
-	Course.find({ [key]: value }).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, courses) => {
+	Course.find({ [key]: value }).populate('uId', '_id username avatarMainSrc.avatar28').populate('category_info', 'name description picto').exec((err, courses) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: 'A error happen at the fetching courses by field', err });
@@ -48,7 +48,7 @@ export function allBySearch(req, res) {
 	// Add criteria if user selected a category at search:
 	if (select !== 'all') query.category = select;
 
-	Course.find(query).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, courses) => {
+	Course.find(query).populate('uId', '_id username avatarMainSrc.avatar28').populate('category_info', 'name description picto').exec((err, courses) => {
 		if (err) {
 			console.error(err);
 			return res.status(500).json({ message: 'A error happen at the fetching courses by search', err });
@@ -64,7 +64,7 @@ export function allBySearch(req, res) {
 export function oneById(req, res) {
 	const { id } = req.params;
 
-	Course.findOne({ _id: id }).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, course) => {
+	Course.findOne({ _id: id }).populate('uId', '_id username avatarMainSrc.avatar28').populate('category_info', 'name description picto').exec((err, course) => {
 		if (err) {
 			console.error(err);
 			return res.status(500).json({ message: err });
@@ -140,7 +140,7 @@ export function update(req, res) {
 			return res.status(500).json({ message: 'A error happen at the updating course', err });
 		}
 
-		Course.findOne({ _id: courseId }).populate('uId', '_id username avatarMainSrc.avatar28').exec((err, course) => {
+		Course.findOne({ _id: courseId }).populate('uId', '_id username avatarMainSrc.avatar28').populate('category_info', 'name description picto').exec((err, course) => {
 			if (err) {
 				console.error(err);
 				return res.status(500).json({ message: 'A error happen at the get course', err });
