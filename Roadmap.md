@@ -48,7 +48,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- finir courseSingle
+- finir courseSingle (voir kartable) -> Mettre un Breadcrumb | créer un nouveau champ 'description' dans model Course
 - gerer les paginations (sur Home et Dashboard)
 - Create = quand on change de catégory, vider les sous cat !!
 - Faire Menu listant les cats/subCats + Page Courses
