@@ -48,12 +48,14 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- refacto: créer compoment CourseInfos
+- refacto bug dans User
 - gerer les paginations (sur Home et Dashboard)
 - Create = quand on change de catégory, vider les sous cat !!
+- gerer la gestion de la génératon du contenu des cours en .md
+
+
 - Faire Menu listant les cats/subCats + Page Courses
-- Afficher la liste des cours sur la page User  fetchCoursesByFieldRequest('uId', userMe._id)  <CoursesList courses={...} />
-
-
 - staredBy
 - commentedBy
 - Mettre un Breadcrumb

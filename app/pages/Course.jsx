@@ -31,7 +31,7 @@ class Course extends Component {
 
 				<Segment vertical>
 					<Container text>
-						{/* CourseHeaderPage */}
+						{/* CourseInfos */}
 						<div className={cx('header-container')}>
 							<h3 className={cx('header-title')}>{course.title}</h3>
 							<div className={cx('header-description')}>{course.description || 'no description'}</div>
