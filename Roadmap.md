@@ -52,6 +52,7 @@ $ ./scripts/generate_menu.sh
 - gerer les paginations (sur Home et Dashboard)
 - Create = quand on change de catégory, vider les sous cat !!
 - Faire Menu listant les cats/subCats + Page Courses
+- Afficher la liste des cours sur la page User  fetchCoursesByFieldRequest('uId', userMe._id)  <CoursesList courses={...} />
 
 
 - staredBy
