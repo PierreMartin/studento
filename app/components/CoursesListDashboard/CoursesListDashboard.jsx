@@ -82,7 +82,7 @@ class CoursesListDashboard extends Component {
 							<Header.Content><Header.Subheader>{course.uId.username}</Header.Subheader></Header.Content>
 						</Header>
 					</Table.Cell>
-					<Table.Cell><a href={`/course/${course._id}`}>{course.title}</a></Table.Cell>
+					<Table.Cell><Link to={`/course/${course._id}`}>{course.title}</Link></Table.Cell>
 					<Table.Cell>
 						<Header as="h4">
 							<Header.Content><Header.Subheader>{courseDate}</Header.Subheader></Header.Content>

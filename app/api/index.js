@@ -41,12 +41,14 @@ export const fetchCoursesBySearchRequest = (fieldSearch) => {
 
 // One by id
 export const fetchCourseRequest = (params, store) => {
+	// create:
 	if (params && params.action === 'create') {
 		store.dispatch({type: types.EMPTY_COURSE});
 		return Promise.resolve({});
 	}
 
-	if (params && (params.action === 'edit' || params.action === 'view')) {
+	// edit or view:
+	if (params && (params.action === 'edit' || typeof params.action === 'undefined')) {
 		return api().getCourseById(params.id)
 			.then((res) => {
 				if (res.status === 200) {

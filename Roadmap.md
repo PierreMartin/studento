@@ -48,10 +48,10 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- Create = quand on change de catégory, vider les sous cat !!
-- page 'course'       -> courseSingle(one)
+- finir courseSingle
 - gerer les paginations (sur Home et Dashboard)
-
+- Create = quand on change de catégory, vider les sous cat !!
+- Faire Menu listant les cats/subCats + Page Courses
 
 
 - staredBy
