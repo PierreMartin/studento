@@ -8,12 +8,15 @@ import { Segment, Header, Icon } from 'semantic-ui-react';
 // const cx = classNames.bind(styles);
 
 const CourseSingle = ({ course }) => {
+	const author = course.uId || {};
+	const categoryInfo = course.category_info || {};
+
 	return (
 		<div>
 			<div style={{ textAlign: 'center', margin: '10px' }}>
-				<Icon style={{ fontSize: '55px' }} name={course.category_info.picto || 'code'} size="big" />
+				<Icon style={{ fontSize: '55px' }} name={categoryInfo.picto || 'code'} size="big" />
 				<div>
-					{ course.subCategories.map((subCat, i) => {
+					{ course.subCategories && course.subCategories.map((subCat, i) => {
 						const space = course.subCategories.length - 1 === i ? '' : ', ';
 						return subCat + space;
 					}) }
@@ -26,7 +29,7 @@ const CourseSingle = ({ course }) => {
 					{course.content}
 				</Segment>
 				<Segment attached>
-					By: <Link to={`/user/${course.uId._id}`}>{course.uId.username}</Link>
+					By: <Link to={`/user/${author._id}`}>{author.username}</Link>
 				</Segment>
 			</div>
 
