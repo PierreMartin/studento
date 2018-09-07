@@ -96,6 +96,7 @@ class CourseAddOrEdit extends Component {
 		fields.subCategories = ((typeof fieldsTyping.subCategories !== 'undefined') ? fieldsTyping.subCategories : course && course.subCategories) || [];
 		fields.isPrivate = ((typeof fieldsTyping.isPrivate !== 'undefined') ? fieldsTyping.isPrivate : course && course.isPrivate) || false;
 		fields.content = ((typeof fieldsTyping.content !== 'undefined') ? fieldsTyping.content : course && course.content) || '';
+		fields.description = ((typeof fieldsTyping.description !== 'undefined') ? fieldsTyping.description : course && course.description) || '';
 
 		return fields;
 	}
@@ -170,6 +171,7 @@ class CourseAddOrEdit extends Component {
 
 						<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
 							<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={this.handleInputChange} />
+							<Form.TextArea label="Description" placeholder="The description of your course..." name="description" value={fields.description || ''} onChange={this.handleInputChange} />
 							<Form.TextArea required label="Content" placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} />
 
 							<Form.Group widths="equal">
@@ -202,7 +204,8 @@ CourseAddOrEdit.propTypes = {
 		category: PropTypes.string,
 		subCategories: PropTypes.array,
 		isPrivate: PropTypes.bool,
-		content: PropTypes.string
+		content: PropTypes.string,
+		description: PropTypes.string
 	}),
 
 	userMe: PropTypes.shape({

@@ -48,7 +48,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- finir courseSingle (voir kartable) -> Mettre un Breadcrumb | créer un nouveau champ 'description' dans model Course
 - gerer les paginations (sur Home et Dashboard)
 - Create = quand on change de catégory, vider les sous cat !!
 - Faire Menu listant les cats/subCats + Page Courses
@@ -57,7 +56,7 @@ $ ./scripts/generate_menu.sh
 
 - staredBy
 - commentedBy
-
+- Mettre un Breadcrumb
 
 
 - this.state.typingArr => le mettre dans le store de redux (gerer les cas ou l'un ecrit, l'autre a pas encore ouvert la popup)

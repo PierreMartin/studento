@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const CourseSchema = new mongoose.Schema({
 	uId: { type: String, ref: 'User' },
 	title: { type: String, default: '' },
+	description: { type: String, default: '' },
 	category: { type: String }, // 'key' of the Category
 	subCategories: { type: Array },
 	isPrivate: { type: Boolean, default: false },
