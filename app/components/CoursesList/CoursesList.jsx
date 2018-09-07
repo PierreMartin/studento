@@ -17,16 +17,19 @@ class CoursesList extends Component {
 		return courses.map((course, key) => {
 			const courseDate = moment(course.created_at).format('L');
 
+			const categoryInfo = course.category_info || {};
+			const author = course.uId || {};
+
 			return (
 				<Link key={key} to={`/course/${course._id}`} className={cx('course-container-item')}>
-					<div className={cx('course-header')}><Icon name={course.category_info.picto || 'code'} size="big" /></div>
+					<div className={cx('course-header')}><Icon name={categoryInfo.picto || 'code'} size="big" /></div>
 					<div className={cx('course-body')}>
-						<div className={cx('subcat')}>{course.subCategories.map((subCat, i) => {
+						<div className={cx('subcat')}>{course.subCategories && course.subCategories.map((subCat, i) => {
 							const space = course.subCategories.length - 1 === i ? '' : ', ';
 							return subCat + space;
 						})}</div>
 						<div className={cx('title')}>{course.title}</div>
-						<div className={cx('username')}>{course.uId.username}</div>
+						<div className={cx('username')}>{author.username}</div>
 						<div className={cx('date')}>{courseDate}</div>
 					</div>
 					<div className={cx('course-footer')}><div><Icon name="star" /> 121</div></div>
