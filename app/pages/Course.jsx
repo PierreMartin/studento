@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
-import { Container, Segment, Icon } from 'semantic-ui-react';
-import moment from 'moment/moment';
+import { Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
+import CourseInfos from '../components/CourseInfos/CourseInfos';
 import CoursePage from '../components/CoursePage/CoursePage';
-import classNames from 'classnames/bind';
-import styles from './css/course.scss';
 
-const cx = classNames.bind(styles);
 
 class Course extends Component {
 	getMetaData() {
@@ -22,38 +18,15 @@ class Course extends Component {
 
 	render() {
 		const { course } = this.props;
-		const categoryInfo = course.category_info || {};
-		const author = course.uId || {};
-		const courseDate = moment(course.created_at).format('L');
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
-
 				<Segment vertical>
 					<Container text>
-						{/* CourseInfos */}
-						<div className={cx('header-container')}>
-							<h3 className={cx('header-title')}>{course.title}</h3>
-							<div className={cx('header-description')}>{course.description || 'no description'}</div>
-							<Icon className={cx('header-category')} name={categoryInfo.picto || 'code'} size="big" />
-							<div className={cx('header-subcategories')}>
-								{ course.subCategories && course.subCategories.map((subCat, i) => {
-									const space = course.subCategories.length - 1 === i ? '' : ', ';
-									return subCat + space;
-								}) }
-							</div>
-							<div className={cx('header-rating')}>
-								<Icon name="star" color="yellow" /> 121
-							</div>
-							<div className={cx('header-username')}>
-								By: <Link to={`/user/${author._id}`}>{author.username}</Link> At: {courseDate}
-							</div>
-						</div>
-
+						<CourseInfos course={course} />
 						<CoursePage course={course} />
 					</Container>
 				</Segment>
-
 			</LayoutPage>
 		);
 	}

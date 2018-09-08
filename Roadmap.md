@@ -48,7 +48,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- refacto: créer compoment CourseInfos
 - refacto bug dans User
 - gerer les paginations (sur Home et Dashboard)
 - Create = quand on change de catégory, vider les sous cat !!
