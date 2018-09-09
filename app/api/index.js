@@ -147,15 +147,13 @@ export const fetchUsersRequest = (params, store) => {
 		});
 };
 
-export const fetchUserRequest = (params, store) => {
-	return api().getUser(params.id)
+export const fetchUserRequest = (userFrontId) => {
+	return api().getUser(userFrontId)
 		.then((res) => {
-			if (res.status === 200) {
-				store.dispatch({type: types.GET_USER_SUCCESS, data: res.data});
-			}
+			return Promise.resolve(res);
 		})
 		.catch((err) => {
-			store.dispatch({type: types.GET_USER_FAILURE, message: getMessage(err)});
+			return Promise.reject(err);
 		});
 };
 

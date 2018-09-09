@@ -48,8 +48,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- refacto bug dans User
-- gerer les paginations (sur Home et Dashboard)
+- gerer les paginations (sur Home et Dashboard) + Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
 - Create = quand on change de catégory, vider les sous cat !!
 - gerer la gestion de la génératon du contenu des cours en .md
 

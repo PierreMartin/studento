@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import { fetchCoursesRequest, fetchCourseRequest, fetchUsersRequest, fetchUserRequest } from './api';
+import { fetchCoursesRequest, fetchCourseRequest, fetchUsersRequest } from './api';
 import App from './pages/App';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -44,7 +44,7 @@ export default (store) => {
     <Route path="/" component={App}>
       <IndexRoute component={Home} fetchData={fetchCoursesRequest} />
       <Route path="/users" component={Users} fetchData={fetchUsersRequest} onEnter={requireAuth} />
-      <Route path="/user/:id" component={User} fetchData={fetchUserRequest} onEnter={requireAuth} />
+      <Route path="/user/:id" component={User} onEnter={requireAuth} />
       <Route path="/about" component={About} />
 
       <Route path="/settings" component={LayoutSettings} onEnter={requireAuth} >

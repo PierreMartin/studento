@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { fetchUserAction } from '../actions/user';
 import { openTchatboxAction } from '../actions/tchat';
-import { fetchCoursesByFieldAction } from '../actions/courses';
 import { Header, Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import UserSingle from '../components/UserSingle/UserSingle';
@@ -17,22 +17,7 @@ class User extends Component {
 	}
 
 	componentDidMount() {
-		// TODO REFACTO CA :
-		// fetchUserAction(userFront._id).then(() {  fetchCoursesByFieldAction('uId', userFront._id)  })
-		// et supprimer componentDidUpdate() + supprimer call requete dans la route
-		const { fetchCoursesByFieldAction, userFront } = this.props;
-		if (userFront._id) {
-			fetchCoursesByFieldAction('uId', userFront._id); // 'uId' => name of field in Model to find
-		}
-	}
-
-	componentDidUpdate(prevProps) {
-		const { fetchCoursesByFieldAction, userFront } = this.props;
-
-		// Because sometime the component is mounted before to get the data... :( :
-		if (prevProps.userFront._id !== userFront._id) {
-			if (userFront._id) fetchCoursesByFieldAction('uId', userFront._id);
-		}
+		this.props.fetchUserAction(this.props.params.id);
 	}
 
 	getMetaData() {
@@ -74,8 +59,8 @@ class User extends Component {
 }
 
 User.propTypes = {
+	fetchUserAction: PropTypes.func,
 	openTchatboxAction: PropTypes.func,
-	fetchCoursesByFieldAction: PropTypes.func,
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
@@ -121,4 +106,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { openTchatboxAction, fetchCoursesByFieldAction })(User);
+export default connect(mapStateToProps, { fetchUserAction, openTchatboxAction })(User);
