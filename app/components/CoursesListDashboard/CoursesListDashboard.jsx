@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import moment from 'moment';
-import { Icon, Table, Button, Menu, Header, Modal } from 'semantic-ui-react';
+import { Icon, Table, Button, Header, Modal, Pagination } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { deleteCourseAction, doSortCoursesAction } from '../../actions/courses';
 
@@ -11,6 +11,7 @@ class CoursesListDashboard extends Component {
 		super(props);
 		this.handleOpenModalForDeleteCourse = this.handleOpenModalForDeleteCourse.bind(this);
 		this.handleSubmitDeleteCourse = this.handleSubmitDeleteCourse.bind(this);
+		this.handlePaginationChange = this.handlePaginationChange.bind(this);
 
 		this.state = {
 			deleteCourse: {
@@ -19,7 +20,11 @@ class CoursesListDashboard extends Component {
 				courseTitle: ''
 			},
 			lastColumnClicked: null,
-			direction: null
+			direction: null,
+			pagination: {
+				indexPage: 1,
+				totalPages: 50
+			}
 		};
 	}
 
@@ -69,6 +74,8 @@ class CoursesListDashboard extends Component {
 		this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' });
 	}
 
+	handlePaginationChange = (e, { activePage }) => this.setState({ pagination: { ...this.state.pagination, indexPage: activePage } });
+
 	renderCoursesList(courses) {
 		if (courses.length === 0) return 'No yet courses';
 
@@ -98,7 +105,7 @@ class CoursesListDashboard extends Component {
 
 	render() {
 		const { courses } = this.props;
-		const { deleteCourse, lastColumnClicked, direction } = this.state;
+		const { deleteCourse, lastColumnClicked, direction, pagination } = this.state;
 
 		return (
 			<div>
@@ -123,12 +130,20 @@ class CoursesListDashboard extends Component {
 							<Table.HeaderCell colSpan="6">
 								<Button basic color="grey" content="Add new course" floated="right" icon="add" as={Link} to="/course/create/new" />
 
-								<Menu pagination>
-									<Menu.Item as="a" icon><Icon name="chevron left" /></Menu.Item>
-									<Menu.Item as="a">1</Menu.Item>
-									<Menu.Item as="a">2</Menu.Item>
-									<Menu.Item as="a" icon><Icon name="chevron right" /></Menu.Item>
-								</Menu>
+								<Pagination
+									activePage={pagination.indexPage}
+									boundaryRange={1}
+									siblingRange={1}
+									onPageChange={this.handlePaginationChange}
+									size="small"
+									totalPages={pagination.totalPages}
+									ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
+									prevItem={{ content: <Icon name="angle left" />, icon: true }}
+									nextItem={{ content: <Icon name="angle right" />, icon: true }}
+									firstItem={null}
+									lastItem={null}
+								/>
+
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Footer>

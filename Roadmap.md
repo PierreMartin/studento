@@ -48,6 +48,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+db.companies.count() to get the number of documents in the collection   https://stackoverflow.com/questions/9703319/mongodb-ranged-pagination
 - gerer les paginations (sur Home et Dashboard) + Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
 - Create = quand on change de catégory, vider les sous cat !!
 - gerer la gestion de la génératon du contenu des cours en .md

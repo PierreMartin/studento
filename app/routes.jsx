@@ -57,7 +57,7 @@ export default (store) => {
 
       <Route path="/dashboard" component={Dashboard} onEnter={requireAuth} />
       <Route path="/course/:action/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} onEnter={requireAuth} />
-      <Route path="/course/:id" component={Course} fetchData={fetchCourseRequest} onEnter={requireAuth} />
+      <Route path="/course/:id" component={Course} fetchData={fetchCourseRequest} />
 
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Login} />
