@@ -17,14 +17,11 @@ class Dashboard extends Component {
 	}
 
 	componentDidMount() {
-		const { userMe, fetchCoursesByFieldAction } = this.props;
-		/*
-		fetchCoursesPaginateByFieldAction('uId', userMe._id).then((res) => {
-			const { pagesCount, firstIds } = res.Data; // TODO mettre ca dans store redux  state.courses.allPaginate
-			fetchCoursesByFieldAction('uId', userMe._id, { 1, firstIds });
-		});
-		*/
-		fetchCoursesByFieldAction('uId', userMe._id); // 'uId' => name of field in Model to find
+		const { userMe, fetchCoursesByFieldAction, courses } = this.props;
+		const directionIndex = 0;
+		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
+
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex }); // 'uId' => name of field in Model to find
 	}
 
 	getMetaData() {
@@ -35,13 +32,16 @@ class Dashboard extends Component {
 		};
 	}
 
-	paginationChange(activePage) {
-		console.log(activePage);
-		// fetchCoursesByFieldAction('uId', userMe._id, { activePage, firstIds }); // 'uId' => name of field in Model to find
+	paginationChange(activePage, lastActivePage) {
+		const { userMe, fetchCoursesByFieldAction, courses } = this.props;
+		const directionIndex = activePage - lastActivePage;
+		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
+
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex }); // 'uId' => name of field in Model to find
 	}
 
 	render() {
-		const { courses } = this.props;
+		const { courses, coursesPagesCount } = this.props;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -53,7 +53,7 @@ class Dashboard extends Component {
 
 					<Container text>
 						<Header as="h2" icon="list" content="My courses" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
-						<CoursesListDashboard courses={courses} paginationChange={this.paginationChange} />
+						<CoursesListDashboard courses={courses} coursesPagesCount={coursesPagesCount} paginationChange={this.paginationChange} />
 					</Container>
 
 				</Segment>
@@ -64,6 +64,7 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
 	fetchCoursesByFieldAction: PropTypes.func,
+	coursesPagesCount: PropTypes.number,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
@@ -82,6 +83,7 @@ Dashboard.propTypes = {
 const mapStateToProps = (state) => {
 	return {
 		courses: state.courses.all,
+		coursesPagesCount: state.courses.pagesCount,
 		userMe: state.userMe.data
 	};
 };

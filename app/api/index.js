@@ -18,8 +18,8 @@ export const fetchCoursesRequest = (params, store) => {
 };
 
 // All by id or by field
-export const fetchCoursesByFieldRequest = (key, value) => {
-	return api().getCoursesByField(key, value)
+export const fetchCoursesByFieldRequest = (param) => {
+	return api().getCoursesByField(param)
 		.then((res) => {
 			return Promise.resolve(res);
 		})

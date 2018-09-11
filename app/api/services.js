@@ -9,9 +9,10 @@ export function api() {
 			method: 'GET',
 			url: '/api/getcourses'
 		}),
-		getCoursesByField: (key, value) => localClient.request({
-			method: 'GET',
-			url: '/api/getcourses/' + key + '/' + value
+		getCoursesByField: param => localClient.request({
+			method: 'POST',
+			url: '/api/getcourses/',
+			data: param
 		}),
 		getCoursesBySearch: fieldSearch => localClient.request({
 			method: 'GET',

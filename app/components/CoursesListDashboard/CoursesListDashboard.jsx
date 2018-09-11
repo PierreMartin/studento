@@ -22,8 +22,7 @@ class CoursesListDashboard extends Component {
 			lastColumnClicked: null,
 			direction: null,
 			pagination: {
-				indexPage: 1,
-				totalPages: 50
+				indexPage: 1
 			}
 		};
 	}
@@ -76,7 +75,8 @@ class CoursesListDashboard extends Component {
 
 	handlePaginationChange = (e, { activePage }) => {
 		this.setState({ pagination: { ...this.state.pagination, indexPage: activePage } });
-		this.props.paginationChange(activePage);
+		const lastActivePage = this.state.pagination.indexPage;
+		this.props.paginationChange(activePage, lastActivePage);
 	}
 
 	renderCoursesList(courses) {
@@ -107,7 +107,7 @@ class CoursesListDashboard extends Component {
 	}
 
 	render() {
-		const { courses } = this.props;
+		const { courses, coursesPagesCount } = this.props;
 		const { deleteCourse, lastColumnClicked, direction, pagination } = this.state;
 
 		return (
@@ -139,7 +139,7 @@ class CoursesListDashboard extends Component {
 									siblingRange={1}
 									onPageChange={this.handlePaginationChange}
 									size="small"
-									totalPages={pagination.totalPages}
+									totalPages={coursesPagesCount}
 									ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
 									prevItem={{ content: <Icon name="angle left" />, icon: true }}
 									nextItem={{ content: <Icon name="angle right" />, icon: true }}
@@ -174,6 +174,7 @@ CoursesListDashboard.propTypes = {
 	deleteCourseAction: PropTypes.func,
 	doSortCoursesAction: PropTypes.func,
 	paginationChange: PropTypes.func,
+	coursesPagesCount: PropTypes.number,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,

@@ -48,8 +48,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-db.companies.count() to get the number of documents in the collection   https://stackoverflow.com/questions/9703319/mongodb-ranged-pagination
-- gerer les paginations (sur Home et Dashboard) + Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
+- Pagination -> passer 'pagination.indexPage' au store de redux   (state.courses.indexActivePage) OU catcher l'evenement 'back' de la navigation du browser et faire une nouvelle requet  fetchCoursesByFieldAction()
 - Create = quand on change de catégory, vider les sous cat !!
 - gerer la gestion de la génératon du contenu des cours en .md
 
@@ -58,7 +57,7 @@ db.companies.count() to get the number of documents in the collection   https://
 - staredBy
 - commentedBy
 - Mettre un Breadcrumb
-
+- Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
 
 - this.state.typingArr => le mettre dans le store de redux (gerer les cas ou l'un ecrit, l'autre a pas encore ouvert la popup)
 - ajouter lastMessageContent

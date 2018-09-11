@@ -11,7 +11,8 @@ export function fetchCoursesByIdSuccess(res) {
 	return {
 		type: types.GET_COURSES_SUCCESS,
 		messageSuccess: res.message,
-		courses: res.courses
+		courses: res.courses,
+		pagesCount: res.pagesCount
 	};
 }
 
@@ -22,9 +23,11 @@ export function fetchCoursesByIdFailure(messageError) {
 	};
 }
 
-export function fetchCoursesByFieldAction(key, value) {
+export function fetchCoursesByFieldAction(param) {
+	if (!param.keyReq || !param.valueReq) return;
+
 	return (dispatch) => {
-		fetchCoursesByFieldRequest(key, value)
+		fetchCoursesByFieldRequest(param)
 			.then((res) => {
 				if (res.status === 200) return dispatch(fetchCoursesByIdSuccess(res.data));
 			})
