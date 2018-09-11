@@ -74,7 +74,10 @@ class CoursesListDashboard extends Component {
 		this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' });
 	}
 
-	handlePaginationChange = (e, { activePage }) => this.setState({ pagination: { ...this.state.pagination, indexPage: activePage } });
+	handlePaginationChange = (e, { activePage }) => {
+		this.setState({ pagination: { ...this.state.pagination, indexPage: activePage } });
+		this.props.paginationChange(activePage);
+	}
 
 	renderCoursesList(courses) {
 		if (courses.length === 0) return 'No yet courses';
@@ -170,6 +173,7 @@ class CoursesListDashboard extends Component {
 CoursesListDashboard.propTypes = {
 	deleteCourseAction: PropTypes.func,
 	doSortCoursesAction: PropTypes.func,
+	paginationChange: PropTypes.func,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
