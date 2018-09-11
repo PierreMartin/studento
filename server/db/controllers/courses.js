@@ -25,7 +25,7 @@ export function allByField(req, res) {
 	// console.log(`currentCourseId: ${currentCourseId} directionIndex: ${directionIndex}`);
 
 	// 1st page:
-	if (typeof currentCourseId === 'undefined') {
+	if (typeof currentCourseId === 'undefined' && directionIndex === 0) {
 		Course.find({ [keyReq]: valueReq })
 			.limit(numberItemPerPage)
 			.sort({ _id: 1 })
