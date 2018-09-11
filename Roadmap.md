@@ -48,7 +48,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- Pagination -> passer 'pagination.indexPage' au store de redux   (state.courses.indexActivePage) OU catcher l'evenement 'back' de la navigation du browser et faire une nouvelle requet  fetchCoursesByFieldAction()
 - Create = quand on change de catégory, vider les sous cat !!
 - gerer la gestion de la génératon du contenu des cours en .md
 

@@ -17,11 +17,10 @@ class Dashboard extends Component {
 	}
 
 	componentDidMount() {
-		const { userMe, fetchCoursesByFieldAction, courses } = this.props;
+		const { userMe, fetchCoursesByFieldAction } = this.props;
 		const directionIndex = 0;
-		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
 
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex }); // 'uId' => name of field in Model to find
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, undefined, directionIndex }); // 'uId' => name of field in Model to find
 	}
 
 	getMetaData() {
