@@ -18,9 +18,10 @@ class Home extends Component {
 		this.handleSelectSubCategory = this.handleSelectSubCategory.bind(this);
 		this.handleSearchInput = this.handleSearchInput.bind(this);
 		this.handleSearchSelect = this.handleSearchSelect.bind(this);
-		this.paginationChange = this.paginationChange.bind(this);
+		this.handlePaginationChange = this.handlePaginationChange.bind(this);
 
 		this.state = {
+			paginationIndexPage: 1,
 			fieldSearch: {
 				select: 'all',
 				typing: ''
@@ -65,18 +66,18 @@ class Home extends Component {
 
 	handleSelectCategory = (clickedCategory, clickedIndex) => () => {
 		const { fetchCoursesByFieldAction } = this.props;
-		this.setState({ category: { lastClicked: clickedCategory, clickedIndex} });
+		this.setState({ category: { lastClicked: clickedCategory, clickedIndex}, paginationIndexPage: 1 });
 		fetchCoursesByFieldAction({ keyReq: 'category', valueReq: clickedCategory });
 	}
 
 	handleSelectSubCategory = clickedSubCategory => () => {
 		const { fetchCoursesByFieldAction } = this.props;
-		this.setState({ subCategory: { lastClicked: clickedSubCategory } });
+		this.setState({ subCategory: { lastClicked: clickedSubCategory }, paginationIndexPage: 1 });
 		fetchCoursesByFieldAction({ keyReq: 'subCategories', valueReq: clickedSubCategory });
 	}
 
 	handleSearchSelect = (e, { value }) => {
-		this.setState({ fieldSearch: { ...this.state.fieldSearch, select: value } }, () => {
+		this.setState({ fieldSearch: { ...this.state.fieldSearch, select: value }, paginationIndexPage: 1 }, () => {
 			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
 		});
 	}
@@ -89,11 +90,13 @@ class Home extends Component {
 		});
 	}
 
-	paginationChange(activePage, lastActivePage) {
+	handlePaginationChange = (e, { activePage }) => {
 		const { fetchCoursesByFieldAction, courses } = this.props;
-		const { category, subCategory, fieldSearch } = this.state;
-		const directionIndex = activePage - lastActivePage;
+		const { category, subCategory, fieldSearch, paginationIndexPage } = this.state;
+		const directionIndex = activePage - paginationIndexPage;
 		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
+
+		this.setState({ paginationIndexPage: activePage });
 
 		if (category.lastClicked !== null) {
 			return fetchCoursesByFieldAction({ keyReq: 'category', valueReq: category.lastClicked, currentCourseId, directionIndex });
@@ -126,7 +129,7 @@ class Home extends Component {
 
   render() {
 		const { courses, coursesPagesCount, categories } = this.props;
-		const { category, fieldSearch } = this.state;
+		const { category, fieldSearch, paginationIndexPage } = this.state;
 
     return (
       <LayoutPage {...this.getMetaData()}>
@@ -161,10 +164,15 @@ class Home extends Component {
 								onChange={this.handleSearchInput}
 							/>
 						</div>
-
 						<br />
 
-						<CoursesList courses={courses} coursesPagesCount={coursesPagesCount} paginationChange={this.paginationChange} />
+						<CoursesList
+							courses={courses}
+							coursesPagesCount={coursesPagesCount}
+							handlePaginationChange={this.handlePaginationChange}
+							paginationIndexPage={paginationIndexPage}
+						/>
+
 					</Container>
 				</Segment>
 

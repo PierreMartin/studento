@@ -8,25 +8,8 @@ import styles from './css/courseList.scss';
 
 const cx = classNames.bind(styles);
 
-
+// TODO changer ca en component functionnal
 class CoursesList extends Component {
-	constructor(props) {
-		super(props);
-		this.handlePaginationChange = this.handlePaginationChange.bind(this);
-
-		this.state = {
-			pagination: {
-				indexPage: 1
-			}
-		};
-	}
-
-	handlePaginationChange = (e, { activePage }) => {
-		this.setState({ pagination: { ...this.state.pagination, indexPage: activePage } });
-		const lastActivePage = this.state.pagination.indexPage;
-		this.props.paginationChange(activePage, lastActivePage);
-	}
-
 	renderCoursesList(courses) {
 		if (courses.length === 0) return 'No yet courses';
 
@@ -55,8 +38,7 @@ class CoursesList extends Component {
 	}
 
 	render() {
-		const { courses, coursesPagesCount } = this.props;
-		const { pagination } = this.state;
+		const { courses, coursesPagesCount, paginationIndexPage, handlePaginationChange } = this.props;
 
 		return (
 			<div>
@@ -65,10 +47,10 @@ class CoursesList extends Component {
 				</div>
 
 				<Pagination
-					activePage={pagination.indexPage}
+					activePage={paginationIndexPage}
 					boundaryRange={1}
 					siblingRange={1}
-					onPageChange={this.handlePaginationChange}
+					onPageChange={handlePaginationChange}
 					size="small"
 					totalPages={coursesPagesCount}
 					ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
@@ -83,8 +65,9 @@ class CoursesList extends Component {
 }
 
 CoursesList.propTypes = {
-	paginationChange: PropTypes.func,
+	handlePaginationChange: PropTypes.func,
 	coursesPagesCount: PropTypes.number,
+	paginationIndexPage: PropTypes.number,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
