@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import moment from 'moment';
-import { Icon } from 'semantic-ui-react';
-import { connect } from 'react-redux';
+import { Icon, Pagination } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/courseList.scss';
 
@@ -11,6 +10,23 @@ const cx = classNames.bind(styles);
 
 
 class CoursesList extends Component {
+	constructor(props) {
+		super(props);
+		this.handlePaginationChange = this.handlePaginationChange.bind(this);
+
+		this.state = {
+			pagination: {
+				indexPage: 1
+			}
+		};
+	}
+
+	handlePaginationChange = (e, { activePage }) => {
+		this.setState({ pagination: { ...this.state.pagination, indexPage: activePage } });
+		const lastActivePage = this.state.pagination.indexPage;
+		this.props.paginationChange(activePage, lastActivePage);
+	}
+
 	renderCoursesList(courses) {
 		if (courses.length === 0) return 'No yet courses';
 
@@ -39,15 +55,37 @@ class CoursesList extends Component {
 	}
 
 	render() {
-		const { courses } = this.props;
+		const { courses, coursesPagesCount } = this.props;
+		const { pagination } = this.state;
 
 		return (
-			<div className={cx('course-container')}>{ this.renderCoursesList(courses) }</div>
+			<div>
+				<div className={cx('course-container')}>
+					{ this.renderCoursesList(courses) }
+				</div>
+
+				<Pagination
+					activePage={pagination.indexPage}
+					boundaryRange={1}
+					siblingRange={1}
+					onPageChange={this.handlePaginationChange}
+					size="small"
+					totalPages={coursesPagesCount}
+					ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
+					prevItem={{ content: <Icon name="angle left" />, icon: true }}
+					nextItem={{ content: <Icon name="angle right" />, icon: true }}
+					firstItem={null}
+					lastItem={null}
+				/>
+			</div>
 		);
 	}
 }
 
 CoursesList.propTypes = {
+	paginationChange: PropTypes.func,
+	coursesPagesCount: PropTypes.number,
+
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
 		title: PropTypes.string,
@@ -64,8 +102,4 @@ CoursesList.propTypes = {
 	})).isRequired
 };
 
-const mapStateToProps = (/*state*/) => {
-	return {};
-};
-
-export default connect(mapStateToProps, null)(CoursesList);
+export default CoursesList;

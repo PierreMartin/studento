@@ -48,6 +48,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- Pagination Home - virer la requet depuis la route pour faire dans componentDidMount  fetchCoursesAction({ keyReq: 'all', directionIndex: 0 })
 - Create = quand on change de catégory, vider les sous cat !!
 - gerer la gestion de la génératon du contenu des cours en .md
 

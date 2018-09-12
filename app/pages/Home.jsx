@@ -18,6 +18,7 @@ class Home extends Component {
 		this.handleSelectSubCategory = this.handleSelectSubCategory.bind(this);
 		this.handleSearchInput = this.handleSearchInput.bind(this);
 		this.handleSearchSelect = this.handleSearchSelect.bind(this);
+		this.paginationChange = this.paginationChange.bind(this);
 
 		this.state = {
 			fieldSearch: {
@@ -64,13 +65,13 @@ class Home extends Component {
 	handleSelectCategory = (clickedCategory, clickedIndex) => () => {
 		const { fetchCoursesByFieldAction } = this.props;
 		this.setState({ category: { lastClicked: clickedCategory, clickedIndex} });
-		fetchCoursesByFieldAction('category', clickedCategory); // 'category' => name of field in Model to find
+		fetchCoursesByFieldAction({ keyReq: 'category', valueReq: clickedCategory, directionIndex: 0 });
 	}
 
 	handleSelectSubCategory = clickedSubCategory => () => {
 		const { fetchCoursesByFieldAction } = this.props;
 		this.setState({ subCategory: { lastClicked: clickedSubCategory } });
-		fetchCoursesByFieldAction('subCategories', clickedSubCategory); // 'subCategories' => name of field in Model to find
+		fetchCoursesByFieldAction({ keyReq: 'subCategories', valueReq: clickedSubCategory, directionIndex: 0 });
 	}
 
 	handleSearchSelect = (e, { value }) => {
@@ -85,6 +86,21 @@ class Home extends Component {
 		this.setState({ fieldSearch: { ...this.state.fieldSearch, typing: value } }, () => {
 			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
 		});
+	}
+
+	paginationChange(activePage, lastActivePage) {
+		const { fetchCoursesByFieldAction, courses } = this.props;
+		const { category } = this.state;
+		const directionIndex = activePage - lastActivePage;
+		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
+
+		/*
+		if (this.state.category.lastClicked !== null || this.state.subCategory.lastClicked !== null)   				=>   fetchCoursesByFieldAction({ keyReq: 'category', valueReq: this.state.category.lastClicked, currentCourseId, directionIndex })
+		else if (this.state.fieldSearch.typing !== '')   				=>   fetchCoursesBySearchAction
+		else (this.state.fieldSearch.typing !== '')   					=>   fetchCoursesAction   A CREER
+		*/
+
+		// fetchCoursesAction({ keyReq: 'all', currentCourseId, directionIndex });
 	}
 
 	renderSubCategories(categoryParam) {
@@ -102,7 +118,7 @@ class Home extends Component {
 	}
 
   render() {
-		const { courses, categories } = this.props;
+		const { courses, coursesPagesCount, categories } = this.props;
 		const { category, fieldSearch } = this.state;
 
     return (
@@ -141,7 +157,7 @@ class Home extends Component {
 
 						<br />
 
-						<CoursesList courses={courses} />
+						<CoursesList courses={courses} coursesPagesCount={coursesPagesCount} paginationChange={this.paginationChange} />
 					</Container>
 				</Segment>
 
@@ -150,23 +166,11 @@ class Home extends Component {
   }
 }
 
-/*
- Home.propTypes = {
-	optionalArray: PropTypes.array, || PropTypes.arrayOf()
-	optionalBool: PropTypes.bool,
-	optionalFunc: PropTypes.func,
-	optionalNumber: PropTypes.number,
-	optionalObject: PropTypes.object,
-	optionalString: PropTypes.string,
-	optionalSymbol: PropTypes.symbol
-};
-*/
-
-
 Home.propTypes = {
 	fetchCoursesByFieldAction: PropTypes.func,
 	fetchCategoriesAction: PropTypes.func,
 	fetchCoursesBySearchAction: PropTypes.func,
+	coursesPagesCount: PropTypes.number,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
@@ -186,6 +190,7 @@ Home.propTypes = {
 const mapStateToProps = (state) => {
 	return {
 		courses: state.courses.all,
+		coursesPagesCount: state.courses.pagesCount,
 		categories: state.categories.all
 	};
 };
