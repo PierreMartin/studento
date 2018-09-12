@@ -36,6 +36,7 @@ class Home extends Component {
 	}
 
 	componentDidMount() {
+		this.props.fetchCoursesByFieldAction({ keyReq: 'all', valueReq: 'all' }); // All courses
 		this.props.fetchCategoriesAction();
 	}
 
@@ -65,13 +66,13 @@ class Home extends Component {
 	handleSelectCategory = (clickedCategory, clickedIndex) => () => {
 		const { fetchCoursesByFieldAction } = this.props;
 		this.setState({ category: { lastClicked: clickedCategory, clickedIndex} });
-		fetchCoursesByFieldAction({ keyReq: 'category', valueReq: clickedCategory, directionIndex: 0 });
+		fetchCoursesByFieldAction({ keyReq: 'category', valueReq: clickedCategory });
 	}
 
 	handleSelectSubCategory = clickedSubCategory => () => {
 		const { fetchCoursesByFieldAction } = this.props;
 		this.setState({ subCategory: { lastClicked: clickedSubCategory } });
-		fetchCoursesByFieldAction({ keyReq: 'subCategories', valueReq: clickedSubCategory, directionIndex: 0 });
+		fetchCoursesByFieldAction({ keyReq: 'subCategories', valueReq: clickedSubCategory });
 	}
 
 	handleSearchSelect = (e, { value }) => {
@@ -90,17 +91,23 @@ class Home extends Component {
 
 	paginationChange(activePage, lastActivePage) {
 		const { fetchCoursesByFieldAction, courses } = this.props;
-		const { category } = this.state;
+		const { category, subCategory, fieldSearch } = this.state;
 		const directionIndex = activePage - lastActivePage;
 		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
 
-		/*
-		if (this.state.category.lastClicked !== null || this.state.subCategory.lastClicked !== null)   				=>   fetchCoursesByFieldAction({ keyReq: 'category', valueReq: this.state.category.lastClicked, currentCourseId, directionIndex })
-		else if (this.state.fieldSearch.typing !== '')   				=>   fetchCoursesBySearchAction
-		else (this.state.fieldSearch.typing !== '')   					=>   fetchCoursesAction   A CREER
-		*/
+		if (category.lastClicked !== null) {
+			return fetchCoursesByFieldAction({ keyReq: 'category', valueReq: category.lastClicked, currentCourseId, directionIndex });
+		}
 
-		// fetchCoursesAction({ keyReq: 'all', currentCourseId, directionIndex });
+		if (subCategory.lastClicked !== null) {
+			return fetchCoursesByFieldAction({ keyReq: 'subCategory', valueReq: subCategory.lastClicked, currentCourseId, directionIndex });
+		}
+
+		if (fieldSearch.typing !== '') {
+			// return fetchCoursesBySearchAction(); // TODO a finir
+		}
+
+		fetchCoursesByFieldAction({ keyReq: 'all', valueReq: 'all', currentCourseId, directionIndex });
 	}
 
 	renderSubCategories(categoryParam) {
@@ -168,8 +175,8 @@ class Home extends Component {
 
 Home.propTypes = {
 	fetchCoursesByFieldAction: PropTypes.func,
-	fetchCategoriesAction: PropTypes.func,
 	fetchCoursesBySearchAction: PropTypes.func,
+	fetchCategoriesAction: PropTypes.func,
 	coursesPagesCount: PropTypes.number,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({

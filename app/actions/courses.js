@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 const getFieldsMissing = res => res.response && res.response.data && res.response.data.errorField;
 
-/************************ Get courses by id ***********************/
+/************************ Get courses by id or a field ***********************/
 export function fetchCoursesByIdSuccess(res) {
 	return {
 		type: types.GET_COURSES_SUCCESS,

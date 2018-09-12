@@ -18,9 +18,8 @@ class Dashboard extends Component {
 
 	componentDidMount() {
 		const { userMe, fetchCoursesByFieldAction } = this.props;
-		const directionIndex = 0;
 
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, undefined, directionIndex }); // 'uId' => name of field in Model to find
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
 	}
 
 	getMetaData() {
@@ -36,7 +35,7 @@ class Dashboard extends Component {
 		const directionIndex = activePage - lastActivePage;
 		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
 
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex }); // 'uId' => name of field in Model to find
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
 	}
 
 	render() {

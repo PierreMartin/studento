@@ -5,10 +5,6 @@ export function api() {
 
 	return {
 		// Courses :
-		getCourses: () => localClient.request({
-			method: 'GET',
-			url: '/api/getcourses'
-		}),
 		getCoursesByField: param => localClient.request({
 			method: 'POST',
 			url: '/api/getcourses/',

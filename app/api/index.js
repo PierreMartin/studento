@@ -4,19 +4,6 @@ import * as types from 'types';
 const getMessage = res => res.response && res.response.data && res.response.data.message;
 
 /********************************************** Courses ***********************************************/
-// All
-export const fetchCoursesRequest = (params, store) => {
-	return api().getCourses()
-		.then((res) => {
-			if (res.status === 200) {
-				store.dispatch({type: types.GET_COURSES_SUCCESS, courses: res.data.courses});
-			}
-		})
-		.catch((err) => {
-			store.dispatch({type: types.GET_COURSES_FAILURE, message: getMessage(err) });
-		});
-};
-
 // All by id or by field
 export const fetchCoursesByFieldRequest = (param) => {
 	return api().getCoursesByField(param)
