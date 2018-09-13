@@ -10,6 +10,9 @@ import UsersList from '../components/UsersList/UsersList';
 class Users extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			paginationIndexPage: 1
+		};
 	}
 
 	componentDidMount() {
@@ -24,8 +27,22 @@ class Users extends Component {
 		};
 	}
 
+	handlePaginationChange = (e, { activePage }) => {
+		const { fetchUsersByFieldAction, users } = this.props;
+		const { paginationIndexPage } = this.state;
+		if (activePage === paginationIndexPage) return;
+
+		const directionIndex = activePage - paginationIndexPage;
+		const currentUserId = users[0] && users[0]._id; // id of first record on current page.
+
+		this.setState({ paginationIndexPage: activePage });
+
+		fetchUsersByFieldAction({ keyReq: 'all', valueReq: 'all', currentUserId, directionIndex });
+	}
+
 	render() {
-		const { users } = this.props;
+		const { users, usersPagesCount } = this.props;
+		const { paginationIndexPage } = this.state;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -33,6 +50,9 @@ class Users extends Component {
 					<Container text>
 						<UsersList
 							users={users}
+							usersPagesCount={usersPagesCount}
+							handlePaginationChange={this.handlePaginationChange}
+							paginationIndexPage={paginationIndexPage}
 						/>
 					</Container>
 				</Segment>
@@ -43,6 +63,7 @@ class Users extends Component {
 
 Users.propTypes = {
 	fetchUsersByFieldAction: PropTypes.func,
+	usersPagesCount: PropTypes.number,
 
 	users: PropTypes.arrayOf(PropTypes.shape({
 		username: PropTypes.string,
@@ -54,7 +75,8 @@ Users.propTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		users: state.users.all
+		users: state.users.all,
+		usersPagesCount: state.users.pagesCount
 	};
 };
 

@@ -48,6 +48,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- fix css usersList
 - gerer la gestion de la génératon du contenu des cours en .md
 
 

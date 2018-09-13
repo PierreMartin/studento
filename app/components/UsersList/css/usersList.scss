@@ -1,8 +1,13 @@
-.grid-container {
+.users-container {
   display: inline-block !important;
   text-align: center;
+  margin-bottom: 20px !important;
+
+  .user-container-item {
+    text-align: left;
+  }
 }
 
-.card-container {
-  text-align: left;
+.pagination {
+  text-align: center;
 }

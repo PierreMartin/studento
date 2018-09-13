@@ -27,10 +27,10 @@ const one = (state = {}, action) => {
 
 const pagesCount = (state = 0, action) => {
 	switch (action.type) {
-		case types.GET_USER_SUCCESS:
+		case types.GET_USERS_SUCCESS:
 			if (action.pagesCount >= 0) return action.pagesCount;
 			return state;
-		case types.GET_USER_FAILURE:
+		case types.GET_USERS_FAILURE:
 			return 0;
 		default:
 			return state;
