@@ -17,7 +17,7 @@ const all = (state = [], action) => {
 const one = (state = {}, action) => {
 	switch (action.type) {
 		case types.GET_USER_SUCCESS:
-			if (action.data) return action.data;
+			if (action.user) return action.user;
 			return state;
 		case types.GET_USER_FAILURE:
 			return state;

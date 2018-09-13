@@ -12,11 +12,9 @@ import { calculateAge } from '../../../toolbox/toolbox';
  */
 export function all(req, res) {
 	User.find({}).exec((err, users) => {
-		if (err) {
-			return res.status(500).send({message: 'Something went wrong getting the data'});
-		}
+		if (err) return res.status(500).send({ message: 'A error happen at the fetching user all', err });
 
-		return res.status(200).json(users);
+		return res.status(200).json(users); // TODO pas bon, a refacto + faire pagination
 	});
 }
 
@@ -24,18 +22,13 @@ export function all(req, res) {
  * GET /api/getuser/:id
  */
 export function oneById(req, res) {
-	const id = req.params.id;
+	const { id } = req.params;
 
 	User.findOne({_id: id}).exec((err, user) => {
-		if (err) {
-			return res.status(500).send({message: 'Something went wrong getting the data'});
-		}
+		if (err) return res.status(500).send({ message: 'A error happen at the fetching user by id', err });
+		if (!user) return res.status(404).send({ message: 'user not found.' });
 
-		if (!user) {
-			return res.status(404).send({ message: 'user not found.' });
-		}
-
-		return res.status(200).json(user);
+		return res.status(200).json({ message: 'user by id fetched', user });
 	});
 }
 

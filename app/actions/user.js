@@ -9,15 +9,15 @@ const getMessage = res => res.response && res.response.data && res.response.data
 export function fetchUserSuccess(res) {
 	return {
 		type: types.GET_USER_SUCCESS,
-		message: res.message,
-		data: res.data
+		messageSuccess: res.message,
+		user: res.user
 	};
 }
 
-export function fetchUserFailure(message) {
+export function fetchUserFailure(messageError) {
 	return {
 		type: types.GET_USER_FAILURE,
-		message
+		messageError
 	};
 }
 
