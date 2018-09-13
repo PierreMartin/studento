@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchUserAction } from '../actions/user';
+import { fetchCoursesByFieldAction } from '../actions/courses';
 import { openTchatboxAction } from '../actions/tchat';
 import { Header, Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
@@ -14,10 +15,14 @@ class User extends Component {
 		super(props);
 		this.handleOpenChatBox = this.handleOpenChatBox.bind(this);
 		this.socket = io('', { path: '/api/tchat' });
+
+		this.state = {
+			paginationIndexPage: 1
+		};
 	}
 
 	componentDidMount() {
-		this.props.fetchUserAction(this.props.params.id);
+		this.props.fetchUserAction(this.props.params.id); // call fetchCoursesByFieldRequest()
 	}
 
 	getMetaData() {
@@ -33,8 +38,21 @@ class User extends Component {
 		openTchatboxAction(userMe, userFront, channelsListOpen, this.socket);
 	}
 
+	handlePaginationChange = (e, { activePage }) => {
+		const { fetchCoursesByFieldAction, courses, userMe } = this.props;
+		const { paginationIndexPage } = this.state;
+		const directionIndex = activePage - paginationIndexPage;
+		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
+
+		this.setState({ paginationIndexPage: activePage });
+
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
+	}
+
+
 	render() {
-		const { userFront, userMe, courses } = this.props;
+		const { userFront, userMe, courses, coursesPagesCount } = this.props;
+		const { paginationIndexPage } = this.state;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -49,7 +67,12 @@ class User extends Component {
 				<Segment vertical>
 					<Container text>
 						<Header as="h2" icon="student" content="courses" />
-						<CoursesList courses={courses} />
+						<CoursesList
+							courses={courses}
+							coursesPagesCount={coursesPagesCount}
+							handlePaginationChange={this.handlePaginationChange}
+							paginationIndexPage={paginationIndexPage}
+						/>
 					</Container>
 				</Segment>
 
@@ -60,7 +83,9 @@ class User extends Component {
 
 User.propTypes = {
 	fetchUserAction: PropTypes.func,
+	fetchCoursesByFieldAction: PropTypes.func,
 	openTchatboxAction: PropTypes.func,
+	coursesPagesCount: PropTypes.number,
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
@@ -102,8 +127,9 @@ const mapStateToProps = (state) => {
 		userFront: state.users.one,
 		userMe: state.userMe.data,
 		channelsListOpen: state.tchat.channelsListOpen,
-		courses: state.courses.all
+		courses: state.courses.all,
+		coursesPagesCount: state.courses.pagesCount
 	};
 };
 
-export default connect(mapStateToProps, { fetchUserAction, openTchatboxAction })(User);
+export default connect(mapStateToProps, { fetchUserAction, fetchCoursesByFieldAction, openTchatboxAction })(User);

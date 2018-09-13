@@ -1,6 +1,6 @@
 import Course from '../models/courses';
 
-const numberItemPerPage = 2;
+const numberItemPerPage = 6;
 
 
 /**
