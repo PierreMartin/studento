@@ -3,17 +3,7 @@ import Course from '../models/courses';
 const numberItemPerPage = 6;
 
 
-/**
- * POST /api/getcourses
- */
-export function allByField(req, res) {
-	const { keyReq, valueReq, currentCourseId, directionIndex } = req.body;
-
-	// console.log(`currentCourseId: ${currentCourseId} directionIndex: ${directionIndex}`);
-
-	let query = {};
-	if (keyReq !== 'all' && valueReq !== 'all') query = { [keyReq]: valueReq };
-
+const requestGetCoursesWithPagination = (res, query, currentCourseId, directionIndex, typeReq) => {
 	// 1st page:
 	if (typeof currentCourseId === 'undefined') {
 		Course.find(query)
@@ -24,19 +14,19 @@ export function allByField(req, res) {
 			.exec((err, courses) => {
 				if (err) {
 					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the fetching courses by field', err });
+					return res.status(500).json({ message: `A error happen at the fetching courses by ${typeReq}`, err });
 				}
 
 				Course.count(query).exec((err, coursesCount) => {
 					if (err) {
 						console.error(err);
-						return res.status(500).json({ message: 'A error happen at the fetching courses count by field', err });
+						return res.status(500).json({ message: `A error happen at the fetching courses count by ${typeReq}`, err });
 					}
 
 					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
-					return res.status(200).json({ message: 'courses by field fetched', courses, pagesCount });
+					return res.status(200).json({ message: `courses by ${typeReq} fetched`, courses, pagesCount });
 				});
-		});
+			});
 	} else if (directionIndex >= 0) {
 		// Go to page >
 		Course.find({ ...query, _id: {$gte: currentCourseId }})
@@ -48,9 +38,9 @@ export function allByField(req, res) {
 			.exec((err, courses) => {
 				if (err) {
 					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the fetching courses by field >>', err });
+					return res.status(500).json({ message: `A error happen at the fetching courses by ${typeReq} >>`, err });
 				}
-				return res.status(200).json({ message: 'courses by field fetched >', courses });
+				return res.status(200).json({ message: `courses by ${typeReq} fetched >`, courses });
 			});
 	} else {
 		// Go to page <
@@ -63,11 +53,23 @@ export function allByField(req, res) {
 			.exec((err, courses) => {
 				if (err) {
 					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the fetching courses by field <<', err });
+					return res.status(500).json({ message: `A error happen at the fetching courses by ${typeReq} <<`, err });
 				}
-				return res.status(200).json({ message: 'courses by field fetched <', courses: courses.reverse() });
+				return res.status(200).json({ message: `courses by ${typeReq} fetched <`, courses: courses.reverse() });
 			});
 	}
+};
+
+/**
+ * POST /api/getcourses
+ */
+export function allByField(req, res) {
+	const { keyReq, valueReq, currentCourseId, directionIndex } = req.body;
+
+	let query = {};
+	if (keyReq !== 'all' && valueReq !== 'all') query = { [keyReq]: valueReq };
+
+	requestGetCoursesWithPagination(res, query, currentCourseId, directionIndex, 'field');
 }
 
 /**
@@ -88,61 +90,7 @@ export function allBySearch(req, res) {
 	// Add criteria if user selected a category at search:
 	if (select !== 'all') query.category = select;
 
-	// TODO refacto ca
-	// 1st page:
-	if (typeof currentCourseId === 'undefined') {
-		Course.find(query)
-			.limit(numberItemPerPage)
-			.sort({ _id: 1 })
-			.populate('uId', '_id username avatarMainSrc.avatar28')
-			.populate('category_info', 'name description picto')
-			.exec((err, courses) => {
-				if (err) {
-					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the fetching courses by search', err });
-				}
-
-				Course.count(query).exec((err, coursesCount) => {
-					if (err) {
-						console.error(err);
-						return res.status(500).json({ message: 'A error happen at the fetching courses count by search', err });
-					}
-
-					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
-					return res.status(200).json({ message: 'courses by search fetched', courses, pagesCount });
-				});
-			});
-	} else if (directionIndex >= 0) {
-		// Go to page >
-		Course.find({ ...query, _id: {$gte: currentCourseId }})
-			.skip(directionIndex * numberItemPerPage)
-			.limit(numberItemPerPage)
-			.sort({ _id: 1 })
-			.populate('uId', '_id username avatarMainSrc.avatar28')
-			.populate('category_info', 'name description picto')
-			.exec((err, courses) => {
-				if (err) {
-					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the fetching courses by search >>', err });
-				}
-				return res.status(200).json({ message: 'courses by search fetched >', courses });
-			});
-	} else {
-		// Go to page <
-		Course.find({ ...query, _id: {$lt: currentCourseId }})
-			.skip((Math.abs(directionIndex) - 1) * numberItemPerPage)
-			.limit(numberItemPerPage)
-			.sort({ _id: -1 })
-			.populate('uId', '_id username avatarMainSrc.avatar28')
-			.populate('category_info', 'name description picto')
-			.exec((err, courses) => {
-				if (err) {
-					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the fetching courses by search <<', err });
-				}
-				return res.status(200).json({ message: 'courses by search fetched <', courses: courses.reverse() });
-			});
-	}
+	requestGetCoursesWithPagination(res, query, currentCourseId, directionIndex, 'search');
 }
 
 /**
