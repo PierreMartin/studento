@@ -57,9 +57,10 @@ export function api() {
 		}),
 
 		// Users
-		getUsers: () => localClient.request({
-			method: 'GET',
-			url: '/api/getusers'
+		getUsersByField: param => localClient.request({
+			method: 'POST',
+			url: '/api/getusers',
+			data: param
 		}),
 		getUser: id => localClient.request({
 			method: 'GET',

@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { fetchUsersByFieldAction } from '../actions/user';
 import { Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import UsersList from '../components/UsersList/UsersList';
 
 
 class Users extends Component {
+	constructor(props) {
+		super(props);
+	}
+
+	componentDidMount() {
+		this.props.fetchUsersByFieldAction({ keyReq: 'all', valueReq: 'all' });
+	}
+
 	getMetaData() {
 		return {
-			title: 'Users',
+			title: 'Users list',
 			meta: [{ name: 'description', content: 'bla blah' }],
 			link: []
 		};
@@ -22,7 +31,9 @@ class Users extends Component {
 			<LayoutPage {...this.getMetaData()}>
 				<Segment vertical>
 					<Container text>
-						<UsersList users={users} />
+						<UsersList
+							users={users}
+						/>
 					</Container>
 				</Segment>
 			</LayoutPage>
@@ -31,6 +42,8 @@ class Users extends Component {
 }
 
 Users.propTypes = {
+	fetchUsersByFieldAction: PropTypes.func,
+
 	users: PropTypes.arrayOf(PropTypes.shape({
 		username: PropTypes.string,
 		email: PropTypes.string,
@@ -45,4 +58,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, null)(Users);
+export default connect(mapStateToProps, { fetchUsersByFieldAction })(Users);

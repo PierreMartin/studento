@@ -7,15 +7,66 @@ import User from '../models/user';
 import bcrypt from 'bcrypt-nodejs';
 import { calculateAge } from '../../../toolbox/toolbox';
 
+const numberItemPerPage = 2;
+
+
 /**
- * GET /api/getusers
+ * POST /api/getusers
  */
 export function all(req, res) {
-	User.find({}).exec((err, users) => {
-		if (err) return res.status(500).send({ message: 'A error happen at the fetching user all', err });
+	const { keyReq, valueReq, currentUserId, directionIndex } = req.body;
 
-		return res.status(200).json(users); // TODO pas bon, a refacto + faire pagination
-	});
+	let query = {};
+	if (keyReq !== 'all' && valueReq !== 'all') query = { [keyReq]: valueReq };
+
+	// 1st page:
+	if (typeof currentUserId === 'undefined') {
+		User.find(query)
+			.limit(numberItemPerPage)
+			.sort({ _id: 1 })
+			.exec((err, users) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'A error happen at the fetching users by field', err });
+				}
+
+				User.count(query).exec((err, usersCount) => {
+					if (err) {
+						console.error(err);
+						return res.status(500).json({ message: 'A error happen at the fetching users count by field', err });
+					}
+
+					const pagesCount = Math.ceil(usersCount / numberItemPerPage);
+					return res.status(200).json({ message: 'users by field fetched', users, pagesCount });
+				});
+			});
+	} else if (directionIndex >= 0) {
+		// Go to page >
+		User.find({ ...query, _id: {$gte: currentUserId }})
+			.skip(directionIndex * numberItemPerPage)
+			.limit(numberItemPerPage)
+			.sort({ _id: 1 })
+			.exec((err, users) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'A error happen at the fetching users by field >>', err });
+				}
+				return res.status(200).json({ message: 'users by field fetched >', users });
+			});
+	} else {
+		// Go to page <
+		User.find({ ...query, _id: {$lt: currentUserId }})
+			.skip((Math.abs(directionIndex) - 1) * numberItemPerPage)
+			.limit(numberItemPerPage)
+			.sort({ _id: -1 })
+			.exec((err, users) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'A error happen at the fetching users by field <<', err });
+				}
+				return res.status(200).json({ message: 'users by field fetched <', users: users.reverse() });
+			});
+	}
 }
 
 /**

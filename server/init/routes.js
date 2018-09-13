@@ -39,7 +39,7 @@ export default (app) => {
 
 	// users routes
 	if (usersController) {
-		app.get('/api/getusers', usersController.all);
+		app.post('/api/getusers', usersController.all);
 		app.get('/api/getuser/:id', usersController.oneById);
 		app.put('/api/updateuser/:id', usersController.update);
 		app.post('/api/addavatar/:id/:avatarId', usersController.uploadAvatarMulter, usersController.uploadAvatar);

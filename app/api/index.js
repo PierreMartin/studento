@@ -122,18 +122,18 @@ export const logoutRequest = () => {
 };
 
 /********************************************** Users ***********************************************/
-export const fetchUsersRequest = (params, store) => {
-	return api().getUsers()
+// All by id or by field
+export const fetchUsersByFieldRequest = (param) => {
+	return api().getUsersByField(param)
 		.then((res) => {
-			if (res.status === 200) {
-				store.dispatch({type: types.GET_USERS_SUCCESS, data: res.data});
-			}
+			return Promise.resolve(res);
 		})
 		.catch((err) => {
-			store.dispatch({type: types.GET_USERS_FAILURE, message: getMessage(err)});
+			return Promise.reject(err);
 		});
 };
 
+// One by id
 export const fetchUserRequest = (userFrontId) => {
 	return api().getUser(userFrontId)
 		.then((res) => {
