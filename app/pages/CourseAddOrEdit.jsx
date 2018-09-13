@@ -126,7 +126,10 @@ class CourseAddOrEdit extends Component {
 		const oldStateTyping = this.state.fieldsTyping;
 
 		if (field.name === 'category') {
-			return this.setState({ fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}, category: { lastSelected: field.value} });
+			return this.setState({
+				fieldsTyping: { ...oldStateTyping, ...{[field.name]: field.value }, subCategories: [] },
+				category: { lastSelected: field.value}
+			});
 		}
 
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
