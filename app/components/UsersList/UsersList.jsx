@@ -1,12 +1,39 @@
 import React from 'react';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
-import { Grid, Card, Icon, Image, Pagination } from 'semantic-ui-react';
-import defaultAvatar150 from '../../images/default-avatar-150.png';
+import { Icon, Pagination, Image } from 'semantic-ui-react';
+import moment from 'moment';
 import classNames from 'classnames/bind';
 import styles from './css/usersList.scss';
 
 const cx = classNames.bind(styles);
+
+const renderUsersList = (users) => {
+	if (users.length === 0) return <div>No yet users</div>;
+
+	return users.map((user, key) => {
+		const userJoinedDate = moment(user.created_at).format('Y'); // TODO a ajouter dans model
+		const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 && `/uploads/${user.avatarMainSrc.avatar150}`;
+
+		return (
+			<Link key={key} to={`/user/${user._id}`} className={cx('user-container-item')}>
+				<div className={cx('user-header')}>
+					<div className={cx('avatar')}>{ src ? <Image circular src={src} size="tiny" /> : <Icon name={'universal access'} size="big" /> }</div>
+				</div>
+				<div className={cx('user-body')}>
+					<div className={cx('username')}>{user.username}</div>
+					<div className={cx('date')}>{`Joined in ${userJoinedDate}`}</div>
+					<div className={cx('about')}>{user.about}</div>
+				</div>
+				<div className={cx('user-footer')}>
+					<div className={cx('friends')}>
+						<Icon name="user" /> 22 Friends
+					</div>
+				</div>
+			</Link>
+		);
+	});
+};
 
 const renderPagination = (handlePaginationChange, usersPagesCount, paginationIndexPage) => {
 	return (
@@ -29,39 +56,13 @@ const renderPagination = (handlePaginationChange, usersPagesCount, paginationInd
 };
 
 const UsersList = ({ users, usersPagesCount, handlePaginationChange, paginationIndexPage }) => {
-	let usersNode = <div>No users</div>;
-
-	if (users.length > 0) {
-		usersNode = users.map((user, key) => {
-			const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 ? `/uploads/${user.avatarMainSrc.avatar150}` : defaultAvatar150;
-
-			return (
-				<Grid.Column key={key} mobile={6} tablet={4} computer={4}>
-					<Card className={cx('user-container-item')}>
-						<Image as={Link} to={'/user/' + user._id} src={src} />
-						<Card.Content>
-							<Card.Header as={Link} to={'/user/' + user._id}>{user.username}</Card.Header>
-							<Card.Meta>
-								<span className="date">Joined in 2015</span>
-							</Card.Meta>
-							<Card.Description>{user.username} is a music producer living in Chicago studying Media Management at the New School</Card.Description>
-						</Card.Content>
-						<Card.Content extra>
-							<a><Icon name="user" />22 Friends</a>
-						</Card.Content>
-					</Card>
-				</Grid.Column>
-			);
-		});
-	}
-
 	return (
 		<div>
 			<h3>List of users :</h3>
 
-			<Grid className={cx('users-container')}>
-				{usersNode}
-			</Grid>
+			<div className={cx('users-container')}>
+				{ renderUsersList(users) }
+			</div>
 
 			{ usersPagesCount > 0 && renderPagination(handlePaginationChange, usersPagesCount, paginationIndexPage) }
 		</div>
