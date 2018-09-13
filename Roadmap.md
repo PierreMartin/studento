@@ -49,7 +49,6 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - pagination - essayer de bloquer les call APIs sur first and last pages
-- pagination - numbers pages on empty courses
 - Create = quand on change de catégory, vider les sous cat !!
 - gerer la gestion de la génératon du contenu des cours en .md
 

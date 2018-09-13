@@ -106,6 +106,24 @@ class CoursesListDashboard extends Component {
 		});
 	}
 
+	renderPagination(coursesPagesCount, pagination) {
+		return (
+			<Pagination
+				activePage={pagination.indexPage}
+				boundaryRange={1}
+				siblingRange={1}
+				onPageChange={this.handlePaginationChange}
+				size="small"
+				totalPages={coursesPagesCount}
+				ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
+				prevItem={{ content: <Icon name="angle left" />, icon: true }}
+				nextItem={{ content: <Icon name="angle right" />, icon: true }}
+				firstItem={null}
+				lastItem={null}
+			/>
+		);
+	}
+
 	render() {
 		const { courses, coursesPagesCount } = this.props;
 		const { deleteCourse, lastColumnClicked, direction, pagination } = this.state;
@@ -132,21 +150,7 @@ class CoursesListDashboard extends Component {
 						<Table.Row>
 							<Table.HeaderCell colSpan="6">
 								<Button basic color="grey" content="Add new course" floated="right" icon="add" as={Link} to="/course/create/new" />
-
-								<Pagination
-									activePage={pagination.indexPage}
-									boundaryRange={1}
-									siblingRange={1}
-									onPageChange={this.handlePaginationChange}
-									size="small"
-									totalPages={coursesPagesCount}
-									ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
-									prevItem={{ content: <Icon name="angle left" />, icon: true }}
-									nextItem={{ content: <Icon name="angle right" />, icon: true }}
-									firstItem={null}
-									lastItem={null}
-								/>
-
+								{ coursesPagesCount > 0 && this.renderPagination(coursesPagesCount, pagination) }
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Footer>

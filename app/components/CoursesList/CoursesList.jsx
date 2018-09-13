@@ -35,6 +35,26 @@ const renderCoursesList = (courses) => {
 	});
 };
 
+const renderPagination = (handlePaginationChange, coursesPagesCount, paginationIndexPage) => {
+	return (
+		<div className={cx('pagination')}>
+			<Pagination
+				activePage={paginationIndexPage}
+				boundaryRange={1}
+				siblingRange={1}
+				onPageChange={handlePaginationChange}
+				size="small"
+				totalPages={coursesPagesCount}
+				ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
+				prevItem={{ content: <Icon name="angle left" />, icon: true }}
+				nextItem={{ content: <Icon name="angle right" />, icon: true }}
+				firstItem={null}
+				lastItem={null}
+			/>
+		</div>
+	);
+};
+
 const CoursesList = ({ courses, coursesPagesCount, paginationIndexPage, handlePaginationChange }) => {
 	return (
 		<div>
@@ -42,21 +62,8 @@ const CoursesList = ({ courses, coursesPagesCount, paginationIndexPage, handlePa
 				{ renderCoursesList(courses) }
 			</div>
 
-			<div className={cx('pagination')}>
-				<Pagination
-					activePage={paginationIndexPage}
-					boundaryRange={1}
-					siblingRange={1}
-					onPageChange={handlePaginationChange}
-					size="small"
-					totalPages={coursesPagesCount}
-					ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
-					prevItem={{ content: <Icon name="angle left" />, icon: true }}
-					nextItem={{ content: <Icon name="angle right" />, icon: true }}
-					firstItem={null}
-					lastItem={null}
-				/>
-			</div>
+			{coursesPagesCount > 0 && renderPagination(handlePaginationChange, coursesPagesCount, paginationIndexPage)}
+
 		</div>
 	);
 };

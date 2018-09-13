@@ -69,7 +69,7 @@ const addOrEditFailure = (state = '', action) => {
 const pagesCount = (state = 0, action) => {
 	switch (action.type) {
 		case types.GET_COURSES_SUCCESS:
-			if (action.pagesCount) return action.pagesCount;
+			if (action.pagesCount >= 0) return action.pagesCount;
 			return state;
 		case types.GET_COURSES_FAILURE:
 			return 0;
