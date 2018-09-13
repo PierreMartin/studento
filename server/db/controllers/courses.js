@@ -88,6 +88,7 @@ export function allBySearch(req, res) {
 	// Add criteria if user selected a category at search:
 	if (select !== 'all') query.category = select;
 
+	// TODO refacto ca
 	// 1st page:
 	if (typeof currentCourseId === 'undefined') {
 		Course.find(query)

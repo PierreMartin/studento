@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import moment from 'moment';
@@ -8,44 +8,41 @@ import styles from './css/courseList.scss';
 
 const cx = classNames.bind(styles);
 
-// TODO changer ca en component functionnal
-class CoursesList extends Component {
-	renderCoursesList(courses) {
-		if (courses.length === 0) return 'No yet courses';
+const renderCoursesList = (courses) => {
+	if (courses.length === 0) return <div>No yet courses</div>;
 
-		return courses.map((course, key) => {
-			const courseDate = moment(course.created_at).format('L');
+	return courses.map((course, key) => {
+		const courseDate = moment(course.created_at).format('L');
 
-			const categoryInfo = course.category_info || {};
-			const author = course.uId || {};
-
-			return (
-				<Link key={key} to={`/course/${course._id}`} className={cx('course-container-item')}>
-					<div className={cx('course-header')}><Icon name={categoryInfo.picto || 'code'} size="big" /></div>
-					<div className={cx('course-body')}>
-						<div className={cx('subcat')}>{course.subCategories && course.subCategories.map((subCat, i) => {
-							const space = course.subCategories.length - 1 === i ? '' : ', ';
-							return subCat + space;
-						})}</div>
-						<div className={cx('title')}>{course.title}</div>
-						<div className={cx('username')}>{author.username}</div>
-						<div className={cx('date')}>{courseDate}</div>
-					</div>
-					<div className={cx('course-footer')}><div><Icon name="star" /> 121</div></div>
-				</Link>
-			);
-		});
-	}
-
-	render() {
-		const { courses, coursesPagesCount, paginationIndexPage, handlePaginationChange } = this.props;
+		const categoryInfo = course.category_info || {};
+		const author = course.uId || {};
 
 		return (
-			<div>
-				<div className={cx('course-container')}>
-					{ this.renderCoursesList(courses) }
+			<Link key={key} to={`/course/${course._id}`} className={cx('course-container-item')}>
+				<div className={cx('course-header')}><Icon name={categoryInfo.picto || 'code'} size="big" /></div>
+				<div className={cx('course-body')}>
+					<div className={cx('subcat')}>{course.subCategories && course.subCategories.map((subCat, i) => {
+						const space = course.subCategories.length - 1 === i ? '' : ', ';
+						return subCat + space;
+					})}</div>
+					<div className={cx('title')}>{course.title}</div>
+					<div className={cx('username')}>{author.username}</div>
+					<div className={cx('date')}>{courseDate}</div>
 				</div>
+				<div className={cx('course-footer')}><div><Icon name="star" /> 121</div></div>
+			</Link>
+		);
+	});
+};
 
+const CoursesList = ({ courses, coursesPagesCount, paginationIndexPage, handlePaginationChange }) => {
+	return (
+		<div>
+			<div className={cx('courses-container')}>
+				{ renderCoursesList(courses) }
+			</div>
+
+			<div className={cx('pagination')}>
 				<Pagination
 					activePage={paginationIndexPage}
 					boundaryRange={1}
@@ -60,9 +57,9 @@ class CoursesList extends Component {
 					lastItem={null}
 				/>
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};
 
 CoursesList.propTypes = {
 	handlePaginationChange: PropTypes.func,
