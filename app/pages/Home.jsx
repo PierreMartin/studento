@@ -66,13 +66,22 @@ class Home extends Component {
 
 	handleSelectCategory = (clickedCategory, clickedIndex) => () => {
 		const { fetchCoursesByFieldAction } = this.props;
-		this.setState({ category: { lastClicked: clickedCategory, clickedIndex}, paginationIndexPage: 1 });
+		this.setState({
+			category: { lastClicked: clickedCategory, clickedIndex},
+			paginationIndexPage: 1, // reset
+			fieldSearch: { typing: '', select: 'all' }, // reset
+			subCategory: { lastClicked: null } // reset
+		});
 		fetchCoursesByFieldAction({ keyReq: 'category', valueReq: clickedCategory });
 	}
 
 	handleSelectSubCategory = clickedSubCategory => () => {
 		const { fetchCoursesByFieldAction } = this.props;
-		this.setState({ subCategory: { lastClicked: clickedSubCategory }, paginationIndexPage: 1 });
+		this.setState({
+			subCategory: { lastClicked: clickedSubCategory },
+			paginationIndexPage: 1, // reset
+			fieldSearch: { typing: '', select: 'all' } // reset
+		});
 		fetchCoursesByFieldAction({ keyReq: 'subCategories', valueReq: clickedSubCategory });
 	}
 
@@ -85,30 +94,27 @@ class Home extends Component {
 	handleSearchInput = (e, { value }) => {
 		if (value === ' ' || value === '  ') return;
 
-		this.setState({ fieldSearch: { ...this.state.fieldSearch, typing: value } }, () => {
+		this.setState({
+			fieldSearch: { ...this.state.fieldSearch, typing: value },
+			paginationIndexPage: 1, // reset
+			category: { lastClicked: null }, // reset
+			subCategory: { lastClicked: null } // reset
+		}, () => {
 			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
 		});
 	}
 
 	handlePaginationChange = (e, { activePage }) => {
-		const { fetchCoursesByFieldAction, courses } = this.props;
+		const { fetchCoursesByFieldAction, courses, fetchCoursesBySearchAction } = this.props;
 		const { category, subCategory, fieldSearch, paginationIndexPage } = this.state;
 		const directionIndex = activePage - paginationIndexPage;
 		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
 
 		this.setState({ paginationIndexPage: activePage });
 
-		if (category.lastClicked !== null) {
-			return fetchCoursesByFieldAction({ keyReq: 'category', valueReq: category.lastClicked, currentCourseId, directionIndex });
-		}
-
-		if (subCategory.lastClicked !== null) {
-			return fetchCoursesByFieldAction({ keyReq: 'subCategory', valueReq: subCategory.lastClicked, currentCourseId, directionIndex });
-		}
-
-		if (fieldSearch.typing !== '') {
-			// return fetchCoursesBySearchAction(); // TODO a finir
-		}
+		if (category.lastClicked !== null) return fetchCoursesByFieldAction({ keyReq: 'category', valueReq: category.lastClicked, currentCourseId, directionIndex });
+		if (subCategory.lastClicked !== null) return fetchCoursesByFieldAction({ keyReq: 'subCategory', valueReq: subCategory.lastClicked, currentCourseId, directionIndex });
+		if (fieldSearch.typing !== '') return fetchCoursesBySearchAction({ ...fieldSearch, currentCourseId, directionIndex });
 
 		fetchCoursesByFieldAction({ keyReq: 'all', valueReq: 'all', currentCourseId, directionIndex });
 	}

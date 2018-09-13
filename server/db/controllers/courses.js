@@ -71,10 +71,10 @@ export function allByField(req, res) {
 }
 
 /**
- * Get /api/getcoursesbysearch/:select/:typing
+ * POST /api/getcoursesbysearch
  */
 export function allBySearch(req, res) {
-	const { select, typing } = req.params;
+	const { select, typing, currentCourseId, directionIndex } = req.body;
 
 	if (!typing) return;
 
@@ -88,14 +88,60 @@ export function allBySearch(req, res) {
 	// Add criteria if user selected a category at search:
 	if (select !== 'all') query.category = select;
 
-	Course.find(query).populate('uId', '_id username avatarMainSrc.avatar28').populate('category_info', 'name description picto').exec((err, courses) => {
-		if (err) {
-			console.error(err);
-			return res.status(500).json({ message: 'A error happen at the fetching courses by search', err });
-		}
+	// 1st page:
+	if (typeof currentCourseId === 'undefined') {
+		Course.find(query)
+			.limit(numberItemPerPage)
+			.sort({ _id: 1 })
+			.populate('uId', '_id username avatarMainSrc.avatar28')
+			.populate('category_info', 'name description picto')
+			.exec((err, courses) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'A error happen at the fetching courses by search', err });
+				}
 
-		return res.status(200).json({ message: 'Search course fetched', courses });
-	});
+				Course.count(query).exec((err, coursesCount) => {
+					if (err) {
+						console.error(err);
+						return res.status(500).json({ message: 'A error happen at the fetching courses count by search', err });
+					}
+
+					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
+					return res.status(200).json({ message: 'courses by search fetched', courses, pagesCount });
+				});
+			});
+	} else if (directionIndex >= 0) {
+		// Go to page >
+		Course.find({ ...query, _id: {$gte: currentCourseId }})
+			.skip(directionIndex * numberItemPerPage)
+			.limit(numberItemPerPage)
+			.sort({ _id: 1 })
+			.populate('uId', '_id username avatarMainSrc.avatar28')
+			.populate('category_info', 'name description picto')
+			.exec((err, courses) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'A error happen at the fetching courses by search >>', err });
+				}
+				return res.status(200).json({ message: 'courses by search fetched >', courses });
+			});
+	} else {
+		// Go to page <
+		Course.find({ ...query, _id: {$lt: currentCourseId }})
+			.skip((Math.abs(directionIndex) - 1) * numberItemPerPage)
+			.limit(numberItemPerPage)
+			.sort({ _id: -1 })
+			.populate('uId', '_id username avatarMainSrc.avatar28')
+			.populate('category_info', 'name description picto')
+			.exec((err, courses) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'A error happen at the fetching courses by search <<', err });
+				}
+				return res.status(200).json({ message: 'courses by search fetched <', courses: courses.reverse() });
+			});
+	}
 }
 
 /**

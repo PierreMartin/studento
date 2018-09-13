@@ -7,12 +7,13 @@ export function api() {
 		// Courses :
 		getCoursesByField: param => localClient.request({
 			method: 'POST',
-			url: '/api/getcourses/',
+			url: '/api/getcourses',
 			data: param
 		}),
 		getCoursesBySearch: fieldSearch => localClient.request({
-			method: 'GET',
-			url: '/api/getcoursesbysearch/' + fieldSearch.select + '/' + fieldSearch.typing
+			method: 'POST',
+			url: '/api/getcoursesbysearch',
+			data: fieldSearch
 		}),
 		getCourseById: id => localClient.request({
 			method: 'GET',

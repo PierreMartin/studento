@@ -27,7 +27,7 @@ export function fetchUserAction(userFrontId) {
 			.then((resUser) => {
 				if (resUser.status === 200) {
 					dispatch(fetchUserSuccess(resUser.data));
-					return fetchCoursesByFieldRequest('uId', userFrontId);
+					return fetchCoursesByFieldRequest({ keyReq: 'uId', valueReq: userFrontId });
 				}
 			})
 			.catch((err) => {
