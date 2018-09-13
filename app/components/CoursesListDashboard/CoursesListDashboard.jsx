@@ -76,6 +76,8 @@ class CoursesListDashboard extends Component {
 	handlePaginationChange = (e, { activePage }) => {
 		this.setState({ pagination: { ...this.state.pagination, indexPage: activePage } });
 		const lastActivePage = this.state.pagination.indexPage;
+		if (activePage === lastActivePage) return;
+
 		this.props.paginationChange(activePage, lastActivePage);
 	}
 
