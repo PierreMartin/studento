@@ -21,9 +21,11 @@ const renderTchatBoxs = (channelsListOpen) => {
 };
 
 const App = ({ children, channelsListOpen }) => {
+	const pathUrl = children.props && children.props.route && children.props.route.path;
+
   return (
     <div className={cx('myClass', 'myOtherClass')}>
-      <NavMain socket={socket} />
+      <NavMain socket={socket} pathUrl={pathUrl} />
       {children}
 			<ToastContainer />
 			{ renderTchatBoxs(channelsListOpen) }
