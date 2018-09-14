@@ -7,7 +7,7 @@ import UnreadNotifMessages from '../../UnreadMessages/UnreadNotifMessages';
 import UnreadModalMessages from '../../UnreadMessages/UnreadModalMessages';
 import { logoutAction } from '../../../actions/authentification';
 import { openTchatboxSuccess } from '../../../actions/tchat';
-import { Button, Container, Menu, Segment, Dropdown, Icon } from 'semantic-ui-react';
+import { Button, Container, Menu, Segment, Dropdown, Icon, Popup } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from '../../../css/main.scss';
 
@@ -109,7 +109,7 @@ class NavigationMain extends Component {
 						<Menu.Item position="right">
 							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
 
-							{ authentification.authenticated ? (<Menu.Item as={Link} to="/course/create/new"><Icon name="add" />Add a course</Menu.Item>) : ''}
+							{ authentification.authenticated ? (<Menu.Item as={Link} to="/course/create/new"><Popup trigger={<Icon name="add" title="toto" />} content="Add a course" /></Menu.Item>) : ''}
 
 							{ authentification.authenticated ? (
 								<div ref={(el) => { this.unreadContentRef = el; }} >
