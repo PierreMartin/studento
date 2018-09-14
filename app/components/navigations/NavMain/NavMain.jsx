@@ -102,7 +102,7 @@ class NavigationMain extends Component {
 				<Container>
 					<Menu inverted pointing secondary className={cx('myClass')}>
 						<Menu.Item as={Link} to="/" active={typeof pathUrl === 'undefined'}>Home</Menu.Item> {/* TODO cacher ce menu si autentifié (mais laisser pour le moment pour dev) */}
-						{ authentification.authenticated ? (<Menu.Item as={Link} to="/dashboard" active={pathUrl === '/dashboard' || pathUrl === '/course/:action/:id'}>Dashboard</Menu.Item>) : ''}
+						{ authentification.authenticated ? (<Menu.Item as={Link} to="/dashboard" active={pathUrl === '/dashboard'}>Dashboard</Menu.Item>) : ''}
 						<Menu.Item as={Link} to="/about" active={pathUrl === '/about'}>About</Menu.Item>
 						{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" active={pathUrl === '/users' || pathUrl === '/user/:id'}>Users</Menu.Item>) : ''}
 
