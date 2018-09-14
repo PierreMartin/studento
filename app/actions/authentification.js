@@ -102,7 +102,7 @@ export function signupAction(data) {
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(signUpSuccess(response.data.message, response.data.userObj));
-					dispatch(push('/user/' + response.data.userObj._id)); // redirection
+					dispatch(push('/settings')); // redirection
 					toast.success(response.data.message);
 				} else {
 					dispatch(signUpError(data.email, 'Oops! Something went wrong'));

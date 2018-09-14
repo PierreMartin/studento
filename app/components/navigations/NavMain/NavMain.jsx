@@ -18,11 +18,9 @@ class NavigationMain extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			activeItem: 'home',
 			openModalUnreadNotifMessages: false
 		};
 
-		this.handleItemClick = this.handleItemClick.bind(this);
 		this.renderDropdownProfile = this.renderDropdownProfile.bind(this);
 
 		// handle open modal:
@@ -41,15 +39,6 @@ class NavigationMain extends Component {
 	componentWillUnmount() {
 		document.removeEventListener('mousedown', this.handleClickOutsideUnreadContent);
 	}
-
-	/**
-	 * When click on a item of the menu - for set a active class
-	 * @param {object} e - the event datas
-	 * @return {void}
-	 * */
-	handleItemClick = (e, { name }) => {
-		this.setState({ activeItem: name });
-	};
 
 	/**
 	 * When click on <UnreadNotifMessages /> for open/close the UnreadModalMessages
@@ -106,17 +95,16 @@ class NavigationMain extends Component {
 	}
 
 	render() {
-		const { activeItem } = this.state;
 		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl } = this.props;
 
 		return (
 			<Segment inverted>
 				<Container>
 					<Menu inverted pointing secondary className={cx('myClass')}>
-						<Menu.Item as={Link} to="/" name="home" active={typeof pathUrl === 'undefined'} onClick={this.handleItemClick}>Home</Menu.Item> {/* TODO cacher ce menu si autentifié (mais laisser pour le moment pour dev) */}
-						{ authentification.authenticated ? (<Menu.Item as={Link} name="dashboard" active={pathUrl === '/dashboard' || pathUrl === '/course/:action/:id'} to="/dashboard" onClick={this.handleItemClick}>Dashboard</Menu.Item>) : ''}
-						<Menu.Item as={Link} to="/about" name="about" active={pathUrl === '/about'} onClick={this.handleItemClick}>About</Menu.Item>
-						{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" name="users" active={pathUrl === '/users/:id'} onClick={this.handleItemClick}>Users</Menu.Item>) : ''}
+						<Menu.Item as={Link} to="/" active={typeof pathUrl === 'undefined'}>Home</Menu.Item> {/* TODO cacher ce menu si autentifié (mais laisser pour le moment pour dev) */}
+						{ authentification.authenticated ? (<Menu.Item as={Link} to="/dashboard" active={pathUrl === '/dashboard' || pathUrl === '/course/:action/:id'}>Dashboard</Menu.Item>) : ''}
+						<Menu.Item as={Link} to="/about" active={pathUrl === '/about'}>About</Menu.Item>
+						{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" active={pathUrl === '/users' || pathUrl === '/user/:id'}>Users</Menu.Item>) : ''}
 
 						<Menu.Item position="right">
 							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
@@ -131,8 +119,8 @@ class NavigationMain extends Component {
 								) : ''}
 
 							{/* authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''*/}
-							{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" name="login" active={pathUrl === 'login'} onClick={this.handleItemClick}>Log in</Menu.Item>) : ''}
-							{ !authentification.authenticated ? (<Button as={Link} to="/signup" name="signup" active={pathUrl === 'signup'} inverted style={{marginLeft: '0.5em'}} onClick={this.handleItemClick}>Sign Up</Button>) : ''}
+							{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" active={pathUrl === '/login'}>Log in</Menu.Item>) : ''}
+							{ !authentification.authenticated ? (<Button as={Link} to="/signup" active={pathUrl === '/signup'} inverted style={{marginLeft: '0.5em'}}>Sign Up</Button>) : ''}
 						</Menu.Item>
 					</Menu>
 				</Container>
