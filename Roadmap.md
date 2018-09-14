@@ -33,6 +33,37 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - /course/edit/${course._id}
 - /course/${course._id}
 
+## Getting Started with Heroku
+
+```bash
+heroku login
+
+cd <myapp>
+npm start
+heroku create
+
+# Deploy to Heroku server
+git push heroku master
+
+# Database on Heroku (free)
+heroku addons:create mongolab
+
+# OPTIONAL:
+
+# Rename if you need to
+heroku apps:rename <newname>
+
+# Open Link in browser
+heroku open
+
+# Open bash
+heroku run bash
+
+# Logs
+heroku logs --tail
+
+```
+
 ### Categories (create the Menu) - See categories.json :
 db.categories.remove({})
 db.categories.insert({"name":"Technology","description":"Technology blah blah","key":"technology","picto":"code","subCategories":[{"name":"Web development","description":"Web development blah blah","key":"web","picto":"code"},{"name":"Administrators","description":"Administrators blah blah","key":"administrators","picto":"code"},{"name":"Linux","description":"Linux blah blah","key":"linux","picto":"code"},{"name":"Game development","description":"Game development blah blah","key":"game","picto":"code"},{"name":"Software Engineering","description":"Software Engineering blah blah","key":"software-engineering","picto":"code"},{"name":"RaspBerry Pi","description":"RaspBerry Pi blah blah","key":"pi","picto":"code"},{"name":"Aduino","description":"Aduino blah blah","key":"aduino","picto":"code"},{"name":"Bitcoin and Cryptocurrencies","description":"Bitcoin and Cryptocurrencies blah blah","key":"cryptocurrencies","picto":"code"}]})
