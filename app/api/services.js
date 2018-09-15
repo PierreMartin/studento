@@ -1,7 +1,8 @@
 import restApiClient from './../middlewares/restApiClient';
+import { apiEndpoint } from './../../config/app';
 
 export function api() {
-	const localClient = restApiClient().withConfig({ baseURL: 'http://localhost:3000' });
+	const localClient = restApiClient().withConfig({ baseURL: apiEndpoint });
 
 	return {
 		// Courses :
