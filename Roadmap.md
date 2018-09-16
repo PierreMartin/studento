@@ -62,6 +62,10 @@ heroku run bash
 # Logs
 heroku logs --tail
 
+# var env
+heroku config:set PORT=80
+heroku config
+
 ```
 
 ### Categories (create the Menu) - See categories.json :
