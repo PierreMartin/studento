@@ -66,6 +66,12 @@ heroku logs --tail
 heroku config:set PORT=80
 heroku config
 
+
+heroku config:set NPM_CONFIG_PRODUCTION=false
+npm i
+npm run dev
+npm start
+
 ```
 
 ### Categories (create the Menu) - See categories.json :
