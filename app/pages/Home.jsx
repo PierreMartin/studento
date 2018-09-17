@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import { Button, Container, Header, Icon, Segment, Divider, Input, Dropdown } from 'semantic-ui-react';
@@ -43,8 +44,8 @@ class Home extends Component {
 
 	getMetaData() {
 		return {
-			title: 'Home | react stater',
-			meta: [{ name: 'description', content: 'react stater' }],
+			title: 'Home | Studento',
+			meta: [{ name: 'description', content: 'Studento' }],
 			link: []
 		};
 	}
@@ -136,16 +137,16 @@ class Home extends Component {
 	}
 
   render() {
-		const { courses, coursesPagesCount, categories } = this.props;
+		const { courses, coursesPagesCount, categories, authentification } = this.props;
 		const { category, fieldSearch, paginationIndexPage } = this.state;
 
     return (
       <LayoutPage {...this.getMetaData()}>
-				<Segment inverted textAlign="center" style={{ minHeight: 400, padding: '1em 0em' }} vertical>
+				<Segment inverted textAlign="center" style={{ minHeight: 600, padding: '0' }} vertical>
 					<Container text>
-						<Header as="h1" content="-.-" inverted style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '1em' }} />
+						<Header as="h1" content="-.-" inverted style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '2em' }} />
 						<Header as="h2" content="Start to share you courses / knowledges with the world." inverted style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
-						<Button primary size="huge">Sign up<Icon name="right arrow" /></Button>
+						{ !authentification.authenticated && <Button as={Link} to="/signup" basic color="grey" size="huge">Sign up<Icon name="right arrow" /></Button> }
 					</Container>
 				</Segment>
 
@@ -195,6 +196,10 @@ Home.propTypes = {
 	fetchCategoriesAction: PropTypes.func,
 	coursesPagesCount: PropTypes.number,
 
+	authentification: PropTypes.shape({
+		authenticated: PropTypes.bool
+	}),
+
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
 		id: PropTypes.string,
@@ -214,7 +219,8 @@ const mapStateToProps = (state) => {
 	return {
 		courses: state.courses.all,
 		coursesPagesCount: state.courses.pagesCount,
-		categories: state.categories.all
+		categories: state.categories.all,
+		authentification: state.authentification
 	};
 };
 
