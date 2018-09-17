@@ -2,11 +2,6 @@ const PATHS = require('../paths');
 
 module.exports = ({ production = false, browser = false } = {}) => {
   const enableHotModuleReplacement = !production && browser;
-  const createPresets = enableHotModuleReplacement => {
-    const presets = ['env', 'react', 'stage-2'];
-    return enableHotModuleReplacement ? ['react-hmre', ...presets]: presets;
-  };
-  const presets = createPresets(enableHotModuleReplacement);
 
   const plugins = production ? [
       'transform-react-remove-prop-types',
@@ -18,7 +13,7 @@ module.exports = ({ production = false, browser = false } = {}) => {
 		{
 			loader: 'babel-loader',
 			options: {
-				// presets, // TODO We use .babelrc
+				// presets, // We use .babelrc
 				plugins
 			}
 		}

@@ -2,6 +2,8 @@
 $ sudo mongod
 $ npm run dev
 
+sudo chown -R $USER:$GROUP $PWD
+
 ### Mongo :
 - db: 'studento'
 
@@ -33,7 +35,7 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 - /course/edit/${course._id}
 - /course/${course._id}
 
-## Getting Started with Heroku
+## Heroku
 
 ```bash
 heroku login
@@ -41,6 +43,11 @@ heroku login
 cd <myapp>
 npm start
 heroku create
+
+heroku config:set NPM_CONFIG_PRODUCTION=false
+npm i
+npm start
+# stop
 
 # Deploy to Heroku server
 git push heroku master
@@ -63,14 +70,9 @@ heroku run bash
 heroku logs --tail
 
 # var env
-heroku config:set PORT=80
+heroku config:set TOTO=salut
 heroku config
 
-
-heroku config:set NPM_CONFIG_PRODUCTION=false
-npm i
-npm run dev
-npm start
 
 ```
 
