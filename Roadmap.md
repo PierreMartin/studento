@@ -46,16 +46,19 @@ db.users.findOne({'_id': ObjectId("59b923d8fe2c95d70482145f") }, { avatarsSrc: {
 heroku login
 
 cd <myapp>
-npm start
 heroku create
 
 heroku config:set NPM_CONFIG_PRODUCTION=false
+heroku run bash
 npm i
 npm start
 # stop
 
 # Deploy to Heroku server
 git push heroku master
+
+# Reload
+heroku ps:scale web=0   heroku ps:scale web=1
 
 # Database on Heroku (free)
 heroku addons:create mongolab
