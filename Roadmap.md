@@ -1,8 +1,13 @@
+Need install NodeJs >=8.12.0
+Need install npm >=6.4.1
+
+sudo chown -R $USER:$GROUP ~/.npm
+sudo chown -R $USER:$GROUP ~/.config
+sudo chown -R $USER:$GROUP $PWD   (if no right when rimraf)
+
 ### development :
 $ sudo mongod
 $ npm run dev
-
-sudo chown -R $USER:$GROUP $PWD
 
 ### Mongo :
 - db: 'studento'
