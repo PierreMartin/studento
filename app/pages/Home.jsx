@@ -142,11 +142,11 @@ class Home extends Component {
 
     return (
       <LayoutPage {...this.getMetaData()}>
-				<Segment inverted textAlign="center" style={{ minHeight: 600, padding: '0' }} vertical>
-					<Container text>
-						<Header as="h1" content="-.-" inverted style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '2em' }} />
+				<Segment inverted textAlign="center" vertical className={cx('home-header-segment')}>
+					<Container className={cx('home-header-container')}>
+						<Header as="h1" content="-.-" inverted style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0 }} />
 						<Header as="h2" content="Start to share you courses / knowledges with the world." inverted style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
-						{ !authentification.authenticated && <Button as={Link} to="/signup" basic color="grey" size="huge">Sign up<Icon name="right arrow" /></Button> }
+						{ !authentification.authenticated && <Button as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }
 					</Container>
 				</Segment>
 

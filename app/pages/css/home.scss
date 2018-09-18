@@ -1,5 +1,16 @@
 @import '../../css/common/colors.scss';
 
+.home-header-segment {
+  height: 500px;
+  background: url(/img/bg-home.jpg) no-repeat 0px -259px fixed !important;
+  background-size: cover !important;
+  opacity: 0.5;
+
+  .home-header-container {
+    margin-top: 100px;
+  }
+}
+
 .title-home {
   text-align: center;
   color: $colorBombay !important;

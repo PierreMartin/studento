@@ -14,6 +14,7 @@ ga('send', 'pageview');
 
 const createStylesheets = () => `
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed" />
+<link rel="stylesheet" href="/css/main.css" />
 <link rel="stylesheet" href="/css/emoji-mart.css" />
 `;
 
