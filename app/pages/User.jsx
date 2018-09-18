@@ -25,6 +25,11 @@ class User extends Component {
 		this.props.fetchUserAction(this.props.params.id); // call fetchCoursesByFieldRequest()
 	}
 
+	componentDidUpdate() {
+		const { params, userFront } = this.props;
+		if (params.id !== userFront._id) this.props.fetchUserAction(this.props.params.id);
+	}
+
 	getMetaData() {
 		return {
 			title: 'User profile',
