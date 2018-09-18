@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { Segment, Button, Header, Grid, Image, Icon } from 'semantic-ui-react';
-import defaultAvatar150 from '../../images/default-avatar-150.png';
+import { Button, Image, Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/userSingle.scss';
 
@@ -21,69 +20,74 @@ const renderAvatarsList = (userFront) => {
 };
 
 const UserSingle = ({ userFront, userMe, handleOpenChatBox }) => {
-	// if my profile :
 	const isMyProfile = userFront._id === userMe._id;
-	const src = userFront.avatarMainSrc && userFront.avatarMainSrc.avatar150 ? `/uploads/${userFront.avatarMainSrc.avatar150}` : defaultAvatar150;
+	const src = userFront.avatarMainSrc && userFront.avatarMainSrc.avatar150 && `/uploads/${userFront.avatarMainSrc.avatar150}`;
 	const avatarsList = renderAvatarsList(userFront);
+	const emptyDescription = !userFront.position && !userFront.schoolName && !userFront.age && !userFront.firstName && !userFront.lastName;
 
 	return (
 		<div>
-			<Grid>
-				<Grid.Row>
-					<Grid.Column width={4}>
-						<Image src={src} />
-					</Grid.Column>
-					<Grid.Column width={6}>
-						<Header as="h2" >{userFront.username}</Header>
-						{userFront.city ? userFront.city + ', ' : ''} {userFront.country}
-						<br />
-						{userFront.domain} {userFront.position ? '(' + userFront.position + ')' : ''}
-						<br />
-						{userFront.schoolName ? 'At ' + userFront.schoolName : ''}
-					</Grid.Column>
-					<Grid.Column width={6}>
-						{ !isMyProfile ? <Button size="mini" primary><Icon name="add user" />Add</Button> : ''}
-						{ !isMyProfile ? <Button size="mini" primary onClick={handleOpenChatBox} ><Icon name="talk" />Message</Button> : ''}
-						{ isMyProfile ? <Button as={Link} to="/settings" size="mini" primary><Icon name="settings" />Edit my profile</Button> : ''}
-					</Grid.Column>
-				</Grid.Row>
+			<div className={cx('user-main-container')}>
+				<h3 className={cx('user-main-username')}>{ userFront.username }</h3>
+				<div className={cx('avatar')}>{ src ? <Image circular src={src} size="small" /> : <Icon name={'universal access'} size="big" /> }</div>
+				<div className={cx('user-main-description')}>{ userFront.about || '' }</div>
+			</div>
 
-				<Grid.Row>
-					<div>
-						<Button circular color="facebook" icon="facebook" />
-						<Button circular color="twitter" icon="twitter" />
-						<Button circular color="linkedin" icon="linkedin" />
-						<Button circular color="google plus" icon="google plus" />
+			<div className={cx('user-actions-container')}>
+				{/* !isMyProfile ? <Button size="small" basic><Icon name="add user" />Add</Button> : '' */}
+				{ !isMyProfile ? <Button size="small" basic onClick={handleOpenChatBox} ><Icon name="talk" />Message</Button> : '' }
+				{ isMyProfile ? <Button as={Link} to="/settings" size="small" basic><Icon name="settings" />Edit my profile</Button> : '' }
+			</div>
+
+			<hr />
+
+			<div className={cx('user-description-container')}>
+				{ userFront.city ? (
+				<div className={cx('user-description-item')}>
+					<strong>City:</strong>
+					<div>{userFront.city}</div>
+				</div>
+				) : '' }
+
+				{ userFront.position ? (
+					<div className={cx('user-description-item')}>
+						<strong>Position:</strong>
+						<div>{userFront.position} { userFront.domain ? ' as ' + userFront.domain : '' }</div>
 					</div>
-				</Grid.Row>
+				) : '' }
 
-				<Grid.Row>
-					<Grid.Column width={8}>
-						Contact: {userFront.email}
-					</Grid.Column>
-					<Grid.Column width={8}>
-						{userFront.age ? 'Age: ' + userFront.age : ''}
-					</Grid.Column>
-				</Grid.Row>
-			</Grid>
+				{ userFront.schoolName ? (
+					<div className={cx('user-description-item')}>
+						<strong>Current school:</strong>
+						<div>{userFront.schoolName}</div>
+					</div>
+				) : '' }
 
-			{ (avatarsList.length > 0) ? <Segment className={cx('thumbnails-container')}>{ avatarsList }</Segment> : '' }
+				{ userFront.age ? (
+					<div className={cx('user-description-item')}>
+						<strong>Age:</strong>
+						<div>{userFront.age}</div>
+					</div>
+				) : '' }
 
-			<div>
-				<Header as="h3" attached="top">Infos</Header>
-				<Segment attached>
-					<div>firstName: {userFront.firstName}</div>
-					<div>lastName: {userFront.lastName}</div>
-					<div>genre: {userFront.gender}</div>
-				</Segment>
+				{ userFront.firstName ? (
+					<div className={cx('user-description-item')}>
+						<strong>FirstName:</strong>
+						<div>{userFront.firstName}</div>
+					</div>
+				) : '' }
+
+				{ userFront.lastName ? (
+					<div className={cx('user-description-item')}>
+						<strong>LastName:</strong>
+						<div>{userFront.lastName}</div>
+					</div>
+				) : '' }
 			</div>
 
-			<div>
-				<Header as="h3" attached="top">About</Header>
-				<Segment attached>
-					{userFront.about}
-				</Segment>
-			</div>
+			{ emptyDescription && <div style={{ textAlign: 'center' }}>This user has not completed his profile yet</div> }
+
+			{ (avatarsList.length > 0) ? <div className={cx('thumbnails-container')}>{ avatarsList }</div> : '' }
 		</div>
 	);
 };
@@ -95,9 +99,19 @@ UserSingle.propTypes = {
 
 	userFront: PropTypes.shape({
 		username: PropTypes.string,
+		about: PropTypes.string,
 		email: PropTypes.string,
 		_id: PropTypes.string,
-		password: PropTypes.string
+		password: PropTypes.string,
+		avatarMainSrc: PropTypes.shape({
+			avatar150: PropTypes.string
+		}),
+		position: PropTypes.string,
+		domain: PropTypes.string,
+		schoolName: PropTypes.string,
+		age: PropTypes.number,
+		firstName: PropTypes.string,
+		lastName: PropTypes.string
 	}).isRequired,
 
 	handleOpenChatBox: PropTypes.func.isRequired

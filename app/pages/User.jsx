@@ -61,14 +61,13 @@ class User extends Component {
 
 				<Segment vertical>
 					<Container text>
-						<Header as="h2" icon="user circle" content="profile" />
 						<UserSingle userFront={userFront} userMe={userMe} handleOpenChatBox={this.handleOpenChatBox} />
 					</Container>
 				</Segment>
 
 				<Segment vertical>
 					<Container text>
-						<Header as="h2" icon="student" content="courses" />
+						<Header as="h2" icon="student" content="His courses" />
 						<CoursesList
 							courses={courses}
 							coursesPagesCount={coursesPagesCount}
