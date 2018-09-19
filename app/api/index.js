@@ -154,9 +154,31 @@ export const updateUserRequest = (data, id) => {
 		});
 };
 
-// Avatar
+// Avatar Local
 export const createAvatarUserRequest = (formData, _id, avatarId) => {
 	return api().createAvatarUser(formData, _id, avatarId)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
+// Avatar S3 Step 1 (GET, write on the bucket)
+export const createAvatarS3SignRequest = (file) => {
+	return api().createAvatarS3Sign(file)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
+// Avatar S3 Step 2 (POST, save in Database)
+export const createAvatarS3SaveDbRequest = (formData, _id, avatarId) => {
+	return api().createAvatarS3SaveDb(formData, _id, avatarId)
 		.then((res) => {
 			return Promise.resolve(res);
 		})

@@ -72,11 +72,25 @@ export function api() {
 			url: '/api/updateuser/' + id,
 			data
 		}),
+
+		// upload avatar S3:
+		createAvatarS3Sign: file => localClient.request({
+			method: 'GET',
+			url: `/api/addavatar-s3/sign?file-name=${file.name}&file-type=${file.type}`
+		}),
+		createAvatarS3SaveDb: (formData, userId, avatarId) => localClient.request({
+			method: 'POST',
+			url: `/api/addavatar-s3/${userId}/${avatarId}`,
+			data: formData
+		}),
+
+		// upload avatar local
 		createAvatarUser: (formData, id, avatarId) => localClient.request({
 			method: 'POST',
 			url: '/api/addavatar/' + id + '/' + avatarId,
 			data: formData
 		}),
+
 		setDefaultAvatarUser: (avatarId, idUser) => localClient.request({
 			method: 'PUT',
 			url: '/api/setdefaultavatar/' + idUser,

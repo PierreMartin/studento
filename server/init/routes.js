@@ -42,7 +42,14 @@ export default (app) => {
 		app.post('/api/getusers', usersController.all);
 		app.get('/api/getuser/:id', usersController.oneById);
 		app.put('/api/updateuser/:id', usersController.update);
+
+		// avatars S3:
+		app.get('/api/addavatar-s3/sign', usersController.uploadAvatarS3Sign); // TODO voir si on peut pas faire   app.post('/api/addavatar-s3', usersController.uploadAvatarSignS3, usersController.uploadAvatarSaveDbS3);
+		app.post('/api/addavatar-s3/:userId/:avatarId', usersController.uploadAvatarS3SaveDb);
+
+		// avatars Local:
 		app.post('/api/addavatar/:id/:avatarId', usersController.uploadAvatarMulter, usersController.uploadAvatar);
+
 		app.put('/api/setdefaultavatar/:idUser/', usersController.setDefaultAvatar);
 	} else {
 		console.warn('users routes');

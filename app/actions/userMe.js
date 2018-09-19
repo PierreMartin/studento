@@ -1,4 +1,4 @@
-import { updateUserRequest, createAvatarUserRequest, defaultAvatarUserRequest } from './../api';
+import { updateUserRequest, createAvatarUserRequest, createAvatarS3SignRequest, createAvatarS3SaveDbRequest, defaultAvatarUserRequest } from './../api';
 import { toast } from 'react-toastify';
 import * as types from 'types';
 
@@ -79,6 +79,30 @@ export function avatarUploadUserSuccess(res) {
 
 export function uploadAvatarUserAction(formData, _id, avatarId) {
 	return (dispatch) => {
+		const isProduction = process.env.NODE_ENV === 'production';
+
+		console.log(formData);
+		// debugger;
+
+		if (isProduction) {
+			const file = {}; // TODO To remove to
+			if (!file.name || !file.type) return;
+
+			return createAvatarS3SignRequest(file).then(() => {
+				return createAvatarS3SaveDbRequest(formData, _id, avatarId)
+					.then((resOnS3) => {
+						if (resOnS3.status === 200) {
+							dispatch(avatarUploadUserSuccess(resOnS3.data));
+							toast.success(resOnS3.data.message);
+						} else {
+							dispatch(avatarUploadUserError(getMessage(resOnS3)));
+						}
+				}).catch((errOnS3) => {
+						dispatch(avatarUploadUserError(getMessage(errOnS3)));
+					});
+			});
+		}
+
 		return createAvatarUserRequest(formData, _id, avatarId)
 			.then((response) => {
 				if (response.status === 200) {
