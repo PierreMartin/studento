@@ -257,8 +257,12 @@ export function uploadAvatar(req, res) {
  */
 export function uploadAvatarS3Sign(req, res) {
 	const s3 = new aws.S3();
-	const fileName = req.query['file-name'];
+	let fileName = req.query['file-name'];
 	const fileType = req.query['file-type'];
+	const userId = req.query['user-id'];
+	const ext = /[^.]+$/.exec(fileName.toLowerCase())[0] || 'jpg';
+	fileName = `${userId}_${Date.now()}.${ext}`;
+
 	const s3Params = {
 		Bucket: S3_BUCKET,
 		Key: fileName,

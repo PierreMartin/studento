@@ -3,6 +3,7 @@ import { apiEndpoint } from './../../config/app';
 
 export function api() {
 	const localClient = restApiClient().withConfig({ baseURL: apiEndpoint });
+	const s3SignUpload = restApiClient().withConfig({ baseURL: '' });
 
 	return {
 		// Courses :
@@ -74,9 +75,13 @@ export function api() {
 		}),
 
 		// upload avatar S3:
-		createAvatarS3Sign: file => localClient.request({
+		createAvatarS3Sign: (file, userId) => localClient.request({
 			method: 'GET',
-			url: `/api/addavatar-s3/sign?file-name=${file.name}&file-type=${file.type}`
+			url: `/api/addavatar-s3/sign?file-name=${file.name}&file-type=${file.type}&user-id=${userId}`
+		}),
+		createAvatarS3SignUpload: signedRequest => s3SignUpload.request({
+			method: 'PUT',
+			url: signedRequest
 		}),
 		createAvatarS3SaveDb: (formData, userId, avatarId) => localClient.request({
 			method: 'POST',

@@ -166,8 +166,8 @@ export const createAvatarUserRequest = (formData, userId, avatarId) => {
 };
 
 // Avatar S3 Step 1 (GET, write on the bucket)
-export const createAvatarS3SignRequest = (file) => {
-	return api().createAvatarS3Sign(file)
+export const createAvatarS3SignRequest = (file, userId) => {
+	return api().createAvatarS3Sign(file, userId)
 		.then((res) => {
 			return Promise.resolve(res);
 		})

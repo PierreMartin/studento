@@ -82,9 +82,10 @@ export function uploadAvatarUserAction(formData, userId, avatarId, file) {
 		const isProduction = process.env.NODE_ENV === 'production';
 
 		if (isProduction) {
-			if (!file.name || !file.type) return;
+			if (!file.name || !file.type || !userId) return;
 
-			return createAvatarS3SignRequest(file).then(() => {
+			return createAvatarS3SignRequest(file, userId).then((resSignS3) => {
+				// createAvatarS3SignUploadRequest(resSignS3.signedRequest).then((resUploadSignS3) => {  if (resUploadSignS3.status === 200) createAvatarS3SaveDbRequest(formData, userId, avatarId)  })
 				return createAvatarS3SaveDbRequest(formData, userId, avatarId)
 					.then((resOnS3) => {
 						if (resOnS3.status === 200) {
