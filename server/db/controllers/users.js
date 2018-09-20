@@ -279,6 +279,12 @@ export function uploadAvatarS3Sign(req, res) {
 		ACL: 'public-read'
 	};
 
+	/*
+	Jimp.read(uploadpath, function (err, data) {
+		//
+	});
+	*/
+
 	s3.getSignedUrl('putObject', s3Params, (err, data) => {
 		if (err) {
 			console.error(err);

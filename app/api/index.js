@@ -165,7 +165,7 @@ export const createAvatarUserRequest = (formData, userId, avatarId) => {
 		});
 };
 
-// Avatar S3 Step 1 (GET, write on the bucket)
+// Avatar S3 Step 1 (GET, get the sign for authorization)
 export const createAvatarS3SignRequest = (file, userId) => {
 	return api().createAvatarS3Sign(file, userId)
 		.then((res) => {
@@ -176,7 +176,18 @@ export const createAvatarS3SignRequest = (file, userId) => {
 		});
 };
 
-// Avatar S3 Step 2 (POST, save in Database)
+// Avatar S3 Step 2 (PUT, upload in AWS S3)
+export const createAvatarS3SignUploadRequest = (file, userId) => {
+	return api().createAvatarS3SignUpload(file, userId)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
+// Avatar S3 Step 3 (POST, save in Database)
 export const createAvatarS3SaveDbRequest = (formData, userId, avatarId) => {
 	return api().createAvatarS3SaveDb(formData, userId, avatarId)
 		.then((res) => {
