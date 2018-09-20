@@ -260,8 +260,16 @@ export function uploadAvatarS3Sign(req, res) {
 	let fileName = req.query['file-name'];
 	const fileType = req.query['file-type'];
 	const userId = req.query['user-id'];
-	const ext = /[^.]+$/.exec(fileName.toLowerCase())[0] || 'jpg';
+	const ext = /[^.]+$/.exec(fileName.toLowerCase()) && /[^.]+$/.exec(fileName.toLowerCase())[0];
 	fileName = `${userId}_${Date.now()}.${ext}`;
+
+	if (!/^image/g.test(fileType)) {
+		return res.status(500).json({ message: 'You must download a valid image' });
+	}
+
+	if (ext !== 'png' && ext !== 'jpg' && ext !== 'gif' && ext !== 'jpeg') {
+		return res.status(500).json({ message: 'You must download a valid image' });
+	}
 
 	const s3Params = {
 		Bucket: S3_BUCKET,
