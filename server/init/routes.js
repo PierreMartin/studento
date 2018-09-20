@@ -48,7 +48,7 @@ export default (app) => {
 		app.post('/api/addavatar-s3/:userId/:avatarId', usersController.uploadAvatarS3SaveDb);
 
 		// avatars Local:
-		app.post('/api/addavatar/:id/:avatarId', usersController.uploadAvatarMulter, usersController.uploadAvatar);
+		app.post('/api/addavatar/:userId/:avatarId', usersController.uploadAvatarMulter, usersController.uploadAvatar);
 
 		app.put('/api/setdefaultavatar/:idUser/', usersController.setDefaultAvatar);
 	} else {

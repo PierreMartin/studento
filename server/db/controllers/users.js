@@ -189,10 +189,10 @@ const upload = multer({
 export const uploadAvatarMulter = upload.single('formAvatar');
 
 /**
- * POST /api/addavatar/:id/:avatarId
+ * POST /api/addavatar/:userId/:avatarId
  */
 export function uploadAvatar(req, res) {
-	const id = req.params.id;
+	const userId = req.params.userId;
 	const filename = req.file.filename;
 	const sizes = [150, 80, 28];
 	const avatar150 = sizes[0] + '_' + filename;
@@ -201,7 +201,7 @@ export function uploadAvatar(req, res) {
 	const avatarId = parseInt(req.params.avatarId, 10);
 	const avatarSrc = { avatarId, avatar150, avatar80, avatar28 };
 
-	if (!id || !filename) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
+	if (!userId || !filename) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
 
 	// rezise at different size :
 	jimp.read(req.file.path, (err, image) => {
@@ -217,10 +217,10 @@ export function uploadAvatar(req, res) {
 		unlinkSync('public/uploadsRaw/' + filename);
 	});
 
-	User.findOne({ _id: id, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userWithAvatar) => {
+	User.findOne({ _id: userId, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userWithAvatar) => {
 		// If avatar already exist
 		if (userWithAvatar) {
-			User.findOneAndUpdate({_id: id, 'avatarsSrc.avatarId': avatarId},
+			User.findOneAndUpdate({_id: userId, 'avatarsSrc.avatarId': avatarId},
 				{
 					$set: {
 						'avatarsSrc.$.avatarId': avatarId,
@@ -233,7 +233,7 @@ export function uploadAvatar(req, res) {
 
 					// If updated the avatar setted as main - we also set default avatar :
 					if (userWithAvatar.avatarMainSrc.avatarId === avatarId) {
-						User.findOneAndUpdate({ _id: id }, {avatarMainSrc: avatarSrc}, (err) => {
+						User.findOneAndUpdate({ _id: userId }, {avatarMainSrc: avatarSrc}, (err) => {
 							if (err) res.status(500).json({message: 'A error happen at the updating main avatar profile'});
 						});
 					}
@@ -242,7 +242,7 @@ export function uploadAvatar(req, res) {
 				});
 		// If avatar don't exist
 		} else {
-			User.findOneAndUpdate({_id: id}, {$push: { avatarsSrc: avatarSrc } }, (err) => {
+			User.findOneAndUpdate({_id: userId}, {$push: { avatarsSrc: avatarSrc } }, (err) => {
 				if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});
 
 				return res.status(200).json({message: 'Your avatar has been add', avatarSrc});
@@ -274,8 +274,8 @@ export function uploadAvatarS3Sign(req, res) {
 		}
 
 		const returnData = {
-			signedRequest: data,
-			url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+			signedRequest: data, // TODO dans 2em requete :  xhr.open('PUT', signedRequest);
+			url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}` // TODO get in store redux for display images   +   dans 2em route :  User.findOne({ _id: id, 'avatarsSrc.$.avatar150': avatar150 })
 		};
 
 		res.write(JSON.stringify(returnData));

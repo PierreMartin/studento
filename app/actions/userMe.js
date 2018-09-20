@@ -77,19 +77,15 @@ export function avatarUploadUserSuccess(res) {
 	};
 }
 
-export function uploadAvatarUserAction(formData, _id, avatarId) {
+export function uploadAvatarUserAction(formData, userId, avatarId, file) {
 	return (dispatch) => {
 		const isProduction = process.env.NODE_ENV === 'production';
 
-		console.log(formData);
-		// debugger;
-
 		if (isProduction) {
-			const file = {}; // TODO To remove to
 			if (!file.name || !file.type) return;
 
 			return createAvatarS3SignRequest(file).then(() => {
-				return createAvatarS3SaveDbRequest(formData, _id, avatarId)
+				return createAvatarS3SaveDbRequest(formData, userId, avatarId)
 					.then((resOnS3) => {
 						if (resOnS3.status === 200) {
 							dispatch(avatarUploadUserSuccess(resOnS3.data));
@@ -103,7 +99,7 @@ export function uploadAvatarUserAction(formData, _id, avatarId) {
 			});
 		}
 
-		return createAvatarUserRequest(formData, _id, avatarId)
+		return createAvatarUserRequest(formData, userId, avatarId)
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(avatarUploadUserSuccess(response.data));

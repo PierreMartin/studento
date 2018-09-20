@@ -155,8 +155,8 @@ export const updateUserRequest = (data, id) => {
 };
 
 // Avatar Local
-export const createAvatarUserRequest = (formData, _id, avatarId) => {
-	return api().createAvatarUser(formData, _id, avatarId)
+export const createAvatarUserRequest = (formData, userId, avatarId) => {
+	return api().createAvatarUser(formData, userId, avatarId)
 		.then((res) => {
 			return Promise.resolve(res);
 		})
@@ -177,8 +177,8 @@ export const createAvatarS3SignRequest = (file) => {
 };
 
 // Avatar S3 Step 2 (POST, save in Database)
-export const createAvatarS3SaveDbRequest = (formData, _id, avatarId) => {
-	return api().createAvatarS3SaveDb(formData, _id, avatarId)
+export const createAvatarS3SaveDbRequest = (formData, userId, avatarId) => {
+	return api().createAvatarS3SaveDb(formData, userId, avatarId)
 		.then((res) => {
 			return Promise.resolve(res);
 		})

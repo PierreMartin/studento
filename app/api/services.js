@@ -85,9 +85,9 @@ export function api() {
 		}),
 
 		// upload avatar local
-		createAvatarUser: (formData, id, avatarId) => localClient.request({
+		createAvatarUser: (formData, userId, avatarId) => localClient.request({
 			method: 'POST',
-			url: '/api/addavatar/' + id + '/' + avatarId,
+			url: '/api/addavatar/' + userId + '/' + avatarId,
 			data: formData
 		}),
 

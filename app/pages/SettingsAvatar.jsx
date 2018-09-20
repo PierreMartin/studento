@@ -108,7 +108,7 @@ class SettingsAvatar extends Component {
 	/** Upload - step 2 - close the modal and call the API **/
 	uploadAvatarAction() {
 		const { userMe, uploadAvatarUserAction } = this.props;
-		const _id = userMe._id;
+		const userId = userMe._id;
 		const that = this;
 
 		this.handleCloseModal();
@@ -126,11 +126,12 @@ class SettingsAvatar extends Component {
 			const filename = ($filename.files[0] && $filename.files[0].name) || 'undefined.jpg';
 			const avatarId = that.state.avatarUploadImagePreview.nameField;
 			const formData = new FormData();
+			const file = { type: blob.type, name: filename };
 			formData.append('formAvatar', blob, filename); // 'formAvatar' is used in routes.js
 
 			// send image cropped to back-end :
-			if (_id && formData && typeof avatarId !== 'undefined') {
-				uploadAvatarUserAction(formData, _id, avatarId);
+			if (userId && formData && typeof avatarId !== 'undefined') {
+				uploadAvatarUserAction(formData, userId, avatarId, file);
 			}
 
 			that.reloadImage(avatarId);
