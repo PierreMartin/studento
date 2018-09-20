@@ -122,9 +122,9 @@ class SettingsAvatar extends Component {
 		});
 
 		this.cropperRef.cropper.getCroppedCanvas().toBlob((blob) => {
-			const $filename = document.querySelector('#formAvatar input[type="file"]');
-			const filename = ($filename.files[0] && $filename.files[0].name) || 'undefined.jpg';
 			const avatarId = that.state.avatarUploadImagePreview.nameField;
+			const $filename = document.querySelectorAll('#formAvatar input[type="file"]') && document.querySelectorAll('#formAvatar input[type="file"]')[avatarId];
+			const filename = ($filename.files[0] && $filename.files[0].name) || 'undefined.jpg';
 			const formData = new FormData();
 			const file = { type: blob.type, name: filename };
 			formData.append('formAvatar', blob, filename); // 'formAvatar' is used in routes.js
