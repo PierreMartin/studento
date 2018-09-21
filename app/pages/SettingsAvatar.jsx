@@ -126,12 +126,11 @@ class SettingsAvatar extends Component {
 			const $filename = document.querySelectorAll('#formAvatar input[type="file"]') && document.querySelectorAll('#formAvatar input[type="file"]')[avatarId];
 			const filename = ($filename.files[0] && $filename.files[0].name) || 'undefined.jpg';
 			const formData = new FormData();
-			const file = { type: blob.type, name: filename };
 			formData.append('formAvatar', blob, filename); // 'formAvatar' is used in routes.js
 
 			// send image cropped to back-end :
 			if (userId && formData && typeof avatarId !== 'undefined') {
-				uploadAvatarUserAction(formData, userId, avatarId, file);
+				uploadAvatarUserAction(formData, userId, avatarId);
 			}
 
 			that.reloadImage(avatarId);

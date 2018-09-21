@@ -290,6 +290,9 @@ export function uploadAvatarS3(req, res) {
 	const avatar28 = sizes[2] + '_' + key;
 	const avatarId = parseInt(req.params.avatarId, 10);
 	const avatarSrc = { avatarId, avatar150, avatar80, avatar28 };
+	
+	console.log(req.file);
+	console.log(req.body);
 
 	if (!userId || !key) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
 

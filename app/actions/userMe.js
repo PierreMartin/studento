@@ -77,13 +77,11 @@ export function avatarUploadUserSuccess(res) {
 	};
 }
 
-export function uploadAvatarUserAction(formData, userId, avatarId, file) {
+export function uploadAvatarUserAction(formData, userId, avatarId) {
 	return (dispatch) => {
 		const isProduction = process.env.NODE_ENV === 'production';
 
 		if (isProduction) {
-			if (!file.name || !file.type || !userId) return;
-
 			return createAvatarS3UserRequest(formData, userId, avatarId)
 				.then((resS3) => {
 					if (resS3.status === 200) {
