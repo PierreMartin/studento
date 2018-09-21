@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { uploadAvatarUserAction, avatarMainAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { Button, Grid, Modal, Header, Popup, Icon } from 'semantic-ui-react';
+import { Button, Grid, Modal, Header, Popup, Icon, Message } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import defaultAvatar150 from '../images/default-avatar-150.png';
@@ -220,6 +220,8 @@ class SettingsAvatar extends Component {
 							{ this.renderItemsAvatar() }
 						</Grid.Row>
 					</Grid>
+
+					<Message header="Note" content="Don't forget to select a avatar as main." />
 
 				</div>
 			</LayoutPage>
