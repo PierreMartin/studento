@@ -15,7 +15,7 @@ const numberItemPerPage = 2;
 aws.config.region = 'eu-west-3';
 const s3 = new aws.S3();
 const S3_BUCKET = process.env.S3_BUCKET || 'studento';
-
+const sizes = [150, 80, 28];
 
 /**
  * POST /api/getusers
@@ -190,6 +190,7 @@ const upload = multer({
 
 // For S3 only
 const uploadS3 = multer({
+	// TODO put limit size
 	storage: multerS3({
 		s3,
 		bucket: S3_BUCKET,
@@ -220,7 +221,6 @@ export const uploadAvatarMulterS3 = uploadS3.single('formAvatar');
 export function uploadAvatar(req, res) {
 	const userId = req.params.userId;
 	const filename = req.file.filename;
-	const sizes = [150, 80, 28]; // TODO mettre ca en var global
 	const avatar150 = sizes[0] + '_' + filename;
 	const avatar80 = sizes[1] + '_' + filename;
 	const avatar28 = sizes[2] + '_' + filename;
@@ -284,15 +284,11 @@ export function uploadAvatar(req, res) {
 export function uploadAvatarS3(req, res) {
 	const userId = req.params.userId;
 	const { key, location } = req.file; // key: filename
-	const sizes = [150, 80, 28];  // TODO mettre ca en var global
 	const avatar150 = sizes[0] + '_' + key;
 	const avatar80 = sizes[1] + '_' + key;
 	const avatar28 = sizes[2] + '_' + key;
 	const avatarId = parseInt(req.params.avatarId, 10);
 	const avatarSrc = { avatarId, avatar150, avatar80, avatar28 };
-	
-	console.log(req.file);
-	console.log(req.body);
 
 	if (!userId || !key) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
 
@@ -304,11 +300,11 @@ export function uploadAvatarS3(req, res) {
 		sizes.forEach((size) => {
 			image
 				.scaleToFit(size, jimp.AUTO, jimp.RESIZE_BEZIER)
-				.write('./public/uploads/' + size + '_' + key);
+				.write('https://studento.s3.eu-west-3.amazonaws.com/' + size + '_' + key);
 		});
 
 		// remove the original image :
-		unlinkSync('public/uploadsRaw/' + key);
+		// unlinkSync('https://studento.s3.eu-west-3.amazonaws.com/' + key);
 	});
 	*/
 
