@@ -1,4 +1,5 @@
 import multer from 'multer';
+import multerS3 from 'multer-s3';
 import path from 'path';
 import jimp from 'jimp';
 import crypto from 'crypto';
@@ -12,6 +13,7 @@ const numberItemPerPage = 2;
 
 // S3 AWS:
 aws.config.region = 'eu-west-3';
+const s3 = new aws.S3();
 const S3_BUCKET = process.env.S3_BUCKET || 'studento';
 
 
@@ -186,7 +188,31 @@ const upload = multer({
 	}
 });
 
+// For S3 only
+const uploadS3 = multer({
+	storage: multerS3({
+		s3,
+		bucket: S3_BUCKET,
+		metadata: (req, file, cb) => {
+			cb(null, { fieldName: file.fieldname });
+		},
+		key: (req, file, cb) => {
+			crypto.pseudoRandomBytes(16, (err, raw) => {
+				if (!err) {
+					let ext = file.originalname && path.extname(file.originalname);
+
+					if (typeof ext === 'undefined' || ext === '') {
+						ext = '.jpg';
+					}
+					cb(null, raw.toString('hex') + Date.now() + ext.toLowerCase());
+				}
+			});
+		}
+	})
+});
+
 export const uploadAvatarMulter = upload.single('formAvatar');
+export const uploadAvatarMulterS3 = uploadS3.single('formAvatar');
 
 /**
  * POST /api/addavatar/:userId/:avatarId
@@ -194,7 +220,7 @@ export const uploadAvatarMulter = upload.single('formAvatar');
 export function uploadAvatar(req, res) {
 	const userId = req.params.userId;
 	const filename = req.file.filename;
-	const sizes = [150, 80, 28];
+	const sizes = [150, 80, 28]; // TODO mettre ca en var global
 	const avatar150 = sizes[0] + '_' + filename;
 	const avatar80 = sizes[1] + '_' + filename;
 	const avatar28 = sizes[2] + '_' + filename;
@@ -253,87 +279,40 @@ export function uploadAvatar(req, res) {
 
 /***************************************** Upload Avatars S3 *****************************************/
 /**
- * GET /api/addavatar-s3/sign
- */
-export function uploadAvatarS3Sign(req, res) {
-	const s3 = new aws.S3();
-	let fileName = req.query['file-name'];
-	const fileType = req.query['file-type'];
-	const userId = req.query['user-id'];
-	const ext = /[^.]+$/.exec(fileName.toLowerCase()) && /[^.]+$/.exec(fileName.toLowerCase())[0];
-	fileName = `${userId}_${Date.now()}.${ext}`;
-
-	if (!/^image/g.test(fileType)) {
-		return res.status(500).json({ message: 'You must download a valid image' });
-	}
-
-	if (ext !== 'png' && ext !== 'jpg' && ext !== 'gif' && ext !== 'jpeg') {
-		return res.status(500).json({ message: 'You must download a valid image' });
-	}
-
-	const s3Params = {
-		Bucket: S3_BUCKET,
-		Key: fileName,
-		Expires: 60,
-		ContentType: fileType,
-		ACL: 'public-read'
-	};
-
-	/*
-	Jimp.read(uploadpath, function (err, data) {
-		//
-	});
-	*/
-
-	s3.getSignedUrl('putObject', s3Params, (err, data) => {
-		if (err) {
-			console.error(err);
-			return res.end();
-		}
-
-		const returnData = {
-			signedRequest: data, // TODO dans 2em requete :  xhr.open('PUT', signedRequest);
-			url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}` // TODO get in store redux for display images   +   dans 2em route :  User.findOne({ _id: id, 'avatarsSrc.$.avatar150': avatar150 })
-		};
-
-		res.write(JSON.stringify(returnData));
-		res.end();
-	});
-}
-
-/**
  * POST /api/addavatar-s3/:userId/:avatarId
  */
-export function uploadAvatarS3SaveDb(req, res) { // TODO finir ca
-	const id = req.params.userId;
-	const filename = req.file.filename;
-	const sizes = [150, 80, 28];
-	const avatar150 = sizes[0] + '_' + filename;
-	const avatar80 = sizes[1] + '_' + filename;
-	const avatar28 = sizes[2] + '_' + filename;
+export function uploadAvatarS3(req, res) {
+	const userId = req.params.userId;
+	const { key, location } = req.file; // key: filename
+	const sizes = [150, 80, 28];  // TODO mettre ca en var global
+	const avatar150 = sizes[0] + '_' + key;
+	const avatar80 = sizes[1] + '_' + key;
+	const avatar28 = sizes[2] + '_' + key;
 	const avatarId = parseInt(req.params.avatarId, 10);
 	const avatarSrc = { avatarId, avatar150, avatar80, avatar28 };
 
-	if (!id || !filename) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
+	if (!userId || !key) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
 
 	// rezise at different size :
-	jimp.read(req.file.path, (err, image) => {
+	/*
+	jimp.read(location, (err, image) => {
 		if (err) throw err;
 
 		sizes.forEach((size) => {
 			image
 				.scaleToFit(size, jimp.AUTO, jimp.RESIZE_BEZIER)
-				.write('./public/uploads/' + size + '_' + filename);
+				.write('./public/uploads/' + size + '_' + key);
 		});
 
 		// remove the original image :
-		unlinkSync('public/uploadsRaw/' + filename);
+		unlinkSync('public/uploadsRaw/' + key);
 	});
+	*/
 
-	User.findOne({ _id: id, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userWithAvatar) => {
+	User.findOne({ _id: userId, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userWithAvatar) => {
 		// If avatar already exist
 		if (userWithAvatar) {
-			User.findOneAndUpdate({_id: id, 'avatarsSrc.avatarId': avatarId},
+			User.findOneAndUpdate({_id: userId, 'avatarsSrc.avatarId': avatarId},
 				{
 					$set: {
 						'avatarsSrc.$.avatarId': avatarId,
@@ -342,23 +321,23 @@ export function uploadAvatarS3SaveDb(req, res) { // TODO finir ca
 						'avatarsSrc.$.avatar28': avatar28
 					}
 				}, (err) => {
-					if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});
+					if (err) return res.status(500).json({ message: 'A error happen at the updating avatar profile - avatar already exist', err });
 
 					// If updated the avatar setted as main - we also set default avatar :
 					if (userWithAvatar.avatarMainSrc.avatarId === avatarId) {
-						User.findOneAndUpdate({ _id: id }, {avatarMainSrc: avatarSrc}, (err) => {
+						User.findOneAndUpdate({ _id: userId }, {avatarMainSrc: avatarSrc}, (err) => {
 							if (err) res.status(500).json({message: 'A error happen at the updating main avatar profile'});
 						});
 					}
 
-					return res.status(200).json({message: 'Your avatar has been update', avatarSrc});
+					return res.status(200).json({message: 'Your avatar has been update', avatarSrc, locationImg: location});
 				});
 			// If avatar don't exist
 		} else {
-			User.findOneAndUpdate({_id: id}, {$push: { avatarsSrc: avatarSrc } }, (err) => {
-				if (err) return res.status(500).json({message: 'A error happen at the updating avatar profile'});
+			User.findOneAndUpdate({_id: userId}, {$push: { avatarsSrc: avatarSrc } }, (err) => {
+				if (err) return res.status(500).json({ message: 'A error happen at the updating avatar profile - avatar don\'t exist', err });
 
-				return res.status(200).json({message: 'Your avatar has been add', avatarSrc});
+				return res.status(200).json({message: 'Your avatar has been add', avatarSrc, locationImg: location});
 			});
 		}
 	});
@@ -398,9 +377,9 @@ export default {
 	all,
 	oneById,
 	update,
-	uploadAvatarS3Sign,
-	uploadAvatarS3SaveDb,
 	uploadAvatarMulter,
+	uploadAvatarMulterS3,
 	uploadAvatar,
+	uploadAvatarS3,
 	setDefaultAvatar
 };

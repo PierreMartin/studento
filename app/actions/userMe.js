@@ -1,4 +1,4 @@
-import { updateUserRequest, createAvatarUserRequest, createAvatarS3SignRequest, createAvatarS3SignUploadRequest, createAvatarS3SaveDbRequest, defaultAvatarUserRequest } from './../api';
+import { updateUserRequest, createAvatarUserRequest, createAvatarS3UserRequest, defaultAvatarUserRequest } from './../api';
 import { toast } from 'react-toastify';
 import * as types from 'types';
 
@@ -84,19 +84,13 @@ export function uploadAvatarUserAction(formData, userId, avatarId, file) {
 		if (isProduction) {
 			if (!file.name || !file.type || !userId) return;
 
-			return createAvatarS3SignRequest(file, userId)
-				.then((resSignS3) => {
-					if (resSignS3.status === 200) return createAvatarS3SignUploadRequest(resSignS3.data.signedRequest);
-				})
-				.then((resUploadSignS3) => {
-					if (resUploadSignS3.status === 200) return createAvatarS3SaveDbRequest(formData, userId, avatarId);
-				})
-				.then((resOnS3) => {
-					if (resOnS3.status === 200) {
-						dispatch(avatarUploadUserSuccess(resOnS3.data));
-						toast.success(resOnS3.data.message);
+			return createAvatarS3UserRequest(formData, userId, avatarId)
+				.then((resS3) => {
+					if (resS3.status === 200) {
+						dispatch(avatarUploadUserSuccess(resS3.data));
+						toast.success(resS3.data.message);
 					} else {
-						dispatch(avatarUploadUserError(getMessage(resOnS3)));
+						dispatch(avatarUploadUserError(getMessage(resS3)));
 					}
 				})
 				.catch((errOnS3) => {
