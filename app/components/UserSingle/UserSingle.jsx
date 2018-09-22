@@ -87,7 +87,7 @@ const UserSingle = ({ userFront, userMe, handleOpenChatBox }) => {
 
 			{ emptyDescription && <div style={{ textAlign: 'center' }}>This user has not completed his profile yet</div> }
 
-			{ (avatarsList.length > 0) ? <div className={cx('thumbnails-container')}>{ avatarsList }</div> : '' }
+			{ (avatarsList.length > 0) ? <div className={cx('user-avatars-container')}>{ avatarsList }</div> : '' }
 		</div>
 	);
 };
