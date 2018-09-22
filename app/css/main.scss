@@ -8,12 +8,21 @@
 body {
   margin: 0;
   font-family: $fontMontserrat;
+  background: url(/img/bgblanc.jpg) repeat;
 }
 
 body ::-webkit-scrollbar {
   width: 8px;
 }
 
+.layout-container {
+  min-height:940px;
+}
+
 .error-message {
   margin: 0;
 }
+
+a:link, a:visited { text-decoration: none; color: rgba(0, 0, 0, 0.6);  transition:.4s; }
+a:hover, a:focus  { text-decoration: none; color: #000; }
+a:active          { text-decoration: none; color: rgba(0, 0, 0, 0.6); }

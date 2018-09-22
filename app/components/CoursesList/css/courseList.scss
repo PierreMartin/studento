@@ -15,6 +15,7 @@
     margin: 0 15px 15px 0;
     width: 216px;
     height: 290px;
+    background-color: #fff;
     box-shadow: 0 0 1px 1px rgba(20,23,28,.1), 0 3px 1px 0 rgba(20,23,28,.1);
 
     &:link, &:visited { text-decoration: none; color: rgba(0,0,0,.6); @include transition(all .2s); }

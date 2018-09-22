@@ -5,6 +5,10 @@ import moment from 'moment';
 import { Icon, Table, Button, Header, Modal, Pagination } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { deleteCourseAction, doSortCoursesAction } from '../../actions/courses';
+import classNames from 'classnames/bind';
+import styles from './css/coursesListDashbord.scss';
+
+const cx = classNames.bind(styles);
 
 class CoursesListDashboard extends Component {
 	constructor(props) {
@@ -82,7 +86,7 @@ class CoursesListDashboard extends Component {
 	}
 
 	renderCoursesList(courses) {
-		if (courses.length === 0) return 'No yet courses';
+		if (courses.length === 0) return;
 
 		return courses.map((course, key) => {
 			const courseDate = moment(course.created_at).format('L, h:mm:ss a');
@@ -131,32 +135,40 @@ class CoursesListDashboard extends Component {
 		const { deleteCourse, lastColumnClicked, direction, pagination } = this.state;
 
 		return (
-			<div>
-				<Table celled unstackable compact="very" sortable fixed>
-					<Table.Header>
-						<Table.Row>
-							<Table.HeaderCell>Author</Table.HeaderCell>
-							<Table.HeaderCell sorted={lastColumnClicked === 'title' ? direction : null} onClick={this.handleSort('title')}>Title</Table.HeaderCell>
-							<Table.HeaderCell sorted={lastColumnClicked === 'created_at' ? direction : null} onClick={this.handleSort('created_at')}>Date</Table.HeaderCell>
-							<Table.HeaderCell>Stars</Table.HeaderCell>
-							<Table.HeaderCell>Edit</Table.HeaderCell>
-							<Table.HeaderCell>Delete</Table.HeaderCell>
-						</Table.Row>
-					</Table.Header>
+			<div className={cx('courses-container')}>
+				{ (courses.length <= 0) ?
+					<div>
+						<div className={cx('no-courses')}>You don't have some courses yet</div>
+						<Button basic color="grey" content="Add new course" icon="add" as={Link} to="/course/create/new" />
+					</div>
+					:
+					<Table celled unstackable compact="very" sortable fixed>
+						<Table.Header>
+							<Table.Row>
+								<Table.HeaderCell>Author</Table.HeaderCell>
+								<Table.HeaderCell sorted={lastColumnClicked === 'title' ? direction : null} onClick={this.handleSort('title')}>Title</Table.HeaderCell>
+								<Table.HeaderCell sorted={lastColumnClicked === 'created_at' ? direction : null} onClick={this.handleSort('created_at')}>Date</Table.HeaderCell>
+								<Table.HeaderCell>Stars</Table.HeaderCell>
+								<Table.HeaderCell>Edit</Table.HeaderCell>
+								<Table.HeaderCell>Delete</Table.HeaderCell>
+							</Table.Row>
+						</Table.Header>
 
-					<Table.Body>
-						{ this.renderCoursesList(courses) }
-					</Table.Body>
+						<Table.Body>
+							{ this.renderCoursesList(courses) }
+						</Table.Body>
 
-					<Table.Footer fullWidth>
-						<Table.Row>
-							<Table.HeaderCell colSpan="6">
-								<Button basic color="grey" content="Add new course" floated="right" icon="add" as={Link} to="/course/create/new" />
-								{ coursesPagesCount > 0 && this.renderPagination(coursesPagesCount, pagination) }
-							</Table.HeaderCell>
-						</Table.Row>
-					</Table.Footer>
-				</Table>
+						<Table.Footer fullWidth>
+							<Table.Row>
+								<Table.HeaderCell colSpan="6">
+									<Button basic color="grey" content="Add new course" floated="right" icon="add" as={Link} to="/course/create/new" />
+									{ coursesPagesCount > 0 && this.renderPagination(coursesPagesCount, pagination) }
+								</Table.HeaderCell>
+							</Table.Row>
+						</Table.Footer>
+					</Table>
+				}
+
 
 				<Modal open={deleteCourse.isModalOpened} onClose={this.handleOpenModalForDeleteCourse({})}>
 					<Modal.Header>Delete a course</Modal.Header>

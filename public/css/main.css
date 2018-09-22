@@ -3,9 +3,13 @@ This file is used for overload the existant css
 */
 
 .ui.inverted.segment, .ui.primary.inverted.segment {
-    background-color: #3c2f26 !important;
+    background-color: #141619 !important;
 }
 
 .ui.secondary.inverted.pointing.menu {
     border: none;
+}
+
+.ui.grid > .stretched.column:not(.row) > * {
+    background-color: transparent;
 }

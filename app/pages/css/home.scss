@@ -23,5 +23,7 @@
 
   .search {
     margin-top: 8px;
+    input { background-color: transparent; }
+    input:focus, input:active { background-color: transparent; }
   }
 }

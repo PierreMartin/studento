@@ -45,7 +45,8 @@ class Dashboard extends Component {
 			<LayoutPage {...this.getMetaData()}>
 				<Segment vertical>
 					<Container text>
-						<Header as="h2" icon="pie graph" content="Stats (coming soon)" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
+						<Header as="h2" icon="pie graph" content="Stats" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
+						<p>coming soon</p>
 						<div>...</div>
 					</Container>
 

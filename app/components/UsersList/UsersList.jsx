@@ -58,8 +58,6 @@ const renderPagination = (handlePaginationChange, usersPagesCount, paginationInd
 const UsersList = ({ users, usersPagesCount, handlePaginationChange, paginationIndexPage }) => {
 	return (
 		<div>
-			<h3>List of users :</h3>
-
 			<div className={cx('users-container')}>
 				{ renderUsersList(users) }
 			</div>

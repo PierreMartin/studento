@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { uploadAvatarUserAction, avatarMainAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { Button, Grid, Modal, Header, Popup, Icon, Message } from 'semantic-ui-react';
+import { Button, Grid, Modal, Header, Image, Message } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import defaultAvatar150 from '../images/default-avatar-150.png';
@@ -166,16 +166,16 @@ class SettingsAvatar extends Component {
 			const src = avatarObj ? `/uploads/${avatarObj.avatar150}` : defaultAvatar150;
 			const isSettableMainAvatar = avatarObj && i !== avatarMainSrc.avatarId;
 			const isMainAvatar = avatarObj && i === avatarMainSrc.avatarId;
+			const label = isMainAvatar ? { content: 'default', ribbon: true } : false;
 
 			nodeItemsAvatar.push(
 				<Grid.Column width={6} key={i} className={cx('dropzone-column')} >
 					<div><strong>Image {i + 1}</strong><br /></div>
 					<Dropzone onDrop={this.dropHandler(i)} multiple={false} accept={'image/*'} className={cx('dropzone-input')} >
-						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar150')} />
-						{(isMainAvatar) ? <div className={cx('mainAvatar')}><Popup trigger={<Icon name="heart" color="red" size="large" circular className={cx('icon-main-avatar')} />} content="Main avatar" position="top center" /></div> : ''}
+						<Image src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar150')} label={label} />
 					</Dropzone>
 
-					{(isSettableMainAvatar) ? <div><Button color="red" size="mini" style={{ marginBottom: 5 }} onClick={this.handleDefaultAvatar(i)}><Icon name="heart" />Define as main</Button></div> : ''}
+					{(isSettableMainAvatar) ? <Button basic size="tiny" style={{ margin: '5px' }} onClick={this.handleDefaultAvatar(i)}>Define as default</Button> : ''}
 				</Grid.Column>
 			);
 		}
@@ -221,7 +221,7 @@ class SettingsAvatar extends Component {
 						</Grid.Row>
 					</Grid>
 
-					<Message header="Note" content="Don't forget to select a avatar as main." />
+					<Message header="Note" content="Don't forget to select a avatar as default." />
 
 				</div>
 			</LayoutPage>

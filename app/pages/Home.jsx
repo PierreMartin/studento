@@ -167,7 +167,7 @@ class Home extends Component {
 								action={<Dropdown button basic floating options={this.getOptionsFormsSelect()} defaultValue="all" onChange={this.handleSearchSelect} />}
 								icon="search"
 								iconPosition="left"
-								placeholder="Search"
+								placeholder="Search a course"
 								name="search"
 								value={fieldSearch.typing || ''}
 								onChange={this.handleSearchInput}
