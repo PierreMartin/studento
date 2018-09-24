@@ -6,6 +6,7 @@ import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Button, Grid, Modal, Header, Image, Message } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
+import { pathImage } from './../../config/app';
 import defaultAvatar150 from '../images/default-avatar-150.png';
 import classNames from 'classnames/bind';
 import styles from './css/settingsAvatar.scss';
@@ -81,7 +82,7 @@ class SettingsAvatar extends Component {
 				that.numberTryingLoadImg++;
 				if (that.numberTryingLoadImg < 5) {
 					setTimeout(() => {
-						image.src = `/uploads/${that.getAvatarById(avatarId, avatarsSrc).avatar150}`;
+						image.src = `${pathImage}/${that.getAvatarById(avatarId, avatarsSrc).avatar150}`;
 					}, 2000);
 				}
 			};
@@ -163,7 +164,7 @@ class SettingsAvatar extends Component {
 
 		for (let i = 0; i <= this.numberItems; i++) {
 			const avatarObj = this.getAvatarById(i, avatarsSrc);
-			const src = avatarObj ? `/uploads/${avatarObj.avatar150}` : defaultAvatar150;
+			const src = avatarObj ? `${pathImage}/${avatarObj.avatar150}` : defaultAvatar150;
 			const isSettableMainAvatar = avatarObj && i !== avatarMainSrc.avatarId;
 			const isMainAvatar = avatarObj && i === avatarMainSrc.avatarId;
 			const label = isMainAvatar ? { content: 'default', ribbon: true } : false;
@@ -185,7 +186,7 @@ class SettingsAvatar extends Component {
 
 	render() {
 		// const { avatarMainSrc } = this.props;
-		// const src = avatarMainSrc.avatar150 ? `/uploads/${avatarMainSrc.avatar150}` : defaultAvatar150;
+		// const src = avatarMainSrc.avatar150 ? `${pathImage}/${avatarMainSrc.avatar150}` : defaultAvatar150;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>

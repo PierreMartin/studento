@@ -273,6 +273,16 @@ export function uploadAvatar(req, res) {
 	if (!userId || !filename) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
 
 	// rezise at different size :
+	/* TODO remplacer jimp par ca:
+	sizes.forEach((size) => {
+		sharp(req.file.path)
+			.resize(size, size)
+			.toFile('./public/uploads/' + size + '_' + filename, (err, info) => { ... });
+			.then(() => {})
+			.catch(() => {});
+	});
+	*/
+
 	jimp.read(req.file.path, (err, image) => {
 		if (err) throw err;
 

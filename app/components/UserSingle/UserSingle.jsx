@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Button, Image, Icon } from 'semantic-ui-react';
+import { pathImage } from './../../../config/app';
 import classNames from 'classnames/bind';
 import styles from './css/userSingle.scss';
 
@@ -12,8 +13,8 @@ const renderAvatarsList = (userFront) => {
 
 	return userFront.avatarsSrc.map((avatar, key) => {
 		return (
-			<a href={`/uploads/${avatar.avatar150}`} key={key} className={cx('thumbnails')} >
-				<Image src={`/uploads/${avatar.avatar80}`} />
+			<a href={`${pathImage}/${avatar.avatar150}`} key={key} className={cx('thumbnails')} >
+				<Image src={`${pathImage}/${avatar.avatar80}`} />
 			</a>
 		);
 	});
@@ -21,7 +22,7 @@ const renderAvatarsList = (userFront) => {
 
 const UserSingle = ({ userFront, userMe, handleOpenChatBox }) => {
 	const isMyProfile = userFront._id === userMe._id;
-	const src = userFront.avatarMainSrc && userFront.avatarMainSrc.avatar150 && `/uploads/${userFront.avatarMainSrc.avatar150}`;
+	const src = userFront.avatarMainSrc && userFront.avatarMainSrc.avatar150 && `${pathImage}/${userFront.avatarMainSrc.avatar150}`;
 	const avatarsList = renderAvatarsList(userFront);
 	const emptyDescription = !userFront.position && !userFront.schoolName && !userFront.age && !userFront.firstName && !userFront.lastName;
 

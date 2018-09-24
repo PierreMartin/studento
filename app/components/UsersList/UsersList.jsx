@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import { Icon, Pagination, Image } from 'semantic-ui-react';
 import moment from 'moment';
+import { pathImage } from './../../../config/app';
 import classNames from 'classnames/bind';
 import styles from './css/usersList.scss';
 
@@ -13,7 +14,7 @@ const renderUsersList = (users) => {
 
 	return users.map((user, key) => {
 		const userJoinedDate = moment(user.created_at).format('Y'); // TODO a ajouter dans model
-		const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 && `/uploads/${user.avatarMainSrc.avatar150}`;
+		const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 && `${pathImage}/${user.avatarMainSrc.avatar150}`;
 
 		return (
 			<Link key={key} to={`/user/${user._id}`} className={cx('user-container-item')}>

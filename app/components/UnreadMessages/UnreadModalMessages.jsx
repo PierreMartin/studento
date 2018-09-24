@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Label, Card, Image } from 'semantic-ui-react';
 import moment from 'moment';
+import { pathImage } from '../../../config/app';
 import defaultAvatar28 from '../../images/default-avatar-28.png';
 import classNames from 'classnames/bind';
 import styles from './css/unreadModalMessages.scss';
@@ -27,7 +28,7 @@ const renderThreadsList = (handleClickOpenTchatBox, unreadMessages) => {
 	}
 
 	return unreadMessages.map((thread, key) => {
-		const src = thread.author && thread.author[0].avatarMainSrc && thread.author[0].avatarMainSrc.avatar28 ? `/uploads/${thread.author[0].avatarMainSrc.avatar28}` : defaultAvatar28;
+		const src = thread.author && thread.author[0].avatarMainSrc && thread.author[0].avatarMainSrc.avatar28 ? `${pathImage}/${thread.author[0].avatarMainSrc.avatar28}` : defaultAvatar28;
 		const lastMessageDate = moment(thread.lastMessageDate).format('MMMM Do LT');
 
 		return (

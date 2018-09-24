@@ -4,6 +4,7 @@ import Emojify from 'react-emojione';
 import classNames from 'classnames/bind';
 import { Comment } from 'semantic-ui-react';
 import moment from 'moment';
+import { pathImage } from './../../../config/app';
 import styles from './css/tchat.scss';
 import defaultAvatar28 from '../../images/default-avatar-28.png';
 
@@ -21,7 +22,7 @@ class TchatMessages extends Component {
 		if (messagesList && messagesList.length > 0) {
 			messagesNode = messagesList.map((message, key) => {
 				const senderIsMe = message.author._id === userMe._id;
-				const src = message.author.avatarMainSrc && message.author.avatarMainSrc.avatar28 ? `/uploads/${message.author.avatarMainSrc.avatar28}` : defaultAvatar28;
+				const src = message.author.avatarMainSrc && message.author.avatarMainSrc.avatar28 ? `${pathImage}/${message.author.avatarMainSrc.avatar28}` : defaultAvatar28;
 				const dateCreatedAtFormated = moment(message.created_at).format('MMMM Do LT');
 
 				return (
