@@ -1,7 +1,8 @@
 import multer from 'multer';
-import multerS3 from 'multer-s3';
+import multerS3 from 'multer-s3-transform';
 import path from 'path';
-import jimp from 'jimp';
+import jimp from 'jimp'; // TODO to remove after replace by sharp
+import sharp from 'sharp';
 import crypto from 'crypto';
 import aws from 'aws-sdk';
 import { unlinkSync } from 'fs';
@@ -16,6 +17,7 @@ aws.config.region = 'eu-west-3';
 const s3 = new aws.S3();
 const S3_BUCKET = process.env.S3_BUCKET || 'studento';
 const sizes = [150, 80, 28];
+let nameImage = '';
 
 /**
  * POST /api/getusers
@@ -188,26 +190,72 @@ const upload = multer({
 	}
 });
 
+const createUniqueName = (file) => {
+	crypto.pseudoRandomBytes(16, (err, raw) => {
+		if (!err) {
+			let ext = file.originalname && path.extname(file.originalname);
+			if (typeof ext === 'undefined' || ext === '') ext = '.jpg';
+			nameImage = raw.toString('hex') + Date.now() + ext.toLowerCase();
+		}
+	});
+};
+
 // For S3 only
 const uploadS3 = multer({
-	// TODO put limit size
+	limits: { fileSize: maxSize },
+	fileFilter(req, file, callback) {
+		const typeArray = file.mimetype.split('/');
+		const ext = file.originalname && path.extname(file.originalname).toLowerCase();
+
+		if (typeArray[0] !== 'image') {
+			return callback(new Error('Something went wrong'), false);
+		}
+
+		if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+			return callback(new Error('Only images are allowed'), false);
+		}
+
+		callback(null, true);
+	},
 	storage: multerS3({
 		s3,
 		bucket: S3_BUCKET,
+		acl: 'public-read',
+		shouldTransform: (req, file, cb) => {
+			createUniqueName(file);
+			cb(null, /^image/i.test(file.mimetype));
+		},
+		transforms: [
+			{
+				id: 'thumbnail-1',
+				key: (req, file, cb) => {
+					cb(null, sizes[0] + '_' + nameImage);
+				},
+				transform: (req, file, cb) => {
+					cb(null, sharp().resize(sizes[0], sizes[0]));
+				}
+			},
+			{
+				id: 'thumbnail-2',
+				key: (req, file, cb) => {
+					cb(null, sizes[1] + '_' + nameImage);
+				},
+				transform: (req, file, cb) => {
+					cb(null, sharp().resize(sizes[1], sizes[1]));
+				}
+			},
+			{
+				id: 'thumbnail-3',
+				key: (req, file, cb) => {
+					cb(null, sizes[2] + '_' + nameImage);
+				},
+				transform: (req, file, cb) => {
+					cb(null, sharp().resize(sizes[2], sizes[2]));
+				}
+			}
+		],
 		metadata: (req, file, cb) => {
 			cb(null, { fieldName: file.fieldname });
-		},
-		key: (req, file, cb) => {
-			crypto.pseudoRandomBytes(16, (err, raw) => {
-				if (!err) {
-					let ext = file.originalname && path.extname(file.originalname);
-
-					if (typeof ext === 'undefined' || ext === '') {
-						ext = '.jpg';
-					}
-					cb(null, raw.toString('hex') + Date.now() + ext.toLowerCase());
-				}
-			});
 		}
 	})
 });
@@ -283,30 +331,14 @@ export function uploadAvatar(req, res) {
  */
 export function uploadAvatarS3(req, res) {
 	const userId = req.params.userId;
-	const { key, location } = req.file; // key: filename
-	const avatar150 = sizes[0] + '_' + key;
-	const avatar80 = sizes[1] + '_' + key;
-	const avatar28 = sizes[2] + '_' + key;
+	const { transforms } = req.file; // transforms[index].key: filename
+	const avatar150 = transforms && transforms[0].key;
+	const avatar80 = transforms && transforms[1].key;
+	const avatar28 = transforms && transforms[2].key;
 	const avatarId = parseInt(req.params.avatarId, 10);
 	const avatarSrc = { avatarId, avatar150, avatar80, avatar28 };
 
-	if (!userId || !key) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
-
-	// rezise at different size :
-	/*
-	jimp.read(location, (err, image) => {
-		if (err) throw err;
-
-		sizes.forEach((size) => {
-			image
-				.scaleToFit(size, jimp.AUTO, jimp.RESIZE_BEZIER)
-				.write('https://studento.s3.eu-west-3.amazonaws.com/' + size + '_' + key);
-		});
-
-		// remove the original image :
-		// unlinkSync('https://studento.s3.eu-west-3.amazonaws.com/' + key);
-	});
-	*/
+	if (!userId || !avatar150 || !avatar80 || !avatar28) return res.status(500).json({message: 'A error happen at the updating avatar profile'}).end();
 
 	User.findOne({ _id: userId, avatarsSrc: { $elemMatch: { avatarId } } }, (findErr, userWithAvatar) => {
 		// If avatar already exist
@@ -329,14 +361,14 @@ export function uploadAvatarS3(req, res) {
 						});
 					}
 
-					return res.status(200).json({message: 'Your avatar has been update', avatarSrc, locationImg: location});
+					return res.status(200).json({message: 'Your avatar has been update', avatarSrc});
 				});
 			// If avatar don't exist
 		} else {
 			User.findOneAndUpdate({_id: userId}, {$push: { avatarsSrc: avatarSrc } }, (err) => {
 				if (err) return res.status(500).json({ message: 'A error happen at the updating avatar profile - avatar don\'t exist', err });
 
-				return res.status(200).json({message: 'Your avatar has been add', avatarSrc, locationImg: location});
+				return res.status(200).json({message: 'Your avatar has been add', avatarSrc});
 			});
 		}
 	});
