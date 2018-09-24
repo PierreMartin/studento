@@ -191,13 +191,8 @@ const upload = multer({
 });
 
 const createUniqueName = (file) => {
-	crypto.pseudoRandomBytes(16, (err, raw) => {
-		if (!err) {
-			let ext = file.originalname && path.extname(file.originalname);
-			if (typeof ext === 'undefined' || ext === '') ext = '.jpg';
-			nameImage = raw.toString('hex') + Date.now() + ext.toLowerCase();
-		}
-	});
+	const ext = (/[^.]+$/.exec(file.originalname.toLowerCase()) && /[^.]+$/.exec(file.originalname.toLowerCase())[0]) || 'jpg';
+	nameImage = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.${ext}`;
 };
 
 // For S3 only
@@ -227,7 +222,7 @@ const uploadS3 = multer({
 		},
 		transforms: [
 			{
-				id: 'thumbnail-1',
+				id: 'thumbnail-150',
 				key: (req, file, cb) => {
 					cb(null, sizes[0] + '_' + nameImage);
 				},
@@ -236,7 +231,7 @@ const uploadS3 = multer({
 				}
 			},
 			{
-				id: 'thumbnail-2',
+				id: 'thumbnail-80',
 				key: (req, file, cb) => {
 					cb(null, sizes[1] + '_' + nameImage);
 				},
@@ -245,7 +240,7 @@ const uploadS3 = multer({
 				}
 			},
 			{
-				id: 'thumbnail-3',
+				id: 'thumbnail-28',
 				key: (req, file, cb) => {
 					cb(null, sizes[2] + '_' + nameImage);
 				},
@@ -331,10 +326,24 @@ export function uploadAvatar(req, res) {
  */
 export function uploadAvatarS3(req, res) {
 	const userId = req.params.userId;
-	const { transforms } = req.file; // transforms[index].key: filename
-	const avatar150 = transforms && transforms[0].key;
-	const avatar80 = transforms && transforms[1].key;
-	const avatar28 = transforms && transforms[2].key;
+	const { transforms } = req.file;
+
+	let avatar150;
+	let avatar80;
+	let avatar28;
+
+	for (let i = 0; i < transforms.length; i++) {
+		if (transforms[i].id === 'thumbnail-150') {
+			avatar150 = transforms[i].key;
+		}
+		if (transforms[i].id === 'thumbnail-80') {
+			avatar80 = transforms[i].key;
+		}
+		if (transforms[i].id === 'thumbnail-28') {
+			avatar28 = transforms[i].key;
+		}
+	}
+
 	const avatarId = parseInt(req.params.avatarId, 10);
 	const avatarSrc = { avatarId, avatar150, avatar80, avatar28 };
 
