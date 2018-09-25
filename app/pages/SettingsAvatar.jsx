@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { uploadAvatarUserAction, avatarMainAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { Button, Grid, Modal, Header, Image, Message } from 'semantic-ui-react';
+import { Button, Grid, Modal, Header, Message, Label } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import { pathImage } from './../../config/app';
@@ -167,13 +167,13 @@ class SettingsAvatar extends Component {
 			const src = avatarObj ? `${pathImage}/${avatarObj.avatar150}` : defaultAvatar150;
 			const isSettableMainAvatar = avatarObj && i !== avatarMainSrc.avatarId;
 			const isMainAvatar = avatarObj && i === avatarMainSrc.avatarId;
-			const label = isMainAvatar ? { content: 'default', ribbon: true } : false;
 
 			nodeItemsAvatar.push(
 				<Grid.Column width={6} key={i} className={cx('dropzone-column')} >
 					<div><strong>Image {i + 1}</strong><br /></div>
 					<Dropzone onDrop={this.dropHandler(i)} multiple={false} accept={'image/*'} className={cx('dropzone-input')} >
-						<Image src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar150')} label={label} />
+						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar150')} />
+						{(isMainAvatar) ? <div className={cx('mainAvatar')}><Label ribbon>Default</Label></div> : ''}
 					</Dropzone>
 
 					{(isSettableMainAvatar) ? <Button basic size="tiny" style={{ margin: '5px' }} onClick={this.handleDefaultAvatar(i)}>Define as default</Button> : ''}
