@@ -81,7 +81,8 @@ heroku logs --tail
 heroku config:set TOTO=salut
 heroku config
 
-
+# mongolab - To connect using the mongo shell:
+mongo ds257732.mlab.com:57732/heroku_463h9sc1 -u <dbuser> -p <dbpassword>
 ```
 
 ### Categories (create the Menu) - See categories.json :

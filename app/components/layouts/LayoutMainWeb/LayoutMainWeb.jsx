@@ -20,7 +20,7 @@ const renderTchatBoxs = (channelsListOpen) => {
 	}
 };
 
-const App = ({ children, channelsListOpen }) => {
+const LayoutMainWeb = ({ children, channelsListOpen }) => {
 	const pathUrl = children.props && children.props.route && children.props.route.path;
 
   return (
@@ -34,7 +34,7 @@ const App = ({ children, channelsListOpen }) => {
   );
 };
 
-App.propTypes = {
+LayoutMainWeb.propTypes = {
   children: PropTypes.object,
 
 	channelsListOpen: PropTypes.shape({
@@ -49,4 +49,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, null)(App);
+export default connect(mapStateToProps, null)(LayoutMainWeb);
