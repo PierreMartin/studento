@@ -17,6 +17,7 @@ import User from './pages/User';
 import Dashboard from './pages/Dashboard';
 import Course from './pages/Course';
 import CourseAddOrEdit from './pages/CourseAddOrEdit';
+import CourseAddOrEditProto from './pages/CourseAddOrEditProto';
 
 
 export default (store) => {
@@ -67,7 +68,7 @@ export default (store) => {
 			</Route>
 
 			<Route component={LayoutMainApp}>
-				<Route path="app/:action/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} onEnter={requireAuth} />
+				<Route path="app/:action/:id" component={CourseAddOrEditProto} fetchData={fetchCourseRequest} onEnter={requireAuth} />
 			</Route>
 		</Route>
   );
