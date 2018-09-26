@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { createCourseAction, updateCourseAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { List, Form, Message, Button } from 'semantic-ui-react';
+import { List, Form, Message, Button, Popup } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import styles from './css/courseAddOrEditProto.scss';
@@ -17,6 +17,7 @@ class CourseAddOrEditProto extends Component {
 		super(props);
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
+		this.goBack = this.goBack.bind(this);
 
 		this.state = {
 			fieldsTyping: {},
@@ -137,6 +138,10 @@ class CourseAddOrEditProto extends Component {
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
 	}
 
+	goBack() {
+		browserHistory.goBack();
+	}
+
 	/**
 	 * Display a error if a field is wrong
 	 * @param {object} missingField - object with true as key if a field is missing
@@ -175,9 +180,10 @@ class CourseAddOrEditProto extends Component {
 					<div className={cx('panel-explorer-container')}>
 						<div className={cx('panel-explorer-nav-bar')}>
 							<Button.Group basic size="small">
-								<Button disabled={isDisabled} icon="bold" />
-								<Button disabled={isDisabled} icon="underline" />
-								<Button disabled={isDisabled} icon="text width" />
+								<Popup trigger={<Button icon="arrow left" onClick={this.goBack} />} content="Go back" />
+								<Popup trigger={<Button icon="file" as={Link} to="/course/create/new" />} content="New file" />
+								{ isEditing && Object.keys(fieldsTyping).length === 0 ? <Button disabled icon="save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" />}
+								<Button disabled={isDisabled} icon="download" />
 							</Button.Group>
 						</div>
 
@@ -214,16 +220,19 @@ class CourseAddOrEditProto extends Component {
 					<div className={cx('editor-container-full')}>
 						<div className={cx('editor-nav-bar')}>
 							<Button.Group basic size="small">
-								<Button disabled={isDisabled} icon="bold" />
-								<Button disabled={isDisabled} icon="underline" />
-								<Button disabled={isDisabled} icon="text width" />
-							</Button.Group>
-
-							<Button.Group basic size="small" style={{ marginLeft: '10px' }}>
-								<Button icon="file" as={Link} to="/course/create/new" />
-								{ isEditing && Object.keys(fieldsTyping).length === 0 ? <Button disabled icon="save" /> : <Button icon="save" onClick={this.handleOnSubmit} />}
-								<Button disabled={isDisabled} icon="upload" />
-								<Button disabled={isDisabled} icon="download" />
+								<Popup trigger={<Button icon="bold" disabled={isDisabled} />} content="bold" />
+								<Popup trigger={<Button icon="italic" disabled={isDisabled} />} content="italic" />
+								<Popup trigger={<Button icon="underline" disabled={isDisabled} />} content="underline" />
+								<Popup trigger={<Button icon="header" disabled={isDisabled} />} content="header" />
+								<Popup trigger={<Button icon="strikethrough" disabled={isDisabled} />} content="strikethrough" />
+								<Popup trigger={<Button icon="unordered list" disabled={isDisabled} />} content="unordered list" />
+								<Popup trigger={<Button icon="ordered list" disabled={isDisabled} />} content="ordered list" />
+								<Popup trigger={<Button icon="check square outline" disabled={isDisabled} />} content="check square outline" />
+								<Popup trigger={<Button icon="quote left" disabled={isDisabled} />} content="quote left" />
+								<Popup trigger={<Button icon="code" disabled={isDisabled} />} content="Add a code snippet" />
+								<Popup trigger={<Button icon="table" disabled={isDisabled} />} content="Add a table" />
+								<Popup trigger={<Button icon="linkify" disabled={isDisabled} />} content="Add a link" />
+								<Popup trigger={<Button icon="file image outline" disabled={isDisabled} />} content="Add image" />
 							</Button.Group>
 						</div>
 
