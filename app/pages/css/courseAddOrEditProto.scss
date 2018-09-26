@@ -1,7 +1,53 @@
-.panel-explorer-container {
+.course-add-or-edit-container {
+  display: flex;
+  flex-direction: row;
 
-}
+  .panel-explorer-container {
+    width: 260px;
+    background-color: rgba(0,0,0,.05);
 
-.panel-preview-container {
+    .panel-explorer-nav-bar {
+      height: 44px;
+      width: 100%;
+      background-color: rgba(0,0,0,.1);
+      border-bottom: 1px solid rgba(0,0,0,.1);
+      padding: 4px;
+    }
 
+    .panel-explorer-tree-folder {
+      padding: 20px;
+    }
+
+    .panel-explorer-properties {
+      padding: 20px;
+      margin-top: 20px;
+    }
+  }
+
+  .editor-container-full {
+    width: 100%;
+
+    .editor-nav-bar {
+      height: 44px;
+      width: 100%;
+      background-color: rgba(0,0,0,.2);
+      border-bottom: 1px solid rgba(0,0,0,.1);
+      padding: 4px;
+    }
+
+    .editor-container {
+      display: flex;
+      flex-direction: row;
+
+      .editor-edition {
+        width: 50%;
+      }
+
+      .editor-preview {
+        width: 50%;
+        background-color: rgba(0,0,0,.1);
+        padding: 20px;
+      }
+    }
+  }
 }

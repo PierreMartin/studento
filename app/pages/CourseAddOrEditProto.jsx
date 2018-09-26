@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { createCourseAction, updateCourseAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { Segment, Form, Message } from 'semantic-ui-react';
+import { List, Form, Message, Button } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import styles from './css/courseAddOrEditProto.scss';
@@ -166,32 +166,82 @@ class CourseAddOrEditProto extends Component {
 		const fields = this.getFieldsVal(this.state.fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
+		const isDisabled = true;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
-				<Segment vertical className={cx('panel-explorer-container')}>Area left</Segment>
+				<div className={cx('course-add-or-edit-container')}>
+					<div className={cx('panel-explorer-container')}>
+						<div className={cx('panel-explorer-nav-bar')}>
+							<Button.Group basic size="small">
+								<Button disabled={isDisabled} icon="bold" />
+								<Button disabled={isDisabled} icon="underline" />
+								<Button disabled={isDisabled} icon="text width" />
+							</Button.Group>
+						</div>
 
-				<Segment vertical>
-					<h4>{ this.state.isEditing ? 'Edit a course' : 'Add a course' }</h4>
+						<div className={cx('panel-explorer-tree-folder')}>
+							<List>
+								<List.Item>
+									<List.Icon name="file text" />
+									<List.Content><List.Header>Course 1</List.Header></List.Content>
+								</List.Item>
 
-					<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
-						<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={this.handleInputChange} />
-						<Form.TextArea label="Description" placeholder="The description of your course..." name="description" value={fields.description || ''} onChange={this.handleInputChange} />
-						<Form.TextArea required label="Content" placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ minHeight: '1000px' }} />
+								<List.Item>
+									<List.Icon name="file text" />
+									<List.Content><List.Header>Course 2</List.Header></List.Content>
+								</List.Item>
+							</List>
+						</div>
 
-						<Form.Group widths="equal">
-							<Form.Select required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
-							{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={this.handleInputChange} /> : ''}
-						</Form.Group>
+						<div className={cx('panel-explorer-properties')}>
+							<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
+								<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={this.handleInputChange} />
+								<Form.TextArea label="Description" placeholder="The description of your course..." name="description" value={fields.description || ''} onChange={this.handleInputChange} />
 
-						<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={this.handleInputChange} />
-						<Message error content={messagesError} />
+								<Form.Select required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
+								{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={this.handleInputChange} /> : ''}
 
-						{ this.state.isEditing && Object.keys(this.state.fieldsTyping).length === 0 ? <Form.Button disabled>Submit</Form.Button> : <Form.Button>Submit</Form.Button>}
-					</Form>
-				</Segment>
+								<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={this.handleInputChange} />
+								<Message error content={messagesError} />
 
-				<Segment vertical className={cx('panel-preview-container')}>Area right</Segment>
+								{ this.state.isEditing && Object.keys(this.state.fieldsTyping).length === 0 ? <Form.Button basic disabled>Save properties</Form.Button> : <Form.Button basic>Save properties</Form.Button>}
+							</Form>
+						</div>
+					</div>
+
+					<div className={cx('editor-container-full')}>
+						<div className={cx('editor-nav-bar')}>
+							<Button.Group basic size="small">
+								<Button disabled={isDisabled} icon="bold" />
+								<Button disabled={isDisabled} icon="underline" />
+								<Button disabled={isDisabled} icon="text width" />
+							</Button.Group>
+
+							<Button.Group basic size="small" style={{ marginLeft: '10px' }}>
+								<Button disabled={isDisabled} icon="file" />
+								<Button disabled={isDisabled} icon="save" />
+								<Button disabled={isDisabled} icon="upload" />
+								<Button disabled={isDisabled} icon="download" />
+							</Button.Group>
+
+							{ this.state.isEditing && Object.keys(this.state.fieldsTyping).length === 0 ? <Button basic disabled size="small" style={{ marginLeft: '10px' }}>Save</Button> : <Button basic size="small" onClick={this.handleOnSubmit} style={{ marginLeft: '10px' }}>Save</Button>}
+						</div>
+
+						<div className={cx('editor-container')}>
+							<div className={cx('editor-edition')}>
+								<Form error={messagesError.props.children.length > 0} size="small">
+									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ minHeight: '1000px' }} />
+									<Message error content={messagesError} />
+								</Form>
+							</div>
+
+							<div className={cx('editor-preview')}>
+								preview here (coming soon)
+							</div>
+						</div>
+					</div>
+				</div>
 			</LayoutPage>
 		);
 	}
