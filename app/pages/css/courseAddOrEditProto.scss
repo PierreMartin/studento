@@ -41,12 +41,18 @@
 
       .editor-edition {
         width: 50%;
+        border-right: 1px solid rgba(0,0,0,.1);
+
+        textarea {
+          font-size: 14px;
+          padding: 20px;
+        }
       }
 
       .editor-preview {
         width: 50%;
-        background-color: rgba(0,0,0,.1);
         padding: 20px;
+        background-color: #fff;
       }
     }
   }

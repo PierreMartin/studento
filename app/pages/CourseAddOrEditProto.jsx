@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
@@ -162,8 +163,8 @@ class CourseAddOrEditProto extends Component {
 
 	render() {
 		const { course, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category, isEditing } = this.state;
-		const fields = this.getFieldsVal(this.state.fieldsTyping, course);
+		const { category, isEditing, fieldsTyping } = this.state;
+		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
 		const isDisabled = true;
@@ -205,7 +206,7 @@ class CourseAddOrEditProto extends Component {
 								<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={this.handleInputChange} />
 								<Message error content={messagesError} />
 
-								{ this.state.isEditing && Object.keys(this.state.fieldsTyping).length === 0 ? <Form.Button basic disabled>Save properties</Form.Button> : <Form.Button basic>Save properties</Form.Button>}
+								{ isEditing && Object.keys(fieldsTyping).length === 0 ? <Form.Button basic disabled>Save properties</Form.Button> : <Form.Button basic>Save properties</Form.Button>}
 							</Form>
 						</div>
 					</div>
@@ -219,13 +220,11 @@ class CourseAddOrEditProto extends Component {
 							</Button.Group>
 
 							<Button.Group basic size="small" style={{ marginLeft: '10px' }}>
-								<Button disabled={isDisabled} icon="file" />
-								<Button disabled={isDisabled} icon="save" />
+								<Button icon="file" as={Link} to="/course/create/new" />
+								{ isEditing && Object.keys(fieldsTyping).length === 0 ? <Button disabled icon="save" /> : <Button icon="save" onClick={this.handleOnSubmit} />}
 								<Button disabled={isDisabled} icon="upload" />
 								<Button disabled={isDisabled} icon="download" />
 							</Button.Group>
-
-							{ this.state.isEditing && Object.keys(this.state.fieldsTyping).length === 0 ? <Button basic disabled size="small" style={{ marginLeft: '10px' }}>Save</Button> : <Button basic size="small" onClick={this.handleOnSubmit} style={{ marginLeft: '10px' }}>Save</Button>}
 						</div>
 
 						<div className={cx('editor-container')}>
@@ -237,7 +236,7 @@ class CourseAddOrEditProto extends Component {
 							</div>
 
 							<div className={cx('editor-preview')}>
-								preview here (coming soon)
+								{ fields.content || '' }
 							</div>
 						</div>
 					</div>

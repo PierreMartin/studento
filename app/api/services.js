@@ -3,7 +3,6 @@ import { apiEndpoint } from './../../config/app';
 
 export function api() {
 	const localClient = restApiClient().withConfig({ baseURL: apiEndpoint });
-	const s3SignUpload = restApiClient().withConfig();
 
 	return {
 		// Courses :
