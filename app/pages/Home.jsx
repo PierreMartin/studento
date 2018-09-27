@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
-import { Button, Container, Header, Icon, Segment, Divider, Input, Dropdown } from 'semantic-ui-react';
+import { Button, Container, Header, Icon, Segment, Divider, Input, Dropdown, Message } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
 import classNames from 'classnames/bind';
@@ -147,6 +147,7 @@ class Home extends Component {
 						<Header as="h1" content="-.-" inverted style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0 }} />
 						<Header as="h2" content="Start to share you courses / knowledges with the world." inverted style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
 						{ !authentification.authenticated && <Button as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }
+						<Message compact icon="info circle" content="Please login (or signup) for test the main features." />
 					</Container>
 				</Segment>
 

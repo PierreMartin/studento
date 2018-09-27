@@ -17,23 +17,32 @@ class CourseAddOrEditProto extends Component {
 		super(props);
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
+		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.goBack = this.goBack.bind(this);
 
 		this.state = {
 			fieldsTyping: {},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
-			category: { lastSelected: null }
+			category: { lastSelected: null },
+			heightDocument: 0
 		};
 	}
 
 	componentDidMount() {
+		this.updateWindowDimensions();
+		window.addEventListener('resize', this.updateWindowDimensions);
 		this.props.fetchCategoriesAction();
+		// this.props.fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
 	}
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.course !== this.props.course) {
 			this.setState({isEditing: this.props.course && typeof this.props.course._id !== 'undefined'});
 		}
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.updateWindowDimensions);
 	}
 
 	getOptionsFormsSelect() {
@@ -104,6 +113,10 @@ class CourseAddOrEditProto extends Component {
 		return fields;
 	}
 
+	updateWindowDimensions() {
+		this.setState({ heightDocument: window.innerHeight });
+	}
+
 	handleOnSubmit(event) {
 		event.preventDefault();
 
@@ -168,7 +181,7 @@ class CourseAddOrEditProto extends Component {
 
 	render() {
 		const { course, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category, isEditing, fieldsTyping } = this.state;
+		const { category, isEditing, fieldsTyping, heightDocument } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
@@ -183,7 +196,7 @@ class CourseAddOrEditProto extends Component {
 								<Popup trigger={<Button icon="arrow left" onClick={this.goBack} />} content="Go back" />
 								<Popup trigger={<Button icon="file" as={Link} to="/course/create/new" />} content="New file" />
 								{ isEditing && Object.keys(fieldsTyping).length === 0 ? <Button disabled icon="save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" />}
-								<Button disabled={isDisabled} icon="download" />
+								<Popup trigger={<Button icon="sticky note outline" as={Link} to={`/course/${course._id}`} />} content="See the course (you must save before)" />
 							</Button.Group>
 						</div>
 
@@ -239,12 +252,12 @@ class CourseAddOrEditProto extends Component {
 						<div className={cx('editor-container')}>
 							<div className={cx('editor-edition')}>
 								<Form error={messagesError.props.children.length > 0} size="small">
-									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ minHeight: '1000px' }} />
+									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ height: (heightDocument - 44) + 'px' }} />
 									<Message error content={messagesError} />
 								</Form>
 							</div>
 
-							<div className={cx('editor-preview')}>
+							<div className={cx('editor-preview')} style={{ height: (heightDocument - 44) + 'px' }}>
 								{ fields.content || '' }
 							</div>
 						</div>

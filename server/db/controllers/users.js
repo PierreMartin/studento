@@ -10,7 +10,7 @@ import User from '../models/user';
 import bcrypt from 'bcrypt-nodejs';
 import { calculateAge } from '../../../toolbox/toolbox';
 
-const numberItemPerPage = 2;
+const numberItemPerPage = 6;
 
 // S3 AWS:
 aws.config.region = 'eu-west-3';
