@@ -1,6 +1,6 @@
 import Course from '../models/courses';
 
-const numberItemPerPage = 6;
+const numberItemPerPage = 12;
 
 
 const requestGetCoursesWithPagination = (res, query, currentCourseId, directionIndex, typeReq) => {

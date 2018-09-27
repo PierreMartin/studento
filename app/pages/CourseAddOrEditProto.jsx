@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
-import { createCourseAction, updateCourseAction } from '../actions/courses';
+import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { List, Form, Message, Button, Popup } from 'semantic-ui-react';
+import { List, Form, Message, Button, Popup, Pagination, Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import styles from './css/courseAddOrEditProto.scss';
@@ -18,21 +18,30 @@ class CourseAddOrEditProto extends Component {
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+		this.handleSelectCourse = this.handleSelectCourse.bind(this);
 		this.goBack = this.goBack.bind(this);
 
 		this.state = {
 			fieldsTyping: {},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
-			heightDocument: 0
+			heightDocument: 0,
+			pagination: {
+				indexPage: 1
+			},
+			clickedCourse: 0
 		};
 	}
 
 	componentDidMount() {
+		const { fetchCategoriesAction, fetchCoursesByFieldAction, userMe } = this.props;
+
+		// Resize element child to 100% height:
 		this.updateWindowDimensions();
 		window.addEventListener('resize', this.updateWindowDimensions);
-		this.props.fetchCategoriesAction();
-		// this.props.fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+
+		fetchCategoriesAction();
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
 	}
 
 	componentDidUpdate(prevProps) {
@@ -151,6 +160,18 @@ class CourseAddOrEditProto extends Component {
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
 	}
 
+	handlePaginationChange = (e, { activePage }) => {
+		this.setState({ pagination: { indexPage: activePage } });
+		const lastActivePage = this.state.pagination.indexPage;
+		if (activePage === lastActivePage) return;
+
+		const { userMe, fetchCoursesByFieldAction, courses } = this.props;
+		const directionIndex = activePage - lastActivePage;
+		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
+
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
+	}
+
 	goBack() {
 		browserHistory.goBack();
 	}
@@ -179,9 +200,42 @@ class CourseAddOrEditProto extends Component {
 		return <ul className={cx('error-message')}>{messagesListNode}</ul>;
 	}
 
+	handleSelectCourse = clickedCourse => () => {
+		this.setState({ clickedCourse });
+	}
+
+	renderCoursesList(courses) {
+		if (courses.length === 0) return;
+
+		return courses.map((course, key) => {
+			const isActive = this.state.clickedCourse === key;
+			return (
+				<List.Item key={key} as={Link} active={isActive} to={`/course/edit/${course._id}`} icon="file text" content={course.title} onClick={this.handleSelectCourse(key)} />
+			);
+		});
+	}
+
+	renderPaginationCoursesList(coursesPagesCount, pagination) {
+		return (
+			<Pagination
+				activePage={pagination.indexPage}
+				boundaryRange={1}
+				siblingRange={1}
+				onPageChange={this.handlePaginationChange}
+				size="tiny"
+				totalPages={coursesPagesCount}
+				ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
+				prevItem={{ content: <Icon name="angle left" />, icon: true }}
+				nextItem={{ content: <Icon name="angle right" />, icon: true }}
+				firstItem={null}
+				lastItem={null}
+			/>
+		);
+	}
+
 	render() {
-		const { course, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category, isEditing, fieldsTyping, heightDocument } = this.state;
+		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
+		const { category, isEditing, fieldsTyping, heightDocument, pagination } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
@@ -201,17 +255,8 @@ class CourseAddOrEditProto extends Component {
 						</div>
 
 						<div className={cx('panel-explorer-tree-folder')}>
-							<List>
-								<List.Item>
-									<List.Icon name="file text" />
-									<List.Content><List.Header>Course 1</List.Header></List.Content>
-								</List.Item>
-
-								<List.Item>
-									<List.Icon name="file text" />
-									<List.Content><List.Header>Course 2</List.Header></List.Content>
-								</List.Item>
-							</List>
+							<List className={cx('panel-explorer-tree-folder-itemslist')} link>{ this.renderCoursesList(courses) }</List>
+							{ coursesPagesCount > 0 && this.renderPaginationCoursesList(coursesPagesCount, pagination) }
 						</div>
 
 						<div className={cx('panel-explorer-properties')}>
@@ -272,8 +317,11 @@ CourseAddOrEditProto.propTypes = {
 	fetchCategoriesAction: PropTypes.func,
 	createCourseAction: PropTypes.func,
 	updateCourseAction: PropTypes.func,
+	fetchCoursesByFieldAction: PropTypes.func,
 	addOrEditMissingField: PropTypes.object,
 	addOrEditFailure: PropTypes.string,
+
+	coursesPagesCount: PropTypes.number,
 
 	course: PropTypes.shape({
 		_id: PropTypes.string,
@@ -284,6 +332,11 @@ CourseAddOrEditProto.propTypes = {
 		content: PropTypes.string,
 		description: PropTypes.string
 	}),
+
+	courses: PropTypes.arrayOf(PropTypes.shape({
+		_id: PropTypes.string,
+		title: PropTypes.string
+	})),
 
 	userMe: PropTypes.shape({
 		_id: PropTypes.string
@@ -300,7 +353,8 @@ CourseAddOrEditProto.propTypes = {
 const mapStateToProps = (state) => {
 	return {
 		course: state.courses.one,
-		// courses: state.courses.all,
+		courses: state.courses.all,
+		coursesPagesCount: state.courses.pagesCount,
 		userMe: state.userMe.data,
 		categories: state.categories.all,
 		addOrEditMissingField: state.courses.addOrEditMissingField,
@@ -308,4 +362,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchCategoriesAction, createCourseAction, updateCourseAction })(CourseAddOrEditProto);
+export default connect(mapStateToProps, { fetchCategoriesAction, createCourseAction, updateCourseAction, fetchCoursesByFieldAction })(CourseAddOrEditProto);
