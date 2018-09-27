@@ -300,6 +300,7 @@ CourseAddOrEditProto.propTypes = {
 const mapStateToProps = (state) => {
 	return {
 		course: state.courses.one,
+		// courses: state.courses.all,
 		userMe: state.userMe.data,
 		categories: state.categories.all,
 		addOrEditMissingField: state.courses.addOrEditMissingField,
