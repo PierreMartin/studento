@@ -17,7 +17,7 @@
     .panel-explorer-tree-folder {
       padding: 20px;
       .panel-explorer-tree-folder-itemslist {
-        height: 260px;
+        min-height: 260px;
 
         a { padding: 3px; }
         a.active-course {

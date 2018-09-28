@@ -146,7 +146,10 @@ class CourseAddOrEdit extends Component {
 			data.createdAt = new Date().toISOString();
 			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
 				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
-				if (courses.length % 12 === 0) fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id }); // 12 => numberItemPerPage setted in controller
+				if (courses.length % 12 === 0) { // 12 => numberItemPerPage setted in controller
+					this.setState({ pagination: { indexPage: 1 } });
+					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+				}
 			});
 		}
 	}
