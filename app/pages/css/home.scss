@@ -8,6 +8,12 @@
 
   .home-header-container {
     margin-top: 100px;
+
+    .signup-button {
+      display: block;
+      width: 160px;
+      margin: auto;
+    }
   }
 }
 
@@ -27,3 +33,4 @@
     input:focus, input:active { background-color: transparent; }
   }
 }
+

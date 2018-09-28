@@ -146,7 +146,7 @@ class Home extends Component {
 					<Container className={cx('home-header-container')}>
 						<Header as="h1" content="-.-" inverted style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0 }} />
 						<Header as="h2" content="Start to share you courses / knowledges with the world." inverted style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
-						{ !authentification.authenticated && <Button as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }
+						{ !authentification.authenticated && <Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }
 						<Message compact icon="info circle" content="Please login (or signup) for test the main features." style={{width: 'auto'}} size="small" />
 					</Container>
 				</Segment>
