@@ -45,6 +45,12 @@
       .editor-edition {
         width: 50%;
         border-right: 1px solid rgba(0,0,0,.1);
+
+        .editor-edition-error-message {
+          position: absolute;
+          bottom: 0;
+        }
+
         form div {
           margin: 0;
           textarea {

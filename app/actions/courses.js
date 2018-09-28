@@ -88,12 +88,13 @@ export function addOrEditMissingField(fields) {
 
 export function createCourseAction(data) {
 	return (dispatch) => {
-		createCourseRequest(data)
+		return createCourseRequest(data)
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch(push('/course/edit/' + res.data.newCourse._id)); // redirection
 					toast.success(res.data.message);
-					return dispatch(addOrEditCourseSuccess(res.data));
+					dispatch(addOrEditCourseSuccess(res.data));
+					return Promise.resolve(res);
 				}
 			})
 			.catch((err) => {
@@ -104,6 +105,7 @@ export function createCourseAction(data) {
 					// Back-end errors to dispay in notification :
 					dispatch(addOrEditCourseFailure(getMessage(err)));
 				}
+				return Promise.reject(err);
 			});
 	};
 }
