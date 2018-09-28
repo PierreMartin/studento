@@ -64,11 +64,14 @@ export function fetchCoursesBySearchAction(fieldSearch) {
 }
 
 /************************ Create or edit course ***********************/
-export function addOrEditCourseSuccess(res) {
+export function addOrEditCourseSuccess(res, isUpdate, coursesPagesCount, indexPagination) {
 	return {
 		type: types.CREATE_OR_EDIT_COURSE_SUCCESS,
 		messageSuccess: res.message,
-		course: res.newCourse
+		course: res.newCourse,
+		isUpdate,
+		coursesPagesCount,
+		indexPagination
 	};
 }
 
@@ -86,14 +89,14 @@ export function addOrEditMissingField(fields) {
 	};
 }
 
-export function createCourseAction(data) {
+export function createCourseAction(data, coursesPagesCount, indexPagination) {
 	return (dispatch) => {
 		return createCourseRequest(data)
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch(push('/course/edit/' + res.data.newCourse._id)); // redirection
 					toast.success(res.data.message);
-					dispatch(addOrEditCourseSuccess(res.data));
+					dispatch(addOrEditCourseSuccess(res.data, false, coursesPagesCount, indexPagination));
 					return Promise.resolve(res);
 				}
 			})
@@ -112,11 +115,12 @@ export function createCourseAction(data) {
 
 export function updateCourseAction(data) {
 	return (dispatch) => {
-		updateCourseRequest(data)
+		return updateCourseRequest(data)
 			.then((res) => {
 				if (res.status === 200) {
 					toast.success(res.data.message);
-					return dispatch(addOrEditCourseSuccess(res.data));
+					dispatch(addOrEditCourseSuccess(res.data, true));
+					return Promise.resolve(res);
 				}
 			})
 			.catch((err) => {
@@ -127,6 +131,7 @@ export function updateCourseAction(data) {
 					// Back-end errors to dispay in notification :
 					dispatch(addOrEditCourseFailure(getMessage(err)));
 				}
+				return Promise.reject(err);
 			});
 	};
 }

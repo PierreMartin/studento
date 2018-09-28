@@ -20,6 +20,22 @@ const all = (state = [], action) => {
 			if (doReverse) return state.reverse();
 			if (clickedColumn) return _.orderBy(state, [s => s[clickedColumn].toLowerCase(), 'create_at']);
 			return state;
+		case types.CREATE_OR_EDIT_COURSE_SUCCESS:
+			// If update:
+			if (action.isUpdate && action.course) {
+				const newStateForAllCourses = JSON.parse(JSON.stringify(state)) || [];
+				for (let i = 0; i < newStateForAllCourses.length; i++) {
+					if (newStateForAllCourses[i]._id === action.course._id) {
+						newStateForAllCourses[i] = action.course;
+						return newStateForAllCourses;
+					}
+				}
+			} else if (action.course && ((action.coursesPagesCount === 0 || action.coursesPagesCount === 1) || action.coursesPagesCount === action.indexPagination) && state.length < 12) {  // 12 => numberItemPerPage setted in controller
+				// If new course:
+				return [...state, action.course]; // add the data only if we here on the last page for handle the pagination
+			}
+
+			return state;
 		default:
 			return state;
 	}

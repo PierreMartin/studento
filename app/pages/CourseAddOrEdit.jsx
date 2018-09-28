@@ -128,19 +128,26 @@ class CourseAddOrEdit extends Component {
 	handleOnSubmit(event) {
 		event.preventDefault();
 
-		const { course, userMe, createCourseAction, updateCourseAction } = this.props;
+		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction } = this.props;
+		const { pagination } = this.state;
+		const indexPagination = pagination.indexPage || 0;
 		const data = {};
 
 		if (this.state.isEditing) {
 			data.fields = this.state.fieldsTyping;
 			data.modifiedAt = new Date().toISOString();
 			data.courseId = course._id;
-			updateCourseAction(data).then(() => this.setState({ category: { lastSelected: null }, fieldsTyping: {} }));
+			updateCourseAction(data).then(() => {
+				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+			});
 		} else {
 			data.fields = this.getFieldsVal(this.state.fieldsTyping, course);
 			data.userMeId = userMe._id;
 			data.createdAt = new Date().toISOString();
-			createCourseAction(data).then(() => this.setState({ category: { lastSelected: null }, fieldsTyping: {} }));
+			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
+				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+				if (courses.length % 12 === 0) fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id }); // 12 => numberItemPerPage setted in controller
+			});
 		}
 	}
 
