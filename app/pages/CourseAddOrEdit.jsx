@@ -211,7 +211,7 @@ class CourseAddOrEdit extends Component {
 		return courses.map((c, key) => {
 			const isActive = course._id === c._id; // course = the current if editing
 			return (
-				<List.Item key={c._id} as={Link} active={isActive} to={`/course/edit/${c._id}`} icon="file text" content={c.title} onClick={this.handleSelectCourse(key)} />
+				<List.Item key={c._id} as={Link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={`/course/edit/${c._id}`} icon="file text" content={c.title} onClick={this.handleSelectCourse(key)} />
 			);
 		});
 	}

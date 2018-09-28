@@ -18,6 +18,13 @@
       padding: 20px;
       .panel-explorer-tree-folder-itemslist {
         height: 260px;
+
+        a { padding: 3px; }
+        a.active-course {
+          background-color: #a9a9a9;
+          color: #fff;
+          border-radius: 2px;
+        }
       }
     }
 
