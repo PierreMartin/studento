@@ -6,4 +6,4 @@ Demo : https://studento.herokuapp.com (please wait 30s to wake up the the Heroku
 
 /!\ The project is under active development
 
-© 2017 Pierre MARTIN.
+© 2018 Pierre MARTIN.
