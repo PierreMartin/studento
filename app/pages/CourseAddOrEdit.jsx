@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction } from '../actions/courses';
+import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { List, Form, Message, Button, Popup, Pagination, Icon } from 'semantic-ui-react';
@@ -45,7 +45,12 @@ class CourseAddOrEdit extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.course !== this.props.course) {
-			this.setState({isEditing: this.props.course && typeof this.props.course._id !== 'undefined'});
+			this.setState({isEditing: this.props.course && typeof this.props.course._id !== 'undefined', fieldsTyping: {} });
+
+			const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
+
+			// Empty the errors when change course or create a new:
+			if ((Object.keys(addOrEditMissingField).length > 0) || addOrEditFailure.length > 0) emptyErrorsAction();
 		}
 	}
 
@@ -323,6 +328,7 @@ CourseAddOrEdit.propTypes = {
 	createCourseAction: PropTypes.func,
 	updateCourseAction: PropTypes.func,
 	fetchCoursesByFieldAction: PropTypes.func,
+	emptyErrorsAction: PropTypes.func,
 	addOrEditMissingField: PropTypes.object,
 	addOrEditFailure: PropTypes.string,
 
@@ -367,4 +373,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchCategoriesAction, createCourseAction, updateCourseAction, fetchCoursesByFieldAction })(CourseAddOrEdit);
+export default connect(mapStateToProps, { fetchCategoriesAction, createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction })(CourseAddOrEdit);

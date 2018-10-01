@@ -26,6 +26,9 @@ export const RATING_COURSE_FAILURE = 'RATING_COURSE_FAILURE';
 // Empty the course in store
 export const EMPTY_COURSE = 'EMPTY_COURSE';
 
+// Empty the errors messages at create/edit course:
+export const EMPTY_ERRORS_EDITING_COURSE = 'EMPTY_ERRORS_EDITING_COURSE';
+
 // Do sort on courses list:
 export const DO_SORT_COURSES = 'DO_SORT_COURSES';
 

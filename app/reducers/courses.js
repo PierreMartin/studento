@@ -64,6 +64,7 @@ const addOrEditMissingField = (state = {}, action) => {
 			if (action.fields) return action.fields;
 			return state;
 		case types.CREATE_OR_EDIT_COURSE_SUCCESS:
+		case types.EMPTY_ERRORS_EDITING_COURSE:
 			return {};
 		default:
 			return state;
@@ -76,6 +77,7 @@ const addOrEditFailure = (state = '', action) => {
 			if (action.messageError) return action.messageError;
 			return state;
 		case types.CREATE_OR_EDIT_COURSE_SUCCESS:
+		case types.EMPTY_ERRORS_EDITING_COURSE:
 			return '';
 		default:
 			return state;

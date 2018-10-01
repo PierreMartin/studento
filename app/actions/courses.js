@@ -136,6 +136,10 @@ export function updateCourseAction(data) {
 	};
 }
 
+export function emptyErrorsAction() {
+	return { type: types.EMPTY_ERRORS_EDITING_COURSE };
+}
+
 /************************ Delete course ***********************/
 export function deleteCourseSuccess(res, course) {
 	return {
