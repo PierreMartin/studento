@@ -295,7 +295,7 @@ class CourseAddOrEdit extends Component {
 								<Popup trigger={<Button icon="strikethrough" disabled={isDisabled} />} content="strikethrough" />
 								<Popup trigger={<Button icon="unordered list" disabled={isDisabled} />} content="unordered list" />
 								<Popup trigger={<Button icon="ordered list" disabled={isDisabled} />} content="ordered list" />
-								<Popup trigger={<Button icon="check square outline" disabled={isDisabled} />} content="check square outline" />
+								<Popup trigger={<Button icon="check square" disabled={isDisabled} />} content="check square" />
 								<Popup trigger={<Button icon="quote left" disabled={isDisabled} />} content="quote left" />
 								<Popup trigger={<Button icon="code" disabled={isDisabled} />} content="Add a code snippet" />
 								<Popup trigger={<Button icon="table" disabled={isDisabled} />} content="Add a table" />
