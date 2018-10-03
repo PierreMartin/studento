@@ -32,6 +32,7 @@ class Course extends Component {
 
 	componentDidMount() {
 		// Forced to put this here because of sanitize:
+		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.getContentSanitized();  })    ET remove  componentDidUpdate()
 		this.getContentSanitized();
 	}
 

@@ -63,7 +63,7 @@ class CourseAddOrEdit extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.course !== this.props.course) {
-			const fields = this.getFieldsVal(this.state.fieldsTyping, this.props.course);
+			const fields = this.getFieldsVal({}, this.props.course);
 			this.setState({
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 				fieldsTyping: {},
