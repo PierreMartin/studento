@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import marked from 'marked';
+import DOMPurify from 'dompurify';
 import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
@@ -20,7 +22,20 @@ class CourseAddOrEdit extends Component {
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleSelectCourse = this.handleSelectCourse.bind(this);
 
+		marked.setOptions({
+			renderer: new marked.Renderer(),
+			pedantic: false,
+			gfm: true,
+			tables: true,
+			breaks: true,
+			sanitize: true,
+			smartLists: true,
+			smartypants: false,
+			xhtml: false
+		});
+
 		this.state = {
+			contentMarkedSanitized: '',
 			fieldsTyping: {},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
@@ -41,11 +56,19 @@ class CourseAddOrEdit extends Component {
 
 		fetchCategoriesAction();
 		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+
+		// Forced to put this here because of sanitize:
+		this.getContentSanitized();
 	}
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.course !== this.props.course) {
-			this.setState({isEditing: this.props.course && typeof this.props.course._id !== 'undefined', fieldsTyping: {} });
+			const fields = this.getFieldsVal(this.state.fieldsTyping, this.props.course);
+			this.setState({
+				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
+				fieldsTyping: {},
+				contentMarkedSanitized: DOMPurify.sanitize(marked(fields.content || ''))
+			});
 
 			const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
 
@@ -56,6 +79,14 @@ class CourseAddOrEdit extends Component {
 
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.updateWindowDimensions);
+	}
+
+	getContentSanitized() {
+		const { course } = this.props;
+		const { fieldsTyping } = this.state;
+
+		const fields = this.getFieldsVal(fieldsTyping, course);
+		this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(fields.content || '')) });
 	}
 
 	getOptionsFormsSelect() {
@@ -169,6 +200,13 @@ class CourseAddOrEdit extends Component {
 			});
 		}
 
+		if (field.name === 'content') {
+			return this.setState({
+				contentMarkedSanitized: DOMPurify.sanitize(marked(field.value || '')),
+				fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}
+			});
+		}
+
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
 	}
 
@@ -244,7 +282,7 @@ class CourseAddOrEdit extends Component {
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category, isEditing, fieldsTyping, heightDocument, pagination } = this.state;
+		const { category, isEditing, fieldsTyping, heightDocument, pagination, contentMarkedSanitized } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
@@ -259,7 +297,7 @@ class CourseAddOrEdit extends Component {
 							<Button.Group basic size="small">
 								<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
 								<Popup trigger={<Button icon="file" as={Link} to="/course/create/new" />} content="New course" />
-								{ isEditing && Object.keys(fieldsTyping).length === 0 ? <Button disabled icon="save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" />}
+								{ isEditing && Object.keys(fieldsTyping).length === 0 ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" />}
 								{ !isEditing ? <Button disabled icon="sticky note outline" /> : <Popup trigger={<Button icon="sticky note outline" as={Link} to={`/course/${course._id}`} />} content="See the course (you should save before)" /> }
 							</Button.Group>
 						</div>
@@ -312,9 +350,7 @@ class CourseAddOrEdit extends Component {
 								</Form>
 							</div>
 
-							<div className={cx('editor-preview')} style={{ height: (heightDocument - 44) + 'px' }}>
-								{ fields.content || '' }
-							</div>
+							<div className={cx('editor-preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} />
 						</div>
 					</div>
 				</div>
