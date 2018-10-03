@@ -31,9 +31,17 @@ class Course extends Component {
 	}
 
 	componentDidMount() {
-		const { course } = this.props;
-
 		// Forced to put this here because of sanitize:
+		this.getContentSanitized();
+	}
+
+	componentDidUpdate(prevProps) {
+		const { course } = this.props;
+		if (prevProps.course !== course) this.getContentSanitized();
+	}
+
+	getContentSanitized() {
+		const { course } = this.props;
 		this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(course.content || '')) });
 	}
 
