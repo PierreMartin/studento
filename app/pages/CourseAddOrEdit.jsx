@@ -34,6 +34,8 @@ class CourseAddOrEdit extends Component {
 			xhtml: false
 		});
 
+		this.editorCm = null;
+
 		this.state = {
 			contentMarkedSanitized: '',
 			fieldsTyping: {},
@@ -48,7 +50,9 @@ class CourseAddOrEdit extends Component {
 	}
 
 	componentDidMount() {
-		const { fetchCategoriesAction, fetchCoursesByFieldAction, userMe } = this.props;
+		const { fetchCategoriesAction, fetchCoursesByFieldAction, userMe, course } = this.props;
+		const { fieldsTyping } = this.state;
+		const fields = this.getFieldsVal(fieldsTyping, course);
 
 		// Resize element child to 100% height:
 		this.updateWindowDimensions();
@@ -57,13 +61,35 @@ class CourseAddOrEdit extends Component {
 		fetchCategoriesAction();
 		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
 
-		// Forced to put this here because of sanitize:
-		this.getContentSanitized();
+		// ##################################### CodeMirror #####################################
+		const CodeMirror = require('codemirror/lib/codemirror');
+		require('codemirror/lib/codemirror.css');
+		require('codemirror/theme/dracula.css');
+		require('codemirror/mode/markdown/markdown');
+
+		this.editorCm = CodeMirror(this.refEditor, {
+			value: fields.content || '# Title',
+			lineNumbers: true,
+			theme: 'dracula',
+			mode: 'markdown'
+		});
+
+		// TODO faire ca dans un handleOnClickToolBar:
+		this.refEditor.addEventListener('mouseup', () => {
+			const selection = this.editorCm.getSelection();
+			this.editorCm.replaceSelection('**' + selection + '**');
+		});
+
+		// Forced to put this here because of DOMPurify:
+		this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(fields.content || '')) });
 	}
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.course !== this.props.course) {
 			const fields = this.getFieldsVal({}, this.props.course);
+
+			this.editorCm.setValue(fields.content);
+
 			this.setState({
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 				fieldsTyping: {},
@@ -79,14 +105,6 @@ class CourseAddOrEdit extends Component {
 
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.updateWindowDimensions);
-	}
-
-	getContentSanitized() {
-		const { course } = this.props;
-		const { fieldsTyping } = this.state;
-
-		const fields = this.getFieldsVal(fieldsTyping, course);
-		this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(fields.content || '')) });
 	}
 
 	getOptionsFormsSelect() {
@@ -344,6 +362,7 @@ class CourseAddOrEdit extends Component {
 
 						<div className={cx('editor-container')}>
 							<div className={cx('editor-edition')}>
+								<div ref={(el) => { this.refEditor = el; }} />
 								<Form error={addOrEditMissingField.content} size="small">
 									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ height: (heightDocument - 44) + 'px' }} />
 									<Message error content="the content is required" className={cx('editor-edition-error-message')} />
