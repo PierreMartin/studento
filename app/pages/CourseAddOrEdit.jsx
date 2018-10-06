@@ -74,11 +74,13 @@ class CourseAddOrEdit extends Component {
 			mode: 'markdown'
 		});
 
-		// TODO faire ca dans un handleOnClickToolBar:
+		// TODO FAIRE ca dans un handleOnClickToolBar:
 		this.refEditor.addEventListener('mouseup', () => {
 			const selection = this.editorCm.getSelection();
 			this.editorCm.replaceSelection('**' + selection + '**');
 		});
+
+		// TODO FAIRE onChange={this.handleInputChange} en addEventListener
 
 		// Forced to put this here because of DOMPurify:
 		this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(fields.content || '')) });
@@ -363,10 +365,12 @@ class CourseAddOrEdit extends Component {
 						<div className={cx('editor-container')}>
 							<div className={cx('editor-edition')}>
 								<div ref={(el) => { this.refEditor = el; }} />
+								{/*
 								<Form error={addOrEditMissingField.content} size="small">
 									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ height: (heightDocument - 44) + 'px' }} />
 									<Message error content="the content is required" className={cx('editor-edition-error-message')} />
 								</Form>
+								*/}
 							</div>
 
 							<div className={cx('editor-preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} />
