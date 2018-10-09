@@ -1,3 +1,7 @@
 .cm-s-dracula.CodeMirror, .cm-s-dracula .CodeMirror-gutters {
     height: 800px;
 }
+
+.CodeMirror {
+    border: 1px solid #eee;
+}

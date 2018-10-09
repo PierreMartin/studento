@@ -64,26 +64,98 @@ class CourseAddOrEdit extends Component {
 		// ##################################### CodeMirror #####################################
 		const CodeMirror = require('codemirror/lib/codemirror');
 		require('codemirror/lib/codemirror.css');
-		require('codemirror/theme/dracula.css');
+
+		// Addon JS:
+		require('codemirror/addon/dialog/dialog.js');
+		require('codemirror/addon/search/matchesonscrollbar.js');
+		require('codemirror/addon/fold/foldgutter.js');
+		require('codemirror/addon/fold/foldcode.js');
+		require('codemirror/addon/fold/brace-fold.js');
+		require('codemirror/addon/fold/comment-fold.js');
+		require('codemirror/addon/fold/indent-fold.js');
+		require('codemirror/addon/fold/markdown-fold.js');
+		require('codemirror/addon/fold/xml-fold.js');
+		require('codemirror/addon/edit/closebrackets.js');
+
+		// Addon CSS:
+		require('codemirror/addon/dialog/dialog.css');
+		require('codemirror/addon/search/matchesonscrollbar.css');
+		require('codemirror/addon/fold/foldgutter.css');
+
+		// Theme CSS:
+		require('codemirror/theme/pastel-on-dark.css');
+
+		// keyMap:
+		require('codemirror/keymap/sublime.js');
+
+		// modes:
 		require('codemirror/mode/markdown/markdown');
+		require('codemirror/mode/javascript/javascript');
+		require('codemirror/mode/php/php');
+		require('codemirror/mode/gfm/gfm');
+		// TODO require les autres
 
-		this.editorCm = CodeMirror(this.refEditor, {
-			value: fields.content || '# Title',
+		this.editorCm = CodeMirror.fromTextArea(this.refEditor, {
+			// value: fields.content, // already set by the textarea
 			lineNumbers: true,
-			theme: 'dracula',
-			mode: 'markdown'
+			codeFold: true,
+			placeholder: 'Write you course here...',
+			dragDrop: false,
+			autofocus: true,
+			readOnly: false,
+			matchTags: false,
+			tabSize: 4,
+			indentUnit: 4,
+			lineWrapping: true,
+			viewportMargin: Infinity,
+			cursorBlinkRate: 0,
+			extraKeys: {
+				'Ctrl-Space': 'autocomplete',
+				'Ctrl-Q': cm => cm.foldCode(cm.getCursor())
+			},
+			keyMap: 'sublime',
+
+			foldGutter: true,
+			gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+			matchBrackets: true,
+			indentWithTabs: true,
+			styleActiveLine: true,
+			styleSelectedText: true,
+			autoCloseBrackets: true,
+			autoCloseTags: true,
+			showTrailingSpace: true,
+			// highlightSelectionMatches : ( (!settings.matchWordHighlight) ? false : { showToken: (settings.matchWordHighlight === "onselected") ? false : /\w/ } )
+
+			theme: 'pastel-on-dark',
+			mode: 'gfm'
 		});
 
-		// TODO FAIRE ca dans un handleOnClickToolBar:
+		// TODO FAIRE ca dans un handleClickToolbar:
 		this.refEditor.addEventListener('mouseup', () => {
-			const selection = this.editorCm.getSelection();
-			this.editorCm.replaceSelection('**' + selection + '**');
+			// const selection = this.editorCm.getSelection();
+			// this.editorCm.replaceSelection('**' + selection + '**');
 		});
 
-		// TODO FAIRE onChange={this.handleInputChange} en addEventListener
+		// handleEditorChange:
+		this.editorCm.on('change', () => {
+			const oldStateTyping = this.state.fieldsTyping;
+			const valueEditor = this.editorCm.getValue();
 
-		// Forced to put this here because of DOMPurify:
-		this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(fields.content || '')) });
+			this.setState({
+				contentMarkedSanitized: DOMPurify.sanitize(marked(valueEditor || '')),
+				fieldsTyping: {...oldStateTyping, ...{content: valueEditor}}
+			});
+		});
+
+		// Forced to put this here because of DOMPurify: // TODO remove DOMPurify por le momment, trop lourd
+		this.setState(
+			{
+				contentMarkedSanitized: DOMPurify.sanitize(marked(fields.content || '')),
+				heightDocument: window.innerHeight
+			},
+			() => {
+				this.editorCm.setSize('auto', this.state.heightDocument - 44);
+			});
 	}
 
 	componentDidUpdate(prevProps) {
@@ -220,12 +292,14 @@ class CourseAddOrEdit extends Component {
 			});
 		}
 
+		/*
 		if (field.name === 'content') {
 			return this.setState({
 				contentMarkedSanitized: DOMPurify.sanitize(marked(field.value || '')),
 				fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}
 			});
 		}
+		*/
 
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
 	}
@@ -364,13 +438,13 @@ class CourseAddOrEdit extends Component {
 
 						<div className={cx('editor-container')}>
 							<div className={cx('editor-edition')}>
-								<div ref={(el) => { this.refEditor = el; }} />
-								{/*
 								<Form error={addOrEditMissingField.content} size="small">
+									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
+									{/*
 									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ height: (heightDocument - 44) + 'px' }} />
 									<Message error content="the content is required" className={cx('editor-edition-error-message')} />
+									*/}
 								</Form>
-								*/}
 							</div>
 
 							<div className={cx('editor-preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} />
