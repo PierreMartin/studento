@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import marked from 'marked';
-import DOMPurify from 'dompurify';
+// import DOMPurify from 'dompurify';
 import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
@@ -37,7 +37,6 @@ class CourseAddOrEdit extends Component {
 		this.editorCm = null;
 
 		this.state = {
-			contentMarkedSanitized: '',
 			fieldsTyping: {},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
@@ -50,9 +49,7 @@ class CourseAddOrEdit extends Component {
 	}
 
 	componentDidMount() {
-		const { fetchCategoriesAction, fetchCoursesByFieldAction, userMe, course } = this.props;
-		const { fieldsTyping } = this.state;
-		const fields = this.getFieldsVal(fieldsTyping, course);
+		const { fetchCategoriesAction, fetchCoursesByFieldAction, userMe } = this.props;
 
 		// Resize element child to 100% height:
 		this.updateWindowDimensions();
@@ -141,21 +138,10 @@ class CourseAddOrEdit extends Component {
 			const oldStateTyping = this.state.fieldsTyping;
 			const valueEditor = this.editorCm.getValue();
 
-			this.setState({
-				contentMarkedSanitized: DOMPurify.sanitize(marked(valueEditor || '')),
-				fieldsTyping: {...oldStateTyping, ...{content: valueEditor}}
-			});
+			this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} });
 		});
 
-		// Forced to put this here because of DOMPurify: // TODO remove DOMPurify por le momment, trop lourd
-		this.setState(
-			{
-				contentMarkedSanitized: DOMPurify.sanitize(marked(fields.content || '')),
-				heightDocument: window.innerHeight
-			},
-			() => {
-				this.editorCm.setSize('auto', this.state.heightDocument - 44);
-			});
+		this.editorCm.setSize('auto', window.innerHeight - 44);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -166,8 +152,7 @@ class CourseAddOrEdit extends Component {
 
 			this.setState({
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
-				fieldsTyping: {},
-				contentMarkedSanitized: DOMPurify.sanitize(marked(fields.content || ''))
+				fieldsTyping: {}
 			});
 
 			const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
@@ -294,10 +279,7 @@ class CourseAddOrEdit extends Component {
 
 		/*
 		if (field.name === 'content') {
-			return this.setState({
-				contentMarkedSanitized: DOMPurify.sanitize(marked(field.value || '')),
-				fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}
-			});
+			return this.setState({ fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}} });
 		}
 		*/
 
@@ -376,7 +358,7 @@ class CourseAddOrEdit extends Component {
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category, isEditing, fieldsTyping, heightDocument, pagination, contentMarkedSanitized } = this.state;
+		const { category, isEditing, fieldsTyping, heightDocument, pagination } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
@@ -447,7 +429,7 @@ class CourseAddOrEdit extends Component {
 								</Form>
 							</div>
 
-							<div className={cx('editor-preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} />
+							<div className={cx('editor-preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: marked(fields.content || '') }} />
 						</div>
 					</div>
 				</div>
