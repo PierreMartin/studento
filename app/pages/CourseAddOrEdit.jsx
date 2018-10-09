@@ -439,7 +439,7 @@ class CourseAddOrEdit extends Component {
 						<div className={cx('editor-container')}>
 							<div className={cx('editor-edition')}>
 								<Form error={addOrEditMissingField.content} size="small">
-									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
+									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" defaultValue={fields.content} />
 									{/*
 									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ height: (heightDocument - 44) + 'px' }} />
 									<Message error content="the content is required" className={cx('editor-edition-error-message')} />
