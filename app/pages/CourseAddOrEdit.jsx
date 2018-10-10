@@ -23,6 +23,7 @@ class CourseAddOrEdit extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleSelectCourse = this.handleSelectCourse.bind(this);
+		this.handleClickToolbar = this.handleClickToolbar.bind(this);
 
 		this.editorCm = null;
 
@@ -131,12 +132,6 @@ class CourseAddOrEdit extends Component {
 
 			theme: 'pastel-on-dark',
 			mode: 'gfm'
-		});
-
-		// TODO FAIRE ca dans un handleClickToolbar:
-		this.refEditor.addEventListener('mouseup', () => {
-			// const selection = this.editorCm.getSelection();
-			// this.editorCm.replaceSelection('**' + selection + '**');
 		});
 
 		// handleEditorChange:
@@ -327,9 +322,32 @@ class CourseAddOrEdit extends Component {
 		return <ul className={cx('error-message')}>{messagesListNode}</ul>;
 	}
 
+	handleClickToolbar = clickedButton => () => {
+		console.log('== ', clickedButton);
+		const selection = this.editorCm.getSelection();
+		// if (selection === '**' + selection + '**') { switch case ... -> this.editorCm.replaceSelection(selection); }
+
+		switch (clickedButton) {
+			case 'bold':
+				if (selection === '') break;
+				this.editorCm.replaceSelection('**' + selection + '**');
+				break;
+			case 'italic':
+				if (selection === '') break;
+				this.editorCm.replaceSelection('*' + selection + '*');
+				break;
+			case 'header':
+				this.editorCm.replaceSelection('# ' + selection);
+				break;
+			default:
+				break;
+		}
+		// TODO finir ca
+	};
+
 	handleSelectCourse = clickedCourse => () => {
 		this.setState({ clickedCourse });
-	}
+	};
 
 	renderCoursesList(courses) {
 		if (courses.length === 0) return;
@@ -373,7 +391,6 @@ class CourseAddOrEdit extends Component {
 		const buttonsToolbar = [
 			{ icon: 'bold', isDisabled: false, content: 'Bold' },
 			{ icon: 'italic', isDisabled: false, content: 'Italic' },
-			{ icon: 'underline', isDisabled: false, content: 'Underline'},
 			{ icon: 'header', isDisabled: true, content: 'Header' },
 			{ icon: 'strikethrough', isDisabled: true, content: 'Strikethrough' },
 			{ icon: 'unordered list', isDisabled: true, content: 'Unordered list' },
@@ -423,7 +440,7 @@ class CourseAddOrEdit extends Component {
 					<div className={cx('editor-container-full')}>
 						<div className={cx('editor-toolbar')}>
 							<Button.Group basic size="small">
-								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic inverted disabled={button.isDisabled} className={cx('button')} />} content={button.content} key={key} />)) }
+								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic inverted disabled={button.isDisabled} className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
 							</Button.Group>
 						</div>
 
