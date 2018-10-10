@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './css/coursePage.scss';
+import stylesCourse from './../../pages/css/course.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(stylesCourse);
 
 const CoursePage = ({ contentMarkedSanitized }) => {
 	return (

@@ -37,12 +37,22 @@
   .editor-container-full {
     width: 100%;
 
-    .editor-nav-bar {
+    .editor-toolbar {
       height: 44px;
       width: 100%;
-      background-color: rgba(0,0,0,.2);
-      border-bottom: 1px solid rgba(0,0,0,.1);
+      background-color: #1A1A17;
+      border-bottom: 1px solid #8F938F;
       padding: 4px;
+
+      .button {
+        border: none;
+        box-shadow: 0 0 0 1px #8F938F inset !important;
+        color: #8F938F !important;
+        &:hover {
+          background: none !important;
+          box-shadow: 0 0 0 1px #fff inset !important;
+        }
+      }
     }
 
     .editor-container {
@@ -65,13 +75,6 @@
             padding: 20px;
           }
         }
-      }
-
-      .editor-preview {
-        width: 50%;
-        padding: 20px;
-        background-color: #fff;
-        overflow: scroll;
       }
     }
   }

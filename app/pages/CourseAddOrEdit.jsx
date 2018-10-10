@@ -10,9 +10,10 @@ import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { List, Form, Message, Button, Popup, Pagination, Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
-import styles from './css/courseAddOrEditProto.scss';
+import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
+import stylesCourse from './css/course.scss';
 
-const cx = classNames.bind({...styles, ...stylesMain});
+const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse, ...stylesCourse});
 
 class CourseAddOrEdit extends Component {
 	constructor(props) {
@@ -363,7 +364,22 @@ class CourseAddOrEdit extends Component {
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
 		const isDisableButtonSubmit = isEditing && !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && !fieldsTyping.isPrivate;
-		const isDisabled = true;
+
+		const buttonsToolbar = [
+			{ icon: 'bold', isDisabled: false, content: 'Bold' },
+			{ icon: 'italic', isDisabled: false, content: 'Italic' },
+			{ icon: 'underline', isDisabled: false, content: 'Underline'},
+			{ icon: 'header', isDisabled: true, content: 'Header' },
+			{ icon: 'strikethrough', isDisabled: true, content: 'Strikethrough' },
+			{ icon: 'unordered list', isDisabled: true, content: 'Unordered list' },
+			{ icon: 'ordered list', isDisabled: true, content: 'Ordered list' },
+			{ icon: 'check square', isDisabled: true, content: 'Check list' },
+			{ icon: 'quote left', isDisabled: true, content: 'Quote left' },
+			{ icon: 'code', isDisabled: true, content: 'Add a code' },
+			{ icon: 'table', isDisabled: true, content: 'Add a table' },
+			{ icon: 'linkify', isDisabled: true, content: 'Add a link' },
+			{ icon: 'file image outline', isDisabled: true, content: 'Add image' }
+		];
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -400,21 +416,9 @@ class CourseAddOrEdit extends Component {
 					</div>
 
 					<div className={cx('editor-container-full')}>
-						<div className={cx('editor-nav-bar')}>
+						<div className={cx('editor-toolbar')}>
 							<Button.Group basic size="small">
-								<Popup trigger={<Button icon="bold" disabled={isDisabled} />} content="bold" />
-								<Popup trigger={<Button icon="italic" disabled={isDisabled} />} content="italic" />
-								<Popup trigger={<Button icon="underline" disabled={isDisabled} />} content="underline" />
-								<Popup trigger={<Button icon="header" disabled={isDisabled} />} content="header" />
-								<Popup trigger={<Button icon="strikethrough" disabled={isDisabled} />} content="strikethrough" />
-								<Popup trigger={<Button icon="unordered list" disabled={isDisabled} />} content="unordered list" />
-								<Popup trigger={<Button icon="ordered list" disabled={isDisabled} />} content="ordered list" />
-								<Popup trigger={<Button icon="check square" disabled={isDisabled} />} content="check square" />
-								<Popup trigger={<Button icon="quote left" disabled={isDisabled} />} content="quote left" />
-								<Popup trigger={<Button icon="code" disabled={isDisabled} />} content="Add a code snippet" />
-								<Popup trigger={<Button icon="table" disabled={isDisabled} />} content="Add a table" />
-								<Popup trigger={<Button icon="linkify" disabled={isDisabled} />} content="Add a link" />
-								<Popup trigger={<Button icon="file image outline" disabled={isDisabled} />} content="Add image" />
+								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic inverted disabled={button.isDisabled} className={cx('button')} />} content={button.content} key={key} />)) }
 							</Button.Group>
 						</div>
 
@@ -429,7 +433,7 @@ class CourseAddOrEdit extends Component {
 								</Form>
 							</div>
 
-							<div className={cx('editor-preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: marked(fields.content || '') }} />
+							<div className={cx('container-page', 'preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: marked(fields.content || '') }} />
 						</div>
 					</div>
 				</div>

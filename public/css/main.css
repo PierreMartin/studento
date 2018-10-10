@@ -2,6 +2,10 @@
 This file is used for overload the existant css
 */
 
+.ui.text.container {
+    max-width: none !important;
+}
+
 .ui.inverted.segment, .ui.primary.inverted.segment {
     background-color: #141619 !important;
 }
