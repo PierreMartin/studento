@@ -100,6 +100,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- Web Workers + highlightjs for fast load
 - gerer la gestion de la génératon du contenu des cours en .md
 - améliorer la requet d'upate de l'user comme pour les courses
 

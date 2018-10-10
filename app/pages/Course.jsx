@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import marked from 'marked';
 import DOMPurify from 'dompurify';
+import hljs from 'highlight.js';
 import { Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CourseInfos from '../components/CourseInfos/CourseInfos';
@@ -13,10 +14,21 @@ class Course extends Component {
 	constructor(props) {
 		super(props);
 
+		this.state = {
+			contentMarkedSanitized: ''
+		};
+	}
+
+	componentDidMount() {
+		// ##################################### highlight.js #####################################
+		require('highlight.js/styles/paraiso-dark.css');
 		marked.setOptions({
 			renderer: new marked.Renderer(),
 			pedantic: false,
 			gfm: true,
+			highlight: (code) => {
+				return hljs.highlightAuto(code).value;
+			},
 			tables: true,
 			breaks: true,
 			sanitize: true,
@@ -25,13 +37,7 @@ class Course extends Component {
 			xhtml: false
 		});
 
-		this.state = {
-			contentMarkedSanitized: ''
-		};
-	}
-
-	componentDidMount() {
-		// Forced to put this here because of sanitize:
+		// ##################################### CodeMirror #####################################
 		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.getContentSanitized();  })    ET remove  componentDidUpdate()
 		this.getContentSanitized();
 	}

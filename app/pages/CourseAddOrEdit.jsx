@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import marked from 'marked';
 // import DOMPurify from 'dompurify';
+import hljs from 'highlight.js';
 import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
@@ -22,18 +23,6 @@ class CourseAddOrEdit extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleSelectCourse = this.handleSelectCourse.bind(this);
-
-		marked.setOptions({
-			renderer: new marked.Renderer(),
-			pedantic: false,
-			gfm: true,
-			tables: true,
-			breaks: true,
-			sanitize: true,
-			smartLists: true,
-			smartypants: false,
-			xhtml: false
-		});
 
 		this.editorCm = null;
 
@@ -58,6 +47,23 @@ class CourseAddOrEdit extends Component {
 
 		fetchCategoriesAction();
 		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+
+		// ##################################### highlight.js #####################################
+		require('highlight.js/styles/paraiso-dark.css');
+		marked.setOptions({
+			renderer: new marked.Renderer(),
+			pedantic: false,
+			gfm: true,
+			highlight: (code) => {
+				return hljs.highlightAuto(code).value;
+			},
+			tables: true,
+			breaks: true,
+			sanitize: true,
+			smartLists: true,
+			smartypants: false,
+			xhtml: false
+		});
 
 		// ##################################### CodeMirror #####################################
 		const CodeMirror = require('codemirror/lib/codemirror');
@@ -106,7 +112,6 @@ class CourseAddOrEdit extends Component {
 			indentUnit: 4,
 			lineWrapping: true,
 			viewportMargin: Infinity,
-			cursorBlinkRate: 0,
 			extraKeys: {
 				'Ctrl-Space': 'autocomplete',
 				'Ctrl-Q': cm => cm.foldCode(cm.getCursor())
