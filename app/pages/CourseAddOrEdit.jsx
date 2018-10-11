@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import marked from 'marked';
 // import DOMPurify from 'dompurify';
-import hljs from 'highlight.js';
+import hljs from 'highlight.js/lib/highlight.js';
 import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
@@ -26,6 +26,7 @@ class CourseAddOrEdit extends Component {
 		this.handleClickToolbar = this.handleClickToolbar.bind(this);
 
 		this.editorCm = null;
+		this.timerHighlightPreview = null;
 
 		this.state = {
 			fieldsTyping: {},
@@ -50,14 +51,29 @@ class CourseAddOrEdit extends Component {
 		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
 
 		// ##################################### highlight.js #####################################
+		hljs.registerLanguage('scss', require('highlight.js/lib/languages/scss'));
+		hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'));
+		hljs.registerLanguage('java', require('highlight.js/lib/languages/java'));
+		hljs.registerLanguage('php', require('highlight.js/lib/languages/php'));
+		hljs.registerLanguage('css', require('highlight.js/lib/languages/css'));
+		hljs.registerLanguage('cpp', require('highlight.js/lib/languages/cpp'));
+		hljs.registerLanguage('ruby', require('highlight.js/lib/languages/ruby'));
+		hljs.registerLanguage('scala', require('highlight.js/lib/languages/scala'));
+		hljs.registerLanguage('haml', require('highlight.js/lib/languages/haml'));
+		hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'));
+		hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
+		hljs.registerLanguage('sql', require('highlight.js/lib/languages/sql'));
+		hljs.registerLanguage('go', require('highlight.js/lib/languages/go'));
+		hljs.registerLanguage('htmlbars', require('highlight.js/lib/languages/htmlbars'));
+		hljs.registerLanguage('json', require('highlight.js/lib/languages/json'));
+		hljs.registerLanguage('less', require('highlight.js/lib/languages/less'));
+		hljs.registerLanguage('mathematica', require('highlight.js/lib/languages/mathematica'));
+
 		require('highlight.js/styles/paraiso-dark.css');
 		marked.setOptions({
 			renderer: new marked.Renderer(),
 			pedantic: false,
 			gfm: true,
-			highlight: (code) => {
-				return hljs.highlightAuto(code).value;
-			},
 			tables: true,
 			breaks: true,
 			sanitize: true,
@@ -65,6 +81,8 @@ class CourseAddOrEdit extends Component {
 			smartypants: false,
 			xhtml: false
 		});
+
+		setTimeout(() => hljs.initHighlighting(), 1000);
 
 		// ##################################### CodeMirror #####################################
 		const CodeMirror = require('codemirror/lib/codemirror');
@@ -98,7 +116,18 @@ class CourseAddOrEdit extends Component {
 		require('codemirror/mode/javascript/javascript');
 		require('codemirror/mode/php/php');
 		require('codemirror/mode/gfm/gfm');
-		// TODO require les autres
+		require('codemirror/mode/python/python');
+		require('codemirror/mode/ruby/ruby');
+		require('codemirror/mode/sass/sass');
+		require('codemirror/mode/shell/shell');
+		require('codemirror/mode/sql/sql');
+		require('codemirror/mode/stylus/stylus');
+		require('codemirror/mode/xml/xml');
+		require('codemirror/mode/coffeescript/coffeescript');
+		require('codemirror/mode/css/css');
+		require('codemirror/mode/cmake/cmake');
+		require('codemirror/mode/htmlmixed/htmlmixed');
+		require('codemirror/mode/mathematica/mathematica');
 
 		this.editorCm = CodeMirror.fromTextArea(this.refEditor, {
 			// value: fields.content, // already set by the textarea
@@ -139,6 +168,13 @@ class CourseAddOrEdit extends Component {
 			const oldStateTyping = this.state.fieldsTyping;
 			const valueEditor = this.editorCm.getValue();
 
+			// Re highlight code:
+			clearTimeout(this.timerHighlightPreview);
+			this.timerHighlightPreview = setTimeout(() => {
+				const code = this.refPreview.querySelectorAll('pre code');
+				for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
+			}, 1000);
+
 			this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} });
 		});
 
@@ -146,6 +182,7 @@ class CourseAddOrEdit extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
+		// Change pages:
 		if (prevProps.course !== this.props.course) {
 			const fields = this.getFieldsVal({}, this.props.course);
 
@@ -455,7 +492,7 @@ class CourseAddOrEdit extends Component {
 								</Form>
 							</div>
 
-							<div className={cx('container-page', 'preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: marked(fields.content || '') }} />
+							<div className={cx('container-page', 'preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: marked(fields.content || '') }} ref={(el) => { this.refPreview = el; }} />
 						</div>
 					</div>
 				</div>
