@@ -28,6 +28,7 @@ class CourseAddOrEdit extends Component {
 
 		this.editorCm = null;
 		this.timerHighlightPreview = null;
+		this.timerRenderPreview = null;
 
 		this.state = {
 			fieldsTyping: {},
@@ -152,6 +153,7 @@ class CourseAddOrEdit extends Component {
 		this.editorCm.on('change', () => {
 			const oldStateTyping = this.state.fieldsTyping;
 			const valueEditor = this.editorCm.getValue();
+			const isBigFile = valueEditor.length >= 3000;
 
 			// Re highlight code:
 			clearTimeout(this.timerHighlightPreview);
@@ -160,7 +162,12 @@ class CourseAddOrEdit extends Component {
 				for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
 			}, 1000);
 
-			this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} });
+			clearTimeout(this.timerRenderPreview);
+			this.timerRenderPreview = setTimeout(() => {
+				if (isBigFile) this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} });
+			}, 200);
+
+			if (!isBigFile) this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} });
 		});
 
 		this.editorCm.setSize('auto', window.innerHeight - 44);
