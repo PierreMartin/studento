@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import marked from 'marked';
 // import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
+import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
@@ -50,26 +51,10 @@ class CourseAddOrEdit extends Component {
 		fetchCategoriesAction();
 		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
 
-		// ##################################### highlight.js #####################################
-		hljs.registerLanguage('scss', require('highlight.js/lib/languages/scss'));
-		hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'));
-		hljs.registerLanguage('java', require('highlight.js/lib/languages/java'));
-		hljs.registerLanguage('php', require('highlight.js/lib/languages/php'));
-		hljs.registerLanguage('css', require('highlight.js/lib/languages/css'));
-		hljs.registerLanguage('cpp', require('highlight.js/lib/languages/cpp'));
-		hljs.registerLanguage('ruby', require('highlight.js/lib/languages/ruby'));
-		hljs.registerLanguage('scala', require('highlight.js/lib/languages/scala'));
-		hljs.registerLanguage('haml', require('highlight.js/lib/languages/haml'));
-		hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'));
-		hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
-		hljs.registerLanguage('sql', require('highlight.js/lib/languages/sql'));
-		hljs.registerLanguage('go', require('highlight.js/lib/languages/go'));
-		hljs.registerLanguage('htmlbars', require('highlight.js/lib/languages/htmlbars'));
-		hljs.registerLanguage('json', require('highlight.js/lib/languages/json'));
-		hljs.registerLanguage('less', require('highlight.js/lib/languages/less'));
-		hljs.registerLanguage('mathematica', require('highlight.js/lib/languages/mathematica'));
+		// Load highlight.js Languages:
+		hljsLoadLanguages(hljs);
 
-		require('highlight.js/styles/paraiso-dark.css');
+		// ##################################### Marked #####################################
 		marked.setOptions({
 			renderer: new marked.Renderer(),
 			pedantic: false,
