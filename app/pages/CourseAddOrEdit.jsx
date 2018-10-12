@@ -352,14 +352,33 @@ class CourseAddOrEdit extends Component {
 	}
 
 	handleClickToolbar = clickedButton => () => {
-		console.log('== ', clickedButton);
+		// inputBox.focus(); // Focus on codeMirror
+
 		const selection = this.editorCm.getSelection();
-		// if (selection === '**' + selection + '**') { switch case ... -> this.editorCm.replaceSelection(selection); }
+		const start = this.editorCm.doc.sel.ranges[0].anchor;
+		const end = this.editorCm.doc.sel.ranges[0].head;
 
 		switch (clickedButton) {
 			case 'bold':
-				if (selection === '') break;
-				this.editorCm.replaceSelection('**' + selection + '**');
+				const chunk = {};
+				chunk.before = this.editorCm.getRange({ line: 0, ch: 0 }, start);
+				chunk.after = this.editorCm.getRange(end, { line: this.editorCm.lineCount() + 1, ch: 0 });
+
+				const starsBefore = /(\**$)/.exec(chunk.before)[0];
+				const starsAfter = /(^\**)/.exec(chunk.after)[0];
+
+				// If already bolded - remove stars:
+				if (starsBefore === '**' && starsAfter === '**') {
+					chunk.before = chunk.before.replace(window.RegExp('[*]{' + 2 + '}$', ''), '');
+					chunk.after = chunk.after.replace(window.RegExp('^[*]{' + 2 + '}', ''), '');
+					this.editorCm.setValue(chunk.before + selection + chunk.after);
+				} else if (selection !== '') {
+					// If first bolded - add stars:
+					this.editorCm.replaceSelection('**' + selection + '**');
+				} else {
+					break;
+				}
+
 				break;
 			case 'italic':
 				if (selection === '') break;
