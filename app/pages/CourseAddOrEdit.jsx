@@ -351,71 +351,110 @@ class CourseAddOrEdit extends Component {
 		return <ul className={cx('error-message')}>{messagesListNode}</ul>;
 	}
 
-	handleClickToolbar = clickedButton => () => {
+	setStyleSelectable(param) {
 		// init:
 		const chunk = {};
 		chunk.selection = this.editorCm.getSelection();
+		if (chunk.selection === '') return;
+
 		const selPosStart = this.editorCm.doc.sel.ranges[0].anchor;
 		const selPosEnd = this.editorCm.doc.sel.ranges[0].head;
 		const valuePosStart = { line: 0, ch: 0 };
 		const valuePosEnd = { line: this.editorCm.lineCount() + 1, ch: 0 };
-		let haveCharBefore = false;
-		let haveCharAfter = false;
-		let numberChars = 0;
-		let regexBefore;
-		let regexAfter;
+		const numberChars = param.numberChars;
+		const char = param.char;
 
+		chunk.before = this.editorCm.getRange(valuePosStart, selPosStart);
+		chunk.after = this.editorCm.getRange(selPosEnd, valuePosEnd);
+
+		const regexBefore = window.RegExp('[' + char + ']{' + numberChars + '}$', '');
+		const regexAfter = window.RegExp('^[' + char + ']{' + numberChars + '}', '');
+
+		const haveCharBefore = regexBefore.test(chunk.before);
+		const haveCharAfter = regexAfter.test(chunk.after);
+
+		// If already styled - remove style:
+		if (haveCharBefore && haveCharAfter) {
+			chunk.before = chunk.before.replace(regexBefore, '');
+			chunk.after = chunk.after.replace(regexAfter, '');
+			this.editorCm.setValue(chunk.before + chunk.selection + chunk.after);
+
+			// Re set selection:
+			selPosStart.ch -= numberChars;
+			selPosEnd.ch -= numberChars;
+			this.editorCm.setSelection(selPosStart, selPosEnd);
+		} else {
+			// If first styled - add style:
+			let charsToAdd = '';
+			for (let i = 0; i < numberChars; i++) charsToAdd += char;
+			this.editorCm.replaceSelection(charsToAdd + chunk.selection + charsToAdd);
+
+			// Re set selection:
+			selPosStart.ch += numberChars;
+			selPosEnd.ch += numberChars;
+			this.editorCm.setSelection(selPosStart, selPosEnd);
+		}
+	}
+
+	setStyleOnLine(param) {
+		// init:
+		const chunk = {};
+		const selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
+		const selPosEnd = Object.assign({}, this.editorCm.doc.sel.ranges[0].head);
+		const valuePosStart = { line: 0, ch: 0 };
+		const valuePosEnd = { line: this.editorCm.lineCount() + 1, ch: 0 };
+		const char = param.char;
+
+		chunk.line = this.editorCm.getLine(selPosStart.line);
+		if (!chunk.line || chunk.line === '') return;
+
+		const selPosStartClone = Object.assign({}, selPosStart);
+		const selPosEndClone = Object.assign({}, selPosEnd);
+		if (selPosStart.line > 0) selPosStartClone.line--;
+		if (selPosStart.line < this.editorCm.lineCount() - 1) selPosEndClone.line++;
+
+		chunk.beforeTheLine = this.editorCm.getRange(valuePosStart, selPosStartClone);
+		chunk.afterTheLine = this.editorCm.getRange(selPosEndClone, valuePosEnd);
+
+		const regex = window.RegExp('^[' + char + ']', '');
+		const haveCharInLine = regex.test(chunk.line);
+
+		// If already styled - remove style:
+		if (haveCharInLine) {
+			chunk.line = chunk.line.replace(regex, '').trim();
+			this.editorCm.setValue(chunk.beforeTheLine + chunk.line + chunk.afterTheLine);
+		} else {
+			// If first styled - add style:
+			selPosStart.ch = 0;
+			this.editorCm.replaceRange('> ', selPosStart);
+		}
+	}
+
+	handleClickToolbar = clickedButton => () => {
 		this.editorCm.focus();
 
 		switch (clickedButton) {
 			case 'bold':
-				if (chunk.selection === '') return;
-				// this.setStyle({ chars: '*', numberChars: 2 });
-				numberChars = 2;
-
-				chunk.before = this.editorCm.getRange(valuePosStart, selPosStart);
-				chunk.after = this.editorCm.getRange(selPosEnd, valuePosEnd);
-
-				regexBefore = window.RegExp('[*]{' + numberChars + '}$', '');
-				regexAfter = window.RegExp('^[*]{' + numberChars + '}', '');
-
-				haveCharBefore = regexBefore.test(chunk.before);
-				haveCharAfter = regexAfter.test(chunk.after);
-
-				// If already bolded - remove stars:
-				if (haveCharBefore && haveCharAfter) {
-					chunk.before = chunk.before.replace(regexBefore, '');
-					chunk.after = chunk.after.replace(regexAfter, '');
-					this.editorCm.setValue(chunk.before + chunk.selection + chunk.after);
-
-					// Re set selection:
-					selPosStart.ch -= numberChars;
-					selPosEnd.ch -= numberChars;
-					this.editorCm.setSelection(selPosStart, selPosEnd);
-				} else {
-					// If first bolded - add stars:
-					let charsToAdd = '';
-					for (let i = 0; i < numberChars; i++) charsToAdd += '*';
-					this.editorCm.replaceSelection(charsToAdd + chunk.selection + charsToAdd);
-
-					// Re set selection:
-					selPosStart.ch += numberChars;
-					selPosEnd.ch += numberChars;
-					this.editorCm.setSelection(selPosStart, selPosEnd);
-				}
-
+				this.setStyleSelectable({ type: 'bold', char: '*', numberChars: 2 });
 				break;
 			case 'italic':
-				if (chunk.selection === '') break;
-				this.editorCm.replaceSelection('*' + chunk.selection + '*');
+				this.setStyleSelectable({ type: 'italic', char: '*', numberChars: 1 });
+				break;
+			case 'quote left':
+				this.setStyleOnLine({ type: 'quote left', char: '> ' });
+				break;
+			case 'unordered list':
+				this.setStyleOnLine({ type: 'unordered list', char: '- ' });
+				break;
+			case 'ordered list':
+				this.setStyleOnLine({ type: 'ordered list', char: '1. ' });
 				break;
 			case 'header':
-				this.editorCm.replaceSelection('# ' + chunk.selection);
+				this.setStyleOnLine({ type: 'h1', char: '# ' });
 				break;
 			default:
 				break;
 		}
-		// TODO finir ca
 	};
 
 	handleSelectCourse = clickedCourse => () => {
@@ -466,11 +505,11 @@ class CourseAddOrEdit extends Component {
 			{ icon: 'italic', isDisabled: false, content: 'Italic' },
 			{ icon: 'header', isDisabled: true, content: 'Header' },
 			{ icon: 'strikethrough', isDisabled: true, content: 'Strikethrough' },
-			{ icon: 'unordered list', isDisabled: true, content: 'Unordered list' },
-			{ icon: 'ordered list', isDisabled: true, content: 'Ordered list' },
-			{ icon: 'check square', isDisabled: true, content: 'Check list' },
-			{ icon: 'quote left', isDisabled: true, content: 'Quote left' },
-			{ icon: 'code', isDisabled: true, content: 'Add a code' },
+			{ icon: 'unordered list', isDisabled: false, content: 'Unordered list' },
+			{ icon: 'ordered list', isDisabled: false, content: 'Ordered list' },
+			{ icon: 'check square', isDisabled: false, content: 'Check list' },
+			{ icon: 'quote left', isDisabled: false, content: 'Quote left' },
+			{ icon: 'code', isDisabled: false, content: 'Add a code' },
 			{ icon: 'table', isDisabled: true, content: 'Add a table' },
 			{ icon: 'linkify', isDisabled: true, content: 'Add a link' },
 			{ icon: 'file image outline', isDisabled: true, content: 'Add image' }
