@@ -100,7 +100,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- voir pagedown pour buttons
 - Améliorer perfs
 - gerer la gestion de la génératon du contenu des cours en .md
 - améliorer la requet d'upate de l'user comme pour les courses

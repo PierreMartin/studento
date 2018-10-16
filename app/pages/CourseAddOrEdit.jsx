@@ -352,40 +352,65 @@ class CourseAddOrEdit extends Component {
 	}
 
 	handleClickToolbar = clickedButton => () => {
-		// inputBox.focus(); // Focus on codeMirror
+		// init:
+		const chunk = {};
+		chunk.selection = this.editorCm.getSelection();
+		const selPosStart = this.editorCm.doc.sel.ranges[0].anchor;
+		const selPosEnd = this.editorCm.doc.sel.ranges[0].head;
+		const valuePosStart = { line: 0, ch: 0 };
+		const valuePosEnd = { line: this.editorCm.lineCount() + 1, ch: 0 };
+		let haveCharBefore = false;
+		let haveCharAfter = false;
+		let numberChars = 0;
+		let regexBefore;
+		let regexAfter;
 
-		const selection = this.editorCm.getSelection();
-		const start = this.editorCm.doc.sel.ranges[0].anchor;
-		const end = this.editorCm.doc.sel.ranges[0].head;
+		this.editorCm.focus();
 
 		switch (clickedButton) {
 			case 'bold':
-				const chunk = {};
-				chunk.before = this.editorCm.getRange({ line: 0, ch: 0 }, start);
-				chunk.after = this.editorCm.getRange(end, { line: this.editorCm.lineCount() + 1, ch: 0 });
+				if (chunk.selection === '') return;
+				// this.setStyle({ chars: '*', numberChars: 2 });
+				numberChars = 2;
 
-				const starsBefore = /(\**$)/.exec(chunk.before)[0];
-				const starsAfter = /(^\**)/.exec(chunk.after)[0];
+				chunk.before = this.editorCm.getRange(valuePosStart, selPosStart);
+				chunk.after = this.editorCm.getRange(selPosEnd, valuePosEnd);
+
+				regexBefore = window.RegExp('[*]{' + numberChars + '}$', '');
+				regexAfter = window.RegExp('^[*]{' + numberChars + '}', '');
+
+				haveCharBefore = regexBefore.test(chunk.before);
+				haveCharAfter = regexAfter.test(chunk.after);
 
 				// If already bolded - remove stars:
-				if (starsBefore === '**' && starsAfter === '**') {
-					chunk.before = chunk.before.replace(window.RegExp('[*]{' + 2 + '}$', ''), '');
-					chunk.after = chunk.after.replace(window.RegExp('^[*]{' + 2 + '}', ''), '');
-					this.editorCm.setValue(chunk.before + selection + chunk.after);
-				} else if (selection !== '') {
-					// If first bolded - add stars:
-					this.editorCm.replaceSelection('**' + selection + '**');
+				if (haveCharBefore && haveCharAfter) {
+					chunk.before = chunk.before.replace(regexBefore, '');
+					chunk.after = chunk.after.replace(regexAfter, '');
+					this.editorCm.setValue(chunk.before + chunk.selection + chunk.after);
+
+					// Re set selection:
+					selPosStart.ch -= numberChars;
+					selPosEnd.ch -= numberChars;
+					this.editorCm.setSelection(selPosStart, selPosEnd);
 				} else {
-					break;
+					// If first bolded - add stars:
+					let charsToAdd = '';
+					for (let i = 0; i < numberChars; i++) charsToAdd += '*';
+					this.editorCm.replaceSelection(charsToAdd + chunk.selection + charsToAdd);
+
+					// Re set selection:
+					selPosStart.ch += numberChars;
+					selPosEnd.ch += numberChars;
+					this.editorCm.setSelection(selPosStart, selPosEnd);
 				}
 
 				break;
 			case 'italic':
-				if (selection === '') break;
-				this.editorCm.replaceSelection('*' + selection + '*');
+				if (chunk.selection === '') break;
+				this.editorCm.replaceSelection('*' + chunk.selection + '*');
 				break;
 			case 'header':
-				this.editorCm.replaceSelection('# ' + selection);
+				this.editorCm.replaceSelection('# ' + chunk.selection);
 				break;
 			default:
 				break;
