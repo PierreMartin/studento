@@ -406,6 +406,7 @@ class CourseAddOrEdit extends Component {
 		const valuePosStart = { line: 0, ch: 0 };
 		const valuePosEnd = { line: this.editorCm.lineCount() + 1, ch: 0 };
 		const char = param.char;
+		const type = param.type;
 		const dirAsc = selPosStart.line <= selPosEnd.line;
 		let k = selPosStart.line;
 
@@ -417,7 +418,7 @@ class CourseAddOrEdit extends Component {
 			chunk.line.reverse();
 		}
 
-		if (!chunk.line[0] || chunk.line[0] === '') return;
+		if (typeof chunk.line[0] === 'undefined') return;
 
 		const selPosStartClone = Object.assign({}, selPosStart);
 		const selPosEndClone = Object.assign({}, selPosEnd);
@@ -435,7 +436,10 @@ class CourseAddOrEdit extends Component {
 			chunk.afterTheLine = this.editorCm.getRange(selPosStartClone, valuePosEnd);
 		}
 
-		const regex = window.RegExp('^' + char, '');
+		let regex = window.RegExp('^' + char, '');
+		if (type === 'check square') {
+			regex = window.RegExp(/^- \[x] /, '');
+		}
 
 		let haveCharInLine = false;
 		for (let l = 0; l < chunk.line.length; l++) {
@@ -484,6 +488,13 @@ class CourseAddOrEdit extends Component {
 			case 'italic':
 				this.setStyleSelectable({ type: 'italic', char: '*', numberChars: 1 });
 				break;
+			case 'header':
+				// this.openModalSetStyle({ type: 'header', char: '#' });
+				this.setStyleOnLine({ type: 'header', char: '# ' });
+				break;
+			case 'strikethrough':
+				this.setStyleSelectable({ type: 'strikethrough', char: '~', numberChars: 2 });
+				break;
 			case 'quote left':
 				this.setStyleOnLine({ type: 'quote left', char: '> ' });
 				break;
@@ -493,8 +504,8 @@ class CourseAddOrEdit extends Component {
 			case 'ordered list':
 				this.setStyleOnLine({ type: 'ordered list', char: '1. ' });
 				break;
-			case 'header':
-				this.setStyleOnLine({ type: 'h1', char: '# ' });
+			case 'check square':
+				this.setStyleOnLine({ type: 'check square', char: '- [x] ' });
 				break;
 			default:
 				break;
