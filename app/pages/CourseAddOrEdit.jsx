@@ -410,23 +410,29 @@ class CourseAddOrEdit extends Component {
 
 		const selPosStartClone = Object.assign({}, selPosStart);
 		const selPosEndClone = Object.assign({}, selPosEnd);
-		if (selPosStart.line > 0) selPosStartClone.line--;
-		if (selPosStart.line < this.editorCm.lineCount() - 1) selPosEndClone.line++;
+		selPosEndClone.line++;
+		selPosEndClone.ch = 0;
+		selPosStartClone.ch = 0;
 
 		chunk.beforeTheLine = this.editorCm.getRange(valuePosStart, selPosStartClone);
 		chunk.afterTheLine = this.editorCm.getRange(selPosEndClone, valuePosEnd);
 
-		const regex = window.RegExp('^[' + char + ']', '');
+		const regex = window.RegExp('^' + char, '');
 		const haveCharInLine = regex.test(chunk.line);
 
 		// If already styled - remove style:
 		if (haveCharInLine) {
 			chunk.line = chunk.line.replace(regex, '').trim();
-			this.editorCm.setValue(chunk.beforeTheLine + chunk.line + chunk.afterTheLine);
+			this.editorCm.setValue(chunk.beforeTheLine + chunk.line + '\n' + chunk.afterTheLine);
+
+			// Re set selection:
+			selPosStart.ch -= char.length;
+			selPosEnd.ch -= char.length;
+			this.editorCm.setSelection(selPosStart, selPosEnd);
 		} else {
 			// If first styled - add style:
 			selPosStart.ch = 0;
-			this.editorCm.replaceRange('> ', selPosStart);
+			this.editorCm.replaceRange(char, selPosStart);
 		}
 	}
 
@@ -503,8 +509,8 @@ class CourseAddOrEdit extends Component {
 		const buttonsToolbar = [
 			{ icon: 'bold', isDisabled: false, content: 'Bold' },
 			{ icon: 'italic', isDisabled: false, content: 'Italic' },
-			{ icon: 'header', isDisabled: true, content: 'Header' },
-			{ icon: 'strikethrough', isDisabled: true, content: 'Strikethrough' },
+			{ icon: 'header', isDisabled: false, content: 'Header' },
+			{ icon: 'strikethrough', isDisabled: false, content: 'Strikethrough' },
 			{ icon: 'unordered list', isDisabled: false, content: 'Unordered list' },
 			{ icon: 'ordered list', isDisabled: false, content: 'Ordered list' },
 			{ icon: 'check square', isDisabled: false, content: 'Check list' },
