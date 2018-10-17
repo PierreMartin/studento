@@ -399,31 +399,56 @@ class CourseAddOrEdit extends Component {
 	setStyleOnLine(param) {
 		// init:
 		const chunk = {};
+		chunk.line = [];
+		chunk.lines = '';
 		const selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
 		const selPosEnd = Object.assign({}, this.editorCm.doc.sel.ranges[0].head);
 		const valuePosStart = { line: 0, ch: 0 };
 		const valuePosEnd = { line: this.editorCm.lineCount() + 1, ch: 0 };
 		const char = param.char;
+		const dirAsc = selPosStart.line <= selPosEnd.line;
+		let k = selPosStart.line;
 
-		chunk.line = this.editorCm.getLine(selPosStart.line);
-		if (!chunk.line || chunk.line === '') return;
+		// Get chunks lines:
+		if (dirAsc) {
+			for (k; k <= selPosEnd.line; k++) { chunk.line.push(this.editorCm.getLine(k)); }
+		} else {
+			for (k; k >= selPosEnd.line; k--) { chunk.line.push(this.editorCm.getLine(k)); }
+			chunk.line.reverse();
+		}
+
+		if (!chunk.line[0] || chunk.line[0] === '') return;
 
 		const selPosStartClone = Object.assign({}, selPosStart);
 		const selPosEndClone = Object.assign({}, selPosEnd);
-		selPosEndClone.line++;
+
+		// Get chunks before / after line:
 		selPosEndClone.ch = 0;
 		selPosStartClone.ch = 0;
-
-		chunk.beforeTheLine = this.editorCm.getRange(valuePosStart, selPosStartClone);
-		chunk.afterTheLine = this.editorCm.getRange(selPosEndClone, valuePosEnd);
+		if (selPosStartClone.line <= selPosEndClone.line) {
+			selPosEndClone.line++;
+			chunk.beforeTheLine = this.editorCm.getRange(valuePosStart, selPosStartClone);
+			chunk.afterTheLine = this.editorCm.getRange(selPosEndClone, valuePosEnd);
+		} else {
+			selPosStartClone.line++;
+			chunk.beforeTheLine = this.editorCm.getRange(valuePosStart, selPosEndClone);
+			chunk.afterTheLine = this.editorCm.getRange(selPosStartClone, valuePosEnd);
+		}
 
 		const regex = window.RegExp('^' + char, '');
-		const haveCharInLine = regex.test(chunk.line);
+
+		let haveCharInLine = false;
+		for (let l = 0; l < chunk.line.length; l++) {
+			haveCharInLine = regex.test(chunk.line[l]);
+			if (haveCharInLine) break;
+		}
 
 		// If already styled - remove style:
 		if (haveCharInLine) {
-			chunk.line = chunk.line.replace(regex, '').trim();
-			this.editorCm.setValue(chunk.beforeTheLine + chunk.line + '\n' + chunk.afterTheLine);
+			for (let i = 0; i < chunk.line.length; i++) {
+				chunk.lines += chunk.line[i].replace(regex, '').trim() + '\n';
+			}
+			this.editorCm.setValue(chunk.beforeTheLine + chunk.lines + chunk.afterTheLine);
 
 			// Re set selection:
 			selPosStart.ch -= char.length;
@@ -432,7 +457,20 @@ class CourseAddOrEdit extends Component {
 		} else {
 			// If first styled - add style:
 			selPosStart.ch = 0;
-			this.editorCm.replaceRange(char, selPosStart);
+
+			let j = selPosStart.line;
+
+			if (dirAsc) {
+				for (j; j <= selPosEnd.line; j++) {
+					selPosStart.line = j;
+					this.editorCm.replaceRange(char, selPosStart);
+				}
+			} else {
+				for (j; j >= selPosEnd.line; j--) {
+					selPosStart.line = j;
+					this.editorCm.replaceRange(char, selPosStart);
+				}
+			}
 		}
 	}
 
