@@ -9,7 +9,7 @@ import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { List, Form, Message, Button, Popup, Pagination, Icon } from 'semantic-ui-react';
+import { List, Form, Message, Button, Popup, Pagination, Icon, Modal, Header } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -26,9 +26,15 @@ class CourseAddOrEdit extends Component {
 		this.handleSelectCourse = this.handleSelectCourse.bind(this);
 		this.handleClickToolbar = this.handleClickToolbar.bind(this);
 
+		// modal:
+		this.handleOpenModalSetStyle = this.handleOpenModalSetStyle.bind(this);
+		this.handleCloseModalSetStyle = this.handleCloseModalSetStyle.bind(this);
+		this.handleSubmitModalSetStyle = this.handleSubmitModalSetStyle.bind(this);
+
 		this.editorCm = null;
 		this.timerHighlightPreview = null;
 		this.timerRenderPreview = null;
+		this.CodeMirror = null;
 
 		this.state = {
 			fieldsTyping: {},
@@ -38,7 +44,8 @@ class CourseAddOrEdit extends Component {
 			pagination: {
 				indexPage: 1
 			},
-			clickedCourse: 0
+			clickedCourse: 0,
+			openModalSetStyle: {}
 		};
 	}
 
@@ -71,7 +78,7 @@ class CourseAddOrEdit extends Component {
 		setTimeout(() => hljs.initHighlighting(), 1000);
 
 		// ##################################### CodeMirror #####################################
-		const CodeMirror = require('codemirror/lib/codemirror');
+		this.CodeMirror = require('codemirror/lib/codemirror');
 		require('codemirror/lib/codemirror.css');
 
 		// Addon JS:
@@ -115,7 +122,7 @@ class CourseAddOrEdit extends Component {
 		require('codemirror/mode/htmlmixed/htmlmixed');
 		require('codemirror/mode/mathematica/mathematica');
 
-		this.editorCm = CodeMirror.fromTextArea(this.refEditor, {
+		this.editorCm = this.CodeMirror.fromTextArea(this.refEditor, {
 			// value: fields.content, // already set by the textarea
 			lineNumbers: true,
 			codeFold: true,
@@ -396,6 +403,52 @@ class CourseAddOrEdit extends Component {
 		}
 	}
 
+	handleCloseModalSetStyle() {
+		this.setState({ openModalSetStyle: {} });
+	}
+
+	handleOpenModalSetStyle(params) {
+		this.setState({ openModalSetStyle: params });
+		if (params.type === 'code') {
+			/*
+			this.editorCm = this.CodeMirror.fromTextArea(this.refEditor, {
+				lineNumbers: true,
+				codeFold: true,
+				placeholder: 'Write you course here...',
+				dragDrop: false,
+				autofocus: true,
+				readOnly: false,
+				matchTags: false,
+				tabSize: 4,
+				indentUnit: 4,
+				lineWrapping: true,
+				viewportMargin: Infinity,
+				extraKeys: {
+					'Ctrl-Space': 'autocomplete',
+					'Ctrl-Q': cm => cm.foldCode(cm.getCursor())
+				},
+				keyMap: 'sublime',
+				foldGutter: true,
+				gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+				matchBrackets: true,
+				indentWithTabs: true,
+				styleActiveLine: true,
+				styleSelectedText: true,
+				autoCloseBrackets: true,
+				autoCloseTags: true,
+				showTrailingSpace: true,
+				theme: 'pastel-on-dark',
+				mode: 'gfm'
+			});
+			*/
+		}
+	}
+
+	handleSubmitModalSetStyle() {
+		// Code ...
+		this.handleCloseModalSetStyle();
+	}
+
 	setStyleOnLine(param) {
 		// init:
 		const chunk = {};
@@ -489,7 +542,6 @@ class CourseAddOrEdit extends Component {
 				this.setStyleSelectable({ type: 'italic', char: '*', numberChars: 1 });
 				break;
 			case 'header':
-				// this.openModalSetStyle({ type: 'header', char: '#' });
 				this.setStyleOnLine({ type: 'header', char: '# ' });
 				break;
 			case 'strikethrough':
@@ -506,6 +558,9 @@ class CourseAddOrEdit extends Component {
 				break;
 			case 'check square':
 				this.setStyleOnLine({ type: 'check square', char: '- [x] ' });
+				break;
+			case 'code':
+				this.handleOpenModalSetStyle({ isOpened: true, type: 'code', title: 'Editor', desc: 'write some code in the editor' });
 				break;
 			default:
 				break;
@@ -549,7 +604,7 @@ class CourseAddOrEdit extends Component {
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category, isEditing, fieldsTyping, heightDocument, pagination } = this.state;
+		const { category, isEditing, fieldsTyping, heightDocument, pagination, openModalSetStyle } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
@@ -626,6 +681,19 @@ class CourseAddOrEdit extends Component {
 						</div>
 					</div>
 				</div>
+
+				<Modal open={openModalSetStyle.isOpened}>
+					<Modal.Header>{openModalSetStyle.title}</Modal.Header>
+					<Modal.Content image>
+						<Modal.Description>
+							<Header>{openModalSetStyle.desc}</Header>
+						</Modal.Description>
+					</Modal.Content>
+					<Modal.Actions>
+						<Button color="black" onClick={this.handleCloseModalSetStyle}>Cancel</Button>
+						<Button icon="checkmark" color="red" labelPosition="right" content="Ok" onClick={this.handleSubmitModalSetStyle} />
+					</Modal.Actions>
+				</Modal>
 			</LayoutPage>
 		);
 	}
