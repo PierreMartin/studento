@@ -27,11 +27,13 @@ class CourseAddOrEdit extends Component {
 		this.handleClickToolbar = this.handleClickToolbar.bind(this);
 
 		// modal:
+		this.editorInModalDidMount = this.editorInModalDidMount.bind(this);
 		this.handleOpenModalSetStyle = this.handleOpenModalSetStyle.bind(this);
 		this.handleCloseModalSetStyle = this.handleCloseModalSetStyle.bind(this);
 		this.handleSubmitModalSetStyle = this.handleSubmitModalSetStyle.bind(this);
 
 		this.editorCm = null;
+		this.editorCmMini = null;
 		this.timerHighlightPreview = null;
 		this.timerRenderPreview = null;
 		this.CodeMirror = null;
@@ -403,52 +405,6 @@ class CourseAddOrEdit extends Component {
 		}
 	}
 
-	handleCloseModalSetStyle() {
-		this.setState({ openModalSetStyle: {} });
-	}
-
-	handleOpenModalSetStyle(params) {
-		this.setState({ openModalSetStyle: params });
-		if (params.type === 'code') {
-			/*
-			this.editorCm = this.CodeMirror.fromTextArea(this.refEditor, {
-				lineNumbers: true,
-				codeFold: true,
-				placeholder: 'Write you course here...',
-				dragDrop: false,
-				autofocus: true,
-				readOnly: false,
-				matchTags: false,
-				tabSize: 4,
-				indentUnit: 4,
-				lineWrapping: true,
-				viewportMargin: Infinity,
-				extraKeys: {
-					'Ctrl-Space': 'autocomplete',
-					'Ctrl-Q': cm => cm.foldCode(cm.getCursor())
-				},
-				keyMap: 'sublime',
-				foldGutter: true,
-				gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-				matchBrackets: true,
-				indentWithTabs: true,
-				styleActiveLine: true,
-				styleSelectedText: true,
-				autoCloseBrackets: true,
-				autoCloseTags: true,
-				showTrailingSpace: true,
-				theme: 'pastel-on-dark',
-				mode: 'gfm'
-			});
-			*/
-		}
-	}
-
-	handleSubmitModalSetStyle() {
-		// Code ...
-		this.handleCloseModalSetStyle();
-	}
-
 	setStyleOnLine(param) {
 		// init:
 		const chunk = {};
@@ -531,6 +487,68 @@ class CourseAddOrEdit extends Component {
 		}
 	}
 
+	handleOpenModalSetStyle(params) { this.setState({ openModalSetStyle: params }); }
+	handleCloseModalSetStyle() { this.setState({ openModalSetStyle: {} }); }
+
+	editorInModalDidMount = (refEditorInModal) => {
+		if (refEditorInModal !== null) {
+			this.editorCmMini = this.CodeMirror.fromTextArea(refEditorInModal, {
+				lineNumbers: true,
+				codeFold: true,
+				placeholder: 'Write you code here',
+				dragDrop: false,
+				autofocus: true,
+				readOnly: false,
+				matchTags: false,
+				tabSize: 4,
+				indentUnit: 4,
+				lineWrapping: true,
+				viewportMargin: Infinity,
+				extraKeys: {
+					'Ctrl-Space': 'autocomplete',
+					'Ctrl-Q': cm => cm.foldCode(cm.getCursor())
+				},
+				keyMap: 'sublime',
+				foldGutter: true,
+				gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+				matchBrackets: true,
+				indentWithTabs: true,
+				styleActiveLine: true,
+				styleSelectedText: true,
+				autoCloseBrackets: true,
+				autoCloseTags: true,
+				showTrailingSpace: true,
+				theme: 'pastel-on-dark',
+				mode: 'gfm'
+			});
+		}
+	}
+
+	handleSubmitModalSetStyle = (params) => {
+		return () => {
+			switch (params.type) {
+				case 'code':
+					// const value = this.editorCmMini.getValue;
+					// const selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
+					// this.editorCm.replaceRange(value, selPosStart);
+					break;
+				case 'table':
+					// ...
+					break;
+				case 'linkify':
+					// ...
+					break;
+				case 'file image outline':
+					// ...
+					break;
+				default:
+					break;
+			}
+
+			this.handleCloseModalSetStyle();
+		};
+	};
+
 	handleClickToolbar = clickedButton => () => {
 		this.editorCm.focus();
 
@@ -560,7 +578,16 @@ class CourseAddOrEdit extends Component {
 				this.setStyleOnLine({ type: 'check square', char: '- [x] ' });
 				break;
 			case 'code':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'code', title: 'Editor', desc: 'write some code in the editor' });
+				this.handleOpenModalSetStyle({ isOpened: true, type: 'code', title: 'Editor', desc: 'Write some code in the editor' });
+				break;
+			case 'table':
+				this.handleOpenModalSetStyle({ isOpened: true, type: 'table', title: 'Table', desc: 'Create a table' });
+				break;
+			case 'linkify':
+				this.handleOpenModalSetStyle({ isOpened: true, type: 'linkify', title: 'Link', desc: 'Add a link' });
+				break;
+			case 'file image outline':
+				this.handleOpenModalSetStyle({ isOpened: true, type: 'file image outline', title: 'Image', desc: 'Add a image' });
 				break;
 			default:
 				break;
@@ -611,18 +638,20 @@ class CourseAddOrEdit extends Component {
 		const isDisableButtonSubmit = isEditing && !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && !fieldsTyping.isPrivate;
 
 		const buttonsToolbar = [
-			{ icon: 'bold', isDisabled: false, content: 'Bold' },
-			{ icon: 'italic', isDisabled: false, content: 'Italic' },
-			{ icon: 'header', isDisabled: false, content: 'Header' },
-			{ icon: 'strikethrough', isDisabled: false, content: 'Strikethrough' },
-			{ icon: 'unordered list', isDisabled: false, content: 'Unordered list' },
-			{ icon: 'ordered list', isDisabled: false, content: 'Ordered list' },
-			{ icon: 'check square', isDisabled: false, content: 'Check list' },
-			{ icon: 'quote left', isDisabled: false, content: 'Quote left' },
-			{ icon: 'code', isDisabled: false, content: 'Add a code' },
-			{ icon: 'table', isDisabled: true, content: 'Add a table' },
-			{ icon: 'linkify', isDisabled: true, content: 'Add a link' },
-			{ icon: 'file image outline', isDisabled: true, content: 'Add image' }
+			{ icon: 'bold', content: 'Bold' },
+			{ icon: 'italic', content: 'Italic' },
+			{ icon: 'header', content: 'Header' },
+			{ icon: 'strikethrough', content: 'Strikethrough' },
+			{ icon: 'unordered list', content: 'Unordered list' },
+			{ icon: 'ordered list', content: 'Ordered list' },
+			{ icon: 'check square', content: 'Check list' },
+			{ icon: 'quote left', content: 'Quote left' }
+		];
+		const buttonsForPopupToolbar = [
+			{ icon: 'code', content: 'Add a code' },
+			{ icon: 'table', content: 'Add a table' },
+			{ icon: 'linkify', content: 'Add a link' },
+			{ icon: 'file image outline', content: 'Add image' }
 		];
 
 		return (
@@ -662,7 +691,10 @@ class CourseAddOrEdit extends Component {
 					<div className={cx('editor-container-full')}>
 						<div className={cx('editor-toolbar')}>
 							<Button.Group basic size="small">
-								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic inverted disabled={button.isDisabled} className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
+								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic inverted className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
+							</Button.Group>
+							<Button.Group basic size="small">
+								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic inverted className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
 							</Button.Group>
 						</div>
 
@@ -682,16 +714,37 @@ class CourseAddOrEdit extends Component {
 					</div>
 				</div>
 
-				<Modal open={openModalSetStyle.isOpened}>
+				<Modal open={openModalSetStyle.isOpened} onClose={this.handleCloseModalSetStyle}>
 					<Modal.Header>{openModalSetStyle.title}</Modal.Header>
 					<Modal.Content image>
 						<Modal.Description>
 							<Header>{openModalSetStyle.desc}</Header>
+
+							{ openModalSetStyle.type === 'code' ? (
+								<Form size="small"><textarea ref={this.editorInModalDidMount} name="editorCmMini" defaultValue="Write you code here" /></Form>
+							) : '' }
+
+							{ openModalSetStyle.type === 'table' ? (
+								<div>comming soon</div>
+							) : '' }
+
+							{ openModalSetStyle.type === 'linkify' ? (
+								<Form size="small">
+									<Form.Input label="Add a link" placeholder="Url here" name="linkify" />
+								</Form>
+							) : '' }
+
+							{ openModalSetStyle.type === 'file image outline' ? (
+								<Form size="small">
+									<Form.Input label="Add a image" placeholder="Url image here" name="file" />
+								</Form>
+							) : '' }
+
 						</Modal.Description>
 					</Modal.Content>
 					<Modal.Actions>
 						<Button color="black" onClick={this.handleCloseModalSetStyle}>Cancel</Button>
-						<Button icon="checkmark" color="red" labelPosition="right" content="Ok" onClick={this.handleSubmitModalSetStyle} />
+						<Button icon="checkmark" color="red" labelPosition="right" content="Ok" onClick={this.handleSubmitModalSetStyle(openModalSetStyle)} />
 					</Modal.Actions>
 				</Modal>
 			</LayoutPage>
