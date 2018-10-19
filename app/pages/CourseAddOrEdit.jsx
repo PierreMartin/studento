@@ -31,6 +31,7 @@ class CourseAddOrEdit extends Component {
 		this.handleOpenModalSetStyle = this.handleOpenModalSetStyle.bind(this);
 		this.handleCloseModalSetStyle = this.handleCloseModalSetStyle.bind(this);
 		this.handleSubmitModalSetStyle = this.handleSubmitModalSetStyle.bind(this);
+		this.handleLanguageChange = this.handleLanguageChange.bind(this);
 
 		this.editorCm = null;
 		this.editorCmMini = null;
@@ -47,7 +48,8 @@ class CourseAddOrEdit extends Component {
 				indexPage: 1
 			},
 			clickedCourse: 0,
-			openModalSetStyle: {}
+			openModalSetStyle: {},
+			codeLanguageSelected: ''
 		};
 	}
 
@@ -250,7 +252,25 @@ class CourseAddOrEdit extends Component {
 			}
 		}
 
-		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList };
+		const codeLanguagesOptions = [
+			{ key: 'markdown', text: 'markdown', value: 'markdown' },
+			{ key: 'javascript', text: 'Javascript', value: 'javascript' },
+			{ key: 'php', text: 'Php', value: 'php' },
+			{ key: 'python', text: 'Python', value: 'python' },
+			{ key: 'ruby', text: 'Ruby', value: 'ruby' },
+			{ key: 'sass', text: 'Sass', value: 'sass' },
+			{ key: 'shell', text: 'Shell', value: 'shell' },
+			{ key: 'sql', text: 'Sql', value: 'sql' },
+			{ key: 'stylus', text: 'Stylus', value: 'stylus' },
+			{ key: 'xml', text: 'XML', value: 'xml' },
+			{ key: 'coffeescript', text: 'Coffeescript', value: 'coffeescript' },
+			{ key: 'css', text: 'Css', value: 'css' },
+			{ key: 'cmake', text: 'Cmake', value: 'cmake' },
+			{ key: 'htmlmixed', text: 'HTML', value: 'htmlmixed' },
+			{ key: 'mathematica', text: 'Mathematica', value: 'mathematica' }
+		];
+
+		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList, codeLanguagesOptions };
 	}
 
 	getMetaData() {
@@ -488,7 +508,7 @@ class CourseAddOrEdit extends Component {
 	}
 
 	handleOpenModalSetStyle(params) { this.setState({ openModalSetStyle: params }); }
-	handleCloseModalSetStyle() { this.setState({ openModalSetStyle: {} }); }
+	handleCloseModalSetStyle() { this.setState({ openModalSetStyle: {}, codeLanguageSelected: '' }); }
 
 	editorInModalDidMount = (refEditorInModal) => {
 		if (refEditorInModal !== null) {
@@ -519,7 +539,7 @@ class CourseAddOrEdit extends Component {
 				autoCloseTags: true,
 				showTrailingSpace: true,
 				theme: 'pastel-on-dark',
-				mode: 'gfm'
+				mode: 'javascript'
 			});
 		}
 	}
@@ -548,6 +568,11 @@ class CourseAddOrEdit extends Component {
 			this.handleCloseModalSetStyle();
 		};
 	};
+
+	handleLanguageChange(event, field) {
+		this.setState({ codeLanguageSelected: field.value });
+		this.editorCmMini.setOption('mode', field.value);
+	}
 
 	handleClickToolbar = clickedButton => () => {
 		this.editorCm.focus();
@@ -631,10 +656,10 @@ class CourseAddOrEdit extends Component {
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category, isEditing, fieldsTyping, heightDocument, pagination, openModalSetStyle } = this.state;
+		const { category, isEditing, fieldsTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
-		const { categoriesOptions, subCategoriesOptions } = this.getOptionsFormsSelect();
+		const { categoriesOptions, subCategoriesOptions, codeLanguagesOptions } = this.getOptionsFormsSelect();
 		const isDisableButtonSubmit = isEditing && !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && !fieldsTyping.isPrivate;
 
 		const buttonsToolbar = [
@@ -721,7 +746,10 @@ class CourseAddOrEdit extends Component {
 							<Header>{openModalSetStyle.desc}</Header>
 
 							{ openModalSetStyle.type === 'code' ? (
-								<Form size="small"><textarea ref={this.editorInModalDidMount} name="editorCmMini" defaultValue="Write you code here" /></Form>
+								<Form size="small">
+									<Form.Select label="Language" options={codeLanguagesOptions} placeholder="Choose a language" width={4} name="language" value={codeLanguageSelected || ''} onChange={this.handleLanguageChange} />
+									<textarea ref={this.editorInModalDidMount} name="editorCmMini" defaultValue="Write you code here" />
+								</Form>
 							) : '' }
 
 							{ openModalSetStyle.type === 'table' ? (

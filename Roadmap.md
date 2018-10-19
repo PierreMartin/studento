@@ -101,7 +101,7 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - Améliorer perfs
-- gerer la gestion de la génératon du contenu des cours en .md
+- selection buttons H1, h2 ,h3
 - améliorer la requet d'upate de l'user comme pour les courses
 
 
