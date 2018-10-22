@@ -32,6 +32,7 @@ class CourseAddOrEdit extends Component {
 		this.handleCloseModalSetStyle = this.handleCloseModalSetStyle.bind(this);
 		this.handleSubmitModalSetStyle = this.handleSubmitModalSetStyle.bind(this);
 		this.handleLanguageChange = this.handleLanguageChange.bind(this);
+		this.handleInputModalSetStyleChange = this.handleInputModalSetStyleChange.bind(this);
 
 		this.editorCm = null;
 		this.editorCmMini = null;
@@ -41,6 +42,7 @@ class CourseAddOrEdit extends Component {
 
 		this.state = {
 			fieldsTyping: {},
+			fieldsModalSetStyleTyping: {},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
 			heightDocument: 0,
@@ -508,7 +510,7 @@ class CourseAddOrEdit extends Component {
 	}
 
 	handleOpenModalSetStyle(params) { this.setState({ openModalSetStyle: params }); }
-	handleCloseModalSetStyle() { this.setState({ openModalSetStyle: {}, codeLanguageSelected: '' }); }
+	handleCloseModalSetStyle() { this.setState({ openModalSetStyle: {}, codeLanguageSelected: '', fieldsModalSetStyleTyping: {} }); }
 
 	editorInModalDidMount = (refEditorInModal) => {
 		if (refEditorInModal !== null) {
@@ -545,22 +547,32 @@ class CourseAddOrEdit extends Component {
 	}
 
 	handleSubmitModalSetStyle = (params) => {
+		const { codeLanguageSelected, fieldsModalSetStyleTyping } = this.state;
+		let selPosStart = {};
+
 		return () => {
 			switch (params.type) {
 				case 'code':
-					const { codeLanguageSelected } = this.state;
+					selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
 					const value = '```' + codeLanguageSelected + '\n' + this.editorCmMini.getValue() + '\n```';
-					const selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
 					this.editorCm.replaceRange('\n' + value + '\n', selPosStart);
 					break;
 				case 'table':
 					// ...
 					break;
 				case 'linkify':
-					// ...
+					selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
+					const urlLink = fieldsModalSetStyleTyping.linkifyUrl.indexOf('http') === -1 ? 'http://' + fieldsModalSetStyleTyping.linkifyUrl : fieldsModalSetStyleTyping.linkifyUrl;
+					const urlLinkFull = `[${fieldsModalSetStyleTyping.linkifyText}](${urlLink})`;
+					this.editorCm.replaceRange('\n' + urlLinkFull + '\n', selPosStart);
+					this.setState({ fieldsModalSetStyleTyping: {} });
 					break;
 				case 'file image outline':
-					// ...
+					selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
+					const urlImage = fieldsModalSetStyleTyping.file.indexOf('http') === -1 ? 'http://' + fieldsModalSetStyleTyping.file : fieldsModalSetStyleTyping.file;
+					const urlImageFull = `![](${urlImage})`;
+					this.editorCm.replaceRange('\n' + urlImageFull + '\n', selPosStart);
+					this.setState({ fieldsModalSetStyleTyping: {} });
 					break;
 				default:
 					break;
@@ -573,6 +585,10 @@ class CourseAddOrEdit extends Component {
 	handleLanguageChange(event, field) {
 		this.setState({ codeLanguageSelected: field.value });
 		this.editorCmMini.setOption('mode', field.value);
+	}
+
+	handleInputModalSetStyleChange(event, field) {
+		this.setState({ fieldsModalSetStyleTyping: { ...this.state.fieldsModalSetStyleTyping, ...{[field.name]: field.value } } });
 	}
 
 	handleClickToolbar = clickedButton => () => {
@@ -657,7 +673,7 @@ class CourseAddOrEdit extends Component {
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category, isEditing, fieldsTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected } = this.state;
+		const { category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions, codeLanguagesOptions } = this.getOptionsFormsSelect();
@@ -754,18 +770,19 @@ class CourseAddOrEdit extends Component {
 							) : '' }
 
 							{ openModalSetStyle.type === 'table' ? (
-								<div>comming soon</div>
+								<div>coming soon</div>
 							) : '' }
 
 							{ openModalSetStyle.type === 'linkify' ? (
 								<Form size="small">
-									<Form.Input label="Add a link" placeholder="Url here" name="linkify" />
+									<Form.Input label="Link text" placeholder="My site" name="linkifyText" value={fieldsModalSetStyleTyping.linkifyText || ''} onChange={this.handleInputModalSetStyleChange} />
+									<Form.Input label="URL" placeholder="www.mywebsite.com" name="linkifyUrl" value={fieldsModalSetStyleTyping.linkifyUrl || ''} onChange={this.handleInputModalSetStyleChange} />
 								</Form>
 							) : '' }
 
 							{ openModalSetStyle.type === 'file image outline' ? (
 								<Form size="small">
-									<Form.Input label="Add a image" placeholder="Url image here" name="file" />
+									<Form.Input label="Add a image" placeholder="https://mywebsite/images/1.jpg" name="file" value={fieldsModalSetStyleTyping.file || ''} onChange={this.handleInputModalSetStyleChange} />
 								</Form>
 							) : '' }
 
