@@ -775,8 +775,10 @@ class CourseAddOrEdit extends Component {
 
 							{ openModalSetStyle.type === 'linkify' ? (
 								<Form size="small">
-									<Form.Input label="Link text" placeholder="My site" name="linkifyText" value={fieldsModalSetStyleTyping.linkifyText || ''} onChange={this.handleInputModalSetStyleChange} />
-									<Form.Input label="URL" placeholder="www.mywebsite.com" name="linkifyUrl" value={fieldsModalSetStyleTyping.linkifyUrl || ''} onChange={this.handleInputModalSetStyleChange} />
+									<Form.Group widths="equal">
+										<Form.Input label="Link text" placeholder="My site" name="linkifyText" value={fieldsModalSetStyleTyping.linkifyText || ''} onChange={this.handleInputModalSetStyleChange} />
+										<Form.Input label="URL" placeholder="www.mywebsite.com" name="linkifyUrl" value={fieldsModalSetStyleTyping.linkifyUrl || ''} onChange={this.handleInputModalSetStyleChange} />
+									</Form.Group>
 								</Form>
 							) : '' }
 
