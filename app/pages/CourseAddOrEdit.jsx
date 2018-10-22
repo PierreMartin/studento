@@ -548,9 +548,10 @@ class CourseAddOrEdit extends Component {
 		return () => {
 			switch (params.type) {
 				case 'code':
-					// const value = this.editorCmMini.getValue;
-					// const selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
-					// this.editorCm.replaceRange(value, selPosStart);
+					const { codeLanguageSelected } = this.state;
+					const value = '```' + codeLanguageSelected + '\n' + this.editorCmMini.getValue() + '\n```';
+					const selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
+					this.editorCm.replaceRange('\n' + value + '\n', selPosStart);
 					break;
 				case 'table':
 					// ...
