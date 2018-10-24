@@ -102,15 +102,16 @@ $ ./scripts/generate_menu.sh
 ### TODO :
 - Tables Markdown
 - dispositions templates
-- Améliorer perfs
-- améliorer la requet d'upate de l'user comme pour les courses
-
+- duplicate style (lists, checksList...) when enter on new line
 
 - Faire Menu listant les cats/subCats + Page Courses
 - staredBy
 - commentedBy
 - Mettre un Breadcrumb
 - Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
+
+- Améliorer perfs codeMIrror
+- améliorer la requet d'upate de l'user comme pour les courses
 
 - this.state.typingArr => le mettre dans le store de redux (gerer les cas ou l'un ecrit, l'autre a pas encore ouvert la popup)
 - ajouter lastMessageContent
