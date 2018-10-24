@@ -437,6 +437,7 @@ class CourseAddOrEdit extends Component {
 		const valuePosStart = { line: 0, ch: 0 };
 		const valuePosEnd = { line: this.editorCm.lineCount() + 1, ch: 0 };
 		const char = param.char;
+		let charsAlreadyHave = '';
 		const type = param.type;
 		const dirAsc = selPosStart.line <= selPosEnd.line;
 		let k = selPosStart.line;
@@ -468,20 +469,33 @@ class CourseAddOrEdit extends Component {
 		}
 
 		let regex = window.RegExp('^' + char, '');
-		if (type === 'check square') {
-			regex = window.RegExp(/^- \[x] /, '');
-		}
+		if (type === 'check square') regex = window.RegExp(/^- \[x] /, '');
+		if (type === 'header') regex = window.RegExp('^[' + char + ']{1,}', '');
 
 		let haveCharInLine = false;
 		for (let l = 0; l < chunk.line.length; l++) {
 			haveCharInLine = regex.test(chunk.line[l]);
+			charsAlreadyHave = window.RegExp('^[' + char + ']{1,}$', '').test(chunk.line[l].split(' ')[0]) ? chunk.line[l].split(' ')[0] : false; // For header
 			if (haveCharInLine) break;
 		}
 
-		// If already styled - remove style:
-		if (haveCharInLine) {
+		// ############################ If already styled - for header ONLY: ############################
+		if (haveCharInLine && type === 'header' && charsAlreadyHave) {
+			const newChars = charsAlreadyHave.length > 5 ? '' : charsAlreadyHave; // reset to 0 after H6
+
 			for (let i = 0; i < chunk.line.length; i++) {
-				chunk.lines += chunk.line[i].replace(regex, '').trim() + '\n';
+				chunk.lines += chunk.line[i].replace(charsAlreadyHave, newChars + char.trim()).trim() + '\n';
+			}
+			this.editorCm.setValue(chunk.beforeTheLine + chunk.lines + chunk.afterTheLine);
+
+			// Re set selection:
+			selPosStart.ch += 1;
+			selPosEnd.ch += 1;
+			this.editorCm.setSelection(selPosStart, selPosEnd);
+		} else if (haveCharInLine) {
+			// ############################ If already styled - remove style: ############################
+			for (let j = 0; j < chunk.line.length; j++) {
+				chunk.lines += chunk.line[j].replace(regex, '').trim() + '\n';
 			}
 			this.editorCm.setValue(chunk.beforeTheLine + chunk.lines + chunk.afterTheLine);
 
@@ -490,7 +504,7 @@ class CourseAddOrEdit extends Component {
 			selPosEnd.ch -= char.length;
 			this.editorCm.setSelection(selPosStart, selPosEnd);
 		} else {
-			// If first styled - add style:
+			// ############################ If first styled - add style: ############################
 			selPosStart.ch = 0;
 
 			let j = selPosStart.line;

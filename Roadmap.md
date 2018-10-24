@@ -100,8 +100,9 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- Tables Markdown
+- dispositions templates
 - Améliorer perfs
-- selection buttons H1, h2 ,h3
 - améliorer la requet d'upate de l'user comme pour les courses
 
 
