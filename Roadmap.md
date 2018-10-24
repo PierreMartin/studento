@@ -100,7 +100,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- Tables Markdown
+- babel-polyfill in pro
 - dispositions templates
 - duplicate style (lists, checksList...) when enter on new line
 
