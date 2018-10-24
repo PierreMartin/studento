@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import marked from 'marked';
 // import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
+import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
@@ -81,7 +82,17 @@ class CourseAddOrEdit extends Component {
 			xhtml: false
 		});
 
+		// Highlight.js rendering:
 		setTimeout(() => hljs.initHighlighting(), 1000);
+
+		// KaTex rendering:
+		require('katex/dist/katex.css');
+		const languageKatexNode = this.refPreview.querySelectorAll('.language-katex');
+
+		for (let i = 0; i < languageKatexNode.length; i++) {
+			const text = languageKatexNode[i].innerText;
+			katex.render(String.raw`${text}`, languageKatexNode[i], { displayMode: true, throwOnError: false });
+		}
 
 		// ##################################### CodeMirror #####################################
 		this.CodeMirror = require('codemirror/lib/codemirror');

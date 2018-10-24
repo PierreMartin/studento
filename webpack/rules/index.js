@@ -3,6 +3,7 @@ const javascript = require('./javascript');
 const css = require('./css');
 const cssExt = require('./cssExt');
 const scss = require('./scss');
+const font = require('./font');
 
 module.exports = ({ production = false, browser = false } = {}) => (
   [
@@ -10,6 +11,7 @@ module.exports = ({ production = false, browser = false } = {}) => (
     css({ production, browser }),
     cssExt(),
     scss({ production, browser }),
-    image()
+    image(),
+    font()
   ]
 );
