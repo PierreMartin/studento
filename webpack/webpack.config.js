@@ -37,7 +37,7 @@ module.exports = (env = {}) => {
   const prodBrowserRender = {
     devtool: 'cheap-module-source-map',
     context: PATHS.app,
-    entry: { app: ['./client'] },
+    entry: { app: ['babel-polyfill', './client'] },
     node,
     output: {
       path: PATHS.assets,
