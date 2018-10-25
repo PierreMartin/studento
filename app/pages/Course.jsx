@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import marked from 'marked';
 import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
+import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
@@ -39,7 +40,10 @@ class Course extends Component {
 			xhtml: false
 		});
 
+		// Highlight and Katex rendering:
+		require('katex/dist/katex.css');
 		setTimeout(() => hljs.initHighlighting(), 1000);
+		setTimeout(() => this.kaTexRendering(), 1000);
 
 		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.getContentSanitized();  })    ET remove  componentDidUpdate()
 		this.getContentSanitized();
@@ -48,11 +52,14 @@ class Course extends Component {
 	componentDidUpdate(prevProps) {
 		const { course } = this.props;
 		if (prevProps.course !== course) {
-			// Re highlight code:
 			clearTimeout(this.timerHighlightPreview);
 			this.timerHighlightPreview = setTimeout(() => {
+				// Re render highlight code:
 				const code = document.querySelectorAll('pre code');
 				for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
+
+				// Re render Katex:
+				this.kaTexRendering();
 			}, 1000);
 
 			// Sanitize mardown:
@@ -71,6 +78,15 @@ class Course extends Component {
 			meta: [{ name: 'description', content: 'bla blah' }],
 			link: []
 		};
+	}
+
+	kaTexRendering() {
+		const languageKatexNode = document.querySelectorAll('.language-katex');
+
+		for (let i = 0; i < languageKatexNode.length; i++) {
+			const text = languageKatexNode[i].innerText;
+			katex.render(String.raw`${text}`, languageKatexNode[i], { displayMode: true, throwOnError: false });
+		}
 	}
 
 	render() {

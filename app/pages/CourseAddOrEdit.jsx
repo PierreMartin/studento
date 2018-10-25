@@ -82,17 +82,10 @@ class CourseAddOrEdit extends Component {
 			xhtml: false
 		});
 
-		// Highlight.js rendering:
-		setTimeout(() => hljs.initHighlighting(), 1000);
-
-		// KaTex rendering:
+		// Highlight and Katex rendering:
 		require('katex/dist/katex.css');
-		const languageKatexNode = this.refPreview.querySelectorAll('.language-katex');
-
-		for (let i = 0; i < languageKatexNode.length; i++) {
-			const text = languageKatexNode[i].innerText;
-			katex.render(String.raw`${text}`, languageKatexNode[i], { displayMode: true, throwOnError: false });
-		}
+		setTimeout(() => hljs.initHighlighting(), 1000);
+		setTimeout(() => this.kaTexRendering(), 1000);
 
 		// ##################################### CodeMirror #####################################
 		this.CodeMirror = require('codemirror/lib/codemirror');
@@ -179,19 +172,35 @@ class CourseAddOrEdit extends Component {
 			const valueEditor = this.editorCm.getValue();
 			const isBigFile = valueEditor.length >= 3000;
 
-			// Re highlight code:
-			clearTimeout(this.timerHighlightPreview);
-			this.timerHighlightPreview = setTimeout(() => {
-				const code = this.refPreview.querySelectorAll('pre code');
-				for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
-			}, 1000);
-
+			// ------- Big course -------
 			clearTimeout(this.timerRenderPreview);
 			this.timerRenderPreview = setTimeout(() => {
-				if (isBigFile) this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} });
+				if (isBigFile) {
+					this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} }, () => {
+						// Re render highlight code:
+						clearTimeout(this.timerHighlightPreview);
+						this.timerHighlightPreview = setTimeout(() => {
+							const code = this.refPreview.querySelectorAll('pre code');
+							for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
+						}, 800);
+
+						// Re render Katex:
+						this.kaTexRendering();
+					});
+				}
 			}, 200);
 
-			if (!isBigFile) this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} });
+			// ------- Small course -------
+			if (!isBigFile) {
+				this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} }, () => {
+					// Re render highlight code:
+					const code = this.refPreview.querySelectorAll('pre code');
+					for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
+
+					// Re render Katex:
+					this.kaTexRendering();
+				});
+			}
 		});
 
 		this.editorCm.setSize('auto', window.innerHeight - 44);
@@ -280,7 +289,8 @@ class CourseAddOrEdit extends Component {
 			{ key: 'css', text: 'Css', value: 'css' },
 			{ key: 'cmake', text: 'Cmake', value: 'cmake' },
 			{ key: 'htmlmixed', text: 'HTML', value: 'htmlmixed' },
-			{ key: 'mathematica', text: 'Mathematica', value: 'mathematica' }
+			{ key: 'mathematica', text: 'Mathematica', value: 'mathematica' },
+			{ key: 'katex', text: 'Katex', value: 'katex' }
 		];
 
 		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList, codeLanguagesOptions };
@@ -534,6 +544,15 @@ class CourseAddOrEdit extends Component {
 		}
 	}
 
+	kaTexRendering() {
+		const languageKatexNode = this.refPreview.querySelectorAll('.language-katex');
+
+		for (let i = 0; i < languageKatexNode.length; i++) {
+			const text = languageKatexNode[i].innerText;
+			katex.render(String.raw`${text}`, languageKatexNode[i], { displayMode: true, throwOnError: false });
+		}
+	}
+
 	handleOpenModalSetStyle(params) { this.setState({ openModalSetStyle: params }); }
 	handleCloseModalSetStyle() { this.setState({ openModalSetStyle: {}, codeLanguageSelected: '', fieldsModalSetStyleTyping: {} }); }
 
@@ -609,7 +628,7 @@ class CourseAddOrEdit extends Component {
 
 	handleLanguageChange(event, field) {
 		this.setState({ codeLanguageSelected: field.value });
-		this.editorCmMini.setOption('mode', field.value);
+		if (field.value !== 'katex') this.editorCmMini.setOption('mode', field.value);
 	}
 
 	handleInputModalSetStyleChange(event, field) {
