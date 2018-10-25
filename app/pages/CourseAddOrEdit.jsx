@@ -84,7 +84,7 @@ class CourseAddOrEdit extends Component {
 
 		// Highlight and Katex rendering:
 		require('katex/dist/katex.css');
-		setTimeout(() => hljs.initHighlighting(), 1000);
+		setTimeout(() => hljs.initHighlighting(), 1000); // TODO enlever les timeout (et call dans le render si fields.content.length > 0 ?? )
 		setTimeout(() => this.kaTexRendering(), 1000);
 
 		// ##################################### CodeMirror #####################################

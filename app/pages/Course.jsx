@@ -42,7 +42,7 @@ class Course extends Component {
 
 		// Highlight and Katex rendering:
 		require('katex/dist/katex.css');
-		setTimeout(() => hljs.initHighlighting(), 1000);
+		setTimeout(() => hljs.initHighlighting(), 1000); // TODO enlever les timeout (et call dans le callback de this.setState() ?? ou dans le render si contentMarkedSanitized.length > 0 ?? )
 		setTimeout(() => this.kaTexRendering(), 1000);
 
 		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.getContentSanitized();  })    ET remove  componentDidUpdate()
