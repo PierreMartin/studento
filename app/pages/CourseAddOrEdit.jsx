@@ -185,7 +185,7 @@ class CourseAddOrEdit extends Component {
 						}, 800);
 
 						// Re render Katex:
-						this.kaTexRendering();
+						this.kaTexRendering(valueEditor);
 					});
 				}
 			}, 200);
@@ -198,7 +198,7 @@ class CourseAddOrEdit extends Component {
 					for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
 
 					// Re render Katex:
-					this.kaTexRendering();
+					this.kaTexRendering(valueEditor);
 				});
 			}
 		});
@@ -544,12 +544,22 @@ class CourseAddOrEdit extends Component {
 		}
 	}
 
-	kaTexRendering() {
-		const languageKatexNode = this.refPreview.querySelectorAll('.language-katex');
+	kaTexRendering(valueEditor) {
+		const katexNode = this.refPreview.querySelectorAll('.language-katex'); // OUT
 
-		for (let i = 0; i < languageKatexNode.length; i++) {
-			const text = languageKatexNode[i].innerText;
-			katex.render(String.raw`${text}`, languageKatexNode[i], { displayMode: true, throwOnError: false });
+		if (valueEditor) {
+			// On typing:
+			const valuesKatex = valueEditor.match(/(?<=```katex\s+).*?(?=\s+```)/gi) || []; // IN
+			for (let i = 0; i < valuesKatex.length; i++) {
+				const text = valuesKatex[i];
+				katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false });
+			}
+		} else {
+			// On load / 1er time:
+			for (let i = 0; i < katexNode.length; i++) {
+				const text = katexNode[i].innerText;
+				katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false });
+			}
 		}
 	}
 
