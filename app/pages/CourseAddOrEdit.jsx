@@ -549,10 +549,12 @@ class CourseAddOrEdit extends Component {
 
 		if (valueEditor) {
 			// On typing:
-			const valuesKatex = valueEditor.match(/(?<=```katex\s+).*?(?=\s+```)/gi) || []; // IN
+			const valuesKatex = valueEditor.match(/(?<=```katex\s).*?(?=\s+```)/gi) || []; // IN
 			for (let i = 0; i < valuesKatex.length; i++) {
 				const text = valuesKatex[i];
-				katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false });
+				if (katexNode[i]) {
+					katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false });
+				}
 			}
 		} else {
 			// On load / 1er time:
