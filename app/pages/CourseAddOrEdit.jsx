@@ -82,11 +82,6 @@ class CourseAddOrEdit extends Component {
 			xhtml: false
 		});
 
-		// Highlight and Katex rendering:
-		require('katex/dist/katex.css');
-		setTimeout(() => hljs.initHighlighting(), 1000); // TODO enlever les timeout (et call dans le render si fields.content.length > 0 ?? )
-		setTimeout(() => this.kaTexRendering(), 1000);
-
 		// ##################################### CodeMirror #####################################
 		this.CodeMirror = require('codemirror/lib/codemirror');
 		require('codemirror/lib/codemirror.css');
@@ -165,6 +160,11 @@ class CourseAddOrEdit extends Component {
 			theme: 'pastel-on-dark',
 			mode: 'gfm'
 		});
+
+		// Highlight and Katex rendering init:
+		require('katex/dist/katex.css');
+		setTimeout(() => hljs.initHighlighting(), 1000);
+		setTimeout(() => this.kaTexRendering(this.editorCm.getValue()), 1000);
 
 		// handleEditorChange:
 		this.editorCm.on('change', () => {
@@ -547,19 +547,10 @@ class CourseAddOrEdit extends Component {
 	kaTexRendering(valueEditor) {
 		const katexNode = this.refPreview.querySelectorAll('.language-katex'); // OUT
 
-		if (valueEditor) {
-			// On typing:
-			const valuesKatex = valueEditor.match(/(?<=```katex\s).*?(?=\s+```)/gi) || []; // IN
-			for (let i = 0; i < valuesKatex.length; i++) {
-				const text = valuesKatex[i];
-				if (katexNode[i]) {
-					katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false });
-				}
-			}
-		} else {
-			// On load / 1er time:
-			for (let i = 0; i < katexNode.length; i++) {
-				const text = katexNode[i].innerText;
+		const valuesKatex = valueEditor.match(/(?<=```katex\s).*?(?=\s+```)/gi) || []; // IN
+		for (let i = 0; i < valuesKatex.length; i++) {
+			const text = valuesKatex[i];
+			if (katexNode[i]) {
 				katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false });
 			}
 		}
