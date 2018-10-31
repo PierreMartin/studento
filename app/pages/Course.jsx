@@ -16,6 +16,7 @@ class Course extends Component {
 	constructor(props) {
 		super(props);
 
+		this.timerRenderPreview = null;
 		// this.timerHighlightPreview = null;
 
 		this.state = {
@@ -83,8 +84,11 @@ class Course extends Component {
 
 	renderCourse() {
 		this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.course.content || '')) }, () => {
-			this.HighlightRendering();
-			this.kaTexRendering();
+			clearTimeout(this.timerRenderPreview);
+			this.timerRenderPreview = setTimeout(() => {
+				this.HighlightRendering();
+				this.kaTexRendering();
+			}, 100);
 		});
 	}
 
