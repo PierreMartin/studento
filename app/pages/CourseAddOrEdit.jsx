@@ -163,7 +163,7 @@ class CourseAddOrEdit extends Component {
 
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
-		setTimeout(() => hljs.initHighlighting(), 1000);
+		setTimeout(() => hljs.initHighlighting(), 1000); // TODO try to remove it
 		setTimeout(() => this.kaTexRendering(this.editorCm.getValue()), 1000);
 
 		// handleEditorChange:

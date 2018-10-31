@@ -16,7 +16,7 @@ class Course extends Component {
 	constructor(props) {
 		super(props);
 
-		this.timerHighlightPreview = null;
+		// this.timerHighlightPreview = null;
 
 		this.state = {
 			contentMarkedSanitized: ''
@@ -42,34 +42,13 @@ class Course extends Component {
 
 		// Highlight and Katex rendering:
 		require('katex/dist/katex.css');
-		setTimeout(() => hljs.initHighlighting(), 1000); // TODO enlever les timeout (et call dans le callback de this.setState() ?? ou dans le render si contentMarkedSanitized.length > 0 ?? )
-		setTimeout(() => this.kaTexRendering(), 1000);
 
-		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.getContentSanitized();  })    ET remove  componentDidUpdate()
-		this.getContentSanitized();
+		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.renderCourse();  })    ET remove  componentDidUpdate()
+		this.renderCourse();
 	}
 
 	componentDidUpdate(prevProps) {
-		const { course } = this.props;
-		if (prevProps.course !== course) {
-			clearTimeout(this.timerHighlightPreview);
-			this.timerHighlightPreview = setTimeout(() => {
-				// Re render highlight code:
-				const code = document.querySelectorAll('pre code');
-				for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
-
-				// Re render Katex:
-				this.kaTexRendering();
-			}, 1000);
-
-			// Sanitize mardown:
-			this.getContentSanitized();
-		}
-	}
-
-	getContentSanitized() {
-		const { course } = this.props;
-		this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(course.content || '')) });
+		if (prevProps.course !== this.props.course) this.renderCourse();
 	}
 
 	getMetaData() {
@@ -80,13 +59,33 @@ class Course extends Component {
 		};
 	}
 
-	kaTexRendering() {
-		const languageKatexNode = document.querySelectorAll('.language-katex');
+	HighlightRendering() {
+		// clearTimeout(this.timerHighlightPreview);
+		// this.timerHighlightPreview = setTimeout(() => {
+			const code = document.querySelectorAll('pre code');
+			for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
+		// }, 1000);
+	}
 
-		for (let i = 0; i < languageKatexNode.length; i++) {
-			const text = languageKatexNode[i].innerText;
-			katex.render(String.raw`${text}`, languageKatexNode[i], { displayMode: true, throwOnError: false });
+	kaTexRendering() {
+		if (this.props.course && this.props.course.content) {
+			const valuesKatex = this.props.course.content.match(/(?<=```katex\s).*?(?=\s+```)/gi) || []; // IN
+			const katexNode = document.querySelectorAll('.language-katex'); // OUT
+
+			for (let i = 0; i < valuesKatex.length; i++) {
+				const text = valuesKatex[i];
+				if (katexNode[i]) {
+					katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false });
+				}
+			}
 		}
+	}
+
+	renderCourse() {
+		this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.course.content || '')) }, () => {
+			this.HighlightRendering();
+			this.kaTexRendering();
+		});
 	}
 
 	render() {
