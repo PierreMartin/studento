@@ -37,7 +37,6 @@ class CourseAddOrEdit extends Component {
 
 		this.editorCm = null;
 		this.editorCmMini = null;
-		this.timerHighlightPreview = null;
 		this.timerRenderPreview = null;
 		this.CodeMirror = null;
 
@@ -163,7 +162,7 @@ class CourseAddOrEdit extends Component {
 
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
-		setTimeout(() => hljs.initHighlighting(), 1000); // TODO try to remove it
+		setTimeout(() => hljs.initHighlighting(), 1000);
 		setTimeout(() => this.kaTexRendering(this.editorCm.getValue()), 1000);
 
 		// handleEditorChange:
@@ -177,14 +176,7 @@ class CourseAddOrEdit extends Component {
 			this.timerRenderPreview = setTimeout(() => {
 				if (isBigFile) {
 					this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} }, () => {
-						// Re render highlight code:
-						clearTimeout(this.timerHighlightPreview);
-						this.timerHighlightPreview = setTimeout(() => {
-							const code = this.refPreview.querySelectorAll('pre code');
-							for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
-						}, 800);
-
-						// Re render Katex:
+						this.HighlightRendering();
 						this.kaTexRendering(valueEditor);
 					});
 				}
@@ -193,11 +185,7 @@ class CourseAddOrEdit extends Component {
 			// ------- Small course -------
 			if (!isBigFile) {
 				this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} }, () => {
-					// Re render highlight code:
-					const code = this.refPreview.querySelectorAll('pre code');
-					for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
-
-					// Re render Katex:
+					this.HighlightRendering();
 					this.kaTexRendering(valueEditor);
 				});
 			}
@@ -542,6 +530,11 @@ class CourseAddOrEdit extends Component {
 				}
 			}
 		}
+	}
+
+	HighlightRendering() {
+		const code = this.refPreview.querySelectorAll('pre code');
+		for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
 	}
 
 	kaTexRendering(valueEditor) {
