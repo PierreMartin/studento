@@ -540,11 +540,15 @@ class CourseAddOrEdit extends Component {
 	kaTexRendering(valueEditor) {
 		const katexNode = this.refPreview.querySelectorAll('.language-katex'); // OUT
 
-		const valuesKatex = valueEditor.match(/(?<=```katex\s).*?(?=\s+```)/gi) || []; // IN
+		const valuesKatex = valueEditor.match(/(?<=```katex\s+)(.[\s\S]*?)(?=\s+```)/gi) || []; // IN
 		for (let i = 0; i < valuesKatex.length; i++) {
 			const text = valuesKatex[i];
 			if (katexNode[i]) {
-				katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false });
+				const macros = {
+					'\\f': 'f(#1)',
+					'\\RR': '\\mathbb{R}'
+				};
+				katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false, macros });
 			}
 		}
 	}

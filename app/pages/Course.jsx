@@ -70,13 +70,17 @@ class Course extends Component {
 
 	kaTexRendering() {
 		if (this.props.course && this.props.course.content) {
-			const valuesKatex = this.props.course.content.match(/(?<=```katex\s).*?(?=\s+```)/gi) || []; // IN
+			const valuesKatex = this.props.course.content.match(/(?<=```katex\s+)(.[\s\S]*?)(?=\s+```)/gi) || []; // IN
 			const katexNode = document.querySelectorAll('.language-katex'); // OUT
 
 			for (let i = 0; i < valuesKatex.length; i++) {
 				const text = valuesKatex[i];
 				if (katexNode[i]) {
-					katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false });
+					const macros = {
+						'\\f': 'f(#1)',
+						'\\RR': '\\mathbb{R}'
+					};
+					katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false, macros });
 				}
 			}
 		}
