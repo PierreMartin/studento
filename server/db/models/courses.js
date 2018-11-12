@@ -11,6 +11,15 @@ const CourseSchema = new mongoose.Schema({
 	created_at: { type: Date },
 	modified_at: { type: Date },
 
+	template: {
+		columnH1: { type: Number, default: 1 },
+		columnH2: { type: Number, default: 1 },
+		columnH3: { type: Number, default: 1 },
+		columnH4: { type: Number, default: 1 },
+		columnH5: { type: Number, default: 1 },
+		columnH6: { type: Number, default: 1 }
+	},
+
 	staredBy: [{
 		username: { type: String, default: '' },
 		at: { type: Date, default: null }

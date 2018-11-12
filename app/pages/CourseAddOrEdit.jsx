@@ -10,7 +10,7 @@ import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { List, Form, Message, Button, Popup, Pagination, Icon, Modal, Header } from 'semantic-ui-react';
+import { List, Form, Message, Button, Popup, Pagination, Icon, Modal, Header, Segment, Select } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -41,7 +41,9 @@ class CourseAddOrEdit extends Component {
 		this.CodeMirror = null;
 
 		this.state = {
-			fieldsTyping: {},
+			fieldsTyping: {
+				template: {}
+			},
 			fieldsModalSetStyleTyping: {},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
@@ -203,7 +205,9 @@ class CourseAddOrEdit extends Component {
 
 			this.setState({
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
-				fieldsTyping: {}
+				fieldsTyping: {
+					template: {}
+				}
 			});
 
 			const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
@@ -281,7 +285,14 @@ class CourseAddOrEdit extends Component {
 			{ key: 'katex', text: 'Katex', value: 'katex' }
 		];
 
-		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList, codeLanguagesOptions };
+		const columnsOptions = [
+			{ key: 1, text: '1 column', value: 1 },
+			{ key: 2, text: '2 columns', value: 2 },
+			{ key: 3, text: '3 columns', value: 3 },
+			{ key: 4, text: '4 columns', value: 4 }
+		];
+
+		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList, codeLanguagesOptions, columnsOptions };
 	}
 
 	getMetaData() {
@@ -300,6 +311,7 @@ class CourseAddOrEdit extends Component {
 		fields.isPrivate = ((typeof fieldsTyping.isPrivate !== 'undefined') ? fieldsTyping.isPrivate : course && course.isPrivate) || false;
 		fields.content = ((typeof fieldsTyping.content !== 'undefined') ? fieldsTyping.content : course && course.content) || '';
 		fields.description = ((typeof fieldsTyping.description !== 'undefined') ? fieldsTyping.description : course && course.description) || '';
+		fields.template = (fieldsTyping.template && Object.keys(fieldsTyping.template).length > 0 ? {...course.template, ...fieldsTyping.template} : course && course.template) || {};
 
 		return fields;
 	}
@@ -314,17 +326,18 @@ class CourseAddOrEdit extends Component {
 		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction } = this.props;
 		const { pagination } = this.state;
 		const indexPagination = pagination.indexPage || 0;
+		const field = this.getFieldsVal(this.state.fieldsTyping, course);
 		const data = {};
 
 		if (this.state.isEditing) {
-			data.fields = this.state.fieldsTyping;
+			data.fields = {...this.state.fieldsTyping, template: { ...field.template } };
 			data.modifiedAt = new Date().toISOString();
 			data.courseId = course._id;
 			updateCourseAction(data).then(() => {
 				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 			});
 		} else {
-			data.fields = this.getFieldsVal(this.state.fieldsTyping, course);
+			data.fields = field;
 			data.userMeId = userMe._id;
 			data.createdAt = new Date().toISOString();
 			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
@@ -345,6 +358,10 @@ class CourseAddOrEdit extends Component {
 				fieldsTyping: { ...oldStateTyping, ...{[field.name]: field.value }, subCategories: [] },
 				category: { lastSelected: field.value}
 			});
+		}
+
+		if (/^column/g.test(field.name)) {
+			return this.setState({ fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} } });
 		}
 
 		/*
@@ -720,7 +737,7 @@ class CourseAddOrEdit extends Component {
 		const { category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
-		const { categoriesOptions, subCategoriesOptions, codeLanguagesOptions } = this.getOptionsFormsSelect();
+		const { categoriesOptions, subCategoriesOptions, codeLanguagesOptions, columnsOptions } = this.getOptionsFormsSelect();
 		const isDisableButtonSubmit = isEditing && !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && !fieldsTyping.isPrivate;
 
 		const buttonsToolbar = [
@@ -740,6 +757,15 @@ class CourseAddOrEdit extends Component {
 			{ icon: 'file image outline', content: 'Add image' }
 		];
 
+		const selectTemplatesHeaders = [
+			{ label: 'h1', name: 'columnH1' },
+			{ label: 'h2', name: 'columnH2' },
+			{ label: 'h3', name: 'columnH3' },
+			{ label: 'h4', name: 'columnH4' },
+			{ label: 'h5', name: 'columnH5' },
+			{ label: 'h6', name: 'columnH6' }
+		];
+
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container')}>
@@ -755,7 +781,7 @@ class CourseAddOrEdit extends Component {
 
 						<div className={cx('panel-explorer-tree-folder')}>
 							<List className={cx('panel-explorer-tree-folder-itemslist')} link>{ this.renderCoursesList(courses) }</List>
-							{ coursesPagesCount > 0 && this.renderPaginationCoursesList(coursesPagesCount, pagination) }
+							{ coursesPagesCount > 1 && this.renderPaginationCoursesList(coursesPagesCount, pagination) }
 						</div>
 
 						<div className={cx('panel-explorer-properties')}>
@@ -767,6 +793,21 @@ class CourseAddOrEdit extends Component {
 								{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={this.handleInputChange} /> : ''}
 
 								<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={this.handleInputChange} />
+
+								<Segment>
+									<Header as="h4" icon="edit" content="Templates" />
+									<Form.Field inline className={cx('header-select-container')}>
+										{ selectTemplatesHeaders.map((select, key) => {
+											return (
+												<div key={key}>
+													<label htmlFor={select.name}>{select.label}</label>
+													<Select className={cx('header-select')} name={select.name} options={columnsOptions} value={fields.template[select.name] || 1} onChange={this.handleInputChange} />
+												</div>
+												);
+										}) }
+									</Form.Field>
+								</Segment>
+
 								<Message error content={messagesError} />
 
 								{ isDisableButtonSubmit ? <Form.Button basic disabled>Save properties</Form.Button> : <Form.Button basic>Save properties</Form.Button>}

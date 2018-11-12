@@ -17,7 +17,7 @@
     .panel-explorer-tree-folder {
       padding: 20px;
       .panel-explorer-tree-folder-itemslist {
-        min-height: 260px;
+        // min-height: 260px;
 
         a { padding: 3px; }
         a.active-course {
@@ -31,6 +31,20 @@
     .panel-explorer-properties {
       padding: 20px;
       margin-top: 20px;
+
+      .header-select-container {
+        label {
+          display: inline-block;
+          width: 25px;
+        }
+        .header-select {
+          display: inline-block;
+          min-width: 110px;
+          font-size: 10px;
+          margin-bottom: 4px;
+        }
+        .header-select div { font-size: 12px; }
+      }
     }
   }
 
