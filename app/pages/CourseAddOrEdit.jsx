@@ -738,7 +738,7 @@ class CourseAddOrEdit extends Component {
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions, codeLanguagesOptions, columnsOptions } = this.getOptionsFormsSelect();
-		const isDisableButtonSubmit = isEditing && !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && !fieldsTyping.isPrivate;
+		const isDisableButtonSubmit = isEditing && !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && !fieldsTyping.isPrivate && (!fieldsTyping.template || (fieldsTyping.template && Object.keys(fieldsTyping.template).length === 0));
 
 		const buttonsToolbar = [
 			{ icon: 'bold', content: 'Bold' },
