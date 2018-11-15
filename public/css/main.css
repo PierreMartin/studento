@@ -23,3 +23,26 @@ This file is used for overload the existant css
     color: inherit !important;
     padding: 0 !important;
 }
+
+/* Markdown render */
+.md-column-1 {
+    width: 100%;
+}
+
+.md-column-2 {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+}
+
+.md-column-3 {
+    display: inline-block;
+    width: 32%;
+    vertical-align: top;
+}
+
+.md-column-4 {
+    display: inline-block;
+    width: 24%;
+    vertical-align: top;
+}

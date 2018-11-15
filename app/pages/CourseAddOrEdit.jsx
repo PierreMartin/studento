@@ -71,8 +71,9 @@ class CourseAddOrEdit extends Component {
 		hljsLoadLanguages(hljs);
 
 		// ##################################### Marked #####################################
+		const renderer = new marked.Renderer();
 		marked.setOptions({
-			renderer: new marked.Renderer(),
+			renderer,
 			pedantic: false,
 			gfm: true,
 			tables: true,
@@ -82,6 +83,25 @@ class CourseAddOrEdit extends Component {
 			smartypants: false,
 			xhtml: false
 		});
+
+		let counterHeader = 0;
+		const numberHeaders = this.props.course.content && this.props.course.content.match(/(?<=# {1,})/gi).length;
+		renderer.heading = (text, level) => {
+			const divClose = counterHeader > 0 ? '</div>' : '';
+			const lastDivClose = /*(counterHeader + 1) === numberHeaders ? '</div>' : ''*/ '';
+			const numberColumns = this.props.course.template['columnH' + level];
+
+			counterHeader++;
+
+			if (counterHeader === numberHeaders) counterHeader = 0;
+
+			return `
+				${divClose}
+				<div class="md-column-${numberColumns}">
+					<h${level}>${text}</h${level}>
+				${lastDivClose}
+			`;
+		};
 
 		// ##################################### CodeMirror #####################################
 		this.CodeMirror = require('codemirror/lib/codemirror');
