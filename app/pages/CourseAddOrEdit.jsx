@@ -152,7 +152,7 @@ class CourseAddOrEdit extends Component {
 				}
 
 				// Close when different header:
-				if (diffLevelWithLastHeader > 0 && currenLevel === headersList[i].levelHeader) {
+				if (currenLevel < lastLevelHeader && currenLevel === headersList[i].levelHeader) {
 					closeDivNode = '</div></div>';
 					break;
 				} else if (lastLevelHeader > currenLevel) {
