@@ -84,22 +84,95 @@ class CourseAddOrEdit extends Component {
 			xhtml: false
 		});
 
-		let counterHeader = 0;
+		/*
+		`
+		<div> 				0
+			<h1></h1> 	0
+		</div> 				1 close
+
+		<div> 				1
+			<h1></h1> 	1
+		</div> 				2 close
+
+		<div> 				2
+			<h1></h1>		2
+			<div>				3
+				<h3></h3>	3
+			</div>			4 close
+
+			<div>				3
+				<h2></h2>	3
+			</div>			4 close
+
+			<div>				3
+				<h2></h2>	3
+			</div>			4 close
+		</div>				4 close
+
+		<div> 				4
+			<h1></h1> 	4 fixer ici
+		</div>
+		`
+		*/
+
+		let indexHeader = 0;
+		let headersList = [];
 		const numberHeaders = this.props.course.content && this.props.course.content.match(/(?<=# {1,})/gi).length;
-		renderer.heading = (text, level) => {
-			const divClose = counterHeader > 0 ? '</div>' : '';
-			const lastDivClose = /*(counterHeader + 1) === numberHeaders ? '</div>' : ''*/ '';
-			const numberColumns = this.props.course.template['columnH' + level];
 
-			counterHeader++;
+		renderer.heading = (text, currenLevel) => {
+			const numberColumns = this.props.course.template['columnH' + currenLevel];
+			let closeDivNode = '';
+			let levelImbrication = 0;
 
-			if (counterHeader === numberHeaders) counterHeader = 0;
+			// 1st header:
+			if (indexHeader === 0) {
+				headersList.push({ levelHeader: currenLevel, levelImbrication });
+				indexHeader++;
+
+				if (indexHeader === numberHeaders) {
+					indexHeader = 0;
+					headersList = [];
+				}
+
+				return `
+					${closeDivNode}
+					<div class="md-column-${numberColumns}">
+						<h${currenLevel}>${text}</h${currenLevel}>
+				`;
+			}
+
+			const lastLevelHeader = headersList[headersList.length - 1].levelHeader;
+			const diffLevelWithLastHeader = Math.abs(lastLevelHeader - currenLevel);
+
+			for (let i = 0; i < headersList.length; i++) { // TODO faire i-- et enlever splice()
+				const alreadyHaveLevelHeader = headersList[i].levelHeader === currenLevel;
+
+				// Close when same header in same level imbrication:
+				if (alreadyHaveLevelHeader && diffLevelWithLastHeader === 0) {
+					closeDivNode = indexHeader > 0 ? '</div>' : '';
+					headersList.splice(i, 1);
+				}
+
+				// Close when different header:
+				if (lastLevelHeader > currenLevel) {
+					levelImbrication++;
+					closeDivNode += indexHeader > 0 ? '</div>' : '';
+					break;
+				}
+			}
+
+			headersList.push({ levelHeader: currenLevel, levelImbrication });
+			indexHeader++;
+
+			if (indexHeader === numberHeaders) {
+				indexHeader = 0;
+				headersList = [];
+			}
 
 			return `
-				${divClose}
+				${closeDivNode}
 				<div class="md-column-${numberColumns}">
-					<h${level}>${text}</h${level}>
-				${lastDivClose}
+					<h${currenLevel}>${text}</h${currenLevel}>
 			`;
 		};
 
