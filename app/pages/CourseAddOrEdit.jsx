@@ -122,11 +122,10 @@ class CourseAddOrEdit extends Component {
 		renderer.heading = (text, currenLevel) => {
 			const numberColumns = this.props.course.template['columnH' + currenLevel];
 			let closeDivNode = '';
-			let levelImbrication = 0;
 
 			// 1st header:
 			if (indexHeader === 0) {
-				headersList.push({ levelHeader: currenLevel, levelImbrication });
+				headersList.push({ levelHeader: currenLevel });
 				indexHeader++;
 
 				if (indexHeader === numberHeaders) {
@@ -144,24 +143,24 @@ class CourseAddOrEdit extends Component {
 			const lastLevelHeader = headersList[headersList.length - 1].levelHeader;
 			const diffLevelWithLastHeader = Math.abs(lastLevelHeader - currenLevel);
 
-			for (let i = 0; i < headersList.length; i++) { // TODO faire i-- et enlever splice()
+			for (let i = headersList.length - 1; i >= 0; i--) {
 				const alreadyHaveLevelHeader = headersList[i].levelHeader === currenLevel;
 
 				// Close when same header in same level imbrication:
 				if (alreadyHaveLevelHeader && diffLevelWithLastHeader === 0) {
-					closeDivNode = indexHeader > 0 ? '</div>' : '';
-					headersList.splice(i, 1);
+					closeDivNode = '</div>';
 				}
 
 				// Close when different header:
-				if (lastLevelHeader > currenLevel) {
-					levelImbrication++;
-					closeDivNode += indexHeader > 0 ? '</div>' : '';
+				if (diffLevelWithLastHeader > 0 && currenLevel === headersList[i].levelHeader) {
+					closeDivNode = '</div></div>';
 					break;
+				} else if (lastLevelHeader > currenLevel) {
+					closeDivNode = '</div>';
 				}
 			}
 
-			headersList.push({ levelHeader: currenLevel, levelImbrication });
+			headersList.push({ levelHeader: currenLevel });
 			indexHeader++;
 
 			if (indexHeader === numberHeaders) {
