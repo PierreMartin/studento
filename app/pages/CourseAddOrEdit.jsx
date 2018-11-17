@@ -117,10 +117,12 @@ class CourseAddOrEdit extends Component {
 
 		let indexHeader = 0;
 		let headersList = [];
-		const numberHeaders = this.props.course.content && this.props.course.content.match(/(?<=# {1,})/gi).length;
 
 		renderer.heading = (text, currenLevel) => {
-			const numberColumns = this.props.course.template['columnH' + currenLevel];
+			const content = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
+			const template = (this.state.fieldsTyping.template && Object.keys(this.state.fieldsTyping.template).length > 0 ? {...this.props.course.template, ...this.state.fieldsTyping.template} : this.props.course && this.props.course.template) || {};
+			const numberHeaders = content.match(/(#{1,6}) ([^\n]+?) *(?:#+ *)?(?:\n+|$)/gi).length;
+			const numberColumns = template['columnH' + currenLevel];
 			let closeDivNode = '';
 
 			// 1st header:

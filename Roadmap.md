@@ -109,6 +109,8 @@ $ ./scripts/generate_menu.sh
 - Mettre un Breadcrumb
 - Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
 
+- Resolve vulnerabilities in dependencies
+- Voir pk on a le props precedent à chaque changement de page
 - Améliorer perfs codeMIrror
 - améliorer la requet d'upate de l'user comme pour les courses
 
