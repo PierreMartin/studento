@@ -84,98 +84,7 @@ class CourseAddOrEdit extends Component {
 			xhtml: false
 		});
 
-		/*
-		`
-		<div> 				0
-			<h1></h1> 	0
-		</div> 				1 close
-
-		<div> 				1
-			<h1></h1> 	1
-		</div> 				2 close
-
-		<div> 				2
-			<h1></h1>		2
-			<div>				3
-				<h3></h3>	3
-			</div>			4 close
-
-			<div>				3
-				<h2></h2>	3
-			</div>			4 close
-
-			<div>				3
-				<h2></h2>	3
-			</div>			4 close
-		</div>				4 close
-
-		<div> 				4
-			<h1></h1> 	4 fixer ici
-		</div>
-		`
-		*/
-
-		let indexHeader = 0;
-		let headersList = [];
-
-		renderer.heading = (text, currenLevel) => {
-			const content = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
-			const template = (this.state.fieldsTyping.template && Object.keys(this.state.fieldsTyping.template).length > 0 ? {...this.props.course.template, ...this.state.fieldsTyping.template} : this.props.course && this.props.course.template) || {};
-			const numberHeaders = content.match(/(#{1,6}) ([^\n]+?) *(?:#+ *)?(?:\n+|$)/gi).length;
-			const numberColumns = template['columnH' + currenLevel];
-			let closeDivNode = '';
-
-			// 1st header:
-			if (indexHeader === 0) {
-				headersList.push({ levelHeader: currenLevel });
-				indexHeader++;
-
-				if (indexHeader === numberHeaders) {
-					indexHeader = 0;
-					headersList = [];
-				}
-
-				return `
-					${closeDivNode}
-					<div class="md-column-${numberColumns}">
-						<h${currenLevel}>${text}</h${currenLevel}>
-				`;
-			}
-
-			const lastLevelHeader = headersList[headersList.length - 1].levelHeader;
-			const diffLevelWithLastHeader = Math.abs(lastLevelHeader - currenLevel);
-
-			for (let i = headersList.length - 1; i >= 0; i--) {
-				const alreadyHaveLevelHeader = headersList[i].levelHeader === currenLevel;
-
-				// Close when same header in same level imbrication:
-				if (alreadyHaveLevelHeader && diffLevelWithLastHeader === 0) {
-					closeDivNode = '</div>';
-				}
-
-				// Close when different header:
-				if (currenLevel < lastLevelHeader && currenLevel === headersList[i].levelHeader) {
-					closeDivNode = '</div></div>';
-					break;
-				} else if (lastLevelHeader > currenLevel) {
-					closeDivNode = '</div>';
-				}
-			}
-
-			headersList.push({ levelHeader: currenLevel });
-			indexHeader++;
-
-			if (indexHeader === numberHeaders) {
-				indexHeader = 0;
-				headersList = [];
-			}
-
-			return `
-				${closeDivNode}
-				<div class="md-column-${numberColumns}">
-					<h${currenLevel}>${text}</h${currenLevel}>
-			`;
-		};
+		this.templateRendering(renderer);
 
 		// ##################################### CodeMirror #####################################
 		this.CodeMirror = require('codemirror/lib/codemirror');
@@ -641,6 +550,70 @@ class CourseAddOrEdit extends Component {
 				}
 			}
 		}
+	}
+
+	templateRendering(renderer) {
+		let indexHeader = 0;
+		let headersList = [];
+
+		renderer.heading = (text, currenLevel) => {
+			const content = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
+			const template = (this.state.fieldsTyping.template && Object.keys(this.state.fieldsTyping.template).length > 0 ? {...this.props.course.template, ...this.state.fieldsTyping.template} : this.props.course && this.props.course.template) || {};
+			const numberHeaders = content.match(/(#{1,6}) ([^\n]+?) *(?:#+ *)?(?:\n+|$)/gi).length; // TODO changer regex, mettre  /^ *(#{1,6}) *([^\n]+?) *(?:#+ *)?(?:\n+|$)/
+			const numberColumns = template['columnH' + currenLevel];
+			let closeDivNode = '';
+
+			// 1st header:
+			if (indexHeader === 0) {
+				headersList.push({ levelHeader: currenLevel });
+				indexHeader++;
+
+				if (indexHeader === numberHeaders) {
+					indexHeader = 0;
+					headersList = [];
+				}
+
+				return `
+					${closeDivNode}
+					<div class="md-column-${numberColumns}">
+						<h${currenLevel}>${text}</h${currenLevel}>
+				`;
+			}
+
+			const lastLevelHeader = headersList[headersList.length - 1].levelHeader;
+			const diffLevelWithLastHeader = Math.abs(lastLevelHeader - currenLevel);
+
+			for (let i = headersList.length - 1; i >= 0; i--) {
+				const alreadyHaveLevelHeader = headersList[i].levelHeader === currenLevel;
+
+				// Close when same header in same level imbrication:
+				if (alreadyHaveLevelHeader && diffLevelWithLastHeader === 0) {
+					closeDivNode = '</div>';
+				}
+
+				// Close when different header:
+				if (lastLevelHeader > currenLevel && currenLevel === headersList[i].levelHeader) {
+					for (let j = 0; j < diffLevelWithLastHeader; j++) closeDivNode += '</div>';
+					break;
+				} else if (lastLevelHeader > currenLevel) {
+					closeDivNode = '</div>';
+				}
+			}
+
+			headersList.push({ levelHeader: currenLevel });
+			indexHeader++;
+
+			if (indexHeader === numberHeaders) {
+				indexHeader = 0;
+				headersList = [];
+			}
+
+			return `
+				${closeDivNode}
+				<div class="md-column-${numberColumns}">
+					<h${currenLevel}>${text}</h${currenLevel}>
+			`;
+		};
 	}
 
 	HighlightRendering() {
