@@ -27,34 +27,26 @@ This file is used for overload the existant css
 /* Markdown render */
 .md-column-1 {
     width: 100%;
-    border: #aca4a1 solid 1px;
     padding: 4px;
-    margin-top: 12px;
 }
 
 .md-column-2 {
     display: inline-block;
     width: 49%;
     vertical-align: top;
-    border: #aca4a1 solid 1px;
     padding: 4px;
-    margin-top: 12px;
 }
 
 .md-column-3 {
     display: inline-block;
     width: 32%;
     vertical-align: top;
-    border: #aca4a1 solid 1px;
     padding: 4px;
-    margin-top: 12px;
 }
 
 .md-column-4 {
     display: inline-block;
     width: 24%;
     vertical-align: top;
-    border: #aca4a1 solid 1px;
     padding: 4px;
-    margin-top: 12px;
 }
