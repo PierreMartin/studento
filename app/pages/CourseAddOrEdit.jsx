@@ -559,7 +559,7 @@ class CourseAddOrEdit extends Component {
 		renderer.heading = (text, currenLevel) => {
 			const content = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
 			const template = (this.state.fieldsTyping.template && Object.keys(this.state.fieldsTyping.template).length > 0 ? {...this.props.course.template, ...this.state.fieldsTyping.template} : this.props.course && this.props.course.template) || {};
-			const numberHeaders = content.match(/(#{1,6}) ([^\n]+?) *(?:#+ *)?(?:\n+|$)/gi).length; // TODO changer regex, mettre  /^ *(#{1,6}) *([^\n]+?) *(?:#+ *)?(?:\n+|$)/
+			const numberHeaders = content.match(/^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)|^[-]{2,}/gmi).length;
 			const numberColumns = template['columnH' + currenLevel];
 			let closeDivNode = '';
 
