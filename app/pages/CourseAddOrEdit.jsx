@@ -559,7 +559,8 @@ class CourseAddOrEdit extends Component {
 		renderer.heading = (text, currenLevel) => {
 			const content = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
 			const template = (this.state.fieldsTyping.template && Object.keys(this.state.fieldsTyping.template).length > 0 ? {...this.props.course.template, ...this.state.fieldsTyping.template} : this.props.course && this.props.course.template) || {};
-			const numberHeaders = content.match(/^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)|^[-]{2,}/gmi).length;
+			const arrMatchHeaders = typeof content === 'string' ? content.match(/^ {0,3}(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)|^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/gmi) : null;
+			const numberHeaders = arrMatchHeaders !== null ? arrMatchHeaders.length : 0;
 			const numberColumns = template['columnH' + currenLevel];
 			let closeDivNode = '';
 
