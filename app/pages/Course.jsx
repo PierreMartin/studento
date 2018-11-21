@@ -15,9 +15,7 @@ import CoursePage from '../components/CoursePage/CoursePage';
 class Course extends Component {
 	constructor(props) {
 		super(props);
-
 		this.timerRenderPreview = null;
-		// this.timerHighlightPreview = null;
 
 		this.state = {
 			contentMarkedSanitized: ''
@@ -44,12 +42,12 @@ class Course extends Component {
 		// Highlight and Katex rendering:
 		require('katex/dist/katex.css');
 
-		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.renderCourse();  })    ET remove  componentDidUpdate()
-		this.renderCourse();
+		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.setStateContentMarkedSanitized();  })    ET remove  componentDidUpdate();
+		this.setStateContentMarkedSanitized();
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.course !== this.props.course) this.renderCourse();
+		if (prevProps.course !== this.props.course) this.setStateContentMarkedSanitized();
 	}
 
 	getMetaData() {
@@ -60,12 +58,21 @@ class Course extends Component {
 		};
 	}
 
+	setStateContentMarkedSanitized() {
+		this.setState({
+			contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.course.content || ''))
+		}, () => {
+			clearTimeout(this.timerRenderPreview);
+			this.timerRenderPreview = setTimeout(() => {
+				this.HighlightRendering();
+				this.kaTexRendering();
+			}, 100);
+		});
+	}
+
 	HighlightRendering() {
-		// clearTimeout(this.timerHighlightPreview);
-		// this.timerHighlightPreview = setTimeout(() => {
-			const code = document.querySelectorAll('pre code');
-			for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
-		// }, 1000);
+		const code = document.querySelectorAll('pre code');
+		for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
 	}
 
 	kaTexRendering() {
@@ -84,16 +91,6 @@ class Course extends Component {
 				}
 			}
 		}
-	}
-
-	renderCourse() {
-		this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.course.content || '')) }, () => {
-			clearTimeout(this.timerRenderPreview);
-			this.timerRenderPreview = setTimeout(() => {
-				this.HighlightRendering();
-				this.kaTexRendering();
-			}, 100);
-		});
 	}
 
 	render() {

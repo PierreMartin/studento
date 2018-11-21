@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import marked from 'marked';
-// import DOMPurify from 'dompurify';
+import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
 import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
@@ -35,12 +35,14 @@ class CourseAddOrEdit extends Component {
 		this.handleLanguageChange = this.handleLanguageChange.bind(this);
 		this.handleInputModalSetStyleChange = this.handleInputModalSetStyleChange.bind(this);
 
+		this.rendererMarked = null;
 		this.editorCm = null;
 		this.editorCmMini = null;
 		this.timerRenderPreview = null;
 		this.CodeMirror = null;
 
 		this.state = {
+			contentMarkedSanitized: '',
 			fieldsTyping: {
 				template: {}
 			},
@@ -71,9 +73,9 @@ class CourseAddOrEdit extends Component {
 		hljsLoadLanguages(hljs);
 
 		// ##################################### Marked #####################################
-		const renderer = new marked.Renderer();
+		this.rendererMarked = new marked.Renderer();
 		marked.setOptions({
-			renderer,
+			renderer: this.rendererMarked,
 			pedantic: false,
 			gfm: true,
 			tables: true,
@@ -83,8 +85,6 @@ class CourseAddOrEdit extends Component {
 			smartypants: false,
 			xhtml: false
 		});
-
-		this.templateRendering(renderer);
 
 		// ##################################### CodeMirror #####################################
 		this.CodeMirror = require('codemirror/lib/codemirror');
@@ -167,12 +167,12 @@ class CourseAddOrEdit extends Component {
 
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
-		setTimeout(() => hljs.initHighlighting(), 1000);
-		setTimeout(() => this.kaTexRendering(this.editorCm.getValue()), 1000);
+		this.templateRendering(); // TODO externaliser ca
+		this.setStateContentMarkedSanitized({ valueEditor: this.editorCm.getValue() });
+		// setTimeout(() => hljs.initHighlighting(), 1000);
 
 		// handleEditorChange:
 		this.editorCm.on('change', () => {
-			const oldStateTyping = this.state.fieldsTyping;
 			const valueEditor = this.editorCm.getValue();
 			const isBigFile = valueEditor.length >= 3000;
 
@@ -180,19 +180,13 @@ class CourseAddOrEdit extends Component {
 			clearTimeout(this.timerRenderPreview);
 			this.timerRenderPreview = setTimeout(() => {
 				if (isBigFile) {
-					this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} }, () => {
-						this.HighlightRendering();
-						this.kaTexRendering(valueEditor);
-					});
+					this.setStateContentMarkedSanitized({ setStateRawContent: true, valueEditor });
 				}
 			}, 200);
 
 			// ------- Small course -------
 			if (!isBigFile) {
-				this.setState({ fieldsTyping: {...oldStateTyping, ...{ content: valueEditor }} }, () => {
-					this.HighlightRendering();
-					this.kaTexRendering(valueEditor);
-				});
+				this.setStateContentMarkedSanitized({ setStateRawContent: true, valueEditor });
 			}
 		});
 
@@ -356,6 +350,7 @@ class CourseAddOrEdit extends Component {
 	handleInputChange(event, field) {
 		const oldStateTyping = this.state.fieldsTyping;
 
+		// Set categories:
 		if (field.name === 'category') {
 			return this.setState({
 				fieldsTyping: { ...oldStateTyping, ...{[field.name]: field.value }, subCategories: [] },
@@ -363,16 +358,17 @@ class CourseAddOrEdit extends Component {
 			});
 		}
 
+		// Set columns:
 		if (/^column/g.test(field.name)) {
-			return this.setState({ fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} } });
+			return this.setState({
+				fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} }
+			}, () => {
+				const content = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
+				return this.setStateContentMarkedSanitized({ valueEditor: content });
+			});
 		}
 
-		/*
-		if (field.name === 'content') {
-			return this.setState({ fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}} });
-		}
-		*/
-
+		// Set all forms fields except content:
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
 	}
 
@@ -552,15 +548,12 @@ class CourseAddOrEdit extends Component {
 		}
 	}
 
-	templateRendering(renderer) {
+	templateRendering() {
 		let indexHeader = 0;
-		let headersList = [];
+		const headersList = [];
 
-		renderer.heading = (text, currenLevel) => {
-			const content = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
+		this.rendererMarked.heading = (text, currenLevel) => {
 			const template = (this.state.fieldsTyping.template && Object.keys(this.state.fieldsTyping.template).length > 0 ? {...this.props.course.template, ...this.state.fieldsTyping.template} : this.props.course && this.props.course.template) || {};
-			const arrMatchHeaders = typeof content === 'string' ? content.match(/^ {0,3}(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)|^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/gmi) : null;
-			const numberHeaders = arrMatchHeaders !== null ? arrMatchHeaders.length : 0;
 			const numberColumns = template['columnH' + currenLevel];
 			let closeDivNode = '';
 
@@ -568,11 +561,6 @@ class CourseAddOrEdit extends Component {
 			if (indexHeader === 0) {
 				headersList.push({ levelHeader: currenLevel });
 				indexHeader++;
-
-				if (indexHeader === numberHeaders) {
-					indexHeader = 0;
-					headersList = [];
-				}
 
 				return `
 					${closeDivNode}
@@ -603,11 +591,6 @@ class CourseAddOrEdit extends Component {
 
 			headersList.push({ levelHeader: currenLevel });
 			indexHeader++;
-
-			if (indexHeader === numberHeaders) {
-				indexHeader = 0;
-				headersList = [];
-			}
 
 			return `
 				${closeDivNode}
@@ -800,9 +783,33 @@ class CourseAddOrEdit extends Component {
 		);
 	}
 
+	setStateContentMarkedSanitized(params = {}) {
+		const content = ((typeof params.valueEditor !== 'undefined') ? params.valueEditor : this.props.course && this.props.course.content) || '';
+		const contentMarkedSanitized = DOMPurify.sanitize(marked(content || ''));
+
+		if (params.setStateRawContent) {
+			const oldStateTyping = this.state.fieldsTyping;
+
+			return this.setState({
+				contentMarkedSanitized,
+				fieldsTyping: {...oldStateTyping, ...{ content: params.valueEditor }}
+			}, () => {
+				this.HighlightRendering();
+				this.kaTexRendering(params.valueEditor);
+			});
+		}
+
+		this.setState({
+			contentMarkedSanitized
+		}, () => {
+			this.HighlightRendering();
+			this.kaTexRendering(params.valueEditor);
+		});
+	}
+
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected } = this.state;
+		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions, codeLanguagesOptions, columnsOptions } = this.getOptionsFormsSelect();
@@ -904,7 +911,7 @@ class CourseAddOrEdit extends Component {
 								</Form>
 							</div>
 
-							<div className={cx('container-page', 'preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: marked(fields.content || '') }} ref={(el) => { this.refPreview = el; }} />
+							<div className={cx('container-page', 'preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refPreview = el; }} />
 						</div>
 					</div>
 				</div>
