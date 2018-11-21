@@ -41,6 +41,10 @@ class CourseAddOrEdit extends Component {
 		this.timerRenderPreview = null;
 		this.CodeMirror = null;
 
+		// Init for generate headings wrap:
+		this.indexHeader = 0;
+		this.headersList = [];
+
 		this.state = {
 			contentMarkedSanitized: '',
 			fieldsTyping: {
@@ -176,6 +180,10 @@ class CourseAddOrEdit extends Component {
 			const valueEditor = this.editorCm.getValue();
 			const isBigFile = valueEditor.length >= 3000;
 
+			// Init for generate headings wrap:
+			this.indexHeader = 0;
+			this.headersList = [];
+
 			// ------- Big course -------
 			clearTimeout(this.timerRenderPreview);
 			this.timerRenderPreview = setTimeout(() => {
@@ -196,6 +204,10 @@ class CourseAddOrEdit extends Component {
 	componentDidUpdate(prevProps) {
 		// Change pages:
 		if (prevProps.course !== this.props.course) {
+			// Init for generate headings wrap:
+			this.indexHeader = 0;
+			this.headersList = [];
+
 			const fields = this.getFieldsVal({}, this.props.course);
 
 			this.editorCm.setValue(fields.content);
@@ -549,18 +561,15 @@ class CourseAddOrEdit extends Component {
 	}
 
 	templateRendering() {
-		let indexHeader = 0;
-		const headersList = [];
-
 		this.rendererMarked.heading = (text, currenLevel) => {
 			const template = (this.state.fieldsTyping.template && Object.keys(this.state.fieldsTyping.template).length > 0 ? {...this.props.course.template, ...this.state.fieldsTyping.template} : this.props.course && this.props.course.template) || {};
-			const numberColumns = template['columnH' + currenLevel];
+			const numberColumns = typeof template['columnH' + currenLevel] !== 'undefined' ? template['columnH' + currenLevel] : 1;
 			let closeDivNode = '';
 
 			// 1st header:
-			if (indexHeader === 0) {
-				headersList.push({ levelHeader: currenLevel });
-				indexHeader++;
+			if (this.indexHeader === 0) {
+				this.headersList.push({ levelHeader: currenLevel });
+				this.indexHeader++;
 
 				return `
 					${closeDivNode}
@@ -569,11 +578,11 @@ class CourseAddOrEdit extends Component {
 				`;
 			}
 
-			const lastLevelHeader = headersList[headersList.length - 1].levelHeader;
+			const lastLevelHeader = this.headersList[this.headersList.length - 1].levelHeader;
 			const diffLevelWithLastHeader = Math.abs(lastLevelHeader - currenLevel);
 
-			for (let i = headersList.length - 1; i >= 0; i--) {
-				const alreadyHaveLevelHeader = headersList[i].levelHeader === currenLevel;
+			for (let i = this.headersList.length - 1; i >= 0; i--) {
+				const alreadyHaveLevelHeader = this.headersList[i].levelHeader === currenLevel;
 
 				// Close when same header in same level imbrication:
 				if (alreadyHaveLevelHeader && diffLevelWithLastHeader === 0) {
@@ -581,7 +590,7 @@ class CourseAddOrEdit extends Component {
 				}
 
 				// Close when different header:
-				if (lastLevelHeader > currenLevel && currenLevel === headersList[i].levelHeader) {
+				if (lastLevelHeader > currenLevel && currenLevel === this.headersList[i].levelHeader) {
 					for (let j = 0; j < diffLevelWithLastHeader; j++) closeDivNode += '</div>';
 					break;
 				} else if (lastLevelHeader > currenLevel) {
@@ -589,8 +598,8 @@ class CourseAddOrEdit extends Component {
 				}
 			}
 
-			headersList.push({ levelHeader: currenLevel });
-			indexHeader++;
+			this.headersList.push({ levelHeader: currenLevel });
+			this.indexHeader++;
 
 			return `
 				${closeDivNode}
