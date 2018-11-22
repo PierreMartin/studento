@@ -19,13 +19,18 @@ const renderCoursesList = (courses) => {
 
 		return (
 			<Link key={key} to={`/course/${course._id}`} className={cx('course-container-item')}>
-				<div className={cx('course-header')}><Icon name={categoryInfo.picto || 'code'} size="big" /></div>
+				<div className={cx('course-header')}>
+					<Icon name={categoryInfo.picto || 'code'} size="big" />
+					<div className={cx('subcat')}>
+						{course.subCategories && course.subCategories.map((subCat, i) => {
+							const space = course.subCategories.length - 1 === i ? '' : ', ';
+							return subCat + space;
+						})}
+					</div>
+				</div>
 				<div className={cx('course-body')}>
-					<div className={cx('subcat')}>{course.subCategories && course.subCategories.map((subCat, i) => {
-						const space = course.subCategories.length - 1 === i ? '' : ', ';
-						return subCat + space;
-					})}</div>
-					<div className={cx('title')}>{course.title}</div>
+					<h2 className={cx('title')}>{course.title}</h2>
+					<div className={cx('description')}>{course.description}</div>
 					<div className={cx('username')}>{author.username}</div>
 					<div className={cx('date')}>{courseDate}</div>
 				</div>
@@ -76,6 +81,7 @@ CoursesList.propTypes = {
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
 		title: PropTypes.string,
+		description: PropTypes.string,
 		category: PropTypes.string,
 		category_info: (PropTypes.shape({
 			description: PropTypes.string,

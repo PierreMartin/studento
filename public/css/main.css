@@ -6,13 +6,30 @@ This file is used for overload the existant css
     max-width: none !important;
 }
 
+/* MAIN MENU & FOOTER */
 .ui.inverted.segment, .ui.primary.inverted.segment {
-    background-color: #141619 !important;
+    background-color: #40c6f2 !important;
 }
 
+
+/* MAIN MENU */
 .ui.secondary.inverted.pointing.menu {
     border: none;
+    padding-top: 16px;
 }
+
+.ui.secondary.inverted.menu .link.item, .ui.secondary.inverted.menu a.item {
+    color: #fff !important;
+    font-weight: 900;
+}
+
+.ui.secondary.inverted.pointing.menu .item {
+    font-weight: 900;
+    padding-top: 0;
+    padding-bottom: 5px;
+}
+
+
 
 .ui.grid > .stretched.column:not(.row) > * {
     background-color: transparent;

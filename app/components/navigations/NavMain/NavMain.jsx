@@ -98,7 +98,7 @@ class NavigationMain extends Component {
 		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl } = this.props;
 
 		return (
-			<Segment inverted style={{ marginBottom: '0' }}>
+			<Segment inverted style={{ marginBottom: '0', padding: '0', height: '55px' }}>
 				<Container>
 					<Menu inverted pointing secondary>
 						<Menu.Item position="left">

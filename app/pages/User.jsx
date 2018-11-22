@@ -71,7 +71,7 @@ class User extends Component {
 				</Segment>
 
 				<Segment vertical>
-					<Container text>
+					<Container text style={{ marginBottom: '40px' }}>
 						<Header as="h2" icon="student" content="His courses" />
 						<CoursesList
 							courses={courses}
