@@ -6,6 +6,7 @@ import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
 import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
+import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
 import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
@@ -171,7 +172,7 @@ class CourseAddOrEdit extends Component {
 
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
-		this.templateRendering(); // TODO externaliser ca
+		this.templateRendering();
 		this.setStateContentMarkedSanitized({ valueEditor: this.editorCm.getValue() });
 		// setTimeout(() => hljs.initHighlighting(), 1000);
 
@@ -609,27 +610,6 @@ class CourseAddOrEdit extends Component {
 		};
 	}
 
-	HighlightRendering() {
-		const code = this.refPreview.querySelectorAll('pre code');
-		for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
-	}
-
-	kaTexRendering(valueEditor) {
-		const katexNode = this.refPreview.querySelectorAll('.language-katex'); // OUT
-
-		const valuesKatex = valueEditor.match(/(?<=```katex\s+)(.[\s\S]*?)(?=\s+```)/gi) || []; // IN
-		for (let i = 0; i < valuesKatex.length; i++) {
-			const text = valuesKatex[i];
-			if (katexNode[i]) {
-				const macros = {
-					'\\f': 'f(#1)',
-					'\\RR': '\\mathbb{R}'
-				};
-				katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false, macros });
-			}
-		}
-	}
-
 	handleOpenModalSetStyle(params) { this.setState({ openModalSetStyle: params }); }
 	handleCloseModalSetStyle() { this.setState({ openModalSetStyle: {}, codeLanguageSelected: '', fieldsModalSetStyleTyping: {} }); }
 
@@ -803,16 +783,16 @@ class CourseAddOrEdit extends Component {
 				contentMarkedSanitized,
 				fieldsTyping: {...oldStateTyping, ...{ content: params.valueEditor }}
 			}, () => {
-				this.HighlightRendering();
-				this.kaTexRendering(params.valueEditor);
+				HighlightRendering(hljs);
+				kaTexRendering(katex, params.valueEditor);
 			});
 		}
 
 		this.setState({
 			contentMarkedSanitized
 		}, () => {
-			this.HighlightRendering();
-			this.kaTexRendering(params.valueEditor);
+			HighlightRendering(hljs);
+			kaTexRendering(katex, params.valueEditor);
 		});
 	}
 

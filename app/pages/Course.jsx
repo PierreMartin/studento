@@ -6,6 +6,7 @@ import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
 import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
+import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
 import { Container, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CourseInfos from '../components/CourseInfos/CourseInfos';
@@ -15,7 +16,12 @@ import CoursePage from '../components/CoursePage/CoursePage';
 class Course extends Component {
 	constructor(props) {
 		super(props);
+		this.rendererMarked = null;
 		this.timerRenderPreview = null;
+
+		// Init for generate headings wrap:
+		this.indexHeader = 0;
+		this.headersList = [];
 
 		this.state = {
 			contentMarkedSanitized: ''
@@ -27,8 +33,9 @@ class Course extends Component {
 		hljsLoadLanguages(hljs);
 
 		// ##################################### Marked #####################################
+		this.rendererMarked = new marked.Renderer();
 		marked.setOptions({
-			renderer: new marked.Renderer(),
+			renderer: this.rendererMarked,
 			pedantic: false,
 			gfm: true,
 			tables: true,
@@ -43,11 +50,19 @@ class Course extends Component {
 		require('katex/dist/katex.css');
 
 		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.setStateContentMarkedSanitized();  })    ET remove  componentDidUpdate();
+
+		this.templateRendering();
 		this.setStateContentMarkedSanitized();
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.course !== this.props.course) this.setStateContentMarkedSanitized();
+		if (prevProps.course !== this.props.course) {
+			// Init for generate headings wrap:
+			this.indexHeader = 0;
+			this.headersList = [];
+
+			this.setStateContentMarkedSanitized();
+		}
 	}
 
 	getMetaData() {
@@ -64,33 +79,61 @@ class Course extends Component {
 		}, () => {
 			clearTimeout(this.timerRenderPreview);
 			this.timerRenderPreview = setTimeout(() => {
-				this.HighlightRendering();
-				this.kaTexRendering();
+				if (this.props.course && this.props.course.content) {
+					HighlightRendering(hljs);
+					kaTexRendering(katex, this.props.course.content);
+				}
 			}, 100);
 		});
 	}
 
-	HighlightRendering() {
-		const code = document.querySelectorAll('pre code');
-		for (let i = 0; i < code.length; i++) hljs.highlightBlock(code[i]);
-	}
+	templateRendering() {
+		this.rendererMarked.heading = (text, currenLevel) => {
+			const template = this.props.course && this.props.course.template;
+			const numberColumns = typeof template['columnH' + currenLevel] !== 'undefined' ? template['columnH' + currenLevel] : 1;
+			let closeDivNode = '';
 
-	kaTexRendering() {
-		if (this.props.course && this.props.course.content) {
-			const valuesKatex = this.props.course.content.match(/(?<=```katex\s+)(.[\s\S]*?)(?=\s+```)/gi) || []; // IN
-			const katexNode = document.querySelectorAll('.language-katex'); // OUT
+			// 1st header:
+			if (this.indexHeader === 0) {
+				this.headersList.push({ levelHeader: currenLevel });
+				this.indexHeader++;
 
-			for (let i = 0; i < valuesKatex.length; i++) {
-				const text = valuesKatex[i];
-				if (katexNode[i]) {
-					const macros = {
-						'\\f': 'f(#1)',
-						'\\RR': '\\mathbb{R}'
-					};
-					katex.render(String.raw`${text}`, katexNode[i], { displayMode: true, throwOnError: false, macros });
+				return `
+					${closeDivNode}
+					<div class="md-column-${numberColumns}">
+						<h${currenLevel}>${text}</h${currenLevel}>
+				`;
+			}
+
+			const lastLevelHeader = this.headersList[this.headersList.length - 1].levelHeader;
+			const diffLevelWithLastHeader = Math.abs(lastLevelHeader - currenLevel);
+
+			for (let i = this.headersList.length - 1; i >= 0; i--) {
+				const alreadyHaveLevelHeader = this.headersList[i].levelHeader === currenLevel;
+
+				// Close when same header in same level imbrication:
+				if (alreadyHaveLevelHeader && diffLevelWithLastHeader === 0) {
+					closeDivNode = '</div>';
+				}
+
+				// Close when different header:
+				if (lastLevelHeader > currenLevel && currenLevel === this.headersList[i].levelHeader) {
+					for (let j = 0; j < diffLevelWithLastHeader; j++) closeDivNode += '</div>';
+					break;
+				} else if (lastLevelHeader > currenLevel) {
+					closeDivNode = '</div>';
 				}
 			}
-		}
+
+			this.headersList.push({ levelHeader: currenLevel });
+			this.indexHeader++;
+
+			return `
+				${closeDivNode}
+				<div class="md-column-${numberColumns}">
+					<h${currenLevel}>${text}</h${currenLevel}>
+			`;
+		};
 	}
 
 	render() {
