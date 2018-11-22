@@ -1,0 +1,37 @@
+/* ---------------------- SMARTPHONE ----------------------*/
+@media screen and (max-width: 500px) {
+
+}
+
+/* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
+@media screen and (max-width: 768px) {
+    /* Markdown render */
+    #container-page-view .md-column-1 {
+        display: block;
+        width: 100%;
+        padding: 4px;
+    }
+
+    #container-page-view .md-column-2 {
+        display: block;
+        width: 100%;
+        padding: 4px;
+    }
+
+    #container-page-view .md-column-3 {
+        display: block;
+        width: 100%;
+        padding: 4px;
+    }
+
+    #container-page-view .md-column-4 {
+        display: block;
+        width: 100%;
+        padding: 4px;
+    }
+}
+
+/* ---------------------- DESTOCK  ----------------------*/
+@media screen and (min-width: 769px) {
+
+}

@@ -39,14 +39,14 @@ This file is used for overload the existant css
 
 .md-column-3 {
     display: inline-block;
-    width: 32%;
+    width: 31%;
     vertical-align: top;
     padding: 4px;
 }
 
 .md-column-4 {
     display: inline-block;
-    width: 24%;
+    width: 22%;
     vertical-align: top;
     padding: 4px;
 }

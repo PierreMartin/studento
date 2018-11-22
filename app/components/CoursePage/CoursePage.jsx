@@ -7,7 +7,7 @@ const cx = classNames.bind(stylesCourse);
 
 const CoursePage = ({ contentMarkedSanitized }) => {
 	return (
-		<div className={cx('container-page')} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} />
+		<div className={cx('container-page')} id="container-page-view" dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} />
 	);
 };
 
