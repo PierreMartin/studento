@@ -4,7 +4,7 @@ function HighlightRendering(hljs) {
 }
 
 function kaTexRendering(katex, content) {
-	const valuesKatex = content.match(/(?<=```katex\s+)(.[\s\S]*?)(?=\s+```)/gi) || []; // IN
+	const valuesKatex = []; // IN    // TODO big bug firefox !!    content.match(/(?<=```katex\s+)(.[\s\S]*?)(?=\s+```)/gi) || [];
 	const katexNode = document.querySelectorAll('.language-katex'); // OUT
 
 	for (let i = 0; i < valuesKatex.length; i++) {
