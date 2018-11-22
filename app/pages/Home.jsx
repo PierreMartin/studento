@@ -139,11 +139,12 @@ class Home extends Component {
   render() {
 		const { courses, coursesPagesCount, categories, authentification } = this.props;
 		const { category, fieldSearch, paginationIndexPage } = this.state;
+		const styles = authentification.authenticated ? { marginTop: '110px' } : {};
 
     return (
       <LayoutPage {...this.getMetaData()}>
 				<Segment inverted textAlign="center" vertical className={cx('home-header-segment')}>
-					<Container className={cx('home-header-container')}>
+					<Container className={cx('home-header-container')} style={styles} >
 						<Header as="h1" content="Start to share you courses / knowledges with the world" inverted className={cx('title')} />
 						<Header as="h2" content="HubNote (Studento) is simple to use and allows you to create a course in a few clicks" inverted className={cx('sub-title')} />
 						{ !authentification.authenticated && <Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }

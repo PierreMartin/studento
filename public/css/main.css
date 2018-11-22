@@ -15,7 +15,7 @@ This file is used for overload the existant css
 /* MAIN MENU */
 .ui.secondary.inverted.pointing.menu {
     border: none;
-    padding-top: 16px;
+    padding-top: 19px;
 }
 
 .ui.secondary.inverted.menu .link.item, .ui.secondary.inverted.menu a.item {
