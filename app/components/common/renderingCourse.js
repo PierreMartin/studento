@@ -4,11 +4,14 @@ function HighlightRendering(hljs) {
 }
 
 function kaTexRendering(katex, content) {
-	const valuesKatex = []; // IN    // TODO big bug firefox !!    content.match(/(?<=```katex\s+)(.[\s\S]*?)(?=\s+```)/gi) || [];
+	const valuesKatex = content.match(/(```katex\s+)(.[\s\S]*?)(\s+```)/gi) || [];
 	const katexNode = document.querySelectorAll('.language-katex'); // OUT
 
 	for (let i = 0; i < valuesKatex.length; i++) {
-		const text = valuesKatex[i];
+		let text = valuesKatex[i];
+		text = text.replace('```katex', '');
+		text = text.replace('```', '');
+
 		if (katexNode[i]) {
 			const macros = {
 				'\\f': 'f(#1)',
