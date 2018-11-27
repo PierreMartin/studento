@@ -8,14 +8,19 @@ import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
 import { Container, Segment } from 'semantic-ui-react';
+import { addCommentAction } from '../actions/courses';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CourseInfos from '../components/CourseInfos/CourseInfos';
 import CoursePage from '../components/CoursePage/CoursePage';
+import Comments from '../components/Comments/Comments';
 
 
 class Course extends Component {
 	constructor(props) {
 		super(props);
+		this.handleInputCommentChange = this.handleInputCommentChange.bind(this);
+		this.handleInputCommentSubmit = this.handleInputCommentSubmit.bind(this);
+
 		this.rendererMarked = null;
 		this.timerRenderPreview = null;
 
@@ -24,7 +29,8 @@ class Course extends Component {
 		this.headersList = [];
 
 		this.state = {
-			contentMarkedSanitized: ''
+			contentMarkedSanitized: '',
+			typingContentComment: ''
 		};
 	}
 
@@ -136,9 +142,30 @@ class Course extends Component {
 		};
 	}
 
+	handleInputCommentChange(e) {
+		this.setState({ typingContentComment: e.target.value });
+	}
+
+	handleInputCommentSubmit(event) {
+		event.preventDefault();
+
+		const { course, userMe } = this.props;
+		const { typingContentComment } = this.state;
+
+		const data = {
+			courseId: course._id,
+			content: typingContentComment,
+			uId: userMe._id,
+			at: new Date().toISOString()
+		};
+
+		this.props.addCommentAction(data);
+	}
+
 	render() {
-		const { course } = this.props;
-		const { contentMarkedSanitized } = this.state;
+		const { course, authentification } = this.props;
+		const { contentMarkedSanitized, typingContentComment } = this.state;
+		const commentedBy = course.commentedBy || [];
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -146,6 +173,13 @@ class Course extends Component {
 					<Container text>
 						<CourseInfos course={course} />
 						<CoursePage contentMarkedSanitized={contentMarkedSanitized} />
+						<Comments
+							comments={commentedBy}
+							authentification={authentification}
+							handleInputCommentChange={this.handleInputCommentChange}
+							handleInputCommentSubmit={this.handleInputCommentSubmit}
+							typingContentComment={typingContentComment}
+						/>
 					</Container>
 				</Segment>
 			</LayoutPage>
@@ -154,6 +188,8 @@ class Course extends Component {
 }
 
 Course.propTypes = {
+	addCommentAction: PropTypes.func,
+
 	course: PropTypes.shape({
 		_id: PropTypes.string,
 		title: PropTypes.string,
@@ -168,13 +204,24 @@ Course.propTypes = {
 		isPrivate: PropTypes.bool,
 		content: PropTypes.string,
 		description: PropTypes.string
-	})
+	}),
+
+	userMe: PropTypes.shape({
+		username: PropTypes.string,
+		email: PropTypes.string,
+		_id: PropTypes.string,
+		password: PropTypes.string
+	}),
+
+	authentification: PropTypes.object
 };
 
 const mapStateToProps = (state) => {
 	return {
-		course: state.courses.one
+		course: state.courses.one,
+		userMe: state.userMe.data,
+		authentification: state.authentification
 	};
 };
 
-export default connect(mapStateToProps, null)(Course);
+export default connect(mapStateToProps, { addCommentAction })(Course);

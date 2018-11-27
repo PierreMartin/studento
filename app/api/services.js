@@ -34,6 +34,11 @@ export function api() {
 			method: 'DELETE',
 			url: '/api/deletecourse/' + courseId
 		}),
+		addComment: data => localClient.request({
+			method: 'POST',
+			url: '/api/addcomment',
+			data
+		}),
 
 		// Categories
 		getCategories: () => localClient.request({

@@ -26,7 +26,8 @@ const CourseSchema = new mongoose.Schema({
 	}],
 
 	commentedBy: [{
-		username: { type: String, default: '' },
+		uId: { type: String, ref: 'User' },
+		content: { type: String },
 		at: { type: Date, default: null }
 	}]
 }, { toJSON: { virtuals: true } });

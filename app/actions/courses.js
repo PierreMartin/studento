@@ -1,5 +1,5 @@
 import * as types from './../types';
-import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, fetchCoursesBySearchRequest, deleteCourseRequest } from './../api';
+import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, fetchCoursesBySearchRequest, deleteCourseRequest, addCommentRequest } from './../api';
 import { toast } from 'react-toastify';
 import { push } from 'react-router-redux';
 
@@ -179,4 +179,34 @@ export function deleteCourseAction(param) {
 /************************ Handle sort courses ***********************/
 export function doSortCoursesAction(param) {
 	return { type: types.DO_SORT_COURSES, param };
+}
+
+/************************ Add comment ***********************/
+export function addCommentSuccess(res) {
+	return {
+		type: types.ADD_COMMENT_COURSE_SUCCESS,
+		messageSuccess: res.message,
+		commentData: { content: res.content, at: res.at, uId: res.uId }
+	};
+}
+
+export function addCommentFailure(messageError) {
+	return {
+		type: types.ADD_COMMENT_COURSE_FAILURE,
+		messageError
+	};
+}
+
+export function addCommentAction(param) {
+	if (!param.courseId || !param.uId) return;
+
+	return (dispatch) => {
+		addCommentRequest(param)
+			.then((res) => {
+				if (res.status === 200) return dispatch(addCommentSuccess(res.data));
+			})
+			.catch((err) => {
+				dispatch(addCommentFailure(getMessage(err)));
+			});
+	};
 }
