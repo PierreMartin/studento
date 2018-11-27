@@ -47,9 +47,17 @@ const one = (state = {}, action) => {
 		case types.CREATE_OR_EDIT_COURSE_SUCCESS:
 			if (action.course) return action.course;
 			return state;
+		case types.ADD_COMMENT_COURSE_SUCCESS:
+			if (action.newComment) {
+				const commentsList = state.commentedBy || [];
+				commentsList.push(action.newComment);
+				return { ...state, commentedBy: commentsList };
+			}
+			return state;
 		case types.GET_COURSE_FAILURE:
 		case types.CREATE_OR_EDIT_COURSE_FAILURE:
 		case types.CREATE_OR_EDIT_COURSE_MISSING_FIELDS:
+		case types.ADD_COMMENT_COURSE_FAILURE:
 			return state;
 		case types.EMPTY_COURSE:
 			return {};

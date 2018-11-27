@@ -186,7 +186,7 @@ export function addCommentSuccess(res) {
 	return {
 		type: types.ADD_COMMENT_COURSE_SUCCESS,
 		messageSuccess: res.message,
-		commentData: { content: res.content, at: res.at, uId: res.uId }
+		newComment: res.newComment
 	};
 }
 

@@ -174,7 +174,7 @@ class Course extends Component {
 						<CourseInfos course={course} />
 						<CoursePage contentMarkedSanitized={contentMarkedSanitized} />
 						<Comments
-							comments={commentedBy}
+							commentedBy={commentedBy}
 							authentification={authentification}
 							handleInputCommentChange={this.handleInputCommentChange}
 							handleInputCommentSubmit={this.handleInputCommentSubmit}
@@ -194,7 +194,8 @@ Course.propTypes = {
 		_id: PropTypes.string,
 		title: PropTypes.string,
 		category: PropTypes.string,
-		category_info: (PropTypes.shape({
+		commentedBy: PropTypes.array,
+		category_info: (PropTypes.shape({ // populate
 			description: PropTypes.string,
 			key: PropTypes.string,
 			name: PropTypes.string,

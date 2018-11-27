@@ -99,13 +99,17 @@ export function allBySearch(req, res) {
 export function oneById(req, res) {
 	const { id } = req.params;
 
-	Course.findOne({ _id: id }).populate('uId', '_id username avatarMainSrc.avatar28').populate('category_info', 'name description picto').exec((err, course) => {
-		if (err) {
-			console.error(err);
-			return res.status(500).json({ message: err });
-		}
+	Course.findOne({ _id: id })
+		.populate('uId', '_id username avatarMainSrc.avatar28')
+		.populate('category_info', 'name description picto')
+		.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28')
+		.exec((err, course) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ message: err });
+			}
 
-		return res.status(200).json({ message: 'course fetched', course });
+			return res.status(200).json({ message: 'course fetched', course });
   });
 }
 
@@ -142,6 +146,40 @@ export function add(req, res) {
 
 		Course.populate(course, { path: 'uId', select: '_id username avatarMainSrc.avatar28' }, (err, newCourse) => {
 			return res.status(200).json({ message: 'You have create a course', newCourse });
+		});
+	});
+}
+
+/**
+ * POST /api/addcomment
+ */
+export function addComment(req, res) {
+	const { content, courseId, uId, at } = req.body;
+	const query = { content, uId, at };
+
+	// handling required fields :
+	if (typeof content === 'undefined' || content === '') {
+		return res.status(400).json({ fieldContentMissing: true });
+	}
+
+	if (!uId) return res.status(500).json({ message: 'A error happen at the added comment, no uId' });
+
+	// If all good:
+	Course.findOneAndUpdate({ _id: courseId }, {$push: { commentedBy: query } }).exec((err) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ message: 'A error happen at the added comment', err });
+		}
+
+		Course.findOne({ _id: courseId })
+			.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28')
+			.exec((err, course) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'A error happen at the added comment', err });
+				}
+
+				return res.status(200).json({ message: 'Your comment as been added!', newComment: course.commentedBy[course.commentedBy.length - 1] });
 		});
 	});
 }
@@ -207,6 +245,7 @@ export default {
 	allBySearch,
 	oneById,
   add,
+	addComment,
 	update,
 	deleteOne
 };

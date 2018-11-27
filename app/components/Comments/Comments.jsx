@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import moment from 'moment/moment';
 import { Form, Comment, Button, Header } from 'semantic-ui-react';
+import defaultAvatar28 from '../../images/default-avatar-28.png';
+import { pathImage } from '../../../config/app';
 
 
 const renderCommentList = (comments) => {
@@ -12,6 +14,7 @@ const renderCommentList = (comments) => {
 		const commentDate = moment(comment.at).format('L');
 		const commentContent = comment.content || '';
 		const author = comment.uId || {};
+		const src = author.avatarMainSrc && author.avatarMainSrc.avatar28 ? `${pathImage}/${author.avatarMainSrc.avatar28}` : defaultAvatar28;
 
 		/*
 		<Comment>
@@ -62,7 +65,7 @@ const renderCommentList = (comments) => {
 
 		return (
 			<Comment key={key}>
-				<Comment.Avatar src="/images/avatar/small/matt.jpg" />
+				<Comment.Avatar src={src} />
 				<Comment.Content>
 					<Comment.Author as={Link} to={`/user/${author._id}`}>{ author.username }</Comment.Author>
 					<Comment.Metadata>
@@ -90,21 +93,28 @@ const renderCommentForm = (handleInputCommentChange, handleInputCommentSubmit, t
 	);
 };
 
-const Comments = ({ comments, authentification, handleInputCommentChange, handleInputCommentSubmit, typingContentComment }) => {
+const Comments = ({ commentedBy, authentification, handleInputCommentChange, handleInputCommentSubmit, typingContentComment }) => {
 	return (
 		<Comment.Group size="mini">
 			<Header as="h3" dividing>Comments</Header>
 
-			{ renderCommentList(comments) }
+			{ renderCommentList(commentedBy) }
 			{ authentification.authenticated && renderCommentForm(handleInputCommentChange, handleInputCommentSubmit, typingContentComment) }
 		</Comment.Group>
 	);
 };
 
 Comments.propTypes = {
-	comments: PropTypes.arrayOf(PropTypes.shape({
-		uId: PropTypes.string, // TODO voir si populé
-		content: PropTypes.string
+	commentedBy: PropTypes.arrayOf(PropTypes.shape({
+		uId: PropTypes.shape({ // populate
+			_id: PropTypes.string,
+			username: PropTypes.string,
+			avatarMainSrc: PropTypes.shape({
+				avatar28: PropTypes.string
+			})
+		}),
+		content: PropTypes.string,
+		at: PropTypes.string
 	})),
 
 	authentification: PropTypes.object,
