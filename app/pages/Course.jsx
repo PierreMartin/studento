@@ -154,13 +154,13 @@ class Course extends Component {
 		const { course, userMe } = this.props;
 		const { typingContentComment } = this.state;
 
-		// if (typeof replyToCommentIndex === 'number') data = { courseId, content, uId, at, replyToCommentIndex } else ...;
-
 		const data = {
 			courseId: course._id,
 			content: typingContentComment,
 			uId: userMe._id,
 			at: new Date().toISOString()
+			// replyToCommentId: (typeof replyToCommentId !== 'undefined') ? replyToCommentId : undefined
+			// BE => Course.findOneAndUpdate({ _id: courseId, 'commentedBy._id': replyToCommentId }, {$push: { 'commentedBy.$.replyTo': query } })
 		};
 
 		this.props.addCommentAction(data);

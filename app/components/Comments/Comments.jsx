@@ -19,7 +19,7 @@ const renderCommentList = (comments, authentification, handleInputCommentSubmit,
 
 		// If comment reply:
 		if (key === indexCommentToReply && authentification.authenticated) {
-			// TODO passer la key (replyToCommentIndex) à handleInputCommentSubmit pour lier le comment reply au comment parent
+			// TODO passer l'id du comment parent à handleInputCommentSubmit(comment._id) pour lier le comment reply au comment parent
 			formReply = (
 				<Form reply onSubmit={handleInputCommentSubmit}>
 					<Form.TextArea />
