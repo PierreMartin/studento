@@ -20,6 +20,7 @@ class Course extends Component {
 		super(props);
 		this.handleInputCommentChange = this.handleInputCommentChange.bind(this);
 		this.handleInputCommentSubmit = this.handleInputCommentSubmit.bind(this);
+		this.handleReplyCommentClick = this.handleReplyCommentClick.bind(this);
 
 		this.rendererMarked = null;
 		this.timerRenderPreview = null;
@@ -30,7 +31,8 @@ class Course extends Component {
 
 		this.state = {
 			contentMarkedSanitized: '',
-			typingContentComment: ''
+			typingContentComment: '',
+			indexCommentToReply: undefined
 		};
 	}
 
@@ -162,9 +164,25 @@ class Course extends Component {
 		this.props.addCommentAction(data);
 	}
 
+	/**
+	 * Set the index of the comment clicked for reply
+	 * @param {number} index - the index of the comment
+	 * @returns {function(): void}
+	 */
+	handleReplyCommentClick(index) {
+		let uIndex = index;
+
+		// If second click on the same comment, we remove the form:
+		if (index === this.state.indexCommentToReply) {
+			uIndex = undefined;
+		}
+
+		return () => this.setState({ indexCommentToReply: uIndex });
+	}
+
 	render() {
 		const { course, authentification } = this.props;
-		const { contentMarkedSanitized, typingContentComment } = this.state;
+		const { contentMarkedSanitized, typingContentComment, indexCommentToReply } = this.state;
 		const commentedBy = course.commentedBy || [];
 
 		return (
@@ -179,6 +197,8 @@ class Course extends Component {
 							handleInputCommentChange={this.handleInputCommentChange}
 							handleInputCommentSubmit={this.handleInputCommentSubmit}
 							typingContentComment={typingContentComment}
+							handleReplyCommentClick={this.handleReplyCommentClick}
+							indexCommentToReply={indexCommentToReply}
 						/>
 					</Container>
 				</Segment>

@@ -7,7 +7,7 @@ import defaultAvatar28 from '../../images/default-avatar-28.png';
 import { pathImage } from '../../../config/app';
 
 
-const renderCommentList = (comments) => {
+const renderCommentList = (comments, handleReplyCommentClick, indexCommentToReply) => {
 	if (comments && comments.length === 0) return;
 
 	return comments.map((comment, key) => {
@@ -15,6 +15,16 @@ const renderCommentList = (comments) => {
 		const commentContent = comment.content || '';
 		const author = comment.uId || {};
 		const src = author.avatarMainSrc && author.avatarMainSrc.avatar28 ? `${pathImage}/${author.avatarMainSrc.avatar28}` : defaultAvatar28;
+		let formReply = '';
+
+		if (key === indexCommentToReply) {
+			formReply = (
+				<Form reply>
+					<Form.TextArea />
+					<Button content="Add Reply" labelPosition="left" icon="edit" primary />
+				</Form>
+			);
+		}
 
 		/*
 		<Comment>
@@ -73,8 +83,9 @@ const renderCommentList = (comments) => {
 					</Comment.Metadata>
 					<Comment.Text>{ commentContent }</Comment.Text>
 					<Comment.Actions>
-						<Comment.Action>Reply</Comment.Action>
+						<Comment.Action onClick={handleReplyCommentClick(key)}>Reply</Comment.Action>
 					</Comment.Actions>
+					{ formReply }
 				</Comment.Content>
 			</Comment>
 		);
@@ -93,12 +104,20 @@ const renderCommentForm = (handleInputCommentChange, handleInputCommentSubmit, t
 	);
 };
 
-const Comments = ({ commentedBy, authentification, handleInputCommentChange, handleInputCommentSubmit, typingContentComment }) => {
+const Comments = ({
+										commentedBy,
+										authentification,
+										handleInputCommentChange,
+										handleInputCommentSubmit,
+										typingContentComment,
+										handleReplyCommentClick,
+										indexCommentToReply
+}) => {
 	return (
 		<Comment.Group size="mini">
 			<Header as="h3" dividing>Comments</Header>
 
-			{ renderCommentList(commentedBy) }
+			{ renderCommentList(commentedBy, handleReplyCommentClick, indexCommentToReply) }
 			{ authentification.authenticated && renderCommentForm(handleInputCommentChange, handleInputCommentSubmit, typingContentComment) }
 		</Comment.Group>
 	);
@@ -120,7 +139,10 @@ Comments.propTypes = {
 	authentification: PropTypes.object,
 	handleInputCommentChange: PropTypes.func,
 	handleInputCommentSubmit: PropTypes.func,
-	typingContentComment: PropTypes.string
+	typingContentComment: PropTypes.string,
+
+	handleReplyCommentClick: PropTypes.func,
+	indexCommentToReply: PropTypes.number
 };
 
 export default Comments;
