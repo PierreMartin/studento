@@ -203,7 +203,10 @@ export function addCommentAction(param) {
 	return (dispatch) => {
 		addCommentRequest(param)
 			.then((res) => {
-				if (res.status === 200) return dispatch(addCommentSuccess(res.data));
+				if (res.status === 200) {
+					toast.success(res.data.message);
+					return dispatch(addCommentSuccess(res.data));
+				}
 			})
 			.catch((err) => {
 				dispatch(addCommentFailure(getMessage(err)));

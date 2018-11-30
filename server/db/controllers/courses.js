@@ -194,6 +194,7 @@ export function addComment(req, res) {
 
 			Course.findOne({ _id: courseId })
 				.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28')
+				.populate('commentedBy.replyTo.uId', '_id username avatarMainSrc.avatar28') // TODO add this everywere
 				.exec((err, course) => {
 					if (err) {
 						console.error(err);

@@ -29,7 +29,11 @@ const CourseSchema = new mongoose.Schema({
 		uId: { type: String, ref: 'User' },
 		content: { type: String },
 		at: { type: Date, default: null },
-		replyTo: { type: Array }
+		replyTo: [{
+			uId: { type: String, ref: 'User' },
+			content: { type: String },
+			at: { type: Date, default: null }
+		}]
 	}]
 }, { toJSON: { virtuals: true } });
 
