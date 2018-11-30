@@ -154,6 +154,8 @@ class Course extends Component {
 		const { course, userMe } = this.props;
 		const { typingContentComment } = this.state;
 
+		// if (typeof replyToCommentIndex === 'number') data = { courseId, content, uId, at, replyToCommentIndex } else ...;
+
 		const data = {
 			courseId: course._id,
 			content: typingContentComment,
@@ -162,6 +164,7 @@ class Course extends Component {
 		};
 
 		this.props.addCommentAction(data);
+		this.setState({ typingContentComment: '' });
 	}
 
 	/**

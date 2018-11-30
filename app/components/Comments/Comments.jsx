@@ -7,7 +7,7 @@ import defaultAvatar28 from '../../images/default-avatar-28.png';
 import { pathImage } from '../../../config/app';
 
 
-const renderCommentList = (comments, handleReplyCommentClick, indexCommentToReply) => {
+const renderCommentList = (comments, authentification, handleInputCommentSubmit, handleReplyCommentClick, indexCommentToReply) => {
 	if (comments && comments.length === 0) return;
 
 	return comments.map((comment, key) => {
@@ -17,9 +17,11 @@ const renderCommentList = (comments, handleReplyCommentClick, indexCommentToRepl
 		const src = author.avatarMainSrc && author.avatarMainSrc.avatar28 ? `${pathImage}/${author.avatarMainSrc.avatar28}` : defaultAvatar28;
 		let formReply = '';
 
-		if (key === indexCommentToReply) {
+		// If comment reply:
+		if (key === indexCommentToReply && authentification.authenticated) {
+			// TODO passer la key (replyToCommentIndex) à handleInputCommentSubmit pour lier le comment reply au comment parent
 			formReply = (
-				<Form reply>
+				<Form reply onSubmit={handleInputCommentSubmit}>
 					<Form.TextArea />
 					<Button content="Add Reply" labelPosition="left" icon="edit" primary />
 				</Form>
@@ -83,7 +85,9 @@ const renderCommentList = (comments, handleReplyCommentClick, indexCommentToRepl
 					</Comment.Metadata>
 					<Comment.Text>{ commentContent }</Comment.Text>
 					<Comment.Actions>
-						<Comment.Action onClick={handleReplyCommentClick(key)}>Reply</Comment.Action>
+						{ authentification.authenticated ?
+							<Comment.Action onClick={handleReplyCommentClick(key)}>Reply</Comment.Action> : ''
+						}
 					</Comment.Actions>
 					{ formReply }
 				</Comment.Content>
@@ -117,7 +121,7 @@ const Comments = ({
 		<Comment.Group size="mini">
 			<Header as="h3" dividing>Comments</Header>
 
-			{ renderCommentList(commentedBy, handleReplyCommentClick, indexCommentToReply) }
+			{ renderCommentList(commentedBy, authentification, handleInputCommentSubmit, handleReplyCommentClick, indexCommentToReply) }
 			{ authentification.authenticated && renderCommentForm(handleInputCommentChange, handleInputCommentSubmit, typingContentComment) }
 		</Comment.Group>
 	);

@@ -28,7 +28,8 @@ const CourseSchema = new mongoose.Schema({
 	commentedBy: [{
 		uId: { type: String, ref: 'User' },
 		content: { type: String },
-		at: { type: Date, default: null }
+		at: { type: Date, default: null },
+		replyTo: { type: Array }
 	}]
 }, { toJSON: { virtuals: true } });
 
