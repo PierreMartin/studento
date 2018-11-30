@@ -7,7 +7,15 @@ import defaultAvatar28 from '../../images/default-avatar-28.png';
 import { pathImage } from '../../../config/app';
 
 
-const renderCommentList = (comments, authentification, handleInputCommentSubmit, handleReplyCommentClick, indexCommentToReply) => {
+const renderCommentList = (
+	comments,
+	authentification,
+	handleInputCommentSubmit,
+	handleReplyCommentClick,
+	indexCommentToReply,
+	fieldsTypingComment,
+	handleInputCommentChange
+) => {
 	if (comments && comments.length === 0) return;
 
 	return comments.map((comment, key) => {
@@ -19,10 +27,10 @@ const renderCommentList = (comments, authentification, handleInputCommentSubmit,
 
 		// If comment reply:
 		if (key === indexCommentToReply && authentification.authenticated) {
-			// TODO passer l'id du comment parent à handleInputCommentSubmit(comment._id) pour lier le comment reply au comment parent
+			// Pass the Id of parent comment to handleInputCommentSubmit for bind the parent to reply
 			formReply = (
-				<Form reply onSubmit={handleInputCommentSubmit}>
-					<Form.TextArea />
+				<Form reply onSubmit={handleInputCommentSubmit(comment._id)}>
+					<Form.TextArea placeholder="Your comment here..." name="commentReply" value={fieldsTypingComment.commentReply || ''} /* error={updateMissingRequiredField.content} */ onChange={handleInputCommentChange} />
 					<Button content="Add Reply" labelPosition="left" icon="edit" primary />
 				</Form>
 			);
@@ -96,12 +104,12 @@ const renderCommentList = (comments, authentification, handleInputCommentSubmit,
 	});
 };
 
-const renderCommentForm = (handleInputCommentChange, handleInputCommentSubmit, typingContentComment) => {
+const renderCommentForm = (handleInputCommentChange, handleInputCommentSubmit, fieldsTypingComment) => {
 	// const messagesError = this.dispayFieldsErrors(updateMissingRequiredField, updateMessageError);
 
 	return (
-		<Form reply /* error={messagesError.props.children.length > 0} */ size="small" onSubmit={handleInputCommentSubmit}>
-			<Form.TextArea placeholder="Your comment here..." name="content" value={typingContentComment || ''} /* error={updateMissingRequiredField.content} */ onChange={handleInputCommentChange} />
+		<Form reply /* error={messagesError.props.children.length > 0} */ size="small" onSubmit={handleInputCommentSubmit()}>
+			<Form.TextArea placeholder="Your comment here..." name="commentMain" value={fieldsTypingComment.commentMain || ''} /* error={updateMissingRequiredField.content} */ onChange={handleInputCommentChange} />
 			{/* <Message error content={messagesError} /> */}
 			<Button content="Add Reply" labelPosition="left" icon="edit" primary />
 		</Form>
@@ -113,7 +121,7 @@ const Comments = ({
 										authentification,
 										handleInputCommentChange,
 										handleInputCommentSubmit,
-										typingContentComment,
+										fieldsTypingComment,
 										handleReplyCommentClick,
 										indexCommentToReply
 }) => {
@@ -121,8 +129,8 @@ const Comments = ({
 		<Comment.Group size="mini">
 			<Header as="h3" dividing>Comments</Header>
 
-			{ renderCommentList(commentedBy, authentification, handleInputCommentSubmit, handleReplyCommentClick, indexCommentToReply) }
-			{ authentification.authenticated && renderCommentForm(handleInputCommentChange, handleInputCommentSubmit, typingContentComment) }
+			{ renderCommentList(commentedBy, authentification, handleInputCommentSubmit, handleReplyCommentClick, indexCommentToReply, fieldsTypingComment, handleInputCommentChange) }
+			{ authentification.authenticated && renderCommentForm(handleInputCommentChange, handleInputCommentSubmit, fieldsTypingComment) }
 		</Comment.Group>
 	);
 };
@@ -143,7 +151,7 @@ Comments.propTypes = {
 	authentification: PropTypes.object,
 	handleInputCommentChange: PropTypes.func,
 	handleInputCommentSubmit: PropTypes.func,
-	typingContentComment: PropTypes.string,
+	fieldsTypingComment: PropTypes.object,
 
 	handleReplyCommentClick: PropTypes.func,
 	indexCommentToReply: PropTypes.number

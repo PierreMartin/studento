@@ -31,7 +31,7 @@ class Course extends Component {
 
 		this.state = {
 			contentMarkedSanitized: '',
-			typingContentComment: '',
+			fieldsTypingComment: {},
 			indexCommentToReply: undefined
 		};
 	}
@@ -144,27 +144,29 @@ class Course extends Component {
 		};
 	}
 
-	handleInputCommentChange(e) {
-		this.setState({ typingContentComment: e.target.value });
+	handleInputCommentChange(e, field) {
+		const oldStateTypingComment = this.state.fieldsTypingComment;
+		this.setState({ fieldsTypingComment: {...oldStateTypingComment, ...{[field.name]: field.value} } });
 	}
 
-	handleInputCommentSubmit(event) {
-		event.preventDefault();
+	handleInputCommentSubmit(replyToCommentId) {
+		return (event) => {
+			event.preventDefault();
 
-		const { course, userMe } = this.props;
-		const { typingContentComment } = this.state;
+			const { course, userMe } = this.props;
+			const { fieldsTypingComment } = this.state;
 
-		const data = {
-			courseId: course._id,
-			content: typingContentComment,
-			uId: userMe._id,
-			at: new Date().toISOString()
-			// replyToCommentId: (typeof replyToCommentId !== 'undefined') ? replyToCommentId : undefined
-			// BE => Course.findOneAndUpdate({ _id: courseId, 'commentedBy._id': replyToCommentId }, {$push: { 'commentedBy.$.replyTo': query } })
+			const data = {
+				courseId: course._id,
+				content: (typeof replyToCommentId !== 'undefined') ? fieldsTypingComment.commentReply : fieldsTypingComment.commentMain,
+				uId: userMe._id,
+				at: new Date().toISOString(),
+				replyToCommentId: (typeof replyToCommentId !== 'undefined') ? replyToCommentId : undefined
+			};
+
+			this.props.addCommentAction(data);
+			this.setState({ fieldsTypingComment: {} });
 		};
-
-		this.props.addCommentAction(data);
-		this.setState({ typingContentComment: '' });
 	}
 
 	/**
@@ -185,7 +187,7 @@ class Course extends Component {
 
 	render() {
 		const { course, authentification } = this.props;
-		const { contentMarkedSanitized, typingContentComment, indexCommentToReply } = this.state;
+		const { contentMarkedSanitized, fieldsTypingComment, indexCommentToReply } = this.state;
 		const commentedBy = course.commentedBy || [];
 
 		return (
@@ -199,7 +201,7 @@ class Course extends Component {
 							authentification={authentification}
 							handleInputCommentChange={this.handleInputCommentChange}
 							handleInputCommentSubmit={this.handleInputCommentSubmit}
-							typingContentComment={typingContentComment}
+							fieldsTypingComment={fieldsTypingComment}
 							handleReplyCommentClick={this.handleReplyCommentClick}
 							indexCommentToReply={indexCommentToReply}
 						/>

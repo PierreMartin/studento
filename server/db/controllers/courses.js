@@ -154,7 +154,7 @@ export function add(req, res) {
  * POST /api/addcomment
  */
 export function addComment(req, res) {
-	const { content, courseId, uId, at } = req.body;
+	const { content, courseId, uId, at, replyToCommentId } = req.body;
 	const query = { content, uId, at };
 
 	// handling required fields :
@@ -165,23 +165,47 @@ export function addComment(req, res) {
 	if (!uId) return res.status(500).json({ message: 'A error happen at the added comment, no uId' });
 
 	// If all good:
-	Course.findOneAndUpdate({ _id: courseId }, {$push: { commentedBy: query } }).exec((err) => {
-		if (err) {
-			console.error(err);
-			return res.status(500).json({ message: 'A error happen at the added comment', err });
-		}
+	if (typeof replyToCommentId === 'undefined') {
+		// Normal comment:
+		Course.findOneAndUpdate({ _id: courseId }, {$push: { commentedBy: query } }).exec((err) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ message: 'A error happen at the added comment main', err });
+			}
 
-		Course.findOne({ _id: courseId })
-			.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28')
-			.exec((err, course) => {
-				if (err) {
-					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the added comment', err });
-				}
+			Course.findOne({ _id: courseId })
+				.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28')
+				.exec((err, course) => {
+					if (err) {
+						console.error(err);
+						return res.status(500).json({ message: 'A error happen at the added comment main', err });
+					}
 
-				return res.status(200).json({ message: 'Your comment as been added!', newComment: course.commentedBy[course.commentedBy.length - 1] });
+					return res.status(200).json({ message: 'Your comment as been added!', newComment: course.commentedBy[course.commentedBy.length - 1] });
+				});
 		});
-	});
+	} else if (typeof replyToCommentId === 'string') {
+		// Reply comment:
+		Course.findOneAndUpdate({ _id: courseId, 'commentedBy._id': replyToCommentId }, {$push: { 'commentedBy.$.replyTo': query } }).exec((err) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ message: 'A error happen at the added comment reply', err });
+			}
+
+			Course.findOne({ _id: courseId })
+				.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28')
+				.exec((err, course) => {
+					if (err) {
+						console.error(err);
+						return res.status(500).json({ message: 'A error happen at the added comment reply', err });
+					}
+
+					// TODO faire algo pour get LE comment (avec replyToCommentId)
+
+					return res.status(200).json({ message: 'Your reply comment as been added!', newComment: course.commentedBy[course.commentedBy.length - 1] });
+				});
+		});
+	}
 }
 
 /**
