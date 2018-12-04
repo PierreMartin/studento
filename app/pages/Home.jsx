@@ -140,6 +140,7 @@ class Home extends Component {
 		const { courses, coursesPagesCount, categories, authentification } = this.props;
 		const { category, fieldSearch, paginationIndexPage } = this.state;
 		const styles = authentification.authenticated ? { marginTop: '110px' } : {};
+		const citationStr = '"Every scientist knows that thorough examinations and skepticism are the power of science. All theories and knowledge are tentative and science is slowly leading us to a better understanding of the truth. There is no certainty, only probability and statistical significance"';
 
     return (
       <LayoutPage {...this.getMetaData()}>
@@ -149,6 +150,12 @@ class Home extends Component {
 						<Header as="h2" content="HubNote (Studento) is simple to use and allows you to create a course in a few clicks" inverted className={cx('sub-title')} />
 						{ !authentification.authenticated && <Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }
 						{ !authentification.authenticated && <Message compact icon="info circle" content="Please login (or signup) for test the main features." style={{width: 'auto'}} size="small" /> }
+					</Container>
+				</Segment>
+
+				<Segment textAlign="center" vertical className={cx('home-citation-segment')}>
+					<Container>
+						<blockquote><Header as="h2" content={citationStr} className={cx('title')} /></blockquote>
 					</Container>
 				</Segment>
 
