@@ -48,12 +48,7 @@ const one = (state = {}, action) => {
 			if (action.course) return action.course;
 			return state;
 		case types.ADD_COMMENT_COURSE_SUCCESS:
-			// TODO faire algo pour push au bonne endroit pour les reply comments (si 'replyToCommentId' exist)
-			if (action.newComment) {
-				const commentsList = state.commentedBy || [];
-				commentsList.push(action.newComment);
-				return { ...state, commentedBy: commentsList };
-			}
+			if (action.commentsList) return { ...state, commentedBy: action.commentsList };
 			return state;
 		case types.GET_COURSE_FAILURE:
 		case types.CREATE_OR_EDIT_COURSE_FAILURE:

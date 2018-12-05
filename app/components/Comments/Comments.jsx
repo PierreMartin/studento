@@ -145,7 +145,8 @@ Comments.propTypes = {
 			})
 		}),
 		content: PropTypes.string,
-		at: PropTypes.string
+		at: PropTypes.string,
+		replyBy: PropTypes.array
 	})),
 
 	authentification: PropTypes.object,

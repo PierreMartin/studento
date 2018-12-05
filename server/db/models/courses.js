@@ -29,7 +29,7 @@ const CourseSchema = new mongoose.Schema({
 		uId: { type: String, ref: 'User' },
 		content: { type: String },
 		at: { type: Date, default: null },
-		replyTo: [{
+		replyBy: [{
 			uId: { type: String, ref: 'User' },
 			content: { type: String },
 			at: { type: Date, default: null }
