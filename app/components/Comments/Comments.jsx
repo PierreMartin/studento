@@ -1,11 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import moment from 'moment/moment';
+import moment from 'moment';
 import { Form, Comment, Button, Header } from 'semantic-ui-react';
 import defaultAvatar28 from '../../images/default-avatar-28.png';
 import { pathImage } from '../../../config/app';
 
+const renderCommentReplyList = (commentsReply) => {
+	if (commentsReply.length <= 0) return false;
+
+	return commentsReply.map((comment, key) => {
+		const commentDate = moment(comment.at).format('MMMM Y Do LT');
+		const commentContent = comment.content || '';
+		const author = comment.uId || {};
+		const src = author.avatarMainSrc && author.avatarMainSrc.avatar28 ? `${pathImage}/${author.avatarMainSrc.avatar28}` : defaultAvatar28;
+
+		return (
+			<Comment key={key}>
+				<Comment.Avatar src={src} />
+				<Comment.Content>
+					<Comment.Author as={Link} to={`/user/${author._id}`}>{ author.username }</Comment.Author>
+					<Comment.Metadata>
+						<div>{ commentDate }</div>
+					</Comment.Metadata>
+					<Comment.Text>{ commentContent }</Comment.Text>
+				</Comment.Content>
+			</Comment>
+		);
+	});
+};
 
 const renderCommentList = (
 	comments,
@@ -19,13 +42,15 @@ const renderCommentList = (
 	if (comments && comments.length === 0) return;
 
 	return comments.map((comment, key) => {
-		const commentDate = moment(comment.at).format('L');
+		const commentDate = moment(comment.at).format('MMMM Y Do LT');
 		const commentContent = comment.content || '';
 		const author = comment.uId || {};
+		const replyBy = comment.replyBy || [];
 		const src = author.avatarMainSrc && author.avatarMainSrc.avatar28 ? `${pathImage}/${author.avatarMainSrc.avatar28}` : defaultAvatar28;
+		const commentReplyListNode = renderCommentReplyList(replyBy);
 		let formReply = '';
 
-		// If comment reply:
+		// Display form reply when clicked:
 		if (key === indexCommentToReply && authentification.authenticated) {
 			// Pass the Id of parent comment to handleInputCommentSubmit for bind the parent to reply
 			formReply = (
@@ -35,53 +60,6 @@ const renderCommentList = (
 				</Form>
 			);
 		}
-
-		/*
-		<Comment>
-			<Comment.Avatar src='/images/avatar/small/elliot.jpg' />
-			<Comment.Content>
-				<Comment.Author as='a'>Elliot Fu</Comment.Author>
-				<Comment.Metadata>
-					<div>Yesterday at 12:30AM</div>
-				</Comment.Metadata>
-				<Comment.Text>
-					<p>This has been very useful for my research. Thanks as well!</p>
-				</Comment.Text>
-				<Comment.Actions>
-					<Comment.Action>Reply</Comment.Action>
-				</Comment.Actions>
-			</Comment.Content>
-			<Comment.Group>
-				<Comment>
-					<Comment.Avatar src='/images/avatar/small/jenny.jpg' />
-					<Comment.Content>
-						<Comment.Author as='a'>Jenny Hess</Comment.Author>
-						<Comment.Metadata>
-							<div>Just now</div>
-						</Comment.Metadata>
-						<Comment.Text>Elliot you are always so right :)</Comment.Text>
-						<Comment.Actions>
-							<Comment.Action>Reply</Comment.Action>
-						</Comment.Actions>
-					</Comment.Content>
-				</Comment>
-			</Comment.Group>
-		</Comment>
-
-		<Comment>
-			<Comment.Avatar src='/images/avatar/small/joe.jpg' />
-			<Comment.Content>
-				<Comment.Author as='a'>Joe Henderson</Comment.Author>
-				<Comment.Metadata>
-					<div>5 days ago</div>
-				</Comment.Metadata>
-				<Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
-				<Comment.Actions>
-					<Comment.Action>Reply</Comment.Action>
-				</Comment.Actions>
-			</Comment.Content>
-		</Comment>
-		*/
 
 		return (
 			<Comment key={key}>
@@ -99,6 +77,8 @@ const renderCommentList = (
 					</Comment.Actions>
 					{ formReply }
 				</Comment.Content>
+
+				{ commentReplyListNode && <Comment.Group size="mini">{ commentReplyListNode } </Comment.Group> }
 			</Comment>
 		);
 	});

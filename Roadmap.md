@@ -101,7 +101,6 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - comments -> handle field require + use dompurify
-- comments -> handle imbrication (reply comment)
 - duplicate style (lists, checksList...) when enter on new line
 
 - Faire Menu listant les cats/subCats + Page Courses

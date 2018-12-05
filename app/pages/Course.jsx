@@ -165,7 +165,7 @@ class Course extends Component {
 			};
 
 			this.props.addCommentAction(data);
-			this.setState({ fieldsTypingComment: {} });
+			this.setState({ fieldsTypingComment: {}, indexCommentToReply: undefined });
 		};
 	}
 
