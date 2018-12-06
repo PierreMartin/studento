@@ -101,6 +101,8 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - comments -> handle field require + use dompurify
+- comments -> render: styles (gras, bold...) + code editor
+- comments -> send notification with socket.io to author of course
 - duplicate style (lists, checksList...) when enter on new line
 
 - Faire Menu listant les cats/subCats + Page Courses
