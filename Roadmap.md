@@ -101,18 +101,20 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - comments -> handle field require + use dompurify
-- comments -> render: styles (gras, bold...) + code editor
-- comments -> send notification with socket.io to author of course
-- duplicate style (lists, checksList...) when enter on new line
+- staredBy
 
 - Faire Menu listant les cats/subCats + Page Courses
-- staredBy
 - Mettre un Breadcrumb
 - Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
+- Améliorer perfs codeMIrror
+
+moins urgent :
+- comments -> render: styles (gras, bold...) + code editor
+- comments -> send notification with socket.io to author of course (Fetch all my courses + where commentedBy.length > 0)
+- duplicate style (lists, checksList...) when enter on new line
 
 - Resolve vulnerabilities in dependencies
 - Voir pk on a le props precedent à chaque changement de page
-- Améliorer perfs codeMIrror
 - améliorer la requet d'upate de l'user comme pour les courses
 
 - this.state.typingArr => le mettre dans le store de redux (gerer les cas ou l'un ecrit, l'autre a pas encore ouvert la popup)
