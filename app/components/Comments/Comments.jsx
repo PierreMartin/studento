@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import moment from 'moment';
-import { Form, Comment, Button, Header } from 'semantic-ui-react';
+import { Form, Comment, Button, Header, Message } from 'semantic-ui-react';
 import defaultAvatar28 from '../../images/default-avatar-28.png';
 import { pathImage } from '../../../config/app';
 
@@ -37,7 +37,8 @@ const renderCommentList = (
 	handleReplyCommentClick,
 	indexCommentToReply,
 	fieldsTypingComment,
-	handleInputCommentChange
+	handleInputCommentChange,
+	addCommentMissingField
 ) => {
 	if (comments && comments.length === 0) return;
 
@@ -52,10 +53,13 @@ const renderCommentList = (
 
 		// Display form reply when clicked:
 		if (key === indexCommentToReply && authentification.authenticated) {
+			const messagesError = addCommentMissingField.commentReply ? 'the field is required ' : '';
+
 			// Pass the Id of parent comment to handleInputCommentSubmit for bind the parent to reply
 			formReply = (
-				<Form reply onSubmit={handleInputCommentSubmit(comment._id)}>
-					<Form.TextArea placeholder="Your comment here..." name="commentReply" value={fieldsTypingComment.commentReply || ''} /* error={updateMissingRequiredField.content} */ onChange={handleInputCommentChange} />
+				<Form reply error={addCommentMissingField.commentReply} onSubmit={handleInputCommentSubmit(comment._id)}>
+					<Form.TextArea placeholder="Your comment here..." name="commentReply" value={fieldsTypingComment.commentReply || ''} error={addCommentMissingField.commentReply} onChange={handleInputCommentChange} />
+					<Message error content={messagesError} />
 					<Button content="Add Reply" labelPosition="left" icon="edit" primary />
 				</Form>
 			);
@@ -84,13 +88,13 @@ const renderCommentList = (
 	});
 };
 
-const renderCommentForm = (handleInputCommentChange, handleInputCommentSubmit, fieldsTypingComment) => {
-	// const messagesError = this.dispayFieldsErrors(updateMissingRequiredField, updateMessageError);
+const renderCommentForm = (handleInputCommentChange, handleInputCommentSubmit, fieldsTypingComment, addCommentMissingField) => {
+	const messagesError = addCommentMissingField.commentMain ? 'the field is required ' : '';
 
 	return (
-		<Form reply /* error={messagesError.props.children.length > 0} */ size="small" onSubmit={handleInputCommentSubmit()}>
-			<Form.TextArea placeholder="Your comment here..." name="commentMain" value={fieldsTypingComment.commentMain || ''} /* error={updateMissingRequiredField.content} */ onChange={handleInputCommentChange} />
-			{/* <Message error content={messagesError} /> */}
+		<Form reply error={addCommentMissingField.commentMain} size="small" onSubmit={handleInputCommentSubmit()}>
+			<Form.TextArea placeholder="Your comment here..." name="commentMain" value={fieldsTypingComment.commentMain || ''} error={addCommentMissingField.commentMain} onChange={handleInputCommentChange} />
+			<Message error content={messagesError} />
 			<Button content="Add Reply" labelPosition="left" icon="edit" primary />
 		</Form>
 	);
@@ -103,14 +107,15 @@ const Comments = ({
 										handleInputCommentSubmit,
 										fieldsTypingComment,
 										handleReplyCommentClick,
-										indexCommentToReply
+										indexCommentToReply,
+										addCommentMissingField
 }) => {
 	return (
 		<Comment.Group size="mini">
 			<Header as="h3" dividing>Comments</Header>
 
-			{ renderCommentList(commentedBy, authentification, handleInputCommentSubmit, handleReplyCommentClick, indexCommentToReply, fieldsTypingComment, handleInputCommentChange) }
-			{ authentification.authenticated && renderCommentForm(handleInputCommentChange, handleInputCommentSubmit, fieldsTypingComment) }
+			{ renderCommentList(commentedBy, authentification, handleInputCommentSubmit, handleReplyCommentClick, indexCommentToReply, fieldsTypingComment, handleInputCommentChange, addCommentMissingField) }
+			{ authentification.authenticated && renderCommentForm(handleInputCommentChange, handleInputCommentSubmit, fieldsTypingComment, addCommentMissingField) }
 		</Comment.Group>
 	);
 };
@@ -135,7 +140,8 @@ Comments.propTypes = {
 	fieldsTypingComment: PropTypes.object,
 
 	handleReplyCommentClick: PropTypes.func,
-	indexCommentToReply: PropTypes.number
+	indexCommentToReply: PropTypes.number,
+	addCommentMissingField: PropTypes.object
 };
 
 export default Comments;

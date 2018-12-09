@@ -8,7 +8,7 @@ import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
 import { Container, Segment } from 'semantic-ui-react';
-import { addCommentAction } from '../actions/courses';
+import { addCommentAction, emptyErrorsCommentAction } from '../actions/courses';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CourseInfos from '../components/CourseInfos/CourseInfos';
 import CoursePage from '../components/CoursePage/CoursePage';
@@ -59,6 +59,7 @@ class Course extends Component {
 
 		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.setStateContentMarkedSanitized();  })    ET remove  componentDidUpdate();
 
+		this.props.emptyErrorsCommentAction();
 		this.templateRendering();
 		this.setStateContentMarkedSanitized();
 	}
@@ -155,17 +156,19 @@ class Course extends Component {
 
 			const { course, userMe } = this.props;
 			const { fieldsTypingComment } = this.state;
+			const content = (typeof replyToCommentId !== 'undefined') ? DOMPurify.sanitize(fieldsTypingComment.commentReply) : DOMPurify.sanitize(fieldsTypingComment.commentMain);
 
 			const data = {
 				courseId: course._id,
-				content: (typeof replyToCommentId !== 'undefined') ? fieldsTypingComment.commentReply : fieldsTypingComment.commentMain,
+				content: content.trim(),
 				uId: userMe._id,
 				at: new Date().toISOString(),
 				replyToCommentId: (typeof replyToCommentId !== 'undefined') ? replyToCommentId : undefined
 			};
 
-			this.props.addCommentAction(data);
-			this.setState({ fieldsTypingComment: {}, indexCommentToReply: undefined });
+			this.props.addCommentAction(data).then(() => {
+				this.setState({ fieldsTypingComment: {}, indexCommentToReply: undefined });
+			});
 		};
 	}
 
@@ -175,18 +178,21 @@ class Course extends Component {
 	 * @returns {function(): void}
 	 */
 	handleReplyCommentClick(index) {
-		let uIndex = index;
+		return () => {
+			let uIndex = index;
 
-		// If second click on the same comment, we remove the form:
-		if (index === this.state.indexCommentToReply) {
-			uIndex = undefined;
-		}
+			// If second click on the same comment, we remove the form:
+			if (index === this.state.indexCommentToReply) {
+				uIndex = undefined;
+			}
 
-		return () => this.setState({ indexCommentToReply: uIndex });
+			this.props.emptyErrorsCommentAction();
+			this.setState({ indexCommentToReply: uIndex });
+		};
 	}
 
 	render() {
-		const { course, authentification } = this.props;
+		const { course, authentification, addCommentMissingField } = this.props;
 		const { contentMarkedSanitized, fieldsTypingComment, indexCommentToReply } = this.state;
 		const commentedBy = course.commentedBy || [];
 
@@ -204,6 +210,7 @@ class Course extends Component {
 							fieldsTypingComment={fieldsTypingComment}
 							handleReplyCommentClick={this.handleReplyCommentClick}
 							indexCommentToReply={indexCommentToReply}
+							addCommentMissingField={addCommentMissingField}
 						/>
 					</Container>
 				</Segment>
@@ -214,6 +221,8 @@ class Course extends Component {
 
 Course.propTypes = {
 	addCommentAction: PropTypes.func,
+	addCommentMissingField: PropTypes.object,
+	emptyErrorsCommentAction: PropTypes.func,
 
 	course: PropTypes.shape({
 		_id: PropTypes.string,
@@ -246,8 +255,9 @@ const mapStateToProps = (state) => {
 	return {
 		course: state.courses.one,
 		userMe: state.userMe.data,
-		authentification: state.authentification
+		authentification: state.authentification,
+		addCommentMissingField: state.courses.addCommentMissingField
 	};
 };
 
-export default connect(mapStateToProps, { addCommentAction })(Course);
+export default connect(mapStateToProps, { addCommentAction, emptyErrorsCommentAction })(Course);

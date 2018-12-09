@@ -197,19 +197,42 @@ export function addCommentFailure(messageError) {
 	};
 }
 
+export function addCommentMissingField(fields) {
+	return {
+		type: types.ADD_COMMENT_COURSE_MISSING_FIELDS,
+		fields
+	};
+}
+
+export function emptyErrorsCommentAction() {
+	return { type: types.EMPTY_ERRORS_COMMENTING_COURSE };
+}
+
 export function addCommentAction(param) {
 	if (!param.courseId || !param.uId) return;
 
 	return (dispatch) => {
-		addCommentRequest(param)
+		return addCommentRequest(param)
 			.then((res) => {
 				if (res.status === 200) {
 					toast.success(res.data.message);
-					return dispatch(addCommentSuccess(res.data));
+					dispatch(addCommentSuccess(res.data));
+					return Promise.resolve();
 				}
+
+				return Promise.reject();
 			})
 			.catch((err) => {
-				dispatch(addCommentFailure(getMessage(err)));
+				if (err.response.data.errorField) {
+					// Missing required fields to dispay in form :
+					dispatch(addCommentMissingField(getFieldsMissing(err)));
+				} else {
+					// Back-end errors to dispay in notification :
+					toast.error(getMessage(err));
+					dispatch(addCommentFailure(getMessage(err)));
+				}
+
+				return Promise.reject();
 			});
 	};
 }

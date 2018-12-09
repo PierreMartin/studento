@@ -100,7 +100,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- comments -> handle field require + use dompurify
 - staredBy
 
 - Faire Menu listant les cats/subCats + Page Courses
@@ -109,7 +108,7 @@ $ ./scripts/generate_menu.sh
 - Améliorer perfs codeMIrror
 
 moins urgent :
-- comments -> render: styles (gras, bold...) + code editor
+- comments -> render: styles (gras, bold, emoji, ...) + code editor
 - comments -> send notification with socket.io to author of course (Fetch all my courses + where commentedBy.length > 0)
 - duplicate style (lists, checksList...) when enter on new line
 

@@ -159,8 +159,17 @@ export function addComment(req, res) {
 	const query = { content, uId, at };
 
 	// handling required fields :
-	if (typeof content === 'undefined' || content === '') {
-		return res.status(400).json({ fieldContentMissing: true });
+	const errorField = {};
+	if (typeof replyToCommentId === 'undefined') {
+		errorField.commentMain = (typeof content === 'undefined' || content === '') ? true : undefined;
+	} else if (typeof replyToCommentId === 'string') {
+		errorField.commentReply = (typeof content === 'undefined' || content === '') ? true : undefined;
+	}
+
+	for (const key in errorField) {
+		if (errorField[key] === true) {
+			return res.status(400).json({errorField});
+		}
 	}
 
 	if (!uId) return res.status(500).json({ message: 'A error happen at the added comment, no uId' });

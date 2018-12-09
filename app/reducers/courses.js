@@ -100,12 +100,26 @@ const pagesCount = (state = 0, action) => {
 	}
 };
 
+const addCommentMissingField = (state = {}, action) => {
+	switch (action.type) {
+		case types.ADD_COMMENT_COURSE_MISSING_FIELDS:
+			if (action.fields) return action.fields;
+			return state;
+		case types.ADD_COMMENT_COURSE_SUCCESS:
+		case types.EMPTY_ERRORS_COMMENTING_COURSE:
+			return {};
+		default:
+			return state;
+	}
+};
+
 const coursesReducer = combineReducers({
 	all,
 	one,
 	addOrEditMissingField,
 	addOrEditFailure,
-	pagesCount
+	pagesCount,
+	addCommentMissingField
 });
 
 export default coursesReducer;
