@@ -105,14 +105,17 @@ $ ./scripts/generate_menu.sh
 - Faire Menu listant les cats/subCats + Page Courses
 - Mettre un Breadcrumb
 - Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
+
 - Améliorer perfs codeMIrror
+- Améliorer design + HomePage
+- Resolve vulnerabilities in dependencies
+- Voir si WYSIWYG possible
 
 moins urgent :
 - comments -> render: styles (gras, bold, emoji, ...) + code editor
 - comments -> send notification with socket.io to author of course (Fetch all my courses + where commentedBy.length > 0)
 - duplicate style (lists, checksList...) when enter on new line
 
-- Resolve vulnerabilities in dependencies
 - Voir pk on a le props precedent à chaque changement de page
 - améliorer la requet d'upate de l'user comme pour les courses
 
