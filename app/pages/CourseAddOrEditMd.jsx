@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import marked from 'marked';
-import { Editor } from '@tinymce/tinymce-react';
 import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
 import katex from 'katex';
@@ -20,7 +19,7 @@ import stylesCourse from './css/course.scss';
 
 const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse, ...stylesCourse});
 
-class CourseAddOrEdit extends Component {
+class CourseAddOrEditMd extends Component {
 	constructor(props) {
 		super(props);
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
@@ -36,8 +35,6 @@ class CourseAddOrEdit extends Component {
 		this.handleSubmitModalSetStyle = this.handleSubmitModalSetStyle.bind(this);
 		this.handleLanguageChange = this.handleLanguageChange.bind(this);
 		this.handleInputModalSetStyleChange = this.handleInputModalSetStyleChange.bind(this);
-
-		this.handleEditorChange = this.handleEditorChange.bind(this);
 
 		this.rendererMarked = null;
 		this.editorCm = null;
@@ -799,10 +796,6 @@ class CourseAddOrEdit extends Component {
 		});
 	}
 
-	handleEditorChange = (e) => {
-		console.log('Content was updated:', e.target.getContent());
-	};
-
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
 		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected } = this.state;
@@ -836,10 +829,6 @@ class CourseAddOrEdit extends Component {
 			{ label: 'h5', name: 'columnH5' },
 			{ label: 'h6', name: 'columnH6' }
 		];
-		const initText = `<h1 style="text-align: center;">This is the initial content of the editor</h1>
-			<pre class="language-php"><code>const toto = 'fdfdfd'</code></pre>
-			<p>vcvccvvc lkckcxlc xcxlkxcl xccxklkxcl xf</p>`
-		;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -902,20 +891,6 @@ class CourseAddOrEdit extends Component {
 
 						<div className={cx('editor-container')}>
 							<div className={cx('editor-edition')}>
-								<Editor
-									apiKey="3kobmcz3sotpddw4zkuzj5d9hse2tuytw4jrqi5ndthqc0wq"
-									initialValue={initText}
-									init={{
-										min_height: 600,
-										external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
-										plugins: 'link image table codesample tiny_mce_wiris',
-										toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | blocks | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry'
-									}}
-									onChange={this.handleEditorChange}
-								/>
-
-								<div dangerouslySetInnerHTML={{ __html: initText }}></div>
-
 								<Form error={addOrEditMissingField.content} size="small">
 									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" defaultValue={fields.content} />
 									{/*
@@ -974,7 +949,7 @@ class CourseAddOrEdit extends Component {
 	}
 }
 
-CourseAddOrEdit.propTypes = {
+CourseAddOrEditMd.propTypes = {
 	fetchCategoriesAction: PropTypes.func,
 	createCourseAction: PropTypes.func,
 	updateCourseAction: PropTypes.func,
@@ -1024,4 +999,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchCategoriesAction, createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction })(CourseAddOrEdit);
+export default connect(mapStateToProps, { fetchCategoriesAction, createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction })(CourseAddOrEditMd);
