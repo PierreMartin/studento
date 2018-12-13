@@ -83,11 +83,24 @@ class NavigationMain extends Component {
 	renderDropdownProfile(userMe, authentification, logoutAction) {
 		if (authentification.authenticated) {
 			return (
-				<Dropdown item text={userMe.username}>
+				<Dropdown item text={userMe.username} title="Settings">
 					<Dropdown.Menu>
 						<Dropdown.Item icon="user" text="Profile" as={Link} to={'/user/' + userMe._id} />
 						<Dropdown.Item icon="settings" text="Edit Profile" as={Link} to="/settings" />
 						<Dropdown.Item icon="user outline" text="logout" as={Link} to="/" onClick={logoutAction} />
+					</Dropdown.Menu>
+				</Dropdown>
+			);
+		}
+	}
+
+	renderDropdownAddCourse(authentification) {
+		if (authentification.authenticated) {
+			return (
+				<Dropdown item icon="add" title="Add a course">
+					<Dropdown.Menu>
+						<Dropdown.Item icon="add" text="Add a course" as={Link} to="/course/create/new" />
+						<Dropdown.Item icon="add" text="Add a Markdown course" as={Link} to="/courseMd/create/new" />
 					</Dropdown.Menu>
 				</Dropdown>
 			);
@@ -110,8 +123,7 @@ class NavigationMain extends Component {
 
 						<Menu.Item position="right">
 							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
-
-							{ authentification.authenticated ? (<Menu.Item as={Link} to="/course/create/new"><Popup trigger={<Icon name="add" title="toto" />} content="Add a course" /></Menu.Item>) : ''}
+							{ this.renderDropdownAddCourse(authentification) }
 
 							{ authentification.authenticated ? (
 								<div ref={(el) => { this.unreadContentRef = el; }} >

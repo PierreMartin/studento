@@ -94,7 +94,8 @@ export function createCourseAction(data, coursesPagesCount, indexPagination) {
 		return createCourseRequest(data)
 			.then((res) => {
 				if (res.status === 200) {
-					dispatch(push('/course/edit/' + res.data.newCourse._id)); // redirection
+					const pathCourseToEdit = res.data.newCourse.type !== 'wy' ? `/courseMd/edit/${res.data.newCourse._id}` : `/course/edit/${res.data.newCourse._id}`;
+					dispatch(push(pathCourseToEdit)); // redirection
 					toast.success(res.data.message);
 					dispatch(addOrEditCourseSuccess(res.data, false, coursesPagesCount, indexPagination));
 					return Promise.resolve(res);

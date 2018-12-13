@@ -90,6 +90,7 @@ class CoursesListDashboard extends Component {
 
 		return courses.map((course, key) => {
 			const courseDate = moment(course.created_at).format('L, h:mm:ss a');
+			const pathCourseToEdit = course.type !== 'wy' ? `/courseMd/edit/${course._id}` : `/course/edit/${course._id}`;
 
 			return (
 				<Table.Row key={key}>
@@ -105,7 +106,7 @@ class CoursesListDashboard extends Component {
 						</Header>
 					</Table.Cell>
 					<Table.Cell><Icon color="red" name="star" /> 121</Table.Cell>
-					<Table.Cell><Button color="grey" content="Edit" icon="settings" size="tiny" as={Link} to={`/course/edit/${course._id}`} /></Table.Cell>
+					<Table.Cell><Button color="grey" content="Edit" icon="settings" size="tiny" as={Link} to={pathCourseToEdit} /></Table.Cell>
 					<Table.Cell><Button inverted color="red" content="Delete" icon="remove" size="tiny" onClick={this.handleOpenModalForDeleteCourse({ courseId: course._id, courseTitle: course.title })} /></Table.Cell>
 				</Table.Row>
 			);
@@ -140,6 +141,7 @@ class CoursesListDashboard extends Component {
 					<div>
 						<div className={cx('no-courses')}>You don't have some courses yet</div>
 						<Button basic color="grey" content="Add new course" icon="add" as={Link} to="/course/create/new" />
+						<Button basic color="grey" content="Add new MarkDown course (for developer)" icon="add" as={Link} to="/courseMd/create/new" />
 					</div>
 					:
 					<Table celled unstackable compact="very" sortable fixed>
@@ -162,6 +164,7 @@ class CoursesListDashboard extends Component {
 							<Table.Row>
 								<Table.HeaderCell colSpan="6">
 									<Button basic color="grey" content="Add new course" floated="right" icon="add" as={Link} to="/course/create/new" />
+									<Button basic color="grey" content="Add new MarkDown course (for developer)" floated="right" icon="add" as={Link} to="/courseMd/create/new" />
 									{ coursesPagesCount > 0 && this.renderPagination(coursesPagesCount, pagination) }
 								</Table.HeaderCell>
 							</Table.Row>

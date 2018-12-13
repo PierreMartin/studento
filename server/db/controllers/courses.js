@@ -118,9 +118,9 @@ export function oneById(req, res) {
  * POST /api/addcourse
  */
 export function add(req, res) {
-	const { fields, userMeId, createdAt } = req.body;
+	const { fields, userMeId, createdAt, type } = req.body;
 	const errorField = {};
-	const data = { ...fields, uId: userMeId, created_at: createdAt };
+	const data = { ...fields, uId: userMeId, created_at: createdAt, type };
 
 	// handling required fields :
 	errorField.title = (typeof fields.title === 'undefined' || fields.title === '') ? true : undefined;
@@ -222,9 +222,9 @@ export function addComment(req, res) {
  * PUT /api/updatecourse
  */
 export function update(req, res) {
-	const { fields, modifiedAt, courseId } = req.body;
+	const { fields, modifiedAt, courseId, type } = req.body;
 	const errorField = {};
-	const data = { ...fields, modified_at: modifiedAt };
+	const data = { ...fields, modified_at: modifiedAt, type };
 
 	// handling required fields :
 	errorField.title = fields.title === '' ? true : undefined;

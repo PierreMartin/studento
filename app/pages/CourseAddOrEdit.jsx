@@ -353,6 +353,7 @@ class CourseAddOrEdit extends Component {
 			data.fields = field;
 			data.userMeId = userMe._id;
 			data.createdAt = new Date().toISOString();
+			data.type = 'wy';
 			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
 				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 				if (courses.length % 12 === 0) { // 12 => numberItemPerPage setted in controller
@@ -750,9 +751,11 @@ class CourseAddOrEdit extends Component {
 		const { course } = this.props;
 
 		return courses.map((c, key) => {
+			const pathCourseToEdit = c.type !== 'wy' ? `/courseMd/edit/${c._id}` : `/course/edit/${c._id}`;
 			const isActive = course._id === c._id; // course = the current if editing
+
 			return (
-				<List.Item key={c._id} as={Link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={`/course/edit/${c._id}`} icon="file text" content={c.title} onClick={this.handleSelectCourse(key)} />
+				<List.Item key={c._id} as={Link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={pathCourseToEdit} icon="file text" content={c.title} onClick={this.handleSelectCourse(key)} />
 			);
 		});
 	}
@@ -849,6 +852,7 @@ class CourseAddOrEdit extends Component {
 							<Button.Group basic size="small">
 								<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
 								<Popup trigger={<Button icon="file" as={Link} to="/course/create/new" />} content="New course" />
+								<Popup trigger={<Button icon="file" as={Link} to="/courseMd/create/new" />} content="New MarkDown course" />
 								{ isEditing && Object.keys(fieldsTyping).length === 0 ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" />}
 								{ !isEditing ? <Button disabled icon="sticky note outline" /> : <Popup trigger={<Button icon="sticky note outline" as={Link} to={`/course/${course._id}`} />} content="See the course (you should save before)" /> }
 							</Button.Group>
