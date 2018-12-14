@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import marked from 'marked';
 import { Editor } from '@tinymce/tinymce-react';
 import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
@@ -12,7 +11,7 @@ import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { List, Form, Message, Button, Popup, Pagination, Icon, Modal, Header, Segment, Select } from 'semantic-ui-react';
+import { List, Form, Message, Button, Popup, Pagination, Icon, Header, Segment, Select } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -27,43 +26,21 @@ class CourseAddOrEdit extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleSelectCourse = this.handleSelectCourse.bind(this);
-		this.handleClickToolbar = this.handleClickToolbar.bind(this);
 
-		// modal:
-		this.editorInModalDidMount = this.editorInModalDidMount.bind(this);
-		this.handleOpenModalSetStyle = this.handleOpenModalSetStyle.bind(this);
-		this.handleCloseModalSetStyle = this.handleCloseModalSetStyle.bind(this);
-		this.handleSubmitModalSetStyle = this.handleSubmitModalSetStyle.bind(this);
-		this.handleLanguageChange = this.handleLanguageChange.bind(this);
-		this.handleInputModalSetStyleChange = this.handleInputModalSetStyleChange.bind(this);
-
+		// Editor:
 		this.handleEditorChange = this.handleEditorChange.bind(this);
 
-		this.rendererMarked = null;
-		this.editorCm = null;
-		this.editorCmMini = null;
-		this.timerRenderPreview = null;
-		this.CodeMirror = null;
-
-		// Init for generate headings wrap:
-		this.indexHeader = 0;
-		this.headersList = [];
-
 		this.state = {
-			contentMarkedSanitized: '',
 			fieldsTyping: {
 				template: {}
 			},
-			fieldsModalSetStyleTyping: {},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
 			heightDocument: 0,
 			pagination: {
 				indexPage: 1
 			},
-			clickedCourse: 0,
-			openModalSetStyle: {},
-			codeLanguageSelected: ''
+			clickedCourse: 0
 		};
 	}
 
@@ -80,141 +57,22 @@ class CourseAddOrEdit extends Component {
 		// Load highlight.js Languages:
 		hljsLoadLanguages(hljs);
 
-		// ##################################### Marked #####################################
-		this.rendererMarked = new marked.Renderer();
-		marked.setOptions({
-			renderer: this.rendererMarked,
-			pedantic: false,
-			gfm: true,
-			tables: true,
-			breaks: true,
-			sanitize: true,
-			smartLists: true,
-			smartypants: false,
-			xhtml: false
-		});
-
-		// ##################################### CodeMirror #####################################
-		this.CodeMirror = require('codemirror/lib/codemirror');
-		require('codemirror/lib/codemirror.css');
-
-		// Addon JS:
-		require('codemirror/addon/dialog/dialog.js');
-		require('codemirror/addon/search/matchesonscrollbar.js');
-		require('codemirror/addon/fold/foldgutter.js');
-		require('codemirror/addon/fold/foldcode.js');
-		require('codemirror/addon/fold/brace-fold.js');
-		require('codemirror/addon/fold/comment-fold.js');
-		require('codemirror/addon/fold/indent-fold.js');
-		require('codemirror/addon/fold/markdown-fold.js');
-		require('codemirror/addon/fold/xml-fold.js');
-		require('codemirror/addon/edit/closebrackets.js');
-
-		// Addon CSS:
-		require('codemirror/addon/dialog/dialog.css');
-		require('codemirror/addon/search/matchesonscrollbar.css');
-		require('codemirror/addon/fold/foldgutter.css');
-
-		// Theme CSS:
-		require('codemirror/theme/pastel-on-dark.css');
-
-		// keyMap:
-		require('codemirror/keymap/sublime.js');
-
-		// modes:
-		require('codemirror/mode/markdown/markdown');
-		require('codemirror/mode/javascript/javascript');
-		require('codemirror/mode/php/php');
-		require('codemirror/mode/gfm/gfm');
-		require('codemirror/mode/python/python');
-		require('codemirror/mode/ruby/ruby');
-		require('codemirror/mode/sass/sass');
-		require('codemirror/mode/shell/shell');
-		require('codemirror/mode/sql/sql');
-		require('codemirror/mode/stylus/stylus');
-		require('codemirror/mode/xml/xml');
-		require('codemirror/mode/coffeescript/coffeescript');
-		require('codemirror/mode/css/css');
-		require('codemirror/mode/cmake/cmake');
-		require('codemirror/mode/htmlmixed/htmlmixed');
-		require('codemirror/mode/mathematica/mathematica');
-
-		this.editorCm = this.CodeMirror.fromTextArea(this.refEditor, {
-			// value: fields.content, // already set by the textarea
-			lineNumbers: true,
-			codeFold: true,
-			placeholder: 'Write you course here...',
-			dragDrop: false,
-			autofocus: true,
-			readOnly: false,
-			matchTags: false,
-			tabSize: 4,
-			indentUnit: 4,
-			lineWrapping: true,
-			viewportMargin: Infinity,
-			extraKeys: {
-				'Ctrl-Space': 'autocomplete',
-				'Ctrl-Q': cm => cm.foldCode(cm.getCursor())
-			},
-			keyMap: 'sublime',
-
-			foldGutter: true,
-			gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-			matchBrackets: true,
-			indentWithTabs: true,
-			styleActiveLine: true,
-			styleSelectedText: true,
-			autoCloseBrackets: true,
-			autoCloseTags: true,
-			showTrailingSpace: true,
-			// highlightSelectionMatches : ( (!settings.matchWordHighlight) ? false : { showToken: (settings.matchWordHighlight === "onselected") ? false : /\w/ } )
-
-			theme: 'pastel-on-dark',
-			mode: 'gfm'
-		});
-
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
-		this.templateRendering();
-		this.setStateContentMarkedSanitized({ valueEditor: this.editorCm.getValue() });
+		// this.templateRendering();
+		this.setStateContentMarkedSanitized({ contentCourse: this.props.course.content || 'New course here...' });
 		// setTimeout(() => hljs.initHighlighting(), 1000);
-
-		// handleEditorChange:
-		this.editorCm.on('change', () => {
-			const valueEditor = this.editorCm.getValue();
-			const isBigFile = valueEditor.length >= 3000;
-
-			// Init for generate headings wrap:
-			this.indexHeader = 0;
-			this.headersList = [];
-
-			// ------- Big course -------
-			clearTimeout(this.timerRenderPreview);
-			this.timerRenderPreview = setTimeout(() => {
-				if (isBigFile) {
-					this.setStateContentMarkedSanitized({ setStateRawContent: true, valueEditor });
-				}
-			}, 200);
-
-			// ------- Small course -------
-			if (!isBigFile) {
-				this.setStateContentMarkedSanitized({ setStateRawContent: true, valueEditor });
-			}
-		});
-
-		this.editorCm.setSize('auto', window.innerHeight - 44);
 	}
 
 	componentDidUpdate(prevProps) {
 		// Change pages:
 		if (prevProps.course !== this.props.course) {
 			// Init for generate headings wrap:
-			this.indexHeader = 0;
-			this.headersList = [];
+			// this.indexHeader = 0;
+			// this.headersList = [];
 
-			const fields = this.getFieldsVal({}, this.props.course);
-
-			this.editorCm.setValue(fields.content);
+			// const fields = this.getFieldsVal({}, this.props.course);
+			// this.editorCm.setValue(fields.content);
 
 			this.setState({
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
@@ -380,8 +238,8 @@ class CourseAddOrEdit extends Component {
 			return this.setState({
 				fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} }
 			}, () => {
-				const content = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
-				return this.setStateContentMarkedSanitized({ valueEditor: content });
+				const contentCourse = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
+				return this.setStateContentMarkedSanitized({ contentCourse });
 			});
 		}
 
@@ -424,146 +282,6 @@ class CourseAddOrEdit extends Component {
 		return <ul className={cx('error-message')}>{messagesListNode}</ul>;
 	}
 
-	setStyleSelectable(param) {
-		// init:
-		const chunk = {};
-		chunk.selection = this.editorCm.getSelection();
-		if (chunk.selection === '') return;
-
-		const selPosStart = this.editorCm.doc.sel.ranges[0].anchor;
-		const selPosEnd = this.editorCm.doc.sel.ranges[0].head;
-		const valuePosStart = { line: 0, ch: 0 };
-		const valuePosEnd = { line: this.editorCm.lineCount() + 1, ch: 0 };
-		const numberChars = param.numberChars;
-		const char = param.char;
-
-		chunk.before = this.editorCm.getRange(valuePosStart, selPosStart);
-		chunk.after = this.editorCm.getRange(selPosEnd, valuePosEnd);
-
-		const regexBefore = window.RegExp('[' + char + ']{' + numberChars + '}$', '');
-		const regexAfter = window.RegExp('^[' + char + ']{' + numberChars + '}', '');
-
-		const haveCharBefore = regexBefore.test(chunk.before);
-		const haveCharAfter = regexAfter.test(chunk.after);
-
-		// If already styled - remove style:
-		if (haveCharBefore && haveCharAfter) {
-			chunk.before = chunk.before.replace(regexBefore, '');
-			chunk.after = chunk.after.replace(regexAfter, '');
-			this.editorCm.setValue(chunk.before + chunk.selection + chunk.after);
-
-			// Re set selection:
-			selPosStart.ch -= numberChars;
-			selPosEnd.ch -= numberChars;
-			this.editorCm.setSelection(selPosStart, selPosEnd);
-		} else {
-			// If first styled - add style:
-			let charsToAdd = '';
-			for (let i = 0; i < numberChars; i++) charsToAdd += char;
-			this.editorCm.replaceSelection(charsToAdd + chunk.selection + charsToAdd);
-
-			// Re set selection:
-			selPosStart.ch += numberChars;
-			selPosEnd.ch += numberChars;
-			this.editorCm.setSelection(selPosStart, selPosEnd);
-		}
-	}
-
-	setStyleOnLine(param) {
-		// init:
-		const chunk = {};
-		chunk.line = [];
-		chunk.lines = '';
-		const selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
-		const selPosEnd = Object.assign({}, this.editorCm.doc.sel.ranges[0].head);
-		const valuePosStart = { line: 0, ch: 0 };
-		const valuePosEnd = { line: this.editorCm.lineCount() + 1, ch: 0 };
-		const char = param.char;
-		let charsAlreadyHave = '';
-		const type = param.type;
-		const dirAsc = selPosStart.line <= selPosEnd.line;
-		let k = selPosStart.line;
-
-		// Get chunks lines:
-		if (dirAsc) {
-			for (k; k <= selPosEnd.line; k++) { chunk.line.push(this.editorCm.getLine(k)); }
-		} else {
-			for (k; k >= selPosEnd.line; k--) { chunk.line.push(this.editorCm.getLine(k)); }
-			chunk.line.reverse();
-		}
-
-		if (typeof chunk.line[0] === 'undefined') return;
-
-		const selPosStartClone = Object.assign({}, selPosStart);
-		const selPosEndClone = Object.assign({}, selPosEnd);
-
-		// Get chunks before / after line:
-		selPosEndClone.ch = 0;
-		selPosStartClone.ch = 0;
-		if (selPosStartClone.line <= selPosEndClone.line) {
-			selPosEndClone.line++;
-			chunk.beforeTheLine = this.editorCm.getRange(valuePosStart, selPosStartClone);
-			chunk.afterTheLine = this.editorCm.getRange(selPosEndClone, valuePosEnd);
-		} else {
-			selPosStartClone.line++;
-			chunk.beforeTheLine = this.editorCm.getRange(valuePosStart, selPosEndClone);
-			chunk.afterTheLine = this.editorCm.getRange(selPosStartClone, valuePosEnd);
-		}
-
-		let regex = window.RegExp('^' + char, '');
-		if (type === 'check square') regex = window.RegExp(/^- \[x] /, '');
-		if (type === 'header') regex = window.RegExp('^[' + char + ']{1,}', '');
-
-		let haveCharInLine = false;
-		for (let l = 0; l < chunk.line.length; l++) {
-			haveCharInLine = regex.test(chunk.line[l]);
-			charsAlreadyHave = window.RegExp('^[' + char + ']{1,}$', '').test(chunk.line[l].split(' ')[0]) ? chunk.line[l].split(' ')[0] : false; // For header
-			if (haveCharInLine) break;
-		}
-
-		// ############################ If already styled - for header ONLY: ############################
-		if (haveCharInLine && type === 'header' && charsAlreadyHave) {
-			const newChars = charsAlreadyHave.length > 5 ? '' : charsAlreadyHave; // reset to 0 after H6
-
-			for (let i = 0; i < chunk.line.length; i++) {
-				chunk.lines += chunk.line[i].replace(charsAlreadyHave, newChars + char.trim()).trim() + '\n';
-			}
-			this.editorCm.setValue(chunk.beforeTheLine + chunk.lines + chunk.afterTheLine);
-
-			// Re set selection:
-			selPosStart.ch += 1;
-			selPosEnd.ch += 1;
-			this.editorCm.setSelection(selPosStart, selPosEnd);
-		} else if (haveCharInLine) {
-			// ############################ If already styled - remove style: ############################
-			for (let j = 0; j < chunk.line.length; j++) {
-				chunk.lines += chunk.line[j].replace(regex, '').trim() + '\n';
-			}
-			this.editorCm.setValue(chunk.beforeTheLine + chunk.lines + chunk.afterTheLine);
-
-			// Re set selection:
-			selPosStart.ch -= char.length;
-			selPosEnd.ch -= char.length;
-			this.editorCm.setSelection(selPosStart, selPosEnd);
-		} else {
-			// ############################ If first styled - add style: ############################
-			selPosStart.ch = 0;
-
-			let j = selPosStart.line;
-
-			if (dirAsc) {
-				for (j; j <= selPosEnd.line; j++) {
-					selPosStart.line = j;
-					this.editorCm.replaceRange(char, selPosStart);
-				}
-			} else {
-				for (j; j >= selPosEnd.line; j--) {
-					selPosStart.line = j;
-					this.editorCm.replaceRange(char, selPosStart);
-				}
-			}
-		}
-	}
 
 	templateRendering() {
 		this.rendererMarked.heading = (text, currenLevel) => {
@@ -614,133 +332,6 @@ class CourseAddOrEdit extends Component {
 		};
 	}
 
-	handleOpenModalSetStyle(params) { this.setState({ openModalSetStyle: params }); }
-	handleCloseModalSetStyle() { this.setState({ openModalSetStyle: {}, codeLanguageSelected: '', fieldsModalSetStyleTyping: {} }); }
-
-	editorInModalDidMount = (refEditorInModal) => {
-		if (refEditorInModal !== null) {
-			this.editorCmMini = this.CodeMirror.fromTextArea(refEditorInModal, {
-				lineNumbers: true,
-				codeFold: true,
-				placeholder: 'Write you code here',
-				dragDrop: false,
-				autofocus: true,
-				readOnly: false,
-				matchTags: false,
-				tabSize: 4,
-				indentUnit: 4,
-				lineWrapping: true,
-				viewportMargin: Infinity,
-				extraKeys: {
-					'Ctrl-Space': 'autocomplete',
-					'Ctrl-Q': cm => cm.foldCode(cm.getCursor())
-				},
-				keyMap: 'sublime',
-				foldGutter: true,
-				gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-				matchBrackets: true,
-				indentWithTabs: true,
-				styleActiveLine: true,
-				styleSelectedText: true,
-				autoCloseBrackets: true,
-				autoCloseTags: true,
-				showTrailingSpace: true,
-				theme: 'pastel-on-dark',
-				mode: 'javascript'
-			});
-		}
-	}
-
-	handleSubmitModalSetStyle = (params) => {
-		const { codeLanguageSelected, fieldsModalSetStyleTyping } = this.state;
-		let selPosStart = {};
-
-		return () => {
-			switch (params.type) {
-				case 'code':
-					selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
-					const value = '```' + codeLanguageSelected + '\n' + this.editorCmMini.getValue() + '\n```';
-					this.editorCm.replaceRange('\n' + value + '\n', selPosStart);
-					break;
-				case 'table':
-					// ...
-					break;
-				case 'linkify':
-					selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
-					const urlLink = fieldsModalSetStyleTyping.linkifyUrl.indexOf('http') === -1 ? 'http://' + fieldsModalSetStyleTyping.linkifyUrl : fieldsModalSetStyleTyping.linkifyUrl;
-					const urlLinkFull = `[${fieldsModalSetStyleTyping.linkifyText}](${urlLink})`;
-					this.editorCm.replaceRange('\n' + urlLinkFull + '\n', selPosStart);
-					this.setState({ fieldsModalSetStyleTyping: {} });
-					break;
-				case 'file image outline':
-					selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
-					const urlImage = fieldsModalSetStyleTyping.file.indexOf('http') === -1 ? 'http://' + fieldsModalSetStyleTyping.file : fieldsModalSetStyleTyping.file;
-					const urlImageFull = `![](${urlImage})`;
-					this.editorCm.replaceRange('\n' + urlImageFull + '\n', selPosStart);
-					this.setState({ fieldsModalSetStyleTyping: {} });
-					break;
-				default:
-					break;
-			}
-
-			this.handleCloseModalSetStyle();
-		};
-	};
-
-	handleLanguageChange(event, field) {
-		this.setState({ codeLanguageSelected: field.value });
-		if (field.value !== 'katex') this.editorCmMini.setOption('mode', field.value);
-	}
-
-	handleInputModalSetStyleChange(event, field) {
-		this.setState({ fieldsModalSetStyleTyping: { ...this.state.fieldsModalSetStyleTyping, ...{[field.name]: field.value } } });
-	}
-
-	handleClickToolbar = clickedButton => () => {
-		this.editorCm.focus();
-
-		switch (clickedButton) {
-			case 'bold':
-				this.setStyleSelectable({ type: 'bold', char: '*', numberChars: 2 });
-				break;
-			case 'italic':
-				this.setStyleSelectable({ type: 'italic', char: '*', numberChars: 1 });
-				break;
-			case 'header':
-				this.setStyleOnLine({ type: 'header', char: '# ' });
-				break;
-			case 'strikethrough':
-				this.setStyleSelectable({ type: 'strikethrough', char: '~', numberChars: 2 });
-				break;
-			case 'quote left':
-				this.setStyleOnLine({ type: 'quote left', char: '> ' });
-				break;
-			case 'unordered list':
-				this.setStyleOnLine({ type: 'unordered list', char: '- ' });
-				break;
-			case 'ordered list':
-				this.setStyleOnLine({ type: 'ordered list', char: '1. ' });
-				break;
-			case 'check square':
-				this.setStyleOnLine({ type: 'check square', char: '- [x] ' });
-				break;
-			case 'code':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'code', title: 'Editor', desc: 'Write some code in the editor' });
-				break;
-			case 'table':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'table', title: 'Table', desc: 'Create a table' });
-				break;
-			case 'linkify':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'linkify', title: 'Link', desc: 'Add a link' });
-				break;
-			case 'file image outline':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'file image outline', title: 'Image', desc: 'Add a image' });
-				break;
-			default:
-				break;
-		}
-	};
-
 	handleSelectCourse = clickedCourse => () => {
 		this.setState({ clickedCourse });
 	};
@@ -778,58 +369,43 @@ class CourseAddOrEdit extends Component {
 		);
 	}
 
+	// TODO voir si utile
 	setStateContentMarkedSanitized(params = {}) {
-		const content = ((typeof params.valueEditor !== 'undefined') ? params.valueEditor : this.props.course && this.props.course.content) || '';
-		const contentMarkedSanitized = DOMPurify.sanitize(marked(content || ''));
+		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || '';
+		const contentSanitized = DOMPurify.sanitize(content);
+		const oldStateTyping = this.state.fieldsTyping;
 
-		if (params.setStateRawContent) {
-			const oldStateTyping = this.state.fieldsTyping;
-
-			return this.setState({
-				contentMarkedSanitized,
-				fieldsTyping: {...oldStateTyping, ...{ content: params.valueEditor }}
-			}, () => {
-				HighlightRendering(hljs);
-				kaTexRendering(katex, params.valueEditor);
-			});
-		}
-
-		this.setState({
-			contentMarkedSanitized
+		// TODO voir ca:
+		return this.setState({
+			fieldsTyping: {...oldStateTyping, ...{ content: contentSanitized }}
 		}, () => {
 			HighlightRendering(hljs);
-			kaTexRendering(katex, params.valueEditor);
+			kaTexRendering(katex, contentSanitized);
 		});
 	}
 
 	handleEditorChange = (e) => {
-		console.log('Content was updated:', e.target.getContent());
+		const getContent = e.target.getContent();
+		const contentSanitized = DOMPurify.sanitize(getContent);
+		const oldStateTyping = this.state.fieldsTyping;
+
+		// setStateContentMarkedSanitized(getContent) ?? // TODO voir ca
+
+		return this.setState({
+			fieldsTyping: {...oldStateTyping, ...{ content: contentSanitized }}
+		}, () => {
+			HighlightRendering(hljs);
+			kaTexRendering(katex, contentSanitized);
+		});
 	};
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected } = this.state;
+		const { category, isEditing, fieldsTyping, pagination } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
-		const { categoriesOptions, subCategoriesOptions, codeLanguagesOptions, columnsOptions } = this.getOptionsFormsSelect();
+		const { categoriesOptions, subCategoriesOptions, columnsOptions } = this.getOptionsFormsSelect();
 		const isDisableButtonSubmit = isEditing && !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && !fieldsTyping.isPrivate && (!fieldsTyping.template || (fieldsTyping.template && Object.keys(fieldsTyping.template).length === 0));
-
-		const buttonsToolbar = [
-			{ icon: 'bold', content: 'Bold' },
-			{ icon: 'italic', content: 'Italic' },
-			{ icon: 'header', content: 'Header' },
-			{ icon: 'strikethrough', content: 'Strikethrough' },
-			{ icon: 'unordered list', content: 'Unordered list' },
-			{ icon: 'ordered list', content: 'Ordered list' },
-			{ icon: 'check square', content: 'Check list' },
-			{ icon: 'quote left', content: 'Quote left' }
-		];
-		const buttonsForPopupToolbar = [
-			{ icon: 'code', content: 'Add a code' },
-			{ icon: 'table', content: 'Add a table' },
-			{ icon: 'linkify', content: 'Add a link' },
-			{ icon: 'file image outline', content: 'Add image' }
-		];
 
 		const selectTemplatesHeaders = [
 			{ label: 'h1', name: 'columnH1' },
@@ -839,10 +415,6 @@ class CourseAddOrEdit extends Component {
 			{ label: 'h5', name: 'columnH5' },
 			{ label: 'h6', name: 'columnH6' }
 		];
-		const initText = `<h1 style="text-align: center;">This is the initial content of the editor</h1>
-			<pre class="language-php"><code>const toto = 'fdfdfd'</code></pre>
-			<p>vcvccvvc lkckcxlc xcxlkxcl xccxklkxcl xf</p>`
-		;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -895,84 +467,21 @@ class CourseAddOrEdit extends Component {
 					</div>
 
 					<div className={cx('editor-container-full')}>
-						<div className={cx('editor-toolbar')}>
-							<Button.Group basic size="small">
-								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic inverted className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
-							</Button.Group>
-							<Button.Group basic size="small">
-								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic inverted className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
-							</Button.Group>
-						</div>
+						<Editor
+							apiKey="3kobmcz3sotpddw4zkuzj5d9hse2tuytw4jrqi5ndthqc0wq"
+							initialValue={fields.content}
+							init={{
+								min_height: 600,
+								external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
+								plugins: 'link image table codesample tiny_mce_wiris',
+								toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | blocks | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry'
+							}}
+							onChange={this.handleEditorChange}
+						/>
 
-						<div className={cx('editor-container')}>
-							<div className={cx('editor-edition')}>
-								<Editor
-									apiKey="3kobmcz3sotpddw4zkuzj5d9hse2tuytw4jrqi5ndthqc0wq"
-									initialValue={initText}
-									init={{
-										min_height: 600,
-										external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
-										plugins: 'link image table codesample tiny_mce_wiris',
-										toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | blocks | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry'
-									}}
-									onChange={this.handleEditorChange}
-								/>
-
-								<div dangerouslySetInnerHTML={{ __html: initText }}></div>
-
-								<Form error={addOrEditMissingField.content} size="small">
-									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" defaultValue={fields.content} />
-									{/*
-									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ height: (heightDocument - 44) + 'px' }} />
-									<Message error content="the content is required" className={cx('editor-edition-error-message')} />
-									*/}
-								</Form>
-							</div>
-
-							<div className={cx('container-page', 'preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refPreview = el; }} />
-						</div>
+						<div dangerouslySetInnerHTML={{ __html: fields.content }} />
 					</div>
 				</div>
-
-				<Modal open={openModalSetStyle.isOpened} onClose={this.handleCloseModalSetStyle}>
-					<Modal.Header>{openModalSetStyle.title}</Modal.Header>
-					<Modal.Content image>
-						<Modal.Description>
-							<Header>{openModalSetStyle.desc}</Header>
-
-							{ openModalSetStyle.type === 'code' ? (
-								<Form size="small">
-									<Form.Select label="Language" options={codeLanguagesOptions} placeholder="Choose a language" width={4} name="language" value={codeLanguageSelected || ''} onChange={this.handleLanguageChange} />
-									<textarea ref={this.editorInModalDidMount} name="editorCmMini" defaultValue="Write you code here" />
-								</Form>
-							) : '' }
-
-							{ openModalSetStyle.type === 'table' ? (
-								<div>coming soon</div>
-							) : '' }
-
-							{ openModalSetStyle.type === 'linkify' ? (
-								<Form size="small">
-									<Form.Group widths="equal">
-										<Form.Input label="Link text" placeholder="My site" name="linkifyText" value={fieldsModalSetStyleTyping.linkifyText || ''} onChange={this.handleInputModalSetStyleChange} />
-										<Form.Input label="URL" placeholder="www.mywebsite.com" name="linkifyUrl" value={fieldsModalSetStyleTyping.linkifyUrl || ''} onChange={this.handleInputModalSetStyleChange} />
-									</Form.Group>
-								</Form>
-							) : '' }
-
-							{ openModalSetStyle.type === 'file image outline' ? (
-								<Form size="small">
-									<Form.Input label="Add a image" placeholder="https://mywebsite/images/1.jpg" name="file" value={fieldsModalSetStyleTyping.file || ''} onChange={this.handleInputModalSetStyleChange} />
-								</Form>
-							) : '' }
-
-						</Modal.Description>
-					</Modal.Content>
-					<Modal.Actions>
-						<Button color="black" onClick={this.handleCloseModalSetStyle}>Cancel</Button>
-						<Button icon="checkmark" color="red" labelPosition="right" content="Ok" onClick={this.handleSubmitModalSetStyle(openModalSetStyle)} />
-					</Modal.Actions>
-				</Modal>
 			</LayoutPage>
 		);
 	}
