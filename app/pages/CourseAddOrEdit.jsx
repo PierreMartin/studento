@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Editor } from '@tinymce/tinymce-react';
 import DOMPurify from 'dompurify';
-import hljs from 'highlight.js/lib/highlight.js';
 import katex from 'katex';
-import { hljsLoadLanguages } from '../components/common/loadLanguages';
-import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
+import { kaTexRendering } from '../components/common/renderingCourse';
 import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
@@ -54,14 +52,10 @@ class CourseAddOrEdit extends Component {
 		fetchCategoriesAction();
 		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
 
-		// Load highlight.js Languages:
-		hljsLoadLanguages(hljs);
-
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
 		// this.templateRendering();
 		this.setContentSanitized({ callFrom: 'mount' });
-		// setTimeout(() => hljs.initHighlighting(), 1000);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -82,6 +76,14 @@ class CourseAddOrEdit extends Component {
 
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.updateWindowDimensions);
+	}
+
+	getMetaData() {
+		return {
+			title: 'Add course',
+			meta: [{ name: 'description', content: 'Add course...' }],
+			link: []
+		};
 	}
 
 	getOptionsFormsSelect() {
@@ -129,25 +131,6 @@ class CourseAddOrEdit extends Component {
 			}
 		}
 
-		const codeLanguagesOptions = [
-			{ key: 'markdown', text: 'markdown', value: 'markdown' },
-			{ key: 'javascript', text: 'Javascript', value: 'javascript' },
-			{ key: 'php', text: 'Php', value: 'php' },
-			{ key: 'python', text: 'Python', value: 'python' },
-			{ key: 'ruby', text: 'Ruby', value: 'ruby' },
-			{ key: 'sass', text: 'Sass', value: 'sass' },
-			{ key: 'shell', text: 'Shell', value: 'shell' },
-			{ key: 'sql', text: 'Sql', value: 'sql' },
-			{ key: 'stylus', text: 'Stylus', value: 'stylus' },
-			{ key: 'xml', text: 'XML', value: 'xml' },
-			{ key: 'coffeescript', text: 'Coffeescript', value: 'coffeescript' },
-			{ key: 'css', text: 'Css', value: 'css' },
-			{ key: 'cmake', text: 'Cmake', value: 'cmake' },
-			{ key: 'htmlmixed', text: 'HTML', value: 'htmlmixed' },
-			{ key: 'mathematica', text: 'Mathematica', value: 'mathematica' },
-			{ key: 'katex', text: 'Katex', value: 'katex' }
-		];
-
 		const columnsOptions = [
 			{ key: 1, text: '1 column', value: 1 },
 			{ key: 2, text: '2 columns', value: 2 },
@@ -155,15 +138,7 @@ class CourseAddOrEdit extends Component {
 			{ key: 4, text: '4 columns', value: 4 }
 		];
 
-		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList, codeLanguagesOptions, columnsOptions };
-	}
-
-	getMetaData() {
-		return {
-			title: 'Add course',
-			meta: [{ name: 'description', content: 'Add course...' }],
-			link: []
-		};
+		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList, columnsOptions };
 	}
 
 	getFieldsVal(fieldsTyping, course) {
@@ -179,101 +154,40 @@ class CourseAddOrEdit extends Component {
 		return fields;
 	}
 
-	updateWindowDimensions() {
-		this.setState({ heightDocument: window.innerHeight });
-	}
-
-	handleOnSubmit(event) {
-		event.preventDefault();
-
-		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction } = this.props;
-		const { pagination } = this.state;
-		const indexPagination = pagination.indexPage || 0;
-		const field = this.getFieldsVal(this.state.fieldsTyping, course);
-		const data = {};
-
-		if (this.state.isEditing) {
-			data.fields = {...this.state.fieldsTyping, template: { ...field.template } };
-			data.modifiedAt = new Date().toISOString();
-			data.courseId = course._id;
-			updateCourseAction(data).then(() => {
-				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
-			});
-		} else {
-			data.fields = field;
-			data.userMeId = userMe._id;
-			data.createdAt = new Date().toISOString();
-			data.type = 'wy';
-			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
-				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
-				if (courses.length % 12 === 0) { // 12 => numberItemPerPage setted in controller
-					this.setState({ pagination: { indexPage: 1 } });
-					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
-				}
-			});
-		}
-	}
-
-	handleInputChange(event, field) {
+	setContentSanitized(params = {}) {
+		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || 'You\'re course here...';
+		const contentSanitized = DOMPurify.sanitize(content);
 		const oldStateTyping = this.state.fieldsTyping;
 
-		// Set categories:
-		if (field.name === 'category') {
+		// From componentDidMount:
+		if (params.callFrom === 'mount') {
 			return this.setState({
-				fieldsTyping: { ...oldStateTyping, ...{[field.name]: field.value }, subCategories: [] },
-				category: { lastSelected: field.value}
-			});
-		}
-
-		// Set columns:
-		if (/^column/g.test(field.name)) {
-			return this.setState({
-				fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} }
+				fieldsTyping: { content: contentSanitized }
 			}, () => {
-				const contentCourse = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
-				return this.setContentSanitized({ contentCourse });
+				kaTexRendering(katex, contentSanitized);
 			});
 		}
 
-		// Set all forms fields except content:
-		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
-	}
+		// From componentDidUpdate:
+		if (params.callFrom === 'update') {
+			return this.setState({
+				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
+				fieldsTyping: {
+					content: contentSanitized,
+					template: {}
+				}
+			}, () => {
+				kaTexRendering(katex, contentSanitized);
+			});
+		}
 
-	handlePaginationChange = (e, { activePage }) => {
-		this.setState({ pagination: { indexPage: activePage } });
-		const lastActivePage = this.state.pagination.indexPage;
-		if (activePage === lastActivePage) return;
-
-		const { userMe, fetchCoursesByFieldAction, courses } = this.props;
-		const directionIndex = activePage - lastActivePage;
-		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
-
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
-	}
-
-	/**
-	 * Display a error if a field is wrong
-	 * @param {object} missingField - object with true as key if a field is missing
-	 * @param {string} messageErrorBe - message from back-end
-	 * @return {HTML} the final message if error
-	 * */
-	dispayFieldsErrors(missingField, messageErrorBe) {
-		const errorsField = [];
-		if (missingField.title) errorsField.push({message: 'the title is required ', key: 'title'});
-		if (missingField.category) errorsField.push({message: 'the category is required ', key: 'category'});
-
-		// Pas obligé d'afficher les erreurs back-end dans le form, on devrait plutôt les aficher dans une notification
-		if (messageErrorBe && messageErrorBe.length > 0) errorsField.push({message: messageErrorBe, key: 'backendError'});
-
-		const messagesListNode = errorsField.map((errorField, key) => {
-			return (
-				<li key={key}>{errorField.message}</li>
-			);
+		// From typing:
+		this.setState({
+			fieldsTyping: {...oldStateTyping, content: contentSanitized }
+		}, () => {
+			kaTexRendering(katex, contentSanitized);
 		});
-
-		return <ul className={cx('error-message')}>{messagesListNode}</ul>;
 	}
-
 
 	templateRendering() {
 		this.rendererMarked.heading = (text, currenLevel) => {
@@ -324,8 +238,107 @@ class CourseAddOrEdit extends Component {
 		};
 	}
 
+	/**
+	 * Display a error if a field is wrong
+	 * @param {object} missingField - object with true as key if a field is missing
+	 * @param {string} messageErrorBe - message from back-end
+	 * @return {HTML} the final message if error
+	 * */
+	dispayFieldsErrors(missingField, messageErrorBe) {
+		const errorsField = [];
+		if (missingField.title) errorsField.push({message: 'the title is required ', key: 'title'});
+		if (missingField.category) errorsField.push({message: 'the category is required ', key: 'category'});
+
+		// Pas obligé d'afficher les erreurs back-end dans le form, on devrait plutôt les aficher dans une notification
+		if (messageErrorBe && messageErrorBe.length > 0) errorsField.push({message: messageErrorBe, key: 'backendError'});
+
+		const messagesListNode = errorsField.map((errorField, key) => {
+			return (
+				<li key={key}>{errorField.message}</li>
+			);
+		});
+
+		return <ul className={cx('error-message')}>{messagesListNode}</ul>;
+	}
+
 	handleSelectCourse = clickedCourse => () => {
 		this.setState({ clickedCourse });
+	};
+
+	handlePaginationChange = (e, { activePage }) => {
+		this.setState({ pagination: { indexPage: activePage } });
+		const lastActivePage = this.state.pagination.indexPage;
+		if (activePage === lastActivePage) return;
+
+		const { userMe, fetchCoursesByFieldAction, courses } = this.props;
+		const directionIndex = activePage - lastActivePage;
+		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
+
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
+	};
+
+	handleInputChange(event, field) {
+		const oldStateTyping = this.state.fieldsTyping;
+
+		// Set categories:
+		if (field.name === 'category') {
+			return this.setState({
+				fieldsTyping: { ...oldStateTyping, ...{[field.name]: field.value }, subCategories: [] },
+				category: { lastSelected: field.value}
+			});
+		}
+
+		// Set columns:
+		if (/^column/g.test(field.name)) {
+			return this.setState({
+				fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} }
+			}, () => {
+				const contentCourse = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
+				return this.setContentSanitized({ contentCourse });
+			});
+		}
+
+		// Set all forms fields except content:
+		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
+	}
+
+	handleOnSubmit(event) {
+		event.preventDefault();
+
+		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction } = this.props;
+		const { pagination, fieldsTyping, isEditing } = this.state;
+		const indexPagination = pagination.indexPage || 0;
+		const template = (fieldsTyping.template && Object.keys(fieldsTyping.template).length > 0 ? {...course.template, ...fieldsTyping.template} : course && course.template) || {};
+		const data = {};
+
+		if (isEditing) {
+			data.fields = {...fieldsTyping, template: { ...template } };
+			data.modifiedAt = new Date().toISOString();
+			data.courseId = course._id;
+			updateCourseAction(data).then(() => {
+				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+			});
+		} else {
+			data.fields = fieldsTyping;
+			data.userMeId = userMe._id;
+			data.createdAt = new Date().toISOString();
+			data.type = 'wy';
+			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
+				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+				if (courses.length % 12 === 0) { // 12 => numberItemPerPage setted in controller
+					this.setState({ pagination: { indexPage: 1 } });
+					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+				}
+			});
+		}
+	}
+
+	updateWindowDimensions() {
+		this.setState({ heightDocument: window.innerHeight });
+	}
+
+	handleEditorChange = (e) => {
+		this.setContentSanitized({ contentCourse: e.target.getContent() });
 	};
 
 	renderCoursesList(courses) {
@@ -361,48 +374,9 @@ class CourseAddOrEdit extends Component {
 		);
 	}
 
-	setContentSanitized(params = {}) {
-		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || 'You\'re course here...';
-		const contentSanitized = DOMPurify.sanitize(content);
-		const oldStateTyping = this.state.fieldsTyping;
-
-		// From componentDidMount:
-		if (params.callFrom === 'mount') {
-			return this.setState({
-				fieldsTyping: { content: contentSanitized }
-			}, () => {
-				kaTexRendering(katex, contentSanitized);
-			});
-		}
-
-		// From componentDidUpdate:
-		if (params.callFrom === 'update') {
-			return this.setState({
-				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
-				fieldsTyping: {
-					content: contentSanitized,
-					template: {}
-				}
-			}, () => {
-				kaTexRendering(katex, contentSanitized);
-			});
-		}
-
-		// From typing:
-		this.setState({
-			fieldsTyping: {...oldStateTyping, content: contentSanitized }
-		}, () => {
-			kaTexRendering(katex, contentSanitized);
-		});
-	}
-
-	handleEditorChange = (e) => {
-		this.setContentSanitized({ contentCourse: e.target.getContent() });
-	};
-
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { category, isEditing, fieldsTyping, pagination } = this.state;
+		const { category, isEditing, fieldsTyping, pagination, heightDocument } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 		const { categoriesOptions, subCategoriesOptions, columnsOptions } = this.getOptionsFormsSelect();
@@ -472,7 +446,7 @@ class CourseAddOrEdit extends Component {
 							apiKey="3kobmcz3sotpddw4zkuzj5d9hse2tuytw4jrqi5ndthqc0wq"
 							initialValue={fields.content}
 							init={{
-								min_height: 600,
+								min_height: heightDocument,
 								external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
 								plugins: 'link image table codesample tiny_mce_wiris',
 								toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | blocks | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry'
