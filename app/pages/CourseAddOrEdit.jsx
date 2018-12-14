@@ -60,7 +60,7 @@ class CourseAddOrEdit extends Component {
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
 		// this.templateRendering();
-		this.setStateContentMarkedSanitized({ contentCourse: this.props.course.content || 'New course here...' });
+		this.setContentSanitized({ callFrom: 'mount' });
 		// setTimeout(() => hljs.initHighlighting(), 1000);
 	}
 
@@ -71,15 +71,7 @@ class CourseAddOrEdit extends Component {
 			// this.indexHeader = 0;
 			// this.headersList = [];
 
-			// const fields = this.getFieldsVal({}, this.props.course);
-			// this.editorCm.setValue(fields.content);
-
-			this.setState({
-				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
-				fieldsTyping: {
-					template: {}
-				}
-			});
+			this.setContentSanitized({ callFrom: 'update' });
 
 			const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
 
@@ -239,7 +231,7 @@ class CourseAddOrEdit extends Component {
 				fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} }
 			}, () => {
 				const contentCourse = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
-				return this.setStateContentMarkedSanitized({ contentCourse });
+				return this.setContentSanitized({ contentCourse });
 			});
 		}
 
@@ -369,34 +361,43 @@ class CourseAddOrEdit extends Component {
 		);
 	}
 
-	// TODO voir si utile
-	setStateContentMarkedSanitized(params = {}) {
-		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || '';
+	setContentSanitized(params = {}) {
+		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || 'You\'re course here...';
 		const contentSanitized = DOMPurify.sanitize(content);
 		const oldStateTyping = this.state.fieldsTyping;
 
-		// TODO voir ca:
-		return this.setState({
-			fieldsTyping: {...oldStateTyping, ...{ content: contentSanitized }}
+		// From componentDidMount:
+		if (params.callFrom === 'mount') {
+			return this.setState({
+				fieldsTyping: { content: contentSanitized }
+			}, () => {
+				kaTexRendering(katex, contentSanitized);
+			});
+		}
+
+		// From componentDidUpdate:
+		if (params.callFrom === 'update') {
+			return this.setState({
+				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
+				fieldsTyping: {
+					content: contentSanitized,
+					template: {}
+				}
+			}, () => {
+				kaTexRendering(katex, contentSanitized);
+			});
+		}
+
+		// From typing:
+		this.setState({
+			fieldsTyping: {...oldStateTyping, content: contentSanitized }
 		}, () => {
-			HighlightRendering(hljs);
 			kaTexRendering(katex, contentSanitized);
 		});
 	}
 
 	handleEditorChange = (e) => {
-		const getContent = e.target.getContent();
-		const contentSanitized = DOMPurify.sanitize(getContent);
-		const oldStateTyping = this.state.fieldsTyping;
-
-		// setStateContentMarkedSanitized(getContent) ?? // TODO voir ca
-
-		return this.setState({
-			fieldsTyping: {...oldStateTyping, ...{ content: contentSanitized }}
-		}, () => {
-			HighlightRendering(hljs);
-			kaTexRendering(katex, contentSanitized);
-		});
+		this.setContentSanitized({ contentCourse: e.target.getContent() });
 	};
 
 	render() {
