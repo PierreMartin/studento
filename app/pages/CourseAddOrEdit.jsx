@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Editor } from '@tinymce/tinymce-react';
+import TinyEditor from '../components/TinyEditor/TinyEditor';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
 import { kaTexRendering } from '../components/common/renderingCourse';
@@ -9,11 +9,21 @@ import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, empt
 import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
-import { TINY_MCE_KEY } from '../../config/env';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
 import stylesCourse from './css/course.scss';
+
+let tinymce;
+if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
+	tinymce = require('tinymce');
+	require('tinymce/themes/modern');
+	require('tinymce/plugins/wordcount');
+	require('tinymce/plugins/table');
+	require('tinymce/plugins/codesample');
+	require('tinymce/plugins/link');
+	require('tinymce/plugins/image');
+}
 
 const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse, ...stylesCourse});
 
@@ -64,6 +74,9 @@ class CourseAddOrEdit extends Component {
 			// this.indexHeader = 0;
 			// this.headersList = [];
 
+			// Update Tiny;
+			tinymce.EditorManager.get('tinyEditor').setContent(this.props.course.content);
+
 			this.setContentSanitized({ callFrom: 'update' });
 
 			const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
@@ -99,7 +112,7 @@ class CourseAddOrEdit extends Component {
 	}
 
 	setContentSanitized(params = {}) {
-		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || 'You\'re course here...';
+		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || 'You\'re content here...';
 		const contentSanitized = DOMPurify.sanitize(content);
 		const oldStateTyping = this.state.fieldsTyping;
 
@@ -225,8 +238,8 @@ class CourseAddOrEdit extends Component {
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
 	}
 
-	handleEditorChange = (e) => {
-		this.setContentSanitized({ contentCourse: e.target.getContent() });
+	handleEditorChange = (content) => {
+		this.setContentSanitized({ contentCourse: content });
 	};
 
 	handleOnSubmit(event) {
@@ -293,16 +306,12 @@ class CourseAddOrEdit extends Component {
 					/>
 
 					<div className={cx('editor-container-full')}>
-						<Editor
-							apiKey={TINY_MCE_KEY}
-							initialValue={fields.content}
-							init={{
-								min_height: heightDocument,
-								external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
-								plugins: 'link image table codesample tiny_mce_wiris',
-								toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | blocks | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry'
-							}}
-							onChange={this.handleEditorChange}
+						<TinyEditor
+							id="tinyEditor"
+							onEditorChange={this.handleEditorChange}
+							content={fields.content}
+							tinymce={tinymce}
+							heightDocument={heightDocument}
 						/>
 
 						<div dangerouslySetInnerHTML={{ __html: fields.content }} />
