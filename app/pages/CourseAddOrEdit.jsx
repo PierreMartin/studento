@@ -37,7 +37,8 @@ class CourseAddOrEdit extends Component {
 			pagination: {
 				indexPage: 1
 			},
-			clickedCourse: 0
+			clickedCourse: 0,
+			isEditorChanged: false
 		};
 	}
 
@@ -119,7 +120,8 @@ class CourseAddOrEdit extends Component {
 				fieldsTyping: {
 					content: contentSanitized,
 					template: {}
-				}
+				},
+				isEditorChanged: false
 			}, () => {
 				kaTexRendering(katex, contentSanitized);
 			});
@@ -127,7 +129,8 @@ class CourseAddOrEdit extends Component {
 
 		// From typing:
 		this.setState({
-			fieldsTyping: {...oldStateTyping, content: contentSanitized }
+			fieldsTyping: {...oldStateTyping, content: contentSanitized },
+			isEditorChanged: true
 		}, () => {
 			kaTexRendering(katex, contentSanitized);
 		});
@@ -264,7 +267,7 @@ class CourseAddOrEdit extends Component {
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories } = this.props;
-		const { category, isEditing, fieldsTyping, pagination, heightDocument } = this.state;
+		const { category, isEditing, fieldsTyping, pagination, heightDocument, isEditorChanged } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 
 		return (
@@ -286,6 +289,7 @@ class CourseAddOrEdit extends Component {
 						handleOnSubmit={this.handleOnSubmit}
 						handlePaginationChange={this.handlePaginationChange}
 						handleSelectCourse={this.handleSelectCourse}
+						isEditorChanged={isEditorChanged}
 						fromPage="wy"
 					/>
 

@@ -131,7 +131,8 @@ const EditorPanelExplorer = ({
 																handleOnSubmit,
 																handlePaginationChange,
 																handleSelectCourse,
-																fromPage
+																fromPage,
+																isEditorChanged
 }) => {
 	const messagesError = dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 	const { categoriesOptions, subCategoriesOptions, columnsOptions } = getOptionsFormsSelect(categories, course, category, isEditing);
@@ -152,7 +153,7 @@ const EditorPanelExplorer = ({
 					<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
 					<Popup trigger={<Button icon="file" as={Link} to="/course/create/new" />} content="New course" />
 					<Popup trigger={<Button icon="file" as={Link} to="/courseMd/create/new" />} content="New MarkDown course" />
-					{ isDisableButtonSubmit ? <Popup trigger={<Button disabled icon="save" onClick={handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={handleOnSubmit} />} content="Save" />}
+					{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={handleOnSubmit} />} content="Save" />}
 					{ !isEditing ? <Button disabled icon="sticky note outline" /> : <Popup trigger={<Button icon="sticky note outline" as={Link} to={`/course/${course._id}`} />} content="See the course (you should save before)" /> }
 				</Button.Group>
 			</div>
@@ -199,6 +200,7 @@ const EditorPanelExplorer = ({
 
 EditorPanelExplorer.propTypes = {
 	fromPage: PropTypes.string,
+	isEditorChanged: PropTypes.bool,
 
 	course: PropTypes.shape({
 		_id: PropTypes.string,

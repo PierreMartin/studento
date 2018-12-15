@@ -7,11 +7,11 @@ import hljs from 'highlight.js/lib/highlight.js';
 import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
-import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
+import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { List, Form, Message, Button, Popup, Pagination, Icon, Modal, Header, Segment, Select } from 'semantic-ui-react';
+import { Form, Button, Popup, Modal, Header } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -27,6 +27,7 @@ class CourseAddOrEditMd extends Component {
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleSelectCourse = this.handleSelectCourse.bind(this);
 		this.handleClickToolbar = this.handleClickToolbar.bind(this);
+		this.handlePaginationChange = this.handlePaginationChange.bind(this);
 
 		// modal:
 		this.editorInModalDidMount = this.editorInModalDidMount.bind(this);
@@ -60,7 +61,8 @@ class CourseAddOrEditMd extends Component {
 			},
 			clickedCourse: 0,
 			openModalSetStyle: {},
-			codeLanguageSelected: ''
+			codeLanguageSelected: '',
+			isEditorChanged: false
 		};
 	}
 
@@ -189,13 +191,13 @@ class CourseAddOrEditMd extends Component {
 			clearTimeout(this.timerRenderPreview);
 			this.timerRenderPreview = setTimeout(() => {
 				if (isBigFile) {
-					this.setStateContentMarkedSanitized({ setStateRawContent: true, valueEditor });
+					this.setStateContentMarkedSanitized({ editorCmChanged: true, valueEditor });
 				}
 			}, 200);
 
 			// ------- Small course -------
 			if (!isBigFile) {
-				this.setStateContentMarkedSanitized({ setStateRawContent: true, valueEditor });
+				this.setStateContentMarkedSanitized({ editorCmChanged: true, valueEditor });
 			}
 		});
 
@@ -217,7 +219,8 @@ class CourseAddOrEditMd extends Component {
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 				fieldsTyping: {
 					template: {}
-				}
+				},
+				isEditorChanged: false
 			});
 
 			const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
@@ -232,50 +235,6 @@ class CourseAddOrEditMd extends Component {
 	}
 
 	getOptionsFormsSelect() {
-		const { categories, course } = this.props;
-		const { category, isEditing } = this.state;
-		let lastCategorySelected = category.lastSelected;
-
-		// If update and no yet select some Inputs:
-		if (isEditing && category.lastSelected === null) {
-			lastCategorySelected = course.category;
-		}
-
-		// CATEGORIES - Convert to Input formate:
-		const arrCatList = [];
-		if (categories.length > 0) {
-			for (let i = 0; i < categories.length; i++) {
-				arrCatList.push({
-					key: categories[i].key,
-					text: categories[i].name,
-					value: categories[i].key
-				});
-			}
-		}
-
-		// SUB CATEGORIES - 1) Get the category selected by the 1st Input:
-		let categorySelected = {};
-		if (categories.length > 0 && lastCategorySelected) {
-			for (let i = 0; i < categories.length; i++) {
-				if (categories[i].key === lastCategorySelected) {
-					categorySelected = categories[i];
-					break;
-				}
-			}
-		}
-
-		// SUB CATEGORIES - 2) Convert to Input formate:
-		const arrSubCatList = [];
-		if (categorySelected.subCategories && categorySelected.subCategories.length > 0) {
-			for (let i = 0; i < categorySelected.subCategories.length; i++) {
-				arrSubCatList.push({
-					key: categorySelected.subCategories[i].key,
-					text: categorySelected.subCategories[i].name,
-					value: categorySelected.subCategories[i].key
-				});
-			}
-		}
-
 		const codeLanguagesOptions = [
 			{ key: 'markdown', text: 'markdown', value: 'markdown' },
 			{ key: 'javascript', text: 'Javascript', value: 'javascript' },
@@ -295,20 +254,13 @@ class CourseAddOrEditMd extends Component {
 			{ key: 'katex', text: 'Katex', value: 'katex' }
 		];
 
-		const columnsOptions = [
-			{ key: 1, text: '1 column', value: 1 },
-			{ key: 2, text: '2 columns', value: 2 },
-			{ key: 3, text: '3 columns', value: 3 },
-			{ key: 4, text: '4 columns', value: 4 }
-		];
-
-		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList, codeLanguagesOptions, columnsOptions };
+		return { codeLanguagesOptions };
 	}
 
 	getMetaData() {
 		return {
-			title: 'Add course',
-			meta: [{ name: 'description', content: 'Add course...' }],
+			title: 'Add a Markdown course',
+			meta: [{ name: 'description', content: 'Add a Markdown course...' }],
 			link: []
 		};
 	}
@@ -334,20 +286,20 @@ class CourseAddOrEditMd extends Component {
 		event.preventDefault();
 
 		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction } = this.props;
-		const { pagination } = this.state;
+		const { fieldsTyping, pagination } = this.state;
 		const indexPagination = pagination.indexPage || 0;
-		const field = this.getFieldsVal(this.state.fieldsTyping, course);
+		const template = (fieldsTyping.template && Object.keys(fieldsTyping.template).length > 0 ? {...course.template, ...fieldsTyping.template} : course && course.template) || {};
 		const data = {};
 
 		if (this.state.isEditing) {
-			data.fields = {...this.state.fieldsTyping, template: { ...field.template } };
+			data.fields = {...fieldsTyping, template: { ...template } };
 			data.modifiedAt = new Date().toISOString();
 			data.courseId = course._id;
 			updateCourseAction(data).then(() => {
 				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 			});
 		} else {
-			data.fields = field;
+			data.fields = fieldsTyping;
 			data.userMeId = userMe._id;
 			data.createdAt = new Date().toISOString();
 			data.type = 'md';
@@ -396,30 +348,7 @@ class CourseAddOrEditMd extends Component {
 		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
 
 		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
-	}
-
-	/**
-	 * Display a error if a field is wrong
-	 * @param {object} missingField - object with true as key if a field is missing
-	 * @param {string} messageErrorBe - message from back-end
-	 * @return {HTML} the final message if error
-	 * */
-	dispayFieldsErrors(missingField, messageErrorBe) {
-		const errorsField = [];
-		if (missingField.title) errorsField.push({message: 'the title is required ', key: 'title'});
-		if (missingField.category) errorsField.push({message: 'the category is required ', key: 'category'});
-
-		// Pas obligé d'afficher les erreurs back-end dans le form, on devrait plutôt les aficher dans une notification
-		if (messageErrorBe && messageErrorBe.length > 0) errorsField.push({message: messageErrorBe, key: 'backendError'});
-
-		const messagesListNode = errorsField.map((errorField, key) => {
-			return (
-				<li key={key}>{errorField.message}</li>
-			);
-		});
-
-		return <ul className={cx('error-message')}>{messagesListNode}</ul>;
-	}
+	};
 
 	setStyleSelectable(param) {
 		// init:
@@ -646,7 +575,7 @@ class CourseAddOrEditMd extends Component {
 				mode: 'javascript'
 			});
 		}
-	}
+	};
 
 	handleSubmitModalSetStyle = (params) => {
 		const { codeLanguageSelected, fieldsModalSetStyleTyping } = this.state;
@@ -742,49 +671,17 @@ class CourseAddOrEditMd extends Component {
 		this.setState({ clickedCourse });
 	};
 
-	renderCoursesList(courses) {
-		if (courses.length === 0) return;
-
-		const { course } = this.props;
-
-		return courses.map((c, key) => {
-			const pathCourseToEdit = c.type !== 'wy' ? `/courseMd/edit/${c._id}` : `/course/edit/${c._id}`;
-			const isActive = course._id === c._id; // course = the current if editing
-
-			return (
-				<List.Item key={c._id} as={Link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={pathCourseToEdit} icon="file text" content={c.title} onClick={this.handleSelectCourse(key)} />
-			);
-		});
-	}
-
-	renderPaginationCoursesList(coursesPagesCount, pagination) {
-		return (
-			<Pagination
-				activePage={pagination.indexPage}
-				boundaryRange={1}
-				siblingRange={1}
-				onPageChange={this.handlePaginationChange}
-				size="mini"
-				totalPages={coursesPagesCount}
-				ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
-				prevItem={{ content: <Icon name="angle left" />, icon: true }}
-				nextItem={{ content: <Icon name="angle right" />, icon: true }}
-				firstItem={null}
-				lastItem={null}
-			/>
-		);
-	}
-
 	setStateContentMarkedSanitized(params = {}) {
 		const content = ((typeof params.valueEditor !== 'undefined') ? params.valueEditor : this.props.course && this.props.course.content) || '';
 		const contentMarkedSanitized = DOMPurify.sanitize(marked(content || ''));
 
-		if (params.setStateRawContent) {
+		if (params.editorCmChanged) {
 			const oldStateTyping = this.state.fieldsTyping;
 
 			return this.setState({
 				contentMarkedSanitized,
-				fieldsTyping: {...oldStateTyping, ...{ content: params.valueEditor }}
+				fieldsTyping: {...oldStateTyping, ...{ content: params.valueEditor }},
+				isEditorChanged: true
 			}, () => {
 				HighlightRendering(hljs);
 				kaTexRendering(katex, params.valueEditor);
@@ -800,12 +697,10 @@ class CourseAddOrEditMd extends Component {
 	}
 
 	render() {
-		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
-		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected } = this.state;
+		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories } = this.props;
+		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected, isEditorChanged } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
-		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
-		const { categoriesOptions, subCategoriesOptions, codeLanguagesOptions, columnsOptions } = this.getOptionsFormsSelect();
-		const isDisableButtonSubmit = isEditing && !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && !fieldsTyping.isPrivate && (!fieldsTyping.template || (fieldsTyping.template && Object.keys(fieldsTyping.template).length === 0));
+		const { codeLanguagesOptions } = this.getOptionsFormsSelect();
 
 		const buttonsToolbar = [
 			{ icon: 'bold', content: 'Bold' },
@@ -824,64 +719,28 @@ class CourseAddOrEditMd extends Component {
 			{ icon: 'file image outline', content: 'Add image' }
 		];
 
-		const selectTemplatesHeaders = [
-			{ label: 'h1', name: 'columnH1' },
-			{ label: 'h2', name: 'columnH2' },
-			{ label: 'h3', name: 'columnH3' },
-			{ label: 'h4', name: 'columnH4' },
-			{ label: 'h5', name: 'columnH5' },
-			{ label: 'h6', name: 'columnH6' }
-		];
-
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container')}>
-					<div className={cx('panel-explorer-container')}>
-						<div className={cx('panel-explorer-nav-bar')}>
-							<Button.Group basic size="small">
-								<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
-								<Popup trigger={<Button icon="file" as={Link} to="/course/create/new" />} content="New course" />
-								<Popup trigger={<Button icon="file" as={Link} to="/courseMd/create/new" />} content="New Markdown course" />
-								{ isEditing && Object.keys(fieldsTyping).length === 0 ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" />}
-								{ !isEditing ? <Button disabled icon="sticky note outline" /> : <Popup trigger={<Button icon="sticky note outline" as={Link} to={`/course/${course._id}`} />} content="See the course (you should save before)" /> }
-							</Button.Group>
-						</div>
-
-						<div className={cx('panel-explorer-tree-folder')}>
-							<List className={cx('panel-explorer-tree-folder-itemslist')} link>{ this.renderCoursesList(courses) }</List>
-							{ coursesPagesCount > 1 && this.renderPaginationCoursesList(coursesPagesCount, pagination) }
-						</div>
-
-						<div className={cx('panel-explorer-properties')}>
-							<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
-								<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={this.handleInputChange} />
-								<Form.TextArea label="Description" placeholder="The description of your course..." name="description" value={fields.description || ''} onChange={this.handleInputChange} />
-
-								<Form.Select required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
-								{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={this.handleInputChange} /> : ''}
-
-								<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={this.handleInputChange} />
-
-								<Segment>
-									<Header as="h4" icon="edit" content="Templates" />
-									<Form.Field inline className={cx('header-select-container')}>
-										{ selectTemplatesHeaders.map((select, key) => {
-											return (
-												<div key={key}>
-													<label htmlFor={select.name}>{select.label}</label>
-													<Select className={cx('header-select')} name={select.name} options={columnsOptions} value={fields.template[select.name] || 1} onChange={this.handleInputChange} />
-												</div>
-												);
-										}) }
-									</Form.Field>
-								</Segment>
-
-								<Message error content={messagesError} />
-
-								{ isDisableButtonSubmit ? <Form.Button basic disabled>Save properties</Form.Button> : <Form.Button basic>Save properties</Form.Button>}
-							</Form>
-						</div>
-					</div>
+					<EditorPanelExplorer
+						course={course}
+						courses={courses}
+						isEditing={isEditing}
+						fieldsTyping={fieldsTyping}
+						fields={fields}
+						addOrEditMissingField={addOrEditMissingField}
+						addOrEditFailure={addOrEditFailure}
+						coursesPagesCount={coursesPagesCount}
+						pagination={pagination}
+						category={category}
+						categories={categories}
+						handleInputChange={this.handleInputChange}
+						handleOnSubmit={this.handleOnSubmit}
+						handlePaginationChange={this.handlePaginationChange}
+						handleSelectCourse={this.handleSelectCourse}
+						isEditorChanged={isEditorChanged}
+						fromPage="md"
+					/>
 
 					<div className={cx('editor-container-full')}>
 						<div className={cx('editor-toolbar')}>
