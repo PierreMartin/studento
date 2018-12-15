@@ -976,7 +976,8 @@ CourseAddOrEditMd.propTypes = {
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
-		title: PropTypes.string
+		title: PropTypes.string,
+		type: PropTypes.string
 	})),
 
 	userMe: PropTypes.shape({

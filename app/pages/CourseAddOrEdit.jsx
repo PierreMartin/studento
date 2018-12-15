@@ -5,11 +5,11 @@ import { Editor } from '@tinymce/tinymce-react';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
 import { kaTexRendering } from '../components/common/renderingCourse';
-import { Link } from 'react-router';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { List, Form, Message, Button, Popup, Pagination, Icon, Header, Segment, Select } from 'semantic-ui-react';
+import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
+import { TINY_MCE_KEY } from '../../config/env';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -24,8 +24,7 @@ class CourseAddOrEdit extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleSelectCourse = this.handleSelectCourse.bind(this);
-
-		// Editor:
+		this.handlePaginationChange = this.handlePaginationChange.bind(this);
 		this.handleEditorChange = this.handleEditorChange.bind(this);
 
 		this.state = {
@@ -84,61 +83,6 @@ class CourseAddOrEdit extends Component {
 			meta: [{ name: 'description', content: 'Add course...' }],
 			link: []
 		};
-	}
-
-	getOptionsFormsSelect() {
-		const { categories, course } = this.props;
-		const { category, isEditing } = this.state;
-		let lastCategorySelected = category.lastSelected;
-
-		// If update and no yet select some Inputs:
-		if (isEditing && category.lastSelected === null) {
-			lastCategorySelected = course.category;
-		}
-
-		// CATEGORIES - Convert to Input formate:
-		const arrCatList = [];
-		if (categories.length > 0) {
-			for (let i = 0; i < categories.length; i++) {
-				arrCatList.push({
-					key: categories[i].key,
-					text: categories[i].name,
-					value: categories[i].key
-				});
-			}
-		}
-
-		// SUB CATEGORIES - 1) Get the category selected by the 1st Input:
-		let categorySelected = {};
-		if (categories.length > 0 && lastCategorySelected) {
-			for (let i = 0; i < categories.length; i++) {
-				if (categories[i].key === lastCategorySelected) {
-					categorySelected = categories[i];
-					break;
-				}
-			}
-		}
-
-		// SUB CATEGORIES - 2) Convert to Input formate:
-		const arrSubCatList = [];
-		if (categorySelected.subCategories && categorySelected.subCategories.length > 0) {
-			for (let i = 0; i < categorySelected.subCategories.length; i++) {
-				arrSubCatList.push({
-					key: categorySelected.subCategories[i].key,
-					text: categorySelected.subCategories[i].name,
-					value: categorySelected.subCategories[i].key
-				});
-			}
-		}
-
-		const columnsOptions = [
-			{ key: 1, text: '1 column', value: 1 },
-			{ key: 2, text: '2 columns', value: 2 },
-			{ key: 3, text: '3 columns', value: 3 },
-			{ key: 4, text: '4 columns', value: 4 }
-		];
-
-		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList, columnsOptions };
 	}
 
 	getFieldsVal(fieldsTyping, course) {
@@ -238,29 +182,6 @@ class CourseAddOrEdit extends Component {
 		};
 	}
 
-	/**
-	 * Display a error if a field is wrong
-	 * @param {object} missingField - object with true as key if a field is missing
-	 * @param {string} messageErrorBe - message from back-end
-	 * @return {HTML} the final message if error
-	 * */
-	dispayFieldsErrors(missingField, messageErrorBe) {
-		const errorsField = [];
-		if (missingField.title) errorsField.push({message: 'the title is required ', key: 'title'});
-		if (missingField.category) errorsField.push({message: 'the category is required ', key: 'category'});
-
-		// Pas obligé d'afficher les erreurs back-end dans le form, on devrait plutôt les aficher dans une notification
-		if (messageErrorBe && messageErrorBe.length > 0) errorsField.push({message: messageErrorBe, key: 'backendError'});
-
-		const messagesListNode = errorsField.map((errorField, key) => {
-			return (
-				<li key={key}>{errorField.message}</li>
-			);
-		});
-
-		return <ul className={cx('error-message')}>{messagesListNode}</ul>;
-	}
-
 	handleSelectCourse = clickedCourse => () => {
 		this.setState({ clickedCourse });
 	};
@@ -341,109 +262,36 @@ class CourseAddOrEdit extends Component {
 		this.setContentSanitized({ contentCourse: e.target.getContent() });
 	};
 
-	renderCoursesList(courses) {
-		if (courses.length === 0) return;
-
-		const { course } = this.props;
-
-		return courses.map((c, key) => {
-			const pathCourseToEdit = c.type !== 'wy' ? `/courseMd/edit/${c._id}` : `/course/edit/${c._id}`;
-			const isActive = course._id === c._id; // course = the current if editing
-
-			return (
-				<List.Item key={c._id} as={Link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={pathCourseToEdit} icon="file text" content={c.title} onClick={this.handleSelectCourse(key)} />
-			);
-		});
-	}
-
-	renderPaginationCoursesList(coursesPagesCount, pagination) {
-		return (
-			<Pagination
-				activePage={pagination.indexPage}
-				boundaryRange={1}
-				siblingRange={1}
-				onPageChange={this.handlePaginationChange}
-				size="mini"
-				totalPages={coursesPagesCount}
-				ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
-				prevItem={{ content: <Icon name="angle left" />, icon: true }}
-				nextItem={{ content: <Icon name="angle right" />, icon: true }}
-				firstItem={null}
-				lastItem={null}
-			/>
-		);
-	}
-
 	render() {
-		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure } = this.props;
+		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories } = this.props;
 		const { category, isEditing, fieldsTyping, pagination, heightDocument } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
-		const messagesError = this.dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
-		const { categoriesOptions, subCategoriesOptions, columnsOptions } = this.getOptionsFormsSelect();
-		const isDisableButtonSubmit = isEditing && !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && !fieldsTyping.isPrivate && (!fieldsTyping.template || (fieldsTyping.template && Object.keys(fieldsTyping.template).length === 0));
-
-		const selectTemplatesHeaders = [
-			{ label: 'h1', name: 'columnH1' },
-			{ label: 'h2', name: 'columnH2' },
-			{ label: 'h3', name: 'columnH3' },
-			{ label: 'h4', name: 'columnH4' },
-			{ label: 'h5', name: 'columnH5' },
-			{ label: 'h6', name: 'columnH6' }
-		];
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container')}>
-					<div className={cx('panel-explorer-container')}>
-						<div className={cx('panel-explorer-nav-bar')}>
-							<Button.Group basic size="small">
-								<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
-								<Popup trigger={<Button icon="file" as={Link} to="/course/create/new" />} content="New course" />
-								<Popup trigger={<Button icon="file" as={Link} to="/courseMd/create/new" />} content="New MarkDown course" />
-								{ isEditing && Object.keys(fieldsTyping).length === 0 ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" />}
-								{ !isEditing ? <Button disabled icon="sticky note outline" /> : <Popup trigger={<Button icon="sticky note outline" as={Link} to={`/course/${course._id}`} />} content="See the course (you should save before)" /> }
-							</Button.Group>
-						</div>
-
-						<div className={cx('panel-explorer-tree-folder')}>
-							<List className={cx('panel-explorer-tree-folder-itemslist')} link>{ this.renderCoursesList(courses) }</List>
-							{ coursesPagesCount > 1 && this.renderPaginationCoursesList(coursesPagesCount, pagination) }
-						</div>
-
-						<div className={cx('panel-explorer-properties')}>
-							<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
-								<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={this.handleInputChange} />
-								<Form.TextArea label="Description" placeholder="The description of your course..." name="description" value={fields.description || ''} onChange={this.handleInputChange} />
-
-								<Form.Select required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
-								{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={this.handleInputChange} /> : ''}
-
-								<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={this.handleInputChange} />
-
-								<Segment>
-									<Header as="h4" icon="edit" content="Templates" />
-									<Form.Field inline className={cx('header-select-container')}>
-										{ selectTemplatesHeaders.map((select, key) => {
-											return (
-												<div key={key}>
-													<label htmlFor={select.name}>{select.label}</label>
-													<Select className={cx('header-select')} name={select.name} options={columnsOptions} value={fields.template[select.name] || 1} onChange={this.handleInputChange} />
-												</div>
-												);
-										}) }
-									</Form.Field>
-								</Segment>
-
-								<Message error content={messagesError} />
-
-								{ isDisableButtonSubmit ? <Form.Button basic disabled>Save properties</Form.Button> : <Form.Button basic>Save properties</Form.Button>}
-							</Form>
-						</div>
-					</div>
+					<EditorPanelExplorer
+						course={course}
+						courses={courses}
+						isEditing={isEditing}
+						fieldsTyping={fieldsTyping}
+						fields={fields}
+						addOrEditMissingField={addOrEditMissingField}
+						addOrEditFailure={addOrEditFailure}
+						coursesPagesCount={coursesPagesCount}
+						pagination={pagination}
+						category={category}
+						categories={categories}
+						handleInputChange={this.handleInputChange}
+						handleOnSubmit={this.handleOnSubmit}
+						handlePaginationChange={this.handlePaginationChange}
+						handleSelectCourse={this.handleSelectCourse}
+						fromPage="wy"
+					/>
 
 					<div className={cx('editor-container-full')}>
 						<Editor
-							apiKey="3kobmcz3sotpddw4zkuzj5d9hse2tuytw4jrqi5ndthqc0wq"
+							apiKey={TINY_MCE_KEY}
 							initialValue={fields.content}
 							init={{
 								min_height: heightDocument,
@@ -485,7 +333,8 @@ CourseAddOrEdit.propTypes = {
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
-		title: PropTypes.string
+		title: PropTypes.string,
+		type: PropTypes.string
 	})),
 
 	userMe: PropTypes.shape({

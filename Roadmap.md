@@ -109,7 +109,6 @@ $ ./scripts/generate_menu.sh
 - Améliorer perfs codeMIrror
 - Améliorer design + HomePage
 - Resolve vulnerabilities in dependencies
-- Voir si WYSIWYG possible
 
 moins urgent :
 - comments -> render: styles (gras, bold, emoji, ...) + code editor
