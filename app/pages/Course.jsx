@@ -37,6 +37,8 @@ class Course extends Component {
 	}
 
 	componentDidMount() {
+		const isTypeMarkDown = this.props.course.type !== 'wy';
+
 		// Load highlight.js Languages:
 		hljsLoadLanguages(hljs);
 
@@ -60,7 +62,7 @@ class Course extends Component {
 		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.setStateContentMarkedSanitized();  })    ET remove  componentDidUpdate();
 
 		this.props.emptyErrorsCommentAction();
-		this.templateRendering();
+		if (isTypeMarkDown) this.templateRendering();
 		this.setStateContentMarkedSanitized();
 	}
 
@@ -83,8 +85,11 @@ class Course extends Component {
 	}
 
 	setStateContentMarkedSanitized() {
+		const isTypeMarkDown = this.props.course.type !== 'wy';
+		const contentSanitized = isTypeMarkDown ? DOMPurify.sanitize(marked(this.props.course.content || '')) : DOMPurify.sanitize(this.props.course.content);
+
 		this.setState({
-			contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.course.content || ''))
+			contentMarkedSanitized: contentSanitized
 		}, () => {
 			clearTimeout(this.timerRenderPreview);
 			this.timerRenderPreview = setTimeout(() => {
