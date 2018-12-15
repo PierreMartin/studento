@@ -33,7 +33,7 @@ class CourseAddOrEdit extends Component {
 			},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
-			heightDocument: 0,
+			heightDocument: window.innerHeight,
 			pagination: {
 				indexPage: 1
 			},
@@ -226,6 +226,10 @@ class CourseAddOrEdit extends Component {
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
 	}
 
+	handleEditorChange = (e) => {
+		this.setContentSanitized({ contentCourse: e.target.getContent() });
+	};
+
 	handleOnSubmit(event) {
 		event.preventDefault();
 
@@ -246,7 +250,7 @@ class CourseAddOrEdit extends Component {
 			data.fields = fieldsTyping;
 			data.userMeId = userMe._id;
 			data.createdAt = new Date().toISOString();
-			data.type = 'wy';
+			data.fields.type = 'wy';
 			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
 				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 				if (courses.length % 12 === 0) { // 12 => numberItemPerPage setted in controller
@@ -260,10 +264,6 @@ class CourseAddOrEdit extends Component {
 	updateWindowDimensions() {
 		this.setState({ heightDocument: window.innerHeight });
 	}
-
-	handleEditorChange = (e) => {
-		this.setContentSanitized({ contentCourse: e.target.getContent() });
-	};
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories } = this.props;

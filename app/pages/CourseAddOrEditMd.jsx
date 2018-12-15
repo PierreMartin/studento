@@ -302,7 +302,7 @@ class CourseAddOrEditMd extends Component {
 			data.fields = fieldsTyping;
 			data.userMeId = userMe._id;
 			data.createdAt = new Date().toISOString();
-			data.type = 'md';
+			data.fields.type = 'md';
 			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
 				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 				if (courses.length % 12 === 0) { // 12 => numberItemPerPage setted in controller
