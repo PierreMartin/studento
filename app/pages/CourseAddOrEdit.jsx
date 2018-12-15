@@ -33,7 +33,7 @@ class CourseAddOrEdit extends Component {
 			},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
-			heightDocument: window.innerHeight,
+			heightDocument: (typeof window !== 'undefined' && window.innerHeight) || 600,
 			pagination: {
 				indexPage: 1
 			},
@@ -46,7 +46,6 @@ class CourseAddOrEdit extends Component {
 		const { fetchCategoriesAction, fetchCoursesByFieldAction, userMe } = this.props;
 
 		// Resize element child to 100% height:
-		this.updateWindowDimensions();
 		window.addEventListener('resize', this.updateWindowDimensions);
 
 		fetchCategoriesAction();
