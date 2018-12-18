@@ -35,7 +35,12 @@ class CourseAddOrEdit extends Component {
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleSelectCourse = this.handleSelectCourse.bind(this);
 		this.handlePaginationChange = this.handlePaginationChange.bind(this);
+
+		// Tiny MCE Editor:
 		this.handleEditorChange = this.handleEditorChange.bind(this);
+
+		this.defaultMessageEditor = 'You\'re content here...';
+		this.idEditor = 'tinyEditor';
 
 		this.state = {
 			fieldsTyping: {
@@ -74,8 +79,8 @@ class CourseAddOrEdit extends Component {
 			// this.indexHeader = 0;
 			// this.headersList = [];
 
-			// Update Tiny;
-			tinymce.EditorManager.get('tinyEditor').setContent(this.props.course.content);
+			// Update Tiny MCE Editor;
+			tinymce.EditorManager.get(this.idEditor).setContent(this.props.course.content || this.defaultMessageEditor);
 
 			this.setContentSanitized({ callFrom: 'update' });
 
@@ -112,7 +117,7 @@ class CourseAddOrEdit extends Component {
 	}
 
 	setContentSanitized(params = {}) {
-		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || 'You\'re content here...';
+		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || this.defaultMessageEditor;
 		const contentSanitized = DOMPurify.sanitize(content);
 		const oldStateTyping = this.state.fieldsTyping;
 
@@ -307,14 +312,12 @@ class CourseAddOrEdit extends Component {
 
 					<div className={cx('editor-container-full')}>
 						<TinyEditor
-							id="tinyEditor"
+							id={this.idEditor}
 							onEditorChange={this.handleEditorChange}
 							content={fields.content}
 							tinymce={tinymce}
 							heightDocument={heightDocument}
 						/>
-
-						<div dangerouslySetInnerHTML={{ __html: fields.content }} />
 					</div>
 				</div>
 			</LayoutPage>
