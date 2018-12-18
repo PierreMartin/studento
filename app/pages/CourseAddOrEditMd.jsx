@@ -168,7 +168,7 @@ class CourseAddOrEditMd extends Component {
 			showTrailingSpace: true,
 			// highlightSelectionMatches : ( (!settings.matchWordHighlight) ? false : { showToken: (settings.matchWordHighlight === "onselected") ? false : /\w/ } )
 
-			theme: 'pastel-on-dark',
+			theme: 'default',
 			mode: 'gfm'
 		});
 
@@ -721,7 +721,7 @@ class CourseAddOrEditMd extends Component {
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
-				<div className={cx('course-add-or-edit-container')}>
+				<div className={cx('course-add-or-edit-container-light')}>
 					<EditorPanelExplorer
 						course={course}
 						courses={courses}
@@ -745,10 +745,10 @@ class CourseAddOrEditMd extends Component {
 					<div className={cx('editor-container-full')}>
 						<div className={cx('editor-toolbar')}>
 							<Button.Group basic size="small">
-								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic inverted className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
+								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
 							</Button.Group>
 							<Button.Group basic size="small">
-								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic inverted className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
+								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
 							</Button.Group>
 						</div>
 
@@ -763,7 +763,7 @@ class CourseAddOrEditMd extends Component {
 								</Form>
 							</div>
 
-							<div className={cx('container-page', 'preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refPreview = el; }} />
+							<div className={cx('container-page-light', 'preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refPreview = el; }} />
 						</div>
 					</div>
 				</div>

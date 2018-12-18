@@ -88,11 +88,13 @@ const renderCoursesList = (courses, course, handleSelectCourse) => {
 	if (courses.length === 0) return;
 
 	return courses.map((c, key) => {
-		const pathCourseToEdit = c.type !== 'wy' ? `/courseMd/edit/${c._id}` : `/course/edit/${c._id}`;
+		const isTypeMarkDown = c.type !== 'wy';
+		const pathCourseToEdit = isTypeMarkDown ? `/courseMd/edit/${c._id}` : `/course/edit/${c._id}`;
+		const icon = isTypeMarkDown ? 'file' : 'file text';
 		const isActive = course._id === c._id;
 
 		return (
-			<List.Item key={c._id} as={Link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={pathCourseToEdit} icon="file text" content={c.title} onClick={handleSelectCourse(key)} />
+			<List.Item key={c._id} as={Link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={pathCourseToEdit} icon={icon} content={c.title} onClick={handleSelectCourse(key)} />
 		);
 	});
 };

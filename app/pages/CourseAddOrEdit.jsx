@@ -289,7 +289,7 @@ class CourseAddOrEdit extends Component {
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
-				<div className={cx('course-add-or-edit-container')}>
+				<div className={cx('course-add-or-edit-container-light')}>
 					<EditorPanelExplorer
 						course={course}
 						courses={courses}

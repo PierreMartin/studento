@@ -16,7 +16,7 @@ class TinyEditor extends Component {
 			external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
 			language: 'en',
 			plugins: 'link image table codesample tiny_mce_wiris',
-			toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | blocks | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry',
+			toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | formatselect | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry',
 			selector: `#${this.props.id}`,
 			skin_url: '/skins/lightgray',
 			codesample_content_css: '/css/prism.css',

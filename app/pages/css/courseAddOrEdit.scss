@@ -1,4 +1,4 @@
-.course-add-or-edit-container {
+@mixin init() {
   display: flex;
   flex-direction: row;
 
@@ -8,19 +8,7 @@
     .editor-toolbar {
       height: 44px;
       width: 100%;
-      background-color: #1A1A17;
-      border-bottom: 1px solid #8F938F;
       padding: 4px;
-
-      .button {
-        border: none;
-        box-shadow: 0 0 0 1px #8F938F inset !important;
-        color: #8F938F !important;
-        &:hover {
-          background: none !important;
-          box-shadow: 0 0 0 1px #fff inset !important;
-        }
-      }
     }
 
     .editor-container {
@@ -29,7 +17,6 @@
 
       .editor-edition {
         width: 50%;
-        border-right: 1px solid rgba(0,0,0,.1);
 
         .editor-edition-error-message {
           position: absolute;
@@ -44,6 +31,44 @@
           }
         }
       }
+    }
+  }
+}
+
+.course-add-or-edit-container-dark {
+  @include init();
+
+  .editor-container-full {
+    .editor-toolbar {
+      background-color: #1A1A17;
+      border-bottom: 1px solid #8F938F;
+
+      .button {
+        border: none;
+        box-shadow: 0 0 0 1px #8F938F inset !important;
+        color: #8F938F !important;
+        &:hover {
+          background: none !important;
+          box-shadow: 0 0 0 1px #fff inset !important;
+        }
+      }
+    }
+
+    .editor-container {
+      .editor-edition {
+        border-right: 1px solid rgba(0,0,0,.1);
+      }
+    }
+  }
+}
+
+.course-add-or-edit-container-light {
+  @include init();
+
+  .editor-container-full {
+    .editor-toolbar {
+      background-color: #fff;
+      border-bottom: 1px solid #8F938F;
     }
   }
 }
