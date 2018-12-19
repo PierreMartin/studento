@@ -153,8 +153,12 @@ const EditorPanelExplorer = ({
 			<div className={cx('panel-explorer-nav-bar')}>
 				<Button.Group basic size="small">
 					<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
-					<Popup trigger={<Button icon="file" as={Link} to="/course/create/new" />} content="New course" />
-					<Popup trigger={<Button icon="file" as={Link} to="/courseMd/create/new" />} content="New MarkDown course" />
+
+					<Popup trigger={<Button icon="file" />} flowing hoverable>
+						<Button basic size="small" icon="file text" as={Link} to="/course/create/new" content="New course" />
+						<Button basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown course" />
+					</Popup>
+
 					{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={handleOnSubmit} />} content="Save" />}
 					{ !isEditing ? <Button disabled icon="sticky note outline" /> : <Popup trigger={<Button icon="sticky note outline" as={Link} to={`/course/${course._id}`} />} content="See the course (you should save before)" /> }
 				</Button.Group>

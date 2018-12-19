@@ -1,3 +1,5 @@
+$lines-color: #8F938F;
+
 @mixin init() {
   display: block;
   margin: 0 15px 15px 0;
@@ -45,7 +47,7 @@
   @include init();
 
   background-color: #2c2827;
-  color: #8F938F;
+  color: $lines-color;
 
   h1, h2, h3, h4, h5, h6 { color: #fff; }
   h1::before, h2::before, h3::before, h4::before, h5::before, h6::before { position: absolute; content: ''; width: 100%; margin-left: -4px }
@@ -61,9 +63,9 @@
 
   table {
     tr {
-      border-top: 1px solid #8F938F;
+      border-top: 1px solid $lines-color;
       th, td {
-        border: 1px solid #8F938F;
+        border: 1px solid $lines-color;
       }
     }
 
@@ -86,9 +88,9 @@
 
   table {
     tr {
-      border-top: 1px solid #8F938F;
+      border-top: 1px solid $lines-color;
       th, td {
-        border: 1px solid #8F938F;
+        border: 1px solid $lines-color;
       }
     }
 

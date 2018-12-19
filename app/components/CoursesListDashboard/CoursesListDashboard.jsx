@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import moment from 'moment';
-import { Icon, Table, Button, Header, Modal, Pagination } from 'semantic-ui-react';
+import { Icon, Table, Button, Header, Modal, Pagination, Popup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { deleteCourseAction, doSortCoursesAction } from '../../actions/courses';
 import classNames from 'classnames/bind';
@@ -140,8 +140,8 @@ class CoursesListDashboard extends Component {
 				{ (courses.length <= 0) ?
 					<div>
 						<div className={cx('no-courses')}>You don't have some courses yet</div>
-						<Button basic color="grey" content="Add new course" icon="add" as={Link} to="/course/create/new" />
-						<Button basic color="grey" content="Add new MarkDown course (for developer)" icon="add" as={Link} to="/courseMd/create/new" />
+						<Button basic color="grey" content="Add new course" icon="add" as={Link} to="/course/create/new" style={{ margin: '5px' }} />
+						<Button basic color="grey" content="Add new Markdown course (for developer)" icon="add" as={Link} to="/courseMd/create/new" style={{ margin: '5px' }} />
 					</div>
 					:
 					<Table celled unstackable compact="very" sortable fixed>
@@ -163,8 +163,11 @@ class CoursesListDashboard extends Component {
 						<Table.Footer fullWidth>
 							<Table.Row>
 								<Table.HeaderCell colSpan="6">
-									<Button basic color="grey" content="Add new course" floated="right" icon="add" as={Link} to="/course/create/new" />
-									<Button basic color="grey" content="Add new MarkDown course (for developer)" floated="right" icon="add" as={Link} to="/courseMd/create/new" />
+									<Popup trigger={<Button basic color="grey" icon="file" floated="right" content="New course" />} flowing hoverable>
+										<Button basic color="grey" size="small" icon="file text" as={Link} to="/course/create/new" content="New course" />
+										<Button basic color="grey" size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown course" />
+									</Popup>
+
 									{ coursesPagesCount > 0 && this.renderPagination(coursesPagesCount, pagination) }
 								</Table.HeaderCell>
 							</Table.Row>
