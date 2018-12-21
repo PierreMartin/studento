@@ -8,7 +8,6 @@ import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
-import { fetchCategoriesAction } from '../actions/category';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Form, Button, Popup, Modal, Header } from 'semantic-ui-react';
@@ -25,9 +24,8 @@ class CourseAddOrEditMd extends Component {
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-		this.handleSelectCourse = this.handleSelectCourse.bind(this);
 		this.handleClickToolbar = this.handleClickToolbar.bind(this);
-		this.handlePaginationChange = this.handlePaginationChange.bind(this);
+		this.setPaginationActivePage = this.setPaginationActivePage.bind(this);
 
 		// modal:
 		this.editorInModalDidMount = this.editorInModalDidMount.bind(this);
@@ -59,7 +57,6 @@ class CourseAddOrEditMd extends Component {
 			pagination: {
 				indexPage: 1
 			},
-			clickedCourse: 0,
 			openModalSetStyle: {},
 			codeLanguageSelected: '',
 			isEditorChanged: false
@@ -67,14 +64,9 @@ class CourseAddOrEditMd extends Component {
 	}
 
 	componentDidMount() {
-		const { fetchCategoriesAction, fetchCoursesByFieldAction, userMe } = this.props;
-
 		// Resize element child to 100% height:
 		this.updateWindowDimensions();
 		window.addEventListener('resize', this.updateWindowDimensions);
-
-		fetchCategoriesAction();
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
 
 		// Load highlight.js Languages:
 		hljsLoadLanguages(hljs);
@@ -338,17 +330,9 @@ class CourseAddOrEditMd extends Component {
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
 	}
 
-	handlePaginationChange = (e, { activePage }) => {
+	setPaginationActivePage(activePage) {
 		this.setState({ pagination: { indexPage: activePage } });
-		const lastActivePage = this.state.pagination.indexPage;
-		if (activePage === lastActivePage) return;
-
-		const { userMe, fetchCoursesByFieldAction, courses } = this.props;
-		const directionIndex = activePage - lastActivePage;
-		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
-
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
-	};
+	}
 
 	setStyleSelectable(param) {
 		// init:
@@ -667,10 +651,6 @@ class CourseAddOrEditMd extends Component {
 		}
 	};
 
-	handleSelectCourse = clickedCourse => () => {
-		this.setState({ clickedCourse });
-	};
-
 	setStateContentMarkedSanitized(params = {}) {
 		const content = ((typeof params.valueEditor !== 'undefined') ? params.valueEditor : this.props.course && this.props.course.content) || '';
 		const contentMarkedSanitized = DOMPurify.sanitize(marked(content || ''));
@@ -697,7 +677,7 @@ class CourseAddOrEditMd extends Component {
 	}
 
 	render() {
-		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories } = this.props;
+		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe } = this.props;
 		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected, isEditorChanged } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { codeLanguagesOptions } = this.getOptionsFormsSelect();
@@ -723,6 +703,7 @@ class CourseAddOrEditMd extends Component {
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-light')}>
 					<EditorPanelExplorer
+						userMe={userMe}
 						course={course}
 						courses={courses}
 						isEditing={isEditing}
@@ -732,12 +713,11 @@ class CourseAddOrEditMd extends Component {
 						addOrEditFailure={addOrEditFailure}
 						coursesPagesCount={coursesPagesCount}
 						pagination={pagination}
+						setPaginationActivePage={this.setPaginationActivePage}
 						category={category}
 						categories={categories}
 						handleInputChange={this.handleInputChange}
 						handleOnSubmit={this.handleOnSubmit}
-						handlePaginationChange={this.handlePaginationChange}
-						handleSelectCourse={this.handleSelectCourse}
 						isEditorChanged={isEditorChanged}
 						fromPage="md"
 					/>
@@ -813,7 +793,6 @@ class CourseAddOrEditMd extends Component {
 }
 
 CourseAddOrEditMd.propTypes = {
-	fetchCategoriesAction: PropTypes.func,
 	createCourseAction: PropTypes.func,
 	updateCourseAction: PropTypes.func,
 	fetchCoursesByFieldAction: PropTypes.func,
@@ -863,4 +842,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchCategoriesAction, createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction })(CourseAddOrEditMd);
+export default connect(mapStateToProps, { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction })(CourseAddOrEditMd);
