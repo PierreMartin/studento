@@ -100,7 +100,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- refacto EditorPanelExplorer en component de Class pour qu'il gere ses states (pb pagination)
 - staredBy
 
 - Faire Menu listant les cats/subCats + Page Courses

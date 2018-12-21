@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import { Icon, Table, Button, Header, Modal, Pagination, Popup } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { deleteCourseAction, doSortCoursesAction } from '../../actions/courses';
+import { fetchCoursesByFieldAction, deleteCourseAction, doSortCoursesAction, setPaginationCoursesEditorAction } from '../../actions/courses';
 import classNames from 'classnames/bind';
 import styles from './css/coursesListDashbord.scss';
 
@@ -24,11 +24,22 @@ class CoursesListDashboard extends Component {
 				courseTitle: ''
 			},
 			lastColumnClicked: null,
-			direction: null,
-			pagination: {
-				indexPage: 1
-			}
+			direction: null
 		};
+	}
+
+	componentDidMount() {
+		const { userMe, fetchCoursesByFieldAction, paginationEditor } = this.props;
+
+		// If lastActivePage === 1st page:
+		if (paginationEditor.lastActivePage === 1) {
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+		} else if (paginationEditor.lastActivePage > 1) {
+			// If lastActivePage > 1st page:
+			const directionIndex = paginationEditor.lastActivePage - 1;
+			const currentCourseId = paginationEditor.lastCourseId;
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
+		}
 	}
 
 	handleOpenModalForDeleteCourse = (param) => {
@@ -46,13 +57,20 @@ class CoursesListDashboard extends Component {
 	};
 
 	handleSubmitDeleteCourse() {
-		const { deleteCourseAction } = this.props;
+		const { deleteCourseAction, courses, paginationEditor, userMe, fetchCoursesByFieldAction, setPaginationCoursesEditorAction } = this.props;
 		const { deleteCourse } = this.state;
 
 		if (deleteCourse && deleteCourse.courseId) {
 			deleteCourseAction(deleteCourse).then(() => {
 				// Close modal :
 				this.setState({ deleteCourse: { isModalOpened: false, courseId: '', courseTitle: '' } });
+
+				// If no more course on (page > 1) : goto 1st page
+				if ((courses.length === 1 || !courses) && paginationEditor.lastActivePage > 1) {
+					const currentCourseId = courses[0] && courses[0]._id;
+					setPaginationCoursesEditorAction(1, currentCourseId);
+					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+				}
 			});
 		}
 	}
@@ -75,15 +93,20 @@ class CoursesListDashboard extends Component {
 
 		doSortCoursesAction({ clickedColumn, doReverse: true });
 		this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' });
-	}
+	};
 
 	handlePaginationChange = (e, { activePage }) => {
-		this.setState({ pagination: { ...this.state.pagination, indexPage: activePage } });
-		const lastActivePage = this.state.pagination.indexPage;
+		const { fetchCoursesByFieldAction, paginationEditor, setPaginationCoursesEditorAction, courses, userMe } = this.props;
+		const lastActivePage = paginationEditor.lastActivePage;
+
 		if (activePage === lastActivePage) return;
 
-		this.props.paginationChange(activePage, lastActivePage);
-	}
+		const currentCourseId = courses[0] && courses[0]._id;
+		const directionIndex = activePage - lastActivePage;
+
+		setPaginationCoursesEditorAction(activePage, currentCourseId);
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
+	};
 
 	renderCoursesList(courses) {
 		if (courses.length === 0) return;
@@ -113,10 +136,10 @@ class CoursesListDashboard extends Component {
 		});
 	}
 
-	renderPagination(coursesPagesCount, pagination) {
+	renderPagination(coursesPagesCount, paginationEditor) {
 		return (
 			<Pagination
-				activePage={pagination.indexPage}
+				activePage={paginationEditor.lastActivePage}
 				boundaryRange={1}
 				siblingRange={1}
 				onPageChange={this.handlePaginationChange}
@@ -132,8 +155,8 @@ class CoursesListDashboard extends Component {
 	}
 
 	render() {
-		const { courses, coursesPagesCount } = this.props;
-		const { deleteCourse, lastColumnClicked, direction, pagination } = this.state;
+		const { courses, coursesPagesCount, paginationEditor } = this.props;
+		const { deleteCourse, lastColumnClicked, direction } = this.state;
 
 		return (
 			<div className={cx('courses-container')}>
@@ -168,7 +191,7 @@ class CoursesListDashboard extends Component {
 										<Button basic color="grey" size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown course" />
 									</Popup>
 
-									{ coursesPagesCount > 0 && this.renderPagination(coursesPagesCount, pagination) }
+									{ coursesPagesCount > 0 && this.renderPagination(coursesPagesCount, paginationEditor) }
 								</Table.HeaderCell>
 							</Table.Row>
 						</Table.Footer>
@@ -195,10 +218,20 @@ class CoursesListDashboard extends Component {
 }
 
 CoursesListDashboard.propTypes = {
+	fetchCoursesByFieldAction: PropTypes.func,
 	deleteCourseAction: PropTypes.func,
 	doSortCoursesAction: PropTypes.func,
-	paginationChange: PropTypes.func,
+	setPaginationCoursesEditorAction: PropTypes.func,
 	coursesPagesCount: PropTypes.number,
+
+	paginationEditor: PropTypes.shape({
+		lastActivePage: PropTypes.number,
+		lastCourseId: PropTypes.string
+	}),
+
+	userMe: PropTypes.shape({
+		_id: PropTypes.string
+	}),
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
@@ -210,4 +243,4 @@ CoursesListDashboard.propTypes = {
 	})).isRequired
 };
 
-export default connect(null, { deleteCourseAction, doSortCoursesAction })(CoursesListDashboard);
+export default connect(null, { fetchCoursesByFieldAction, deleteCourseAction, doSortCoursesAction, setPaginationCoursesEditorAction })(CoursesListDashboard);

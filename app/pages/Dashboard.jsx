@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchCoursesByFieldAction } from '../actions/courses';
 import CoursesListDashboard from '../components/CoursesListDashboard/CoursesListDashboard';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Container, Header } from 'semantic-ui-react';
@@ -11,17 +10,6 @@ import { Segment, Container, Header } from 'semantic-ui-react';
 // const cx = classNames.bind(styles);
 
 class Dashboard extends Component {
-	constructor(props) {
-		super(props);
-		this.paginationChange = this.paginationChange.bind(this);
-	}
-
-	componentDidMount() {
-		const { userMe, fetchCoursesByFieldAction } = this.props;
-
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
-	}
-
 	getMetaData() {
 		return {
 			title: 'Dashboard',
@@ -30,16 +18,8 @@ class Dashboard extends Component {
 		};
 	}
 
-	paginationChange(activePage, lastActivePage) {
-		const { userMe, fetchCoursesByFieldAction, courses } = this.props;
-		const directionIndex = activePage - lastActivePage;
-		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
-
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
-	}
-
 	render() {
-		const { courses, coursesPagesCount } = this.props;
+		const { courses, userMe, coursesPagesCount, paginationEditor } = this.props;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -52,7 +32,12 @@ class Dashboard extends Component {
 
 					<Container text>
 						<Header as="h2" icon="list" content="My courses" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
-						<CoursesListDashboard courses={courses} coursesPagesCount={coursesPagesCount} paginationChange={this.paginationChange} />
+						<CoursesListDashboard
+							courses={courses}
+							userMe={userMe}
+							coursesPagesCount={coursesPagesCount}
+							paginationEditor={paginationEditor}
+						/>
 					</Container>
 
 				</Segment>
@@ -62,8 +47,12 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-	fetchCoursesByFieldAction: PropTypes.func,
 	coursesPagesCount: PropTypes.number,
+
+	paginationEditor: PropTypes.shape({
+		lastActivePage: PropTypes.number,
+		lastCourseId: PropTypes.string
+	}),
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
@@ -83,8 +72,9 @@ const mapStateToProps = (state) => {
 	return {
 		courses: state.courses.all,
 		coursesPagesCount: state.courses.pagesCount,
+		paginationEditor: state.courses.paginationEditor,
 		userMe: state.userMe.data
 	};
 };
 
-export default connect(mapStateToProps, { fetchCoursesByFieldAction })(Dashboard);
+export default connect(mapStateToProps, null)(Dashboard);
