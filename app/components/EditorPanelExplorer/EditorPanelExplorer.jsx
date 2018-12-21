@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { fetchCoursesByFieldAction } from '../../actions/courses';
+import { fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../../actions/courses';
 import { fetchCategoriesAction } from '../../actions/category';
 import { Segment, Popup, Button, List, Form, Header, Message, Select, Icon, Pagination } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
@@ -17,13 +17,22 @@ class EditorPanelExplorer extends Component {
 		this.handlePaginationChange = this.handlePaginationChange.bind(this);
 	}
 
+	/**
+	* Called at reload OR every changed courses because the parents components are 'CourseAddOrEditMd' or 'CourseAddOrEdit'
+	* */
 	componentDidMount() {
-		const { fetchCategoriesAction, fetchCoursesByFieldAction, userMe } = this.props;
+		const { fetchCategoriesAction, fetchCoursesByFieldAction, userMe, paginationEditor } = this.props;
 
-		// if (pageNotChanged) return;
-		fetchCategoriesAction();
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
-		// fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex }); // TODO use it et get paginationEditor.lastActivePage from Redux store
+		// If lastActivePage === 1st page:
+		if (paginationEditor.lastActivePage === 1) {
+			fetchCategoriesAction();
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+		} else if (paginationEditor.lastActivePage > 1) {
+			// If lastActivePage > 1st page:
+			const directionIndex = paginationEditor.lastActivePage - 1;
+			const currentCourseId = paginationEditor.lastCourseId;
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
+		}
 	}
 
 	getOptionsFormsSelect() {
@@ -82,14 +91,15 @@ class EditorPanelExplorer extends Component {
 	}
 
 	handlePaginationChange = (e, { activePage }) => {
-		this.props.setPaginationActivePage(activePage);
-		const lastActivePage = this.props.pagination.indexPage;
+		const { userMe, fetchCoursesByFieldAction, courses, paginationEditor, setPaginationCoursesEditorAction } = this.props;
+		const lastActivePage = paginationEditor.lastActivePage;
+
 		if (activePage === lastActivePage) return;
 
-		const { userMe, fetchCoursesByFieldAction, courses } = this.props;
+		const currentCourseId = courses[0] && courses[0]._id;
 		const directionIndex = activePage - lastActivePage;
-		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
 
+		setPaginationCoursesEditorAction(activePage, currentCourseId);
 		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
 	};
 
@@ -136,11 +146,11 @@ class EditorPanelExplorer extends Component {
 	}
 
 	renderPaginationCoursesList() {
-		const { pagination, coursesPagesCount } = this.props;
+		const { paginationEditor, coursesPagesCount } = this.props;
 
 		return (
 			<Pagination
-				activePage={pagination.indexPage}
+				activePage={paginationEditor.lastActivePage}
 				boundaryRange={1}
 				siblingRange={1}
 				onPageChange={this.handlePaginationChange}
@@ -243,10 +253,6 @@ EditorPanelExplorer.propTypes = {
 	fromPage: PropTypes.string,
 	isEditorChanged: PropTypes.bool,
 
-	pagination: PropTypes.shape({
-		indexPage: PropTypes.number
-	}),
-
 	course: PropTypes.shape({
 		_id: PropTypes.string,
 		title: PropTypes.string,
@@ -265,6 +271,11 @@ EditorPanelExplorer.propTypes = {
 
 	userMe: PropTypes.shape({
 		_id: PropTypes.string
+	}),
+
+	paginationEditor: PropTypes.shape({
+		lastActivePage: PropTypes.number,
+		lastCourseId: PropTypes.string
 	}),
 
 	isEditing: PropTypes.bool,
@@ -287,9 +298,9 @@ EditorPanelExplorer.propTypes = {
 
 	handleInputChange: PropTypes.func,
 	handleOnSubmit: PropTypes.func,
-	setPaginationActivePage: PropTypes.func,
 	fetchCoursesByFieldAction: PropTypes.func,
-	fetchCategoriesAction: PropTypes.func
+	fetchCategoriesAction: PropTypes.func,
+	setPaginationCoursesEditorAction: PropTypes.func
 };
 
-export default connect(null, { fetchCategoriesAction, fetchCoursesByFieldAction })(EditorPanelExplorer);
+export default connect(null, { fetchCategoriesAction, fetchCoursesByFieldAction, setPaginationCoursesEditorAction })(EditorPanelExplorer);

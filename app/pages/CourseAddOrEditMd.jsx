@@ -7,7 +7,7 @@ import hljs from 'highlight.js/lib/highlight.js';
 import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
-import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction } from '../actions/courses';
+import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../actions/courses';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Form, Button, Popup, Modal, Header } from 'semantic-ui-react';
@@ -25,7 +25,6 @@ class CourseAddOrEditMd extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleClickToolbar = this.handleClickToolbar.bind(this);
-		this.setPaginationActivePage = this.setPaginationActivePage.bind(this);
 
 		// modal:
 		this.editorInModalDidMount = this.editorInModalDidMount.bind(this);
@@ -54,9 +53,6 @@ class CourseAddOrEditMd extends Component {
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
 			heightDocument: 0,
-			pagination: {
-				indexPage: 1
-			},
 			openModalSetStyle: {},
 			codeLanguageSelected: '',
 			isEditorChanged: false
@@ -277,9 +273,9 @@ class CourseAddOrEditMd extends Component {
 	handleOnSubmit(event) {
 		event.preventDefault();
 
-		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction } = this.props;
-		const { fieldsTyping, pagination } = this.state;
-		const indexPagination = pagination.indexPage || 0;
+		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction, paginationEditor, setPaginationCoursesEditorAction } = this.props;
+		const { fieldsTyping } = this.state;
+		const indexPagination = paginationEditor.lastActivePage;
 		const template = (fieldsTyping.template && Object.keys(fieldsTyping.template).length > 0 ? {...course.template, ...fieldsTyping.template} : course && course.template) || {};
 		const data = {};
 
@@ -298,8 +294,11 @@ class CourseAddOrEditMd extends Component {
 			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
 				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 				if (courses.length % 12 === 0) { // 12 => numberItemPerPage setted in controller
-					this.setState({ pagination: { indexPage: 1 } });
-					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+					const currentCourseId = courses[0] && courses[0]._id;
+					const directionIndex = (indexPagination + 1) - indexPagination;
+
+					setPaginationCoursesEditorAction(indexPagination + 1, currentCourseId);
+					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
 				}
 			});
 		}
@@ -328,10 +327,6 @@ class CourseAddOrEditMd extends Component {
 
 		// Set all forms fields except content:
 		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
-	}
-
-	setPaginationActivePage(activePage) {
-		this.setState({ pagination: { indexPage: activePage } });
 	}
 
 	setStyleSelectable(param) {
@@ -677,8 +672,8 @@ class CourseAddOrEditMd extends Component {
 	}
 
 	render() {
-		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe } = this.props;
-		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, pagination, openModalSetStyle, codeLanguageSelected, isEditorChanged } = this.state;
+		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
+		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, openModalSetStyle, codeLanguageSelected, isEditorChanged } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { codeLanguagesOptions } = this.getOptionsFormsSelect();
 
@@ -712,8 +707,7 @@ class CourseAddOrEditMd extends Component {
 						addOrEditMissingField={addOrEditMissingField}
 						addOrEditFailure={addOrEditFailure}
 						coursesPagesCount={coursesPagesCount}
-						pagination={pagination}
-						setPaginationActivePage={this.setPaginationActivePage}
+						paginationEditor={paginationEditor}
 						category={category}
 						categories={categories}
 						handleInputChange={this.handleInputChange}
@@ -797,6 +791,7 @@ CourseAddOrEditMd.propTypes = {
 	updateCourseAction: PropTypes.func,
 	fetchCoursesByFieldAction: PropTypes.func,
 	emptyErrorsAction: PropTypes.func,
+	setPaginationCoursesEditorAction: PropTypes.func,
 	addOrEditMissingField: PropTypes.object,
 	addOrEditFailure: PropTypes.string,
 
@@ -822,6 +817,11 @@ CourseAddOrEditMd.propTypes = {
 		_id: PropTypes.string
 	}),
 
+	paginationEditor: PropTypes.shape({
+		lastActivePage: PropTypes.number,
+		lastCourseId: PropTypes.string
+	}),
+
 	categories: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
 		name: PropTypes.string,
@@ -838,8 +838,9 @@ const mapStateToProps = (state) => {
 		userMe: state.userMe.data,
 		categories: state.categories.all,
 		addOrEditMissingField: state.courses.addOrEditMissingField,
-		addOrEditFailure: state.courses.addOrEditFailure
+		addOrEditFailure: state.courses.addOrEditFailure,
+		paginationEditor: state.courses.paginationEditor
 	};
 };
 
-export default connect(mapStateToProps, { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction })(CourseAddOrEditMd);
+export default connect(mapStateToProps, { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction })(CourseAddOrEditMd);

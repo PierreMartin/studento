@@ -5,7 +5,7 @@ import TinyEditor from '../components/TinyEditor/TinyEditor';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
 import { kaTexRendering } from '../components/common/renderingCourse';
-import { createCourseAction, updateCourseAction, emptyErrorsAction, fetchCoursesByFieldAction } from '../actions/courses';
+import { createCourseAction, updateCourseAction, emptyErrorsAction, fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../actions/courses';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import classNames from 'classnames/bind';
@@ -32,7 +32,6 @@ class CourseAddOrEdit extends Component {
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-		this.setPaginationActivePage = this.setPaginationActivePage.bind(this);
 
 		// Tiny MCE Editor:
 		this.handleEditorChange = this.handleEditorChange.bind(this);
@@ -47,9 +46,6 @@ class CourseAddOrEdit extends Component {
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
 			heightDocument: (typeof window !== 'undefined' && window.innerHeight) || 600,
-			pagination: {
-				indexPage: 1
-			},
 			isEditorChanged: false
 		};
 	}
@@ -226,9 +222,9 @@ class CourseAddOrEdit extends Component {
 	handleOnSubmit(event) {
 		event.preventDefault();
 
-		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction } = this.props;
-		const { pagination, fieldsTyping, isEditing } = this.state;
-		const indexPagination = pagination.indexPage || 0;
+		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction, paginationEditor, setPaginationCoursesEditorAction } = this.props;
+		const { fieldsTyping, isEditing } = this.state;
+		const indexPagination = paginationEditor.lastActivePage;
 		const template = (fieldsTyping.template && Object.keys(fieldsTyping.template).length > 0 ? {...course.template, ...fieldsTyping.template} : course && course.template) || {};
 		const data = {};
 
@@ -247,15 +243,14 @@ class CourseAddOrEdit extends Component {
 			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
 				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 				if (courses.length % 12 === 0) { // 12 => numberItemPerPage setted in controller
-					this.setState({ pagination: { indexPage: 1 } });
-					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+					const currentCourseId = courses[0] && courses[0]._id;
+					const directionIndex = (indexPagination + 1) - indexPagination;
+
+					setPaginationCoursesEditorAction(indexPagination + 1, currentCourseId);
+					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
 				}
 			});
 		}
-	}
-
-	setPaginationActivePage(activePage) {
-		this.setState({ pagination: { indexPage: activePage } });
 	}
 
 	updateWindowDimensions() {
@@ -263,8 +258,8 @@ class CourseAddOrEdit extends Component {
 	}
 
 	render() {
-		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe } = this.props;
-		const { category, isEditing, fieldsTyping, pagination, heightDocument, isEditorChanged } = this.state;
+		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
+		const { category, isEditing, fieldsTyping, heightDocument, isEditorChanged } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 
 		return (
@@ -280,8 +275,7 @@ class CourseAddOrEdit extends Component {
 						addOrEditMissingField={addOrEditMissingField}
 						addOrEditFailure={addOrEditFailure}
 						coursesPagesCount={coursesPagesCount}
-						pagination={pagination}
-						setPaginationActivePage={this.setPaginationActivePage}
+						paginationEditor={paginationEditor}
 						category={category}
 						categories={categories}
 						handleInputChange={this.handleInputChange}
@@ -310,6 +304,7 @@ CourseAddOrEdit.propTypes = {
 	updateCourseAction: PropTypes.func,
 	fetchCoursesByFieldAction: PropTypes.func,
 	emptyErrorsAction: PropTypes.func,
+	setPaginationCoursesEditorAction: PropTypes.func,
 	addOrEditMissingField: PropTypes.object,
 	addOrEditFailure: PropTypes.string,
 
@@ -335,6 +330,11 @@ CourseAddOrEdit.propTypes = {
 		_id: PropTypes.string
 	}),
 
+	paginationEditor: PropTypes.shape({
+		lastActivePage: PropTypes.number,
+		lastCourseId: PropTypes.string
+	}),
+
 	categories: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
 		name: PropTypes.string,
@@ -351,8 +351,9 @@ const mapStateToProps = (state) => {
 		userMe: state.userMe.data,
 		categories: state.categories.all,
 		addOrEditMissingField: state.courses.addOrEditMissingField,
-		addOrEditFailure: state.courses.addOrEditFailure
+		addOrEditFailure: state.courses.addOrEditFailure,
+		paginationEditor: state.courses.paginationEditor
 	};
 };
 
-export default connect(mapStateToProps, { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction })(CourseAddOrEdit);
+export default connect(mapStateToProps, { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction })(CourseAddOrEdit);

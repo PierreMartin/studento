@@ -100,6 +100,16 @@ const pagesCount = (state = 0, action) => {
 	}
 };
 
+const paginationEditor = (state = { lastActivePage: 1 }, action) => {
+	switch (action.type) {
+		case types.SET_PAGINATION_COURSES_EDITOR:
+			if (action.paginationEditor) return action.paginationEditor;
+			return state;
+		default:
+			return state;
+	}
+};
+
 const addCommentMissingField = (state = {}, action) => {
 	switch (action.type) {
 		case types.ADD_COMMENT_COURSE_MISSING_FIELDS:
@@ -119,6 +129,7 @@ const coursesReducer = combineReducers({
 	addOrEditMissingField,
 	addOrEditFailure,
 	pagesCount,
+	paginationEditor,
 	addCommentMissingField
 });
 

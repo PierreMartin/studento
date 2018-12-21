@@ -40,7 +40,16 @@ const requestGetCoursesWithPagination = (res, query, currentCourseId, directionI
 					console.error(err);
 					return res.status(500).json({ message: `A error happen at the fetching courses by ${typeReq} >>`, err });
 				}
-				return res.status(200).json({ message: `courses by ${typeReq} fetched >`, courses });
+
+				Course.count(query).exec((err, coursesCount) => {
+					if (err) {
+						console.error(err);
+						return res.status(500).json({ message: `A error happen at the fetching courses count by ${typeReq}`, err });
+					}
+
+					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
+					return res.status(200).json({ message: `courses by ${typeReq} fetched >`, courses, pagesCount });
+				});
 			});
 	} else {
 		// Go to page <
@@ -55,7 +64,16 @@ const requestGetCoursesWithPagination = (res, query, currentCourseId, directionI
 					console.error(err);
 					return res.status(500).json({ message: `A error happen at the fetching courses by ${typeReq} <<`, err });
 				}
-				return res.status(200).json({ message: `courses by ${typeReq} fetched <`, courses: courses.reverse() });
+
+				Course.count(query).exec((err, coursesCount) => {
+					if (err) {
+						console.error(err);
+						return res.status(500).json({ message: `A error happen at the fetching courses count by ${typeReq}`, err });
+					}
+
+					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
+					return res.status(200).json({ message: `courses by ${typeReq} fetched <`, courses: courses.reverse(), pagesCount });
+				});
 			});
 	}
 };

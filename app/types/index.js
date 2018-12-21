@@ -1,6 +1,10 @@
 /***************************************** Messages ********************************************/
 export const DISMISS_MESSAGE = 'DISMISS_MESSAGE';
 
+/***************************************** Editor ********************************************/
+// Set pagination
+export const SET_PAGINATION_COURSES_EDITOR = 'SET_PAGINATION_COURSES_EDITOR';
+
 /***************************************** Courses ********************************************/
 // Create / edit
 export const CREATE_OR_EDIT_COURSE_SUCCESS = 'CREATE_OR_EDIT_COURSE_SUCCESS';
