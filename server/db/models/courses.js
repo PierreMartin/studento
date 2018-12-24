@@ -21,7 +21,13 @@ const CourseSchema = new mongoose.Schema({
 		columnH6: { type: Number, default: 1 }
 	},
 
-	staredBy: [{
+	stars: {
+		average: { type: Number },
+		totalStars: { type: Number },
+		numberOfTimeVoted: { type: Number }
+	},
+
+	starredBy: [{
 		username: { type: String, default: '' },
 		at: { type: Date, default: null }
 	}],

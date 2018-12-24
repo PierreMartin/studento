@@ -111,6 +111,7 @@ $ ./scripts/generate_menu.sh
 - Resolve vulnerabilities in dependencies
 
 moins urgent :
+- courseToolbar : Add to fav - download to PDF
 - comments -> render: styles (gras, bold, emoji, ...) + code editor
 - comments -> send notification with socket.io to author of course (Fetch all my courses + where commentedBy.length > 0)
 - duplicate style (lists, checksList...) when enter on new line

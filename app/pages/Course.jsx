@@ -11,6 +11,7 @@ import { Container, Segment } from 'semantic-ui-react';
 import { addCommentAction, emptyErrorsCommentAction } from '../actions/courses';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CourseInfos from '../components/CourseInfos/CourseInfos';
+import CourseToolbar from '../components/CourseToolbar/CourseToolbar';
 import CoursePage from '../components/CoursePage/CoursePage';
 import Comments from '../components/Comments/Comments';
 
@@ -197,7 +198,7 @@ class Course extends Component {
 	}
 
 	render() {
-		const { course, authentification, addCommentMissingField } = this.props;
+		const { course, authentification, addCommentMissingField, userMe } = this.props;
 		const { contentMarkedSanitized, fieldsTypingComment, indexCommentToReply } = this.state;
 		const commentedBy = course.commentedBy || [];
 
@@ -206,6 +207,7 @@ class Course extends Component {
 				<Segment vertical>
 					<Container text>
 						<CourseInfos course={course} />
+						<CourseToolbar course={course} authentification={authentification} userMe={userMe} />
 						<CoursePage contentMarkedSanitized={contentMarkedSanitized} />
 						<Comments
 							commentedBy={commentedBy}

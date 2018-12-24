@@ -24,9 +24,6 @@ const CourseInfos = ({ course }) => {
 					return subCat + space;
 				}) }
 			</div>
-			<div className={cx('header-rating')}>
-				<Icon name="star" color="yellow" /> 121
-			</div>
 			<div className={cx('header-username')}>
 				By: <Link to={`/user/${author._id}`}>{author.username}</Link> At: {courseDate}
 			</div>
