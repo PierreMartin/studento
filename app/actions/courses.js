@@ -252,8 +252,8 @@ export function ratingCourseSuccess(res) {
 	return {
 		type: types.RATING_COURSE_SUCCESS,
 		messageSuccess: res.message,
-		average: res.average,
-		numberOfTimeVoted: res.numberOfTimeVoted
+		stars: res.stars,
+		courseId: res.courseId
 	};
 }
 
@@ -272,7 +272,7 @@ export function ratingCourseAction(data) {
 	return (dispatch) => {
 		return ratingCourseRequest(data)
 			.then((res) => {
-				toast.success(getMessage(res));
+				toast.success(res.data.message);
 				if (res.status === 200) return dispatch(ratingCourseSuccess(res.data));
 			})
 			.catch((err) => {

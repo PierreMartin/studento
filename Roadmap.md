@@ -100,8 +100,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- staredBy
-
 - Faire Menu listant les cats/subCats + Page Courses
 - Mettre un Breadcrumb
 - Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca

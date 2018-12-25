@@ -36,6 +36,17 @@ const all = (state = [], action) => {
 			}
 
 			return state;
+		case types.RATING_COURSE_SUCCESS:
+			if (action.stars && action.courseId) {
+				const newStateForRatingCourse = JSON.parse(JSON.stringify(state)) || [];
+				for (let j = 0; j < newStateForRatingCourse.length; j++) {
+					if (newStateForRatingCourse[j]._id === action.courseId) {
+						newStateForRatingCourse[j].stars = action.stars;
+						return newStateForRatingCourse;
+					}
+				}
+			}
+			return state;
 		default:
 			return state;
 	}
@@ -50,10 +61,14 @@ const one = (state = {}, action) => {
 		case types.ADD_COMMENT_COURSE_SUCCESS:
 			if (action.commentsList) return { ...state, commentedBy: action.commentsList };
 			return state;
+		case types.RATING_COURSE_SUCCESS:
+			if (action.stars) return { ...state, stars: action.stars };
+			return state;
 		case types.GET_COURSE_FAILURE:
 		case types.CREATE_OR_EDIT_COURSE_FAILURE:
 		case types.CREATE_OR_EDIT_COURSE_MISSING_FIELDS:
 		case types.ADD_COMMENT_COURSE_FAILURE:
+		case types.RATING_COURSE_FAILURE:
 			return state;
 		case types.EMPTY_COURSE:
 			return {};

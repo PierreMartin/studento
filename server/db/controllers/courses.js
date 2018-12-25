@@ -243,7 +243,7 @@ export function ratingCourse(req, res) {
 	const { rating, uId, courseId, at, stars } = req.body;
 
 	const totalStars = stars.totalStars ? stars.totalStars + rating : rating;
-	const numberOfTimeVoted = stars.numberOfTimeVoted ? stars.numberOfTimeVoted++ : 1;
+	const numberOfTimeVoted = stars.numberOfTimeVoted ? stars.numberOfTimeVoted + 1 : 1;
 	const average = (totalStars / numberOfTimeVoted).toFixed(2);
 
 	const queryStars = { average, totalStars, numberOfTimeVoted };
@@ -257,12 +257,19 @@ export function ratingCourse(req, res) {
 			return res.status(500).json({ message: 'A error happen at the rating course', err });
 		}
 
-		// TODO populer
-		return res.status(200).json({
-			message: `Thank you, you gave a score of ${rating} out of 5 for this course`,
-			average: course.average,
-			numberOfTimeVoted: course.numberOfTimeVoted
-		});
+		Course.findOne({ _id: courseId })
+			.exec((err, course) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'A error happen at the rating course', err });
+				}
+
+				return res.status(200).json({
+					message: `Thank you, you gave a score of ${rating} out of 5 for this course`,
+					stars: { average: course.stars.average, numberOfTimeVoted: course.stars.numberOfTimeVoted, totalStars: course.stars.totalStars },
+					courseId
+				});
+			});
 	});
 }
 

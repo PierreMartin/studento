@@ -41,6 +41,13 @@ class CourseToolbar extends Component {
 		const author = course.uId || {};
 		const stars = course.stars || {};
 		const average = stars.average || 0;
+		let numberOfVote = 'No vote';
+
+		if (stars.numberOfTimeVoted === 1) {
+			numberOfVote = stars.numberOfTimeVoted + ' vote';
+		} else if (stars.numberOfTimeVoted > 1) {
+			numberOfVote = stars.numberOfTimeVoted + ' votes';
+		}
 
 		return (
 			<Menu size="tiny" icon="labeled" className={cx('toolbar-container')}>
@@ -66,7 +73,7 @@ class CourseToolbar extends Component {
 				{ authentification.authenticated ? (
 					<Menu.Item name="star">
 						<Rating icon="star" defaultRating={average} maxRating={5} style={{ marginBottom: '13px' }} onRate={this.handleRating} />
-						Average: { stars.numberOfTimeVoted === 0 || typeof stars.numberOfTimeVoted === 'undefined' ? 'Ne yet voted' : average }
+						{ numberOfVote }
 					</Menu.Item>
 				) : '' }
 			</Menu>
