@@ -28,7 +28,7 @@ const CourseSchema = new mongoose.Schema({
 	},
 
 	starredBy: [{
-		username: { type: String, default: '' },
+		uId: { type: String, ref: 'User' },
 		at: { type: Date, default: null }
 	}],
 

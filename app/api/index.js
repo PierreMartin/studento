@@ -88,6 +88,16 @@ export const addCommentRequest = (data) => {
 		});
 };
 
+export const ratingCourseRequest = (data) => {
+	return api().ratingCourse(data)
+		.then((res) => {
+			if (res.status === 200) return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
 /********************************************** Categories ***********************************************/
 // All
 export const fetchCategoriesRequest = () => {

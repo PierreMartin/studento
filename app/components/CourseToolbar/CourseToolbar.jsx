@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { ratingCourseAction } from '../../actions/courses';
 import { Icon, Menu, Rating } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/courseToolbar.scss';
@@ -23,7 +24,16 @@ class CourseToolbar extends Component {
 	};
 
 	handleRating = (e, { rating }) => {
-		console.log(rating);
+		const { ratingCourseAction, userMe, course } = this.props;
+		const data = {
+			stars: course.stars || {},
+			rating,
+			uId: userMe._id,
+			courseId: course._id,
+			at: new Date().toISOString()
+		};
+
+		ratingCourseAction(data);
 	};
 
 	render() {
@@ -66,6 +76,7 @@ class CourseToolbar extends Component {
 
 CourseToolbar.propTypes = {
 	authentification: PropTypes.object,
+	ratingCourseAction: PropTypes.func,
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
@@ -82,4 +93,4 @@ CourseToolbar.propTypes = {
 	})
 };
 
-export default connect(null, null)(CourseToolbar);
+export default connect(null, { ratingCourseAction })(CourseToolbar);

@@ -1,5 +1,5 @@
 import * as types from './../types';
-import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, fetchCoursesBySearchRequest, deleteCourseRequest, addCommentRequest } from './../api';
+import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, fetchCoursesBySearchRequest, deleteCourseRequest, addCommentRequest, ratingCourseRequest } from './../api';
 import { toast } from 'react-toastify';
 import { push } from 'react-router-redux';
 
@@ -243,6 +243,42 @@ export function addCommentAction(param) {
 				}
 
 				return Promise.reject();
+			});
+	};
+}
+
+/************************ Rating course ***********************/
+export function ratingCourseSuccess(res) {
+	return {
+		type: types.RATING_COURSE_SUCCESS,
+		messageSuccess: res.message,
+		average: res.average,
+		numberOfTimeVoted: res.numberOfTimeVoted
+	};
+}
+
+export function ratingCourseFailure(messageError) {
+	return {
+		type: types.RATING_COURSE_FAILURE,
+		messageError
+	};
+}
+
+export function ratingCourseAction(data) {
+	const { rating, uId, courseId } = data;
+
+	if (typeof rating === 'undefined' || !uId || !courseId) return;
+
+	return (dispatch) => {
+		return ratingCourseRequest(data)
+			.then((res) => {
+				toast.success(getMessage(res));
+				if (res.status === 200) return dispatch(ratingCourseSuccess(res.data));
+			})
+			.catch((err) => {
+				const messageError = getMessage(err);
+				toast.error(messageError);
+				dispatch(ratingCourseFailure(messageError));
 			});
 	};
 }

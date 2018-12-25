@@ -39,6 +39,11 @@ export function api() {
 			url: '/api/addcomment',
 			data
 		}),
+		ratingCourse: data => localClient.request({
+			method: 'POST',
+			url: '/api/ratingcourse',
+			data
+		}),
 
 		// Categories
 		getCategories: () => localClient.request({

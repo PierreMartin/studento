@@ -237,6 +237,36 @@ export function addComment(req, res) {
 }
 
 /**
+ * POST /api/ratingcourse
+ */
+export function ratingCourse(req, res) {
+	const { rating, uId, courseId, at, stars } = req.body;
+
+	const totalStars = stars.totalStars ? stars.totalStars + rating : rating;
+	const numberOfTimeVoted = stars.numberOfTimeVoted ? stars.numberOfTimeVoted++ : 1;
+	const average = (totalStars / numberOfTimeVoted).toFixed(2);
+
+	const queryStars = { average, totalStars, numberOfTimeVoted };
+	const queryStarredBy = { uId, at };
+
+	if (typeof rating === 'undefined' || !uId || !courseId) return res.status(500).json({ message: 'A error happen at the rating course, payload missing' });
+
+	Course.findOneAndUpdate({ _id: courseId }, {stars: queryStars, $push: { starredBy: queryStarredBy } }).exec((err) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ message: 'A error happen at the rating course', err });
+		}
+
+		// TODO populer
+		return res.status(200).json({
+			message: `Thank you, you gave a score of ${rating} out of 5 for this course`,
+			average: course.average,
+			numberOfTimeVoted: course.numberOfTimeVoted
+		});
+	});
+}
+
+/**
  * PUT /api/updatecourse
  */
 export function update(req, res) {
@@ -298,6 +328,7 @@ export default {
 	oneById,
   add,
 	addComment,
+	ratingCourse,
 	update,
 	deleteOne
 };

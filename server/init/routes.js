@@ -18,6 +18,7 @@ export default (app) => {
 		app.put('/api/updatecourse', coursesController.update);
 		app.delete('/api/deletecourse/:courseid', coursesController.deleteOne);
 		app.post('/api/addcomment', coursesController.addComment);
+		app.post('/api/ratingcourse', coursesController.ratingCourse);
 	} else {
 		console.warn('courses routes');
 	}
