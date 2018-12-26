@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { ratingCourseAction } from '../../actions/courses';
 import { Icon, Menu, Rating } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
@@ -38,6 +39,7 @@ class CourseToolbar extends Component {
 
 	render() {
 		const { course, authentification, userMe } = this.props;
+		const pathCourseToEdit = course.type !== 'wy' ? `/courseMd/edit/${course._id}` : `/course/edit/${course._id}`;
 		const author = course.uId || {};
 		const disableRating = !authentification.authenticated || author._id === userMe._id;
 		const stars = course.stars || {};
@@ -55,17 +57,17 @@ class CourseToolbar extends Component {
 				{ authentification.authenticated ? (
 					<Menu.Item disabled name="favorite" onClick={this.handleItemClick}>
 						<Icon name="favorite" />
-						Add to fav
+						Add to fav <br /> (coming soon)
 					</Menu.Item>
 				) : '' }
 
 				<Menu.Item disabled name="download" onClick={this.handleItemClick}>
 					<Icon name="download" />
-					Download to PDF
+					Download to PDF <br /> (coming soon)
 				</Menu.Item>
 
 				{ authentification.authenticated && author._id === userMe._id ? (
-					<Menu.Item name="setting" onClick={this.handleItemClick}>
+					<Menu.Item name="setting" onClick={this.handleItemClick} as={Link} to={pathCourseToEdit}>
 						<Icon name="setting" />
 						Edit
 					</Menu.Item>

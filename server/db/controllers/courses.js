@@ -1,4 +1,5 @@
 import Course from '../models/courses';
+import User from '../models/user';
 
 const numberItemPerPage = 12;
 
@@ -236,6 +237,30 @@ export function addComment(req, res) {
 	}
 }
 
+/***************************************** Rating course *****************************************/
+const updateStaringCourse = (res, courseId, rating, queryStars) => {
+	Course.findOneAndUpdate({ _id: courseId }, { stars: queryStars }).exec((err) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ message: 'Course - A error happen at the rating course', err });
+		}
+
+		Course.findOne({ _id: courseId })
+			.exec((err, course) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'Course - A error happen at the rating course', err });
+				}
+
+				return res.status(200).json({
+					message: `Thank you, you gave a score of ${rating} out of 5 for this course`,
+					stars: { average: course.stars.average, numberOfTimeVoted: course.stars.numberOfTimeVoted, totalStars: course.stars.totalStars },
+					courseId
+				});
+			});
+	});
+};
+
 /**
  * POST /api/ratingcourse
  */
@@ -245,31 +270,41 @@ export function ratingCourse(req, res) {
 	const totalStars = stars.totalStars ? stars.totalStars + rating : rating;
 	const numberOfTimeVoted = stars.numberOfTimeVoted ? stars.numberOfTimeVoted + 1 : 1;
 	const average = Math.ceil(totalStars / numberOfTimeVoted);
-
 	const queryStars = { average, totalStars, numberOfTimeVoted };
-	const queryStarredBy = { uId, at };
+	const now = new Date();
+	const date24hoursBefore = now.setHours(now.getHours() - 24);
 
 	if (typeof rating === 'undefined' || !uId || !courseId) return res.status(500).json({ message: 'A error happen at the rating course, payload missing' });
 
-	Course.findOneAndUpdate({ _id: courseId }, {stars: queryStars, $push: { starredBy: queryStarredBy } }).exec((err) => {
-		if (err) {
-			console.error(err);
-			return res.status(500).json({ message: 'A error happen at the rating course', err });
-		}
+	// TODO do transaction
+	User.findOne({ _id: uId, votedCourses: { $elemMatch: { courseId, at: {$lte: new Date(date24hoursBefore) } } } }, (findErr, userAlreadyVotedMore24hoursBefore) => {
+		// If course already voted more 24 hours before:
+		if (userAlreadyVotedMore24hoursBefore) {
+			User.findOneAndUpdate({_id: uId, 'votedCourses.courseId': courseId},
+				{
+					$set: {
+						'votedCourses.$.courseId': courseId,
+						'votedCourses.$.at': at
+					}
+				}, (err) => {
+					if (err) return res.status(500).json({ message: 'User update - A error happen at the rating course', err });
 
-		Course.findOne({ _id: courseId })
-			.exec((err, course) => {
-				if (err) {
-					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the rating course', err });
-				}
-
-				return res.status(200).json({
-					message: `Thank you, you gave a score of ${rating} out of 5 for this course`,
-					stars: { average: course.stars.average, numberOfTimeVoted: course.stars.numberOfTimeVoted, totalStars: course.stars.totalStars },
-					courseId
+					updateStaringCourse(res, courseId, rating, queryStars);
 				});
+		} else {
+			User.findOne({ _id: uId, votedCourses: { $elemMatch: { courseId } } }, (findErr, userAlreadyVoted) => {
+				// If course don't already voted:
+				if (!userAlreadyVoted) {
+					User.findOneAndUpdate({_id: uId}, {$push: { votedCourses: { courseId, at } } }, (err) => {
+						if (err) return res.status(500).json({ message: 'User push - A error happen at the rating course', err });
+
+						updateStaringCourse(res, courseId, rating, queryStars);
+					});
+				} else {
+					return res.status(500).json({ message: 'You already voted for this course! Please waiting for 24 hours for submit a new vote' });
+				}
 			});
+		}
 	});
 }
 

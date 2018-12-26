@@ -35,6 +35,11 @@ const UserSchema = new mongoose.Schema({
 		avatar28: { type: String, default: '' }
 	},
 
+	votedCourses: [{
+		courseId: { type: String },
+		at: { type: Date, default: null }
+	}],
+
   tokens: Array,
   resetPasswordToken: String,
   resetPasswordExpires: Date,
