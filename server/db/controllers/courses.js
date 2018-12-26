@@ -244,7 +244,7 @@ export function ratingCourse(req, res) {
 
 	const totalStars = stars.totalStars ? stars.totalStars + rating : rating;
 	const numberOfTimeVoted = stars.numberOfTimeVoted ? stars.numberOfTimeVoted + 1 : 1;
-	const average = (totalStars / numberOfTimeVoted).toFixed(2);
+	const average = Math.ceil(totalStars / numberOfTimeVoted);
 
 	const queryStars = { average, totalStars, numberOfTimeVoted };
 	const queryStarredBy = { uId, at };

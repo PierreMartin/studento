@@ -27,7 +27,7 @@ const CourseSchema = new mongoose.Schema({
 		numberOfTimeVoted: { type: Number }
 	},
 
-	starredBy: [{
+	starredBy: [{ // TODO put it in aside collection and remove of this collection
 		uId: { type: String, ref: 'User' },
 		at: { type: Date, default: null }
 	}],

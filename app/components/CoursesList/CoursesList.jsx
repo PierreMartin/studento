@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import moment from 'moment';
-import { Icon, Pagination } from 'semantic-ui-react';
+import { Icon, Pagination, Rating } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/courseList.scss';
 
@@ -16,6 +16,9 @@ const renderCoursesList = (courses) => {
 
 		const categoryInfo = course.category_info || {};
 		const author = course.uId || {};
+		const stars = course.stars || {};
+		const average = stars.average || 0;
+		const numberOfVote = stars.numberOfTimeVoted || 'No vote';
 
 		return (
 			<Link key={key} to={`/course/${course._id}`} className={cx('course-container-item')}>
@@ -34,7 +37,7 @@ const renderCoursesList = (courses) => {
 					<div className={cx('username')}>{author.username}</div>
 					<div className={cx('date')}>{courseDate}</div>
 				</div>
-				<div className={cx('course-footer')}><div><Icon name="star" /> 121</div></div>
+				<div className={cx('course-footer')}><div><Rating disabled rating={average} maxRating={5} /> { numberOfVote }</div></div>
 			</Link>
 		);
 	});

@@ -39,6 +39,7 @@ class CourseToolbar extends Component {
 	render() {
 		const { course, authentification, userMe } = this.props;
 		const author = course.uId || {};
+		const disableRating = !authentification.authenticated || author._id === userMe._id;
 		const stars = course.stars || {};
 		const average = stars.average || 0;
 		let numberOfVote = 'No vote';
@@ -70,12 +71,10 @@ class CourseToolbar extends Component {
 					</Menu.Item>
 				) : '' }
 
-				{ authentification.authenticated ? (
-					<Menu.Item name="star">
-						<Rating icon="star" defaultRating={average} maxRating={5} style={{ marginBottom: '13px' }} onRate={this.handleRating} />
-						{ numberOfVote }
-					</Menu.Item>
-				) : '' }
+				<Menu.Item name="star">
+					<Rating disabled={disableRating} rating={average} maxRating={5} style={{ marginBottom: '13px' }} onRate={this.handleRating} />
+					{ numberOfVote }
+				</Menu.Item>
 			</Menu>
 		);
 	}
