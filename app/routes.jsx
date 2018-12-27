@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import { fetchCourseRequest } from './api';
+import { fetchCourseRequest, checkIfUserOwnerCourseRequest } from './api';
 import App from './pages/App';
 import LayoutMainWeb from './components/layouts/LayoutMainWeb/LayoutMainWeb';
 import LayoutMainApp from './components/layouts/LayoutMainApp/LayoutMainApp';
@@ -31,6 +31,32 @@ export default (store) => {
     }
     callback();
   };
+
+  const requireAuthEditor = (nextState, replace, callback) => {
+    const { userMe, authentification: { authenticated }} = store.getState();
+
+    if (!authenticated) {
+      replace({
+        pathname: '/login',
+        state: { nextPathname: nextState.location.pathname }
+      });
+			callback();
+			return;
+    }
+
+    const userMeId = userMe.data && userMe.data._id;
+    const courseIdToFind = nextState.params && nextState.params.id;
+
+		checkIfUserOwnerCourseRequest(userMeId, courseIdToFind)
+			.then((res) => {
+				if (!res.data.isUserOwnerCourse) replace({ pathname: '/dashboard' });
+				callback();
+			}).catch(() => {
+				replace({ pathname: '/dashboard' });
+				callback();
+			});
+  };
+
   /*
   const redirectAuth = (nextState, replace, callback) => {
     const { authentification: { authenticated }} = store.getState();
@@ -67,8 +93,8 @@ export default (store) => {
 			</Route>
 
 			<Route component={LayoutMainApp}>
-				<Route path="/course/:action/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} onEnter={requireAuth} />
-				<Route path="/courseMd/:action/:id" component={CourseAddOrEditMd} fetchData={fetchCourseRequest} onEnter={requireAuth} />
+				<Route path="/course/:action/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
+				<Route path="/courseMd/:action/:id" component={CourseAddOrEditMd} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
 			</Route>
 		</Route>
   );

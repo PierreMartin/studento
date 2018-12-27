@@ -44,6 +44,11 @@ export function api() {
 			url: '/api/ratingcourse',
 			data
 		}),
+		checkIfUserOwnerCourse: (userMeId, courseIdToFind) => localClient.request({
+			method: 'POST',
+			url: '/api/checkownercourse',
+			data: { userMeId, courseIdToFind }
+		}),
 
 		// Categories
 		getCategories: () => localClient.request({

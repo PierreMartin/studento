@@ -364,6 +364,25 @@ export function deleteOne(req, res) {
 	});
 }
 
+/**
+ * Post /api/checkownercourse
+ */
+export function checkOwnerCourse(req, res) {
+	const { userMeId, courseIdToFind } = req.body;
+
+	Course.findOne({ _id: courseIdToFind, uId: userMeId })
+		.exec((err, course) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ message: 'A error happen at the checking owner course', err });
+			}
+
+			const isUserOwnerCourse = !!course;
+
+			return res.status(200).json({ message: 'Owner course checked', isUserOwnerCourse });
+		});
+}
+
 export default {
 	allByField,
 	allBySearch,
@@ -372,5 +391,6 @@ export default {
 	addComment,
 	ratingCourse,
 	update,
-	deleteOne
+	deleteOne,
+	checkOwnerCourse
 };

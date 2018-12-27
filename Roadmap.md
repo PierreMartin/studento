@@ -100,7 +100,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- empecher l'update d'un course qui n'ai pas le mien
 - Faire Menu listant les cats/subCats + Page Courses
 - Mettre un Breadcrumb
 - Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
@@ -113,6 +112,7 @@ moins urgent :
 - courseToolbar : Add to fav - download to PDF
 - comments -> render: styles (gras, bold, emoji, ...) + code editor
 - comments -> send notification with socket.io to author of course (Fetch all my courses + where commentedBy.length > 0)
+- starings -> send notification with socket.io to author of course
 - duplicate style (lists, checksList...) when enter on new line
 
 - Voir pk on a le props precedent à chaque changement de page

@@ -21,7 +21,7 @@ class CourseToolbar extends Component {
 	}
 
 	handleItemClick = (e, { name }) => {
-		console.log(name);
+		// console.log(name);
 	};
 
 	handleRating = (e, { rating }) => {
@@ -67,7 +67,7 @@ class CourseToolbar extends Component {
 				</Menu.Item>
 
 				{ authentification.authenticated && author._id === userMe._id ? (
-					<Menu.Item name="setting" onClick={this.handleItemClick} as={Link} to={pathCourseToEdit}>
+					<Menu.Item name="setting" as={Link} to={pathCourseToEdit}>
 						<Icon name="setting" />
 						Edit
 					</Menu.Item>
