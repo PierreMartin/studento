@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import UnreadNotifMessages from '../../UnreadMessages/UnreadNotifMessages';
 import UnreadModalMessages from '../../UnreadMessages/UnreadModalMessages';
+import { fetchCategoriesAction } from '../../../actions/category';
 import { logoutAction } from '../../../actions/authentification';
 import { openTchatboxSuccess } from '../../../actions/tchat';
-import { Button, Container, Menu, Segment, Dropdown, Icon, Popup } from 'semantic-ui-react';
-import classNames from 'classnames/bind';
-import styles from '../../../css/main.scss';
+import { Button, Container, Menu, Segment, Dropdown, Icon } from 'semantic-ui-react';
+// import classNames from 'classnames/bind';
+// import styles from '../../../css/main.scss';
 
-const cx = classNames.bind(styles);
+// const cx = classNames.bind(styles);
 
 
 class NavigationMain extends Component {
@@ -22,6 +23,7 @@ class NavigationMain extends Component {
 		};
 
 		this.renderDropdownProfile = this.renderDropdownProfile.bind(this);
+		this.handleCategoriesItemClick = this.handleCategoriesItemClick.bind(this);
 
 		// handle open modal:
 		this.handleClickOpenModalUnreadMessages = this.handleClickOpenModalUnreadMessages.bind(this);
@@ -32,6 +34,9 @@ class NavigationMain extends Component {
 	}
 
 	componentDidMount() {
+		const { categories } = this.props;
+		if (categories.length === 0) this.props.fetchCategoriesAction();
+
 		// Obliged to use addEventListener for handle the events outside a element
 		document.addEventListener('mousedown', this.handleClickOutsideUnreadContent);
 	}
@@ -80,14 +85,47 @@ class NavigationMain extends Component {
 		openTchatboxSuccess(getChannelFormated);
 	}
 
+	handleCategoriesItemClick = (e, { name }) => {
+		e.stopPropagation();
+		browserHistory.push(name);
+	};
+
+	renderDropdownCategories(categories) {
+		return (
+			<Dropdown item simple text="Categories" title="Categories">
+				<Dropdown.Menu>
+					{ categories.map((cat, keyCat) => {
+						return (
+							<Dropdown.Item key={keyCat} name={`/courses/${cat.key}/list`} onClick={this.handleCategoriesItemClick}>
+								<Icon name={cat.picto} />
+								<span className="text">{cat.name}</span>
+
+								<Dropdown.Menu>
+									{ cat.subCategories.map((subCat, keySubCat) => {
+										return (
+											<Dropdown.Item key={keySubCat} name={`/courses/${cat.key}/${subCat.key}`} onClick={this.handleCategoriesItemClick}>
+												<span className="text">{subCat.name}</span>
+											</Dropdown.Item>
+										);
+									}) }
+								</Dropdown.Menu>
+							</Dropdown.Item>
+						);
+					}) }
+				</Dropdown.Menu>
+			</Dropdown>
+		);
+	}
+
 	renderDropdownProfile(userMe, authentification, logoutAction) {
 		if (authentification.authenticated) {
 			return (
 				<Dropdown item text={userMe.username} title="Settings">
 					<Dropdown.Menu>
 						<Dropdown.Item icon="user" text="Profile" as={Link} to={'/user/' + userMe._id} />
+						<Dropdown.Item icon="dashboard" text="Dashboard" as={Link} to="/dashboard" />
 						<Dropdown.Item icon="settings" text="Edit Profile" as={Link} to="/settings" />
-						<Dropdown.Item icon="user outline" text="logout" as={Link} to="/" onClick={logoutAction} />
+						<Dropdown.Item icon="user outline" text="Logout" as={Link} to="/" onClick={logoutAction} />
 					</Dropdown.Menu>
 				</Dropdown>
 			);
@@ -108,15 +146,15 @@ class NavigationMain extends Component {
 	}
 
 	render() {
-		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl } = this.props;
+		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl, categories } = this.props;
 
 		return (
 			<Segment inverted style={{ marginBottom: '0', padding: '0', height: '55px' }}>
 				<Container>
 					<Menu inverted pointing secondary>
 						<Menu.Item position="left">
-							<Menu.Item as={Link} to="/" active={typeof pathUrl === 'undefined'}>Home</Menu.Item> {/* TODO cacher ce menu si autentifié (mais laisser pour le moment pour dev) */}
-							{ authentification.authenticated ? (<Menu.Item as={Link} to="/dashboard" active={pathUrl === '/dashboard'}>Dashboard</Menu.Item>) : ''}
+							<Menu.Item as={Link} to="/" active={typeof pathUrl === 'undefined'}>Home</Menu.Item>
+							{ this.renderDropdownCategories(categories) }
 							<Menu.Item as={Link} to="/about" active={pathUrl === '/about'}>About</Menu.Item>
 							{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" active={pathUrl === '/users' || pathUrl === '/user/:id'}>Users</Menu.Item>) : ''}
 						</Menu.Item>
@@ -155,22 +193,32 @@ NavigationMain.propTypes = {
 		password: PropTypes.string
 	}),
 
+	categories: PropTypes.arrayOf(PropTypes.shape({
+		description: PropTypes.string,
+		name: PropTypes.string,
+		key: PropTypes.string,
+		picto: PropTypes.string,
+		subCategories: PropTypes.array
+	})),
+
 	unreadMessages: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,
 		author: PropTypes.array, // populate
 		count: PropTypes.number
 	})),
 
+	fetchCategoriesAction: PropTypes.func,
 	logoutAction: PropTypes.func.isRequired,
 	openTchatboxSuccess: PropTypes.func
 };
 
 function mapStateToProps(state) {
 	return {
+		categories: state.categories.all,
 		authentification: state.authentification,
 		userMe: state.userMe.data,
 		unreadMessages: state.tchat.unreadMessages
 	};
 }
 
-export default connect(mapStateToProps, { logoutAction, openTchatboxSuccess })(NavigationMain);
+export default connect(mapStateToProps, { fetchCategoriesAction, logoutAction, openTchatboxSuccess })(NavigationMain);

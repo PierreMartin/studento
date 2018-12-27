@@ -120,6 +120,17 @@ export const fetchCategoriesRequest = () => {
 		});
 };
 
+// One
+export const fetchCategoryRequest = (category, subcategory) => {
+	return api().getCategory(category, subcategory)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
 /********************************************** Authentification ***********************************************/
 export const loginRequest = (data) => {
 	return api().login(data)

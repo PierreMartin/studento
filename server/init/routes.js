@@ -27,6 +27,7 @@ export default (app) => {
 	// categories routes
 	if (categoriesController) {
 		app.get('/api/getcategories', categoriesController.all);
+		app.post('/api/getcategory', categoriesController.one);
 	} else {
 		console.warn('categories routes');
 	}

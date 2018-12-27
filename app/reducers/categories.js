@@ -14,9 +14,22 @@ const all = (state = [], action) => {
 	}
 };
 
+const one = (state = {}, action) => {
+	switch (action.type) {
+		case types.GET_CATEGORY_SUCCESS:
+			if (action.category) return action.category;
+			return state;
+		case types.GET_CATEGORY_FAILURE:
+			return state;
+		default:
+			return state;
+	}
+};
+
 
 const categoriesReducer = combineReducers({
-	all
+	all,
+	one
 });
 
 export default categoriesReducer;

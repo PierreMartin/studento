@@ -55,6 +55,11 @@ export function api() {
 			method: 'GET',
 			url: '/api/getcategories'
 		}),
+		getCategory: (category, subcategory) => localClient.request({
+			method: 'POST',
+			url: '/api/getcategory',
+			data: { category, subcategory }
+		}),
 
 		// Authentification
 		login: data => localClient.request({

@@ -48,6 +48,10 @@ export const DO_SORT_COURSES = 'DO_SORT_COURSES';
 export const GET_CATEGORIES_SUCCESS = 'GET_CATEGORIES_SUCCESS';
 export const GET_CATEGORIES_FAILURE = 'GET_CATEGORIES_FAILURE';
 
+// Get one
+export const GET_CATEGORY_SUCCESS = 'GET_CATEGORY_SUCCESS';
+export const GET_CATEGORY_FAILURE = 'GET_CATEGORY_FAILURE';
+
 /***************************************** Authentification ********************************************/
 export const LOGIN_BEGIN_USER = 'LOGIN_BEGIN_USER';
 export const SIGNUP_BEGIN_USER = 'SIGNUP_BEGIN_USER';

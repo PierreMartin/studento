@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import Users from './pages/Users';
 import User from './pages/User';
 import Dashboard from './pages/Dashboard';
+import Courses from './pages/Courses';
 import Course from './pages/Course';
 import CourseAddOrEdit from './pages/CourseAddOrEdit';
 import CourseAddOrEditMd from './pages/CourseAddOrEditMd';
@@ -76,6 +77,7 @@ export default (store) => {
 				<Route path="/users" component={Users} onEnter={requireAuth} />
 				<Route path="/user/:id" component={User} onEnter={requireAuth} />
 				<Route path="/about" component={About} />
+				<Route path="/courses/:category/:subcategory" component={Courses} />
 
 				<Route path="/settings" component={LayoutSettings} onEnter={requireAuth} >
 					<IndexRoute component={SettingsProfile} onEnter={requireAuth} />
