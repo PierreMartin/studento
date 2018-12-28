@@ -55,9 +55,8 @@ class Courses extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		// Change pages:
-		// TODO finir ca :
-		if (prevProps.courses !== this.props.courses && false) {
+		// Change route:
+		if (this.props.params.category !== prevProps.params.category || this.props.params.subcategory !== prevProps.params.subcategory) {
 			const { fetchCategoryAction, fetchCoursesByFieldAction } = this.props;
 			const category = (this.props && this.props.params && this.props.params.category) || '';
 			const subcategory = (this.props && this.props.params && this.props.params.subcategory) || '';
@@ -77,9 +76,9 @@ class Courses extends Component {
 	}
 
 	getMetaData() {
-		const nameCategory = (this.props && this.props.category && this.props.category.name) || 'No category';
+		const { category } = this.props;
 		return {
-			title: nameCategory,
+			title: category.name || '',
 			meta: [{ name: 'description', content: 'Courses by categories' }],
 			link: []
 		};
@@ -174,7 +173,7 @@ class Courses extends Component {
 	render() {
 		const { courses, coursesPagesCount, categories, category } = this.props;
 		const { categoryAction, fieldSearch, paginationIndexPage } = this.state;
-		const nameCategory = category.name || 'No category';
+		const nameCategory = category.name || '';
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
