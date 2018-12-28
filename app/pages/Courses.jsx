@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { Link} from 'react-router';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
 import { fetchCategoryAction } from '../actions/category';
-import { Button, Container, Header, Segment, Input, Dropdown, Breadcrumb } from 'semantic-ui-react';
+import { Button, Container, Header, Segment, Breadcrumb } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
+import CourseSearch from '../components/CourseSearch/CourseSearch';
 import classNames from 'classnames/bind';
 import styles from './css/home.scss';
 
@@ -48,21 +49,6 @@ class Courses extends Component {
 		};
 	}
 
-	getOptionsFormsSelect() {
-		const { categories } = this.props;
-
-		const arrCatList = [{ key: 'all', text: 'All', value: 'all' }];
-		for (let i = 0; i < categories.length; i++) {
-			arrCatList.push({
-				key: categories[i].key,
-				text: categories[i].name,
-				value: categories[i].key
-			});
-		}
-
-		return arrCatList;
-	}
-
 	loadDatas(currentCourseId = false, directionIndex = false) {
 		const { fetchCategoryAction, fetchCoursesByFieldAction } = this.props;
 		const category = (this.props && this.props.params && this.props.params.category) || '';
@@ -90,7 +76,7 @@ class Courses extends Component {
 		this.setState({ fieldSearch: { ...this.state.fieldSearch, select: value }, paginationIndexPage: 1 }, () => {
 			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
 		});
-	}
+	};
 
 	handleSearchInput = (e, { value }) => {
 		if (value === ' ' || value === '  ') return;
@@ -184,7 +170,7 @@ class Courses extends Component {
 	}
 
 	render() {
-		const { courses, coursesPagesCount, category, params } = this.props;
+		const { courses, coursesPagesCount, categories, category, params } = this.props;
 		const { fieldSearch, paginationIndexPage } = this.state;
 		let subCategory = {};
 
@@ -210,19 +196,12 @@ class Courses extends Component {
 
 						{ this.renderSubCategories(category) }
 
-						{/* TODO externaliser : */}
-						<div style={{textAlign: 'center'}} className={cx('search')}>
-							<Input
-								size="mini"
-								action={<Dropdown button basic floating options={this.getOptionsFormsSelect()} defaultValue="all" onChange={this.handleSearchSelect} />}
-								icon="search"
-								iconPosition="left"
-								placeholder="Search a course"
-								name="search"
-								value={fieldSearch.typing || ''}
-								onChange={this.handleSearchInput}
-							/>
-						</div>
+						<CourseSearch
+							handleSearchInput={this.handleSearchInput}
+							handleSearchSelect={this.handleSearchSelect}
+							fieldSearch={fieldSearch}
+							categories={categories}
+						/>
 						<br />
 
 						<CoursesList

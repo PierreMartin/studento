@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
-import { Button, Container, Header, Icon, Segment, Divider, Input, Dropdown, Message } from 'semantic-ui-react';
+import { Button, Container, Header, Icon, Segment, Divider, Message } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
+import CourseSearch from '../components/CourseSearch/CourseSearch';
 import classNames from 'classnames/bind';
 import styles from './css/home.scss';
 
@@ -46,21 +47,6 @@ class Home extends Component {
 			meta: [{ name: 'description', content: 'Studento' }],
 			link: []
 		};
-	}
-
-	getOptionsFormsSelect() {
-		const { categories } = this.props;
-
-		const arrCatList = [{ key: 'all', text: 'All', value: 'all' }];
-		for (let i = 0; i < categories.length; i++) {
-			arrCatList.push({
-				key: categories[i].key,
-				text: categories[i].name,
-				value: categories[i].key
-			});
-		}
-
-		return arrCatList;
 	}
 
 	handleSelectCategory = (clickedCategory, clickedIndex) => () => {
@@ -168,18 +154,12 @@ class Home extends Component {
 
 						{ category.lastClicked && category.lastClicked.length > 0 ? this.renderSubCategories(categories[category.clickedIndex]) : ''}
 
-						<div style={{textAlign: 'center'}} className={cx('search')}>
-							<Input
-								size="mini"
-								action={<Dropdown button basic floating options={this.getOptionsFormsSelect()} defaultValue="all" onChange={this.handleSearchSelect} />}
-								icon="search"
-								iconPosition="left"
-								placeholder="Search a course"
-								name="search"
-								value={fieldSearch.typing || ''}
-								onChange={this.handleSearchInput}
-							/>
-						</div>
+						<CourseSearch
+							handleSearchInput={this.handleSearchInput}
+							handleSearchSelect={this.handleSearchSelect}
+							fieldSearch={fieldSearch}
+							categories={categories}
+						/>
 						<br />
 
 						<CoursesList
