@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
-import { fetchCategoriesAction } from '../actions/category';
 import { Button, Container, Header, Icon, Segment, Divider, Input, Dropdown, Message } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
@@ -39,7 +38,6 @@ class Home extends Component {
 
 	componentDidMount() {
 		this.props.fetchCoursesByFieldAction({ keyReq: 'all', valueReq: 'all' }); // All courses
-		this.props.fetchCategoriesAction();
 	}
 
 	getMetaData() {
@@ -202,7 +200,6 @@ class Home extends Component {
 Home.propTypes = {
 	fetchCoursesByFieldAction: PropTypes.func,
 	fetchCoursesBySearchAction: PropTypes.func,
-	fetchCategoriesAction: PropTypes.func,
 	coursesPagesCount: PropTypes.number,
 
 	authentification: PropTypes.shape({
@@ -233,4 +230,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchCoursesByFieldAction, fetchCategoriesAction, fetchCoursesBySearchAction })(Home);
+export default connect(mapStateToProps, { fetchCoursesByFieldAction, fetchCoursesBySearchAction })(Home);

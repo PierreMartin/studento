@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link} from 'react-router';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
 import { fetchCategoryAction } from '../actions/category';
-import { Button, Container, Header, Segment, Divider, Input, Dropdown, Breadcrumb } from 'semantic-ui-react';
+import { Button, Container, Header, Segment, Input, Dropdown, Breadcrumb } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
 import classNames from 'classnames/bind';
@@ -15,8 +15,6 @@ const cx = classNames.bind(styles);
 class Courses extends Component {
 	constructor(props) {
 		super(props);
-		this.handleSelectCategory = this.handleSelectCategory.bind(this);
-		this.handleSelectSubCategory = this.handleSelectSubCategory.bind(this);
 		this.handleSearchInput = this.handleSearchInput.bind(this);
 		this.handleSearchSelect = this.handleSearchSelect.bind(this);
 		this.handlePaginationChange = this.handlePaginationChange.bind(this);
@@ -26,18 +24,12 @@ class Courses extends Component {
 			fieldSearch: {
 				select: 'all',
 				typing: ''
-			},
-			categoryAction: {
-				lastClicked: null,
-				clickedIndex: 0
-			},
-			subCategory: {
-				lastClicked: null
 			}
 		};
 	}
 
 	componentDidMount() {
+		// TODO mettre tout ca dans une function :
 		const { fetchCategoryAction, fetchCoursesByFieldAction } = this.props;
 		const category = (this.props && this.props.params && this.props.params.category) || '';
 		const subcategory = (this.props && this.props.params && this.props.params.subcategory) || '';
@@ -100,27 +92,6 @@ class Courses extends Component {
 		return arrCatList;
 	}
 
-	handleSelectCategory = (clickedCategory, clickedIndex) => () => {
-		const { fetchCoursesByFieldAction } = this.props;
-		this.setState({
-			categoryAction: { lastClicked: clickedCategory, clickedIndex},
-			paginationIndexPage: 1, // reset
-			fieldSearch: { typing: '', select: 'all' }, // reset
-			subCategory: { lastClicked: null } // reset
-		});
-		fetchCoursesByFieldAction({ keyReq: 'category', valueReq: clickedCategory });
-	}
-
-	handleSelectSubCategory = clickedSubCategory => () => {
-		const { fetchCoursesByFieldAction } = this.props;
-		this.setState({
-			subCategory: { lastClicked: clickedSubCategory },
-			paginationIndexPage: 1, // reset
-			fieldSearch: { typing: '', select: 'all' } // reset
-		});
-		fetchCoursesByFieldAction({ keyReq: 'subCategories', valueReq: clickedSubCategory });
-	}
-
 	handleSearchSelect = (e, { value }) => {
 		this.setState({ fieldSearch: { ...this.state.fieldSearch, select: value }, paginationIndexPage: 1 }, () => {
 			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
@@ -133,8 +104,6 @@ class Courses extends Component {
 		this.setState({
 			fieldSearch: { ...this.state.fieldSearch, typing: value },
 			paginationIndexPage: 1, // reset
-			categoryAction: { lastClicked: null }, // reset
-			subCategory: { lastClicked: null } // reset
 		}, () => {
 			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
 		});
@@ -142,7 +111,7 @@ class Courses extends Component {
 
 	handlePaginationChange = (e, { activePage }) => {
 		const { fetchCoursesByFieldAction, courses, fetchCoursesBySearchAction } = this.props;
-		const { categoryAction, subCategory, fieldSearch, paginationIndexPage } = this.state;
+		const { fieldSearch, paginationIndexPage } = this.state;
 		if (activePage === paginationIndexPage) return;
 
 		const directionIndex = activePage - paginationIndexPage;
@@ -150,18 +119,17 @@ class Courses extends Component {
 
 		this.setState({ paginationIndexPage: activePage });
 
-		if (categoryAction.lastClicked !== null) return fetchCoursesByFieldAction({ keyReq: 'category', valueReq: categoryAction.lastClicked, currentCourseId, directionIndex });
-		if (subCategory.lastClicked !== null) return fetchCoursesByFieldAction({ keyReq: 'subCategory', valueReq: subCategory.lastClicked, currentCourseId, directionIndex });
 		if (fieldSearch.typing !== '') return fetchCoursesBySearchAction({ ...fieldSearch, currentCourseId, directionIndex });
 
 		fetchCoursesByFieldAction({ keyReq: 'all', valueReq: 'all', currentCourseId, directionIndex });
 	}
 
 	renderSubCategories(categoryParam) {
-		const { subCategory } = this.state;
+		if (!categoryParam.subCategories) return;
 
+		const { params } = this.props;
 		const buttonsSubCategoriesNode = categoryParam.subCategories.map((subCat, index) => {
-			return (<Button key={index} basic size="tiny" active={subCategory.lastClicked === subCat.key} onClick={this.handleSelectSubCategory(subCat.key)}>{subCat.name}</Button>);
+			return (<Button key={index} basic size="tiny" as={Link} to={`/courses/${categoryParam.key}/${subCat.key}`} active={params.subcategory === subCat.key}>{subCat.name}</Button>);
 		});
 
 		return (
@@ -220,8 +188,8 @@ class Courses extends Component {
 	}
 
 	render() {
-		const { courses, coursesPagesCount, categories, category, params } = this.props;
-		const { categoryAction, fieldSearch, paginationIndexPage } = this.state;
+		const { courses, coursesPagesCount, category, params } = this.props;
+		const { fieldSearch, paginationIndexPage } = this.state;
 		let subCategory = {};
 
 		// Get subCategory from the params (if params !== 'list'):
@@ -244,14 +212,9 @@ class Courses extends Component {
 				<Segment vertical>
 					<Container text className={cx('courses-container')}>
 
-						<Divider horizontal className={cx('categories')}>
-							<Button.Group basic size="tiny">
-								{categories.map((cat, index) => (<Button key={index} active={categoryAction.lastClicked === cat.key} onClick={this.handleSelectCategory(cat.key, index)}>{cat.name}</Button>))}
-							</Button.Group>
-						</Divider>
+						{ this.renderSubCategories(category) }
 
-						{ categoryAction.lastClicked && categoryAction.lastClicked.length > 0 ? this.renderSubCategories(categories[categoryAction.clickedIndex]) : ''}
-
+						{/* TODO externaliser : */}
 						<div style={{textAlign: 'center'}} className={cx('search')}>
 							<Input
 								size="mini"
