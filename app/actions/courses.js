@@ -47,13 +47,15 @@ export function fetchCoursesByFieldAction(param) {
 }
 
 /************************ Get courses by search ***********************/
-export function fetchCoursesBySearchAction(fieldSearch) {
+export function fetchCoursesBySearchAction(fieldSearch, customQuery = false) {
 	return (dispatch) => {
 		if (typeof fieldSearch.typing === 'undefined' || !fieldSearch.select || fieldSearch.select === '') return;
 
+		const query = customQuery || { keyReq: 'all', valueReq: 'all' };
+
 		// When the user delete the search after typing in input:
 		if (fieldSearch.typing.trim() === '') {
-			return fetchCoursesByFieldRequest({ keyReq: 'all', valueReq: 'all' }, { dispatch })
+			return fetchCoursesByFieldRequest(query, { dispatch })
 				.then((resCoursesByField) => {
 					if (resCoursesByField.status === 200) return dispatch(fetchCoursesByIdSuccess(resCoursesByField.data));
 				})

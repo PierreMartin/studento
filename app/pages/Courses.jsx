@@ -17,13 +17,12 @@ class Courses extends Component {
 	constructor(props) {
 		super(props);
 		this.handleSearchInput = this.handleSearchInput.bind(this);
-		this.handleSearchSelect = this.handleSearchSelect.bind(this);
 		this.handlePaginationChange = this.handlePaginationChange.bind(this);
 
 		this.state = {
 			paginationIndexPage: 1,
 			fieldSearch: {
-				select: 'all',
+				select: this.props.params.category,
 				typing: ''
 			}
 		};
@@ -37,6 +36,7 @@ class Courses extends Component {
 		// Change route:
 		if (this.props.params.category !== prevProps.params.category || this.props.params.subcategory !== prevProps.params.subcategory) {
 			this.loadDatas();
+			this.setState({ fieldSearch: { select: this.props.params.category } });
 		}
 	}
 
@@ -72,12 +72,6 @@ class Courses extends Component {
 		}
 	}
 
-	handleSearchSelect = (e, { value }) => {
-		this.setState({ fieldSearch: { ...this.state.fieldSearch, select: value }, paginationIndexPage: 1 }, () => {
-			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
-		});
-	};
-
 	handleSearchInput = (e, { value }) => {
 		if (value === ' ' || value === '  ') return;
 
@@ -85,7 +79,21 @@ class Courses extends Component {
 			fieldSearch: { ...this.state.fieldSearch, typing: value },
 			paginationIndexPage: 1 // reset
 		}, () => {
-			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
+			const category = (this.props && this.props.params && this.props.params.category) || '';
+			const subcategory = (this.props && this.props.params && this.props.params.subcategory) || '';
+
+			let categoryType = 'subCategories';
+			let categoryKey = subcategory;
+
+			// If no subcategory:
+			if (subcategory === 'list') {
+				categoryType = 'category';
+				categoryKey = category;
+			}
+
+			const queryForGetAllCoursesByCategory = { keyReq: categoryType, valueReq: categoryKey };
+
+			this.props.fetchCoursesBySearchAction(this.state.fieldSearch, queryForGetAllCoursesByCategory);
 		});
 	};
 
@@ -170,7 +178,7 @@ class Courses extends Component {
 	}
 
 	render() {
-		const { courses, coursesPagesCount, categories, category, params } = this.props;
+		const { courses, coursesPagesCount, category, params } = this.props;
 		const { fieldSearch, paginationIndexPage } = this.state;
 		let subCategory = {};
 
@@ -198,9 +206,8 @@ class Courses extends Component {
 
 						<CourseSearch
 							handleSearchInput={this.handleSearchInput}
-							handleSearchSelect={this.handleSearchSelect}
 							fieldSearch={fieldSearch}
-							categories={categories}
+							from="courses"
 						/>
 						<br />
 
@@ -232,13 +239,6 @@ Courses.propTypes = {
 		title: PropTypes.string
 	})).isRequired,
 
-	categories: PropTypes.arrayOf(PropTypes.shape({
-		description: PropTypes.string,
-		name: PropTypes.string,
-		key: PropTypes.string,
-		subCategories: PropTypes.array
-	})),
-
 	category: PropTypes.shape({
 		description: PropTypes.string,
 		name: PropTypes.string,
@@ -252,7 +252,6 @@ const mapStateToProps = (state) => {
 	return {
 		courses: state.courses.all,
 		coursesPagesCount: state.courses.pagesCount,
-		categories: state.categories.all,
 		category: state.categories.one,
 		authentification: state.authentification
 	};

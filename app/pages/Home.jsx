@@ -159,6 +159,7 @@ class Home extends Component {
 							handleSearchSelect={this.handleSearchSelect}
 							fieldSearch={fieldSearch}
 							categories={categories}
+							from="home"
 						/>
 						<br />
 
