@@ -93,7 +93,7 @@ class NavigationMain extends Component {
 	renderDropdownCategories(categories) {
 		return (
 			<Dropdown item simple text="Categories" title="Categories">
-				<Dropdown.Menu>
+				<Dropdown.Menu style={{ marginTop: '0px' }}>
 					{ categories.map((cat, keyCat) => {
 						return (
 							<Dropdown.Item key={keyCat} name={`/courses/${cat.key}/list`} onClick={this.handleCategoriesItemClick}>

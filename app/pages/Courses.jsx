@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link} from 'react-router';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
 import { fetchCategoryAction } from '../actions/category';
-import { Button, Container, Header, Segment, Divider, Input, Dropdown } from 'semantic-ui-react';
+import { Button, Container, Header, Segment, Divider, Input, Dropdown, Breadcrumb } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
 import classNames from 'classnames/bind';
@@ -64,7 +65,7 @@ class Courses extends Component {
 			let categoryType = 'subCategories';
 			let categoryKey = subcategory;
 
-			// If no subcategory:
+			// If not subCategory:
 			if (subcategory === 'list') {
 				categoryType = 'category';
 				categoryKey = category;
@@ -170,16 +171,73 @@ class Courses extends Component {
 		);
 	}
 
+	renderBreadcrumb(category, subCategory, params) {
+		if (!category.key) return;
+
+		const itemsBreadCrumb = [{
+			key: 'home',
+			name: 'Home',
+			link: '/'
+		}, {
+			key: category.key,
+			name: category.name,
+			link: `/courses/${category.key}/list`
+		}];
+
+		// If clicked on subCategory:
+		if (!!subCategory.name) {
+			itemsBreadCrumb.push({
+				key: subCategory.key,
+				name: subCategory.name,
+				link: `/courses/${subCategory.key}/${subCategory.name}`
+			});
+		}
+
+		const itemsBreadCrumbNode = itemsBreadCrumb.map((itemMenu, key) => {
+			let isActive = false;
+
+			// If not clicked on subCategory:
+			if (params.subcategory === 'list') {
+				isActive = params.category === itemMenu.key;
+			} else {
+				isActive = params.subcategory === itemMenu.key;
+			}
+
+			return (
+				<span key={key}>
+					{ !isActive && <Breadcrumb.Section as={Link} to={itemMenu.link} active={isActive}>{itemMenu.name}</Breadcrumb.Section> }
+					{ isActive && <Breadcrumb.Section active={isActive}>{itemMenu.name}</Breadcrumb.Section> }
+					{ (key !== itemsBreadCrumb.length - 1) && <Breadcrumb.Divider icon="right angle" /> }
+				</span>
+			);
+		});
+
+		return (
+			<Breadcrumb>
+				{ itemsBreadCrumbNode }
+			</Breadcrumb>
+		);
+	}
+
 	render() {
-		const { courses, coursesPagesCount, categories, category } = this.props;
+		const { courses, coursesPagesCount, categories, category, params } = this.props;
 		const { categoryAction, fieldSearch, paginationIndexPage } = this.state;
-		const nameCategory = category.name || '';
+		let subCategory = {};
+
+		// Get subCategory from the params (if params !== 'list'):
+		for (let i = 0; i < (category.subCategories && category.subCategories.length); i++) {
+			if (category.subCategories[i].key === params.subcategory) {
+				subCategory = category.subCategories[i];
+				break;
+			}
+		}
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<Segment textAlign="center" vertical className={cx('home-citation-segment')}>
 					<Container>
-						<Header as="h2" content={nameCategory} className={cx('title')} />
+						{ this.renderBreadcrumb(category, subCategory, params) }
+						<Header as="h2" content={typeof subCategory.name !== 'undefined' ? subCategory.name : category.name} className={cx('title')} />
 					</Container>
 				</Segment>
 
