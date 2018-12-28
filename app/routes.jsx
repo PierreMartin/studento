@@ -45,6 +45,12 @@ export default (store) => {
 			return;
     }
 
+		// No redirection for the news courses:
+		if (nextState.params && nextState.params.action === 'create') {
+			callback();
+			return;
+		}
+
     const userMeId = userMe.data && userMe.data._id;
     const courseIdToFind = nextState.params && nextState.params.id;
 
