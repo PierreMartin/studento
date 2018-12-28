@@ -92,7 +92,7 @@ class NavigationMain extends Component {
 
 	renderDropdownCategories(categories) {
 		return (
-			<Dropdown item simple text="Categories" title="Categories">
+			<Dropdown item simple text="Categories" title="Categories" style={{ alignSelf: 'center' }}>
 				<Dropdown.Menu style={{ marginTop: '0px' }}>
 					{ categories.map((cat, keyCat) => {
 						return (
