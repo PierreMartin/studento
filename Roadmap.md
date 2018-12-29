@@ -124,3 +124,13 @@ moins urgent :
 - refacto les notifications + gerer toutes les erreurs
 - check si un username / email est deja utilisé
 - supprimer le fichier de l'avatar si update
+
+
+# TODO faire toutes les requetes comme ca:
+const query = [{ keyReq, valueReq }] || { keyReq, valueReq } || {};
+const querySearch = [{ keyReq, fieldSearchTyping }] || {};
+const queryPagination = { currentCourseId, directionIndex } || {};
+const queryOption = { sortBy: name, filter: toto } || {};
+
+this.props.fetchSomethingAction(query, queryPagination, queryOption);
+this.props.searchSomethingAction(querySearch, queryPagination, queryOption);

@@ -138,11 +138,8 @@ class Courses extends Component {
 	handleSortBy = (e, { name }) => {
 		this.setState({ activeItemSortBy: name });
 
-		// TODO refacto toutes les requetes comme ca:
-		// const query = [{ keyReq, valueReq }] || { keyReq, valueReq } || {};
-		// const queryPagination = { currentCourseId, directionIndex } || {};
-		// const queryOption = { sortBy: name, filter: toto } || {};
-		// this.props.fetchCoursesByFieldAction(query, queryPagination, queryOption);
+		// if (...) this.props.fetchCoursesByFieldAction({ keyReq, valueReq, sortBy, currentCourseId, directionIndex });
+		// if (...) this.props.fetchCoursesBySearchAction(fieldSearchTyping, { keyReq, valueReq, sortBy }, currentCourseId, directionIndex);
 	};
 
 	renderSubCategories(categoryParam) {
