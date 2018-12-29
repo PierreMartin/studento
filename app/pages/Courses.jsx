@@ -34,17 +34,39 @@ class Courses extends Component {
 		// Change route:
 		if (this.props.params.category !== prevProps.params.category || this.props.params.subcategory !== prevProps.params.subcategory) {
 			this.loadDatas();
-			this.setState({ paginationIndexPage: 1 });
+			this.setState({ paginationIndexPage: 1, fieldSearchTyping: '' });
 		}
 	}
 
 	getMetaData() {
-		const { categoryValue } = this.getCategoriesFromParamsForPayload();
+		const { category } = this.props;
+		const subCategory = this.getInfosSubCategory();
+		const currentCategoryString = typeof subCategory.name !== 'undefined' ? subCategory.name : category.name;
+
 		return {
-			title: categoryValue || '',
+			title: currentCategoryString,
 			meta: [{ name: 'description', content: 'Courses by categories' }],
 			link: []
 		};
+	}
+
+	/**
+	 * Get the subCategory info from the param and the category
+	 * return {object} object empty if no clicked on subCategory
+	 * */
+	getInfosSubCategory() {
+		const { category, params } = this.props;
+
+		let subCategory = {};
+		// Get subCategory from the params (if params !== 'list'):
+		for (let i = 0; i < (category.subCategories && category.subCategories.length); i++) {
+			if (category.subCategories[i].key === params.subcategory) {
+				subCategory = category.subCategories[i];
+				break;
+			}
+		}
+
+		return subCategory;
 	}
 
 	getCategoriesFromParamsForPayload() {
@@ -177,22 +199,15 @@ class Courses extends Component {
 	render() {
 		const { courses, coursesPagesCount, category, params } = this.props;
 		const { fieldSearchTyping, paginationIndexPage } = this.state;
-		let subCategory = {};
-
-		// Get subCategory from the params (if params !== 'list'):
-		for (let i = 0; i < (category.subCategories && category.subCategories.length); i++) {
-			if (category.subCategories[i].key === params.subcategory) {
-				subCategory = category.subCategories[i];
-				break;
-			}
-		}
+		const subCategory = this.getInfosSubCategory();
+		const currentCategoryString = typeof subCategory.name !== 'undefined' ? subCategory.name : category.name;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<Segment textAlign="center" vertical className={cx('header-container')}>
 					<Container>
 						{ this.renderBreadcrumb(category, subCategory, params) }
-						<Header as="h2" content={typeof subCategory.name !== 'undefined' ? subCategory.name : category.name} className={cx('title')} />
+						<Header as="h2" content={currentCategoryString} className={cx('title')} />
 					</Container>
 				</Segment>
 
