@@ -9,9 +9,10 @@ import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
 import CourseSearch from '../components/CourseSearch/CourseSearch';
 import classNames from 'classnames/bind';
-import styles from './css/home.scss';
+import stylesMain from '../css/main.scss';
+import stylesCourses from './css/courses.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind({...stylesMain, ...stylesCourses});
 
 class Courses extends Component {
 	constructor(props) {
@@ -202,7 +203,7 @@ class Courses extends Component {
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
-				<Segment textAlign="center" vertical className={cx('home-citation-segment')}>
+				<Segment textAlign="center" vertical className={cx('header-container')}>
 					<Container>
 						{ this.renderBreadcrumb(category, subCategory, params) }
 						<Header as="h2" content={typeof subCategory.name !== 'undefined' ? subCategory.name : category.name} className={cx('title')} />

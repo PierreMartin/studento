@@ -8,9 +8,10 @@ import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
 import CourseSearch from '../components/CourseSearch/CourseSearch';
 import classNames from 'classnames/bind';
-import styles from './css/home.scss';
+import stylesMain from '../css/main.scss';
+import stylesHome from './css/home.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind({...stylesMain, ...stylesHome});
 
 class Home extends Component {
 	constructor(props) {
