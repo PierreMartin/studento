@@ -34,40 +34,47 @@ class Courses extends Component {
 		// Change route:
 		if (this.props.params.category !== prevProps.params.category || this.props.params.subcategory !== prevProps.params.subcategory) {
 			this.loadDatas();
+			this.setState({ paginationIndexPage: 1 });
 		}
 	}
 
 	getMetaData() {
-		const { category } = this.props;
+		const { categoryValue } = this.getCategoriesFromParamsForPayload();
 		return {
-			title: category.name || '',
+			title: categoryValue || '',
 			meta: [{ name: 'description', content: 'Courses by categories' }],
 			link: []
 		};
 	}
 
-	loadDatas(currentCourseId = false, directionIndex = false) {
-		const { fetchCategoryAction, fetchCoursesByFieldAction } = this.props;
-
-		// TODO refacto ca:
-		const category = (this.props && this.props.params && this.props.params.category) || '';
-		const subcategory = (this.props && this.props.params && this.props.params.subcategory) || '';
+	getCategoriesFromParamsForPayload() {
+		const category = (this.props.params && this.props.params.category) || '';
+		const subcategory = (this.props.params && this.props.params.subcategory) || '';
 
 		let categoryType = 'subCategories';
-		let categoryKey = subcategory;
+		let categoryValue = subcategory;
 
 		// If no subcategory:
 		if (subcategory === 'list') {
 			categoryType = 'category';
-			categoryKey = category;
+			categoryValue = category;
 		}
+
+		return { categoryType, categoryValue };
+	}
+
+	loadDatas(currentCourseId = false, directionIndex = false) {
+		const { fetchCategoryAction, fetchCoursesByFieldAction } = this.props;
+		const { categoryType, categoryValue } = this.getCategoriesFromParamsForPayload();
 
 		// If fetch for pagination:
 		if (currentCourseId && directionIndex) {
-			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryKey, currentCourseId, directionIndex });
+			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryValue, currentCourseId, directionIndex });
 		} else {
+			const category = (this.props.params && this.props.params.category) || '';
+			const subcategory = (this.props.params && this.props.params.subcategory) || '';
 			fetchCategoryAction(category, subcategory);
-			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryKey });
+			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryValue });
 		}
 	}
 
@@ -78,20 +85,8 @@ class Courses extends Component {
 			fieldSearchTyping: value,
 			paginationIndexPage: 1 // reset
 		}, () => {
-			// TODO refacto ca:
-			const category = (this.props && this.props.params && this.props.params.category) || '';
-			const subcategory = (this.props && this.props.params && this.props.params.subcategory) || '';
-
-			let categoryType = 'subCategories';
-			let categoryKey = subcategory;
-
-			// If no subcategory:
-			if (subcategory === 'list') {
-				categoryType = 'category';
-				categoryKey = category;
-			}
-
-			this.props.fetchCoursesBySearchAction(this.state.fieldSearchTyping, { keyReq: categoryType, valueReq: categoryKey });
+			const { categoryType, categoryValue } = this.getCategoriesFromParamsForPayload();
+			this.props.fetchCoursesBySearchAction(this.state.fieldSearchTyping, { keyReq: categoryType, valueReq: categoryValue });
 		});
 	};
 
@@ -105,23 +100,14 @@ class Courses extends Component {
 
 		this.setState({ paginationIndexPage: activePage });
 
-		// TODO refacto ca:
-		const category = (this.props && this.props.params && this.props.params.category) || '';
-		const subcategory = (this.props && this.props.params && this.props.params.subcategory) || '';
-
-		let categoryType = 'subCategories';
-		let categoryKey = subcategory;
-
-		// If no subcategory:
-		if (subcategory === 'list') {
-			categoryType = 'category';
-			categoryKey = category;
+		// If pagination at search:
+		if (fieldSearchTyping !== '') {
+			const { categoryType, categoryValue } = this.getCategoriesFromParamsForPayload();
+			fetchCoursesBySearchAction(fieldSearchTyping, { keyReq: categoryType, valueReq: categoryValue }, currentCourseId, directionIndex);
+			return;
 		}
 
-		// If pagination at search:
-		if (fieldSearchTyping !== '') return fetchCoursesBySearchAction(fieldSearchTyping, { keyReq: categoryType, valueReq: categoryKey }, currentCourseId, directionIndex);
-
-		// If pagination normal:
+		// Else if pagination normal:
 		this.loadDatas(currentCourseId, directionIndex);
 	};
 
