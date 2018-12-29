@@ -23,10 +23,8 @@ class Home extends Component {
 
 		this.state = {
 			paginationIndexPage: 1,
-			fieldSearch: {
-				select: 'all',
-				typing: ''
-			},
+			fieldSearchTyping: '',
+			fieldSearchSelect: 'all',
 			category: {
 				lastClicked: null,
 				clickedIndex: 0
@@ -54,7 +52,8 @@ class Home extends Component {
 		this.setState({
 			category: { lastClicked: clickedCategory, clickedIndex},
 			paginationIndexPage: 1, // reset
-			fieldSearch: { typing: '', select: 'all' }, // reset
+			fieldSearchTyping: '', // reset
+			fieldSearchSelect: 'all', // reset
 			subCategory: { lastClicked: null } // reset
 		});
 		fetchCoursesByFieldAction({ keyReq: 'category', valueReq: clickedCategory });
@@ -65,14 +64,15 @@ class Home extends Component {
 		this.setState({
 			subCategory: { lastClicked: clickedSubCategory },
 			paginationIndexPage: 1, // reset
-			fieldSearch: { typing: '', select: 'all' } // reset
+			fieldSearchTyping: '', // reset
+			fieldSearchSelect: 'all' // reset
 		});
 		fetchCoursesByFieldAction({ keyReq: 'subCategories', valueReq: clickedSubCategory });
 	}
 
 	handleSearchSelect = (e, { value }) => {
-		this.setState({ fieldSearch: { ...this.state.fieldSearch, select: value }, paginationIndexPage: 1 }, () => {
-			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
+		this.setState({ fieldSearchSelect: value, paginationIndexPage: 1 }, () => {
+			this.props.fetchCoursesBySearchAction(this.state.fieldSearchTyping, { valueReq: this.state.fieldSearchSelect });
 		});
 	}
 
@@ -80,18 +80,18 @@ class Home extends Component {
 		if (value === ' ' || value === '  ') return;
 
 		this.setState({
-			fieldSearch: { ...this.state.fieldSearch, typing: value },
+			fieldSearchTyping: value,
 			paginationIndexPage: 1, // reset
 			category: { lastClicked: null }, // reset
 			subCategory: { lastClicked: null } // reset
 		}, () => {
-			this.props.fetchCoursesBySearchAction(this.state.fieldSearch);
+			this.props.fetchCoursesBySearchAction(this.state.fieldSearchTyping, { valueReq: this.state.fieldSearchSelect });
 		});
 	}
 
 	handlePaginationChange = (e, { activePage }) => {
 		const { fetchCoursesByFieldAction, courses, fetchCoursesBySearchAction } = this.props;
-		const { category, subCategory, fieldSearch, paginationIndexPage } = this.state;
+		const { category, subCategory, paginationIndexPage, fieldSearchTyping } = this.state;
 		if (activePage === paginationIndexPage) return;
 
 		const directionIndex = activePage - paginationIndexPage;
@@ -101,7 +101,7 @@ class Home extends Component {
 
 		if (category.lastClicked !== null) return fetchCoursesByFieldAction({ keyReq: 'category', valueReq: category.lastClicked, currentCourseId, directionIndex });
 		if (subCategory.lastClicked !== null) return fetchCoursesByFieldAction({ keyReq: 'subCategory', valueReq: subCategory.lastClicked, currentCourseId, directionIndex });
-		if (fieldSearch.typing !== '') return fetchCoursesBySearchAction({ ...fieldSearch, currentCourseId, directionIndex });
+		if (fieldSearchTyping !== '') return fetchCoursesBySearchAction(fieldSearchTyping, { valueReq: this.state.fieldSearchSelect }, currentCourseId, directionIndex);
 
 		fetchCoursesByFieldAction({ keyReq: 'all', valueReq: 'all', currentCourseId, directionIndex });
 	}
@@ -122,7 +122,7 @@ class Home extends Component {
 
   render() {
 		const { courses, coursesPagesCount, categories, authentification } = this.props;
-		const { category, fieldSearch, paginationIndexPage } = this.state;
+		const { category, fieldSearchTyping, paginationIndexPage } = this.state;
 		const styles = authentification.authenticated ? { marginTop: '110px' } : {};
 		const citationStr = '"Every scientist knows that thorough examinations and skepticism are the power of science. All theories and knowledge are tentative and science is slowly leading us to a better understanding of the truth. There is no certainty, only probability and statistical significance"';
 
@@ -157,7 +157,7 @@ class Home extends Component {
 						<CourseSearch
 							handleSearchInput={this.handleSearchInput}
 							handleSearchSelect={this.handleSearchSelect}
-							fieldSearch={fieldSearch}
+							fieldSearchTyping={fieldSearchTyping}
 							categories={categories}
 							from="home"
 						/>

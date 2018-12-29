@@ -11,10 +11,10 @@ export function api() {
 			url: '/api/getcourses',
 			data: param
 		}),
-		getCoursesBySearch: fieldSearch => localClient.request({
+		getCoursesBySearch: (typing, query, currentCourseId, directionIndex) => localClient.request({
 			method: 'POST',
 			url: '/api/getcoursesbysearch',
-			data: fieldSearch
+			data: { typing, ...query, currentCourseId, directionIndex }
 		}),
 		getCourseById: id => localClient.request({
 			method: 'GET',

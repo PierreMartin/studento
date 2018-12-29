@@ -95,7 +95,7 @@ export function allByField(req, res) {
  * POST /api/getcoursesbysearch
  */
 export function allBySearch(req, res) {
-	const { select, typing, currentCourseId, directionIndex } = req.body;
+	const { keyReq, valueReq, typing, currentCourseId, directionIndex } = req.body;
 
 	if (!typing) return;
 
@@ -107,7 +107,8 @@ export function allBySearch(req, res) {
 	};
 
 	// Add criteria if user selected a category at search:
-	if (select !== 'all') query.category = select;
+	if (typeof keyReq === 'undefined' && valueReq !== 'all') query.category = valueReq;
+	if (typeof keyReq !== 'undefined' && valueReq !== 'all') query[keyReq] = valueReq;
 
 	requestGetCoursesWithPagination(res, query, currentCourseId, directionIndex, 'search');
 }

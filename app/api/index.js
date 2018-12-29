@@ -16,8 +16,8 @@ export const fetchCoursesByFieldRequest = (param) => {
 };
 
 // All by search
-export const fetchCoursesBySearchRequest = (fieldSearch) => {
-	return api().getCoursesBySearch(fieldSearch)
+export const fetchCoursesBySearchRequest = (typing, query, currentCourseId, directionIndex) => {
+	return api().getCoursesBySearch(typing, query, currentCourseId, directionIndex)
 		.then((res) => {
 			return Promise.resolve(res);
 		})

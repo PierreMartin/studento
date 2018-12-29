@@ -21,10 +21,7 @@ class Courses extends Component {
 
 		this.state = {
 			paginationIndexPage: 1,
-			fieldSearch: {
-				select: this.props.params.category,
-				typing: ''
-			}
+			fieldSearchTyping: ''
 		};
 	}
 
@@ -36,7 +33,6 @@ class Courses extends Component {
 		// Change route:
 		if (this.props.params.category !== prevProps.params.category || this.props.params.subcategory !== prevProps.params.subcategory) {
 			this.loadDatas();
-			this.setState({ fieldSearch: { select: this.props.params.category } });
 		}
 	}
 
@@ -51,6 +47,8 @@ class Courses extends Component {
 
 	loadDatas(currentCourseId = false, directionIndex = false) {
 		const { fetchCategoryAction, fetchCoursesByFieldAction } = this.props;
+
+		// TODO refacto ca:
 		const category = (this.props && this.props.params && this.props.params.category) || '';
 		const subcategory = (this.props && this.props.params && this.props.params.subcategory) || '';
 
@@ -76,9 +74,10 @@ class Courses extends Component {
 		if (value === ' ' || value === '  ') return;
 
 		this.setState({
-			fieldSearch: { ...this.state.fieldSearch, typing: value },
+			fieldSearchTyping: value,
 			paginationIndexPage: 1 // reset
 		}, () => {
+			// TODO refacto ca:
 			const category = (this.props && this.props.params && this.props.params.category) || '';
 			const subcategory = (this.props && this.props.params && this.props.params.subcategory) || '';
 
@@ -91,15 +90,13 @@ class Courses extends Component {
 				categoryKey = category;
 			}
 
-			const queryForGetAllCoursesByCategory = { keyReq: categoryType, valueReq: categoryKey };
-
-			this.props.fetchCoursesBySearchAction(this.state.fieldSearch, queryForGetAllCoursesByCategory);
+			this.props.fetchCoursesBySearchAction(this.state.fieldSearchTyping, { keyReq: categoryType, valueReq: categoryKey });
 		});
 	};
 
 	handlePaginationChange = (e, { activePage }) => {
 		const { courses, fetchCoursesBySearchAction } = this.props;
-		const { fieldSearch, paginationIndexPage } = this.state;
+		const { fieldSearchTyping, paginationIndexPage } = this.state;
 		if (activePage === paginationIndexPage) return;
 
 		const directionIndex = activePage - paginationIndexPage;
@@ -107,8 +104,21 @@ class Courses extends Component {
 
 		this.setState({ paginationIndexPage: activePage });
 
+		// TODO refacto ca:
+		const category = (this.props && this.props.params && this.props.params.category) || '';
+		const subcategory = (this.props && this.props.params && this.props.params.subcategory) || '';
+
+		let categoryType = 'subCategories';
+		let categoryKey = subcategory;
+
+		// If no subcategory:
+		if (subcategory === 'list') {
+			categoryType = 'category';
+			categoryKey = category;
+		}
+
 		// If pagination at search:
-		if (fieldSearch.typing !== '') return fetchCoursesBySearchAction({ ...fieldSearch, currentCourseId, directionIndex });
+		if (fieldSearchTyping !== '') return fetchCoursesBySearchAction(fieldSearchTyping, { keyReq: categoryType, valueReq: categoryKey }, currentCourseId, directionIndex);
 
 		// If pagination normal:
 		this.loadDatas(currentCourseId, directionIndex);
@@ -179,7 +189,7 @@ class Courses extends Component {
 
 	render() {
 		const { courses, coursesPagesCount, category, params } = this.props;
-		const { fieldSearch, paginationIndexPage } = this.state;
+		const { fieldSearchTyping, paginationIndexPage } = this.state;
 		let subCategory = {};
 
 		// Get subCategory from the params (if params !== 'list'):
@@ -206,7 +216,7 @@ class Courses extends Component {
 
 						<CourseSearch
 							handleSearchInput={this.handleSearchInput}
-							fieldSearch={fieldSearch}
+							fieldSearchTyping={fieldSearchTyping}
 							from="courses"
 						/>
 						<br />

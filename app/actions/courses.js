@@ -47,15 +47,16 @@ export function fetchCoursesByFieldAction(param) {
 }
 
 /************************ Get courses by search ***********************/
-export function fetchCoursesBySearchAction(fieldSearch, customQuery = false) {
+export function fetchCoursesBySearchAction(typing, query, currentCourseId, directionIndex) {
 	return (dispatch) => {
-		if (typeof fieldSearch.typing === 'undefined' || !fieldSearch.select || fieldSearch.select === '') return;
-
-		const query = customQuery || { keyReq: 'all', valueReq: 'all' };
+		if (typeof typing === 'undefined') return;
 
 		// When the user delete the search after typing in input:
-		if (fieldSearch.typing.trim() === '') {
-			return fetchCoursesByFieldRequest(query, { dispatch })
+		if (typing.trim() === '') {
+			const noKeyReq = typeof query.keyReq === 'undefined'; // keyReq always undefined from home page
+			const customQuery = noKeyReq ? { keyReq: 'all', valueReq: 'all' } : query;
+
+			return fetchCoursesByFieldRequest(customQuery, { dispatch })
 				.then((resCoursesByField) => {
 					if (resCoursesByField.status === 200) return dispatch(fetchCoursesByIdSuccess(resCoursesByField.data));
 				})
@@ -64,7 +65,7 @@ export function fetchCoursesBySearchAction(fieldSearch, customQuery = false) {
 			});
 		}
 
-		fetchCoursesBySearchRequest(fieldSearch)
+		fetchCoursesBySearchRequest(typing, query, currentCourseId, directionIndex)
 			.then((res) => {
 				if (res.status === 200) return dispatch(fetchCoursesByIdSuccess(res.data));
 			})

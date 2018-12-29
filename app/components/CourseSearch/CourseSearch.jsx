@@ -19,7 +19,7 @@ const getOptionsFormsSelect = (categories) => {
 	return arrCatList;
 };
 
-const CourseSearch = ({ handleSearchInput, handleSearchSelect, fieldSearch, categories, from }) => {
+const CourseSearch = ({ handleSearchInput, handleSearchSelect, fieldSearchTyping, categories, from }) => {
 	let option = null;
 	if (from === 'home') {
 		option = <Dropdown button basic floating options={getOptionsFormsSelect(categories)} defaultValue="all" onChange={handleSearchSelect} />;
@@ -34,7 +34,7 @@ const CourseSearch = ({ handleSearchInput, handleSearchSelect, fieldSearch, cate
 				iconPosition="left"
 				placeholder="Search a course"
 				name="search"
-				value={fieldSearch.typing || ''}
+				value={fieldSearchTyping || ''}
 				onChange={handleSearchInput}
 			/>
 		</div>
@@ -44,7 +44,7 @@ const CourseSearch = ({ handleSearchInput, handleSearchSelect, fieldSearch, cate
 CourseSearch.propTypes = {
 	handleSearchInput: PropTypes.func,
 	handleSearchSelect: PropTypes.func,
-	fieldSearch: PropTypes.object,
+	fieldSearchTyping: PropTypes.string,
 	from: PropTypes.string,
 
 	categories: PropTypes.arrayOf(PropTypes.shape({
