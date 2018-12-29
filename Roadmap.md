@@ -101,9 +101,10 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
+- afficher nombre d'items par request
 
 - Améliorer perfs codeMIrror
-- Améliorer design + HomePage
+- Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 
 moins urgent :

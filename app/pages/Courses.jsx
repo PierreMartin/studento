@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link} from 'react-router';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
 import { fetchCategoryAction } from '../actions/category';
-import { Button, Container, Header, Segment, Breadcrumb } from 'semantic-ui-react';
+import { Button, Container, Header, Segment, Breadcrumb, Menu } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
 import CourseSearch from '../components/CourseSearch/CourseSearch';
@@ -19,10 +19,12 @@ class Courses extends Component {
 		super(props);
 		this.handleSearchInput = this.handleSearchInput.bind(this);
 		this.handlePaginationChange = this.handlePaginationChange.bind(this);
+		this.handleSortBy = this.handleSortBy.bind(this);
 
 		this.state = {
 			paginationIndexPage: 1,
-			fieldSearchTyping: ''
+			fieldSearchTyping: '',
+			activeItemSortBy: 'created_at'
 		};
 	}
 
@@ -44,7 +46,7 @@ class Courses extends Component {
 		const currentCategoryString = typeof subCategory.name !== 'undefined' ? subCategory.name : category.name;
 
 		return {
-			title: currentCategoryString,
+			title: currentCategoryString || '',
 			meta: [{ name: 'description', content: 'Courses by categories' }],
 			link: []
 		};
@@ -133,6 +135,16 @@ class Courses extends Component {
 		this.loadDatas(currentCourseId, directionIndex);
 	};
 
+	handleSortBy = (e, { name }) => {
+		this.setState({ activeItemSortBy: name });
+
+		// TODO refacto toutes les requetes comme ca:
+		// const query = [{ keyReq, valueReq }] || { keyReq, valueReq } || {};
+		// const queryPagination = { currentCourseId, directionIndex } || {};
+		// const queryOption = { sortBy: name, filter: toto } || {};
+		// this.props.fetchCoursesByFieldAction(query, queryPagination, queryOption);
+	};
+
 	renderSubCategories(categoryParam) {
 		if (!categoryParam.subCategories) return;
 
@@ -198,7 +210,7 @@ class Courses extends Component {
 
 	render() {
 		const { courses, coursesPagesCount, category, params } = this.props;
-		const { fieldSearchTyping, paginationIndexPage } = this.state;
+		const { fieldSearchTyping, paginationIndexPage, activeItemSortBy } = this.state;
 		const subCategory = this.getInfosSubCategory();
 		const currentCategoryString = typeof subCategory.name !== 'undefined' ? subCategory.name : category.name;
 
@@ -222,6 +234,33 @@ class Courses extends Component {
 							from="courses"
 						/>
 						<br />
+
+						<Menu pointing secondary>
+							<Menu.Item
+								name="created_at"
+								content="Date"
+								active={activeItemSortBy === 'created_at'}
+								onClick={this.handleSortBy}
+							/>
+							<Menu.Item
+								name="stars.average"
+								content="Best average"
+								active={activeItemSortBy === 'stars.average'}
+								onClick={this.handleSortBy}
+							/>
+							<Menu.Item
+								name="stars.numberOfTimeVoted"
+								content="Most voted"
+								active={activeItemSortBy === 'stars.numberOfTimeVoted'}
+								onClick={this.handleSortBy}
+							/>
+							<Menu.Item
+								name="uId"
+								content="User"
+								active={activeItemSortBy === 'uId'}
+								onClick={this.handleSortBy}
+							/>
+						</Menu>
 
 						<CoursesList
 							courses={courses}
