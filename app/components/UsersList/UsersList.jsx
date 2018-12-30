@@ -63,7 +63,7 @@ const UsersList = ({ users, usersPagesCount, handlePaginationChange, paginationI
 				{ renderUsersList(users) }
 			</div>
 
-			{ usersPagesCount > 0 && renderPagination(handlePaginationChange, usersPagesCount, paginationIndexPage) }
+			{ usersPagesCount > 1 && renderPagination(handlePaginationChange, usersPagesCount, paginationIndexPage) }
 		</div>
 	);
 };

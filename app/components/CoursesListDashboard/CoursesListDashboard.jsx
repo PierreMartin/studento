@@ -186,7 +186,7 @@ class CoursesListDashboard extends Component {
 										<Button basic color="grey" size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown course" />
 									</Popup>
 
-									{ coursesPagesCount > 0 && this.renderPagination(coursesPagesCount, paginationEditor) }
+									{ coursesPagesCount > 1 && this.renderPagination(coursesPagesCount, paginationEditor) }
 								</Table.HeaderCell>
 							</Table.Row>
 						</Table.Footer>

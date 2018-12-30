@@ -70,7 +70,7 @@ const CoursesList = ({ courses, coursesPagesCount, paginationIndexPage, handlePa
 				{ renderCoursesList(courses) }
 			</div>
 
-			{coursesPagesCount > 0 && renderPagination(handlePaginationChange, coursesPagesCount, paginationIndexPage)}
+			{coursesPagesCount > 1 && renderPagination(handlePaginationChange, coursesPagesCount, paginationIndexPage)}
 
 		</div>
 	);
