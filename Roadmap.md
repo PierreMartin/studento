@@ -102,8 +102,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- afficher nombre d'items par request
-
 - Améliorer perfs codeMIrror
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies

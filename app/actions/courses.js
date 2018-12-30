@@ -21,6 +21,7 @@ export function fetchCoursesByIdSuccess(res) {
 		type: types.GET_COURSES_SUCCESS,
 		messageSuccess: res.message,
 		courses: res.courses,
+		coursesCount: res.coursesCount,
 		pagesCount: res.pagesCount
 	};
 }

@@ -213,10 +213,11 @@ class Courses extends Component {
 	}
 
 	render() {
-		const { courses, coursesPagesCount, category, params } = this.props;
+		const { courses, coursesCount, pagesCount, category, params } = this.props;
 		const { fieldSearchTyping, paginationIndexPage, sortByField } = this.state;
 		const subCategory = this.getInfosSubCategory();
 		const currentCategoryString = typeof subCategory.name !== 'undefined' ? subCategory.name : category.name;
+		const results = coursesCount > 1 ? `${coursesCount} results` : `${coursesCount} result`;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -238,6 +239,8 @@ class Courses extends Component {
 							from="courses"
 						/>
 						<br />
+
+						<Header sub>{ results }</Header>
 
 						<Menu pointing secondary>
 							<Menu.Item
@@ -268,7 +271,7 @@ class Courses extends Component {
 
 						<CoursesList
 							courses={courses}
-							coursesPagesCount={coursesPagesCount}
+							coursesPagesCount={pagesCount}
 							handlePaginationChange={this.handlePaginationChange}
 							paginationIndexPage={paginationIndexPage}
 						/>
@@ -285,7 +288,8 @@ Courses.propTypes = {
 	fetchCoursesByFieldAction: PropTypes.func,
 	fetchCoursesBySearchAction: PropTypes.func,
 	fetchCategoryAction: PropTypes.func,
-	coursesPagesCount: PropTypes.number,
+	coursesCount: PropTypes.number,
+	pagesCount: PropTypes.number,
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
@@ -306,7 +310,8 @@ Courses.propTypes = {
 const mapStateToProps = (state) => {
 	return {
 		courses: state.courses.all,
-		coursesPagesCount: state.courses.pagesCount,
+		coursesCount: state.courses.coursesCount,
+		pagesCount: state.courses.pagesCount,
 		category: state.categories.one,
 		authentification: state.authentification
 	};

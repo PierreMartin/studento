@@ -103,6 +103,18 @@ const addOrEditFailure = (state = '', action) => {
 	}
 };
 
+const coursesCount = (state = 0, action) => {
+	switch (action.type) {
+		case types.GET_COURSES_SUCCESS:
+			if (action.coursesCount >= 0) return action.coursesCount;
+			return state;
+		case types.GET_COURSES_FAILURE:
+			return 0;
+		default:
+			return state;
+	}
+};
+
 const pagesCount = (state = 0, action) => {
 	switch (action.type) {
 		case types.GET_COURSES_SUCCESS:
@@ -143,6 +155,7 @@ const coursesReducer = combineReducers({
 	one,
 	addOrEditMissingField,
 	addOrEditFailure,
+	coursesCount,
 	pagesCount,
 	paginationEditor,
 	addCommentMissingField
