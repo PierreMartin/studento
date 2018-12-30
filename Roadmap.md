@@ -18,7 +18,7 @@ $> use studento
 $> show collections
 
 db.courses.find()
-db.courses.find({"text": "test 1"} , {_id:0}) 
+db.courses.find({ category: 'technology' }, { _id:0, title: 1 } ).sort({ 'stars.average': 1 }).pretty()
 
 db.users.remove({})
 db.users.update({}, {$unset: {avatarsSrc: 1}}, false, true)
@@ -108,6 +108,8 @@ $ ./scripts/generate_menu.sh
 - Resolve vulnerabilities in dependencies
 
 moins urgent :
+- Deploiment sur OVH
+- Auth facebook google...
 - courseToolbar : Add to fav - download to PDF
 - comments -> render: styles (gras, bold, emoji, ...) + code editor
 - comments -> send notification with socket.io to author of course (Fetch all my courses + where commentedBy.length > 0)

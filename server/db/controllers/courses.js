@@ -4,12 +4,12 @@ import User from '../models/user';
 const numberItemPerPage = 12;
 
 
-const requestGetCoursesWithPagination = (res, query, currentCourseId, directionIndex, typeReq) => {
+const requestGetCoursesWithPagination = (res, query, currentCourseId, directionIndex, sortByField = 'created_at', typeReq) => {
 	// 1st page:
 	if (typeof currentCourseId === 'undefined') {
 		Course.find(query)
+			.sort({ [sortByField]: -1 })
 			.limit(numberItemPerPage)
-			.sort({ _id: 1 })
 			.populate('uId', '_id username avatarMainSrc.avatar28')
 			.populate('category_info', 'name description picto')
 			.exec((err, courses) => {
@@ -30,10 +30,10 @@ const requestGetCoursesWithPagination = (res, query, currentCourseId, directionI
 			});
 	} else if (directionIndex >= 0) {
 		// Go to page >
-		Course.find({ ...query, _id: {$gte: currentCourseId }})
+		Course.find(query)
+			.sort({ [sortByField]: -1 })
 			.skip(directionIndex * numberItemPerPage)
 			.limit(numberItemPerPage)
-			.sort({ _id: 1 })
 			.populate('uId', '_id username avatarMainSrc.avatar28')
 			.populate('category_info', 'name description picto')
 			.exec((err, courses) => {
@@ -54,10 +54,10 @@ const requestGetCoursesWithPagination = (res, query, currentCourseId, directionI
 			});
 	} else {
 		// Go to page <
-		Course.find({ ...query, _id: {$lt: currentCourseId }})
+		Course.find(query)
+			.sort({ [sortByField]: -1 })
 			.skip((Math.abs(directionIndex) - 1) * numberItemPerPage)
 			.limit(numberItemPerPage)
-			.sort({ _id: -1 })
 			.populate('uId', '_id username avatarMainSrc.avatar28')
 			.populate('category_info', 'name description picto')
 			.exec((err, courses) => {
@@ -73,7 +73,7 @@ const requestGetCoursesWithPagination = (res, query, currentCourseId, directionI
 					}
 
 					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
-					return res.status(200).json({ message: `courses by ${typeReq} fetched <`, courses: courses.reverse(), pagesCount });
+					return res.status(200).json({ message: `courses by ${typeReq} fetched <`, courses, pagesCount });
 				});
 			});
 	}
@@ -83,19 +83,19 @@ const requestGetCoursesWithPagination = (res, query, currentCourseId, directionI
  * POST /api/getcourses
  */
 export function allByField(req, res) {
-	const { keyReq, valueReq, currentCourseId, directionIndex } = req.body;
+	const { keyReq, valueReq, currentCourseId, directionIndex, sortByField } = req.body;
 
 	let query = {};
 	if (keyReq !== 'all' && valueReq !== 'all') query = { [keyReq]: valueReq };
 
-	requestGetCoursesWithPagination(res, query, currentCourseId, directionIndex, 'field');
+	requestGetCoursesWithPagination(res, query, currentCourseId, directionIndex, sortByField, 'field');
 }
 
 /**
  * POST /api/getcoursesbysearch
  */
 export function allBySearch(req, res) {
-	const { keyReq, valueReq, typing, currentCourseId, directionIndex } = req.body;
+	const { keyReq, valueReq, typing, currentCourseId, directionIndex, sortByField } = req.body;
 
 	if (!typing) return;
 
@@ -110,7 +110,7 @@ export function allBySearch(req, res) {
 	if (typeof keyReq === 'undefined' && valueReq !== 'all') query.category = valueReq;
 	if (typeof keyReq !== 'undefined' && valueReq !== 'all') query[keyReq] = valueReq;
 
-	requestGetCoursesWithPagination(res, query, currentCourseId, directionIndex, 'search');
+	requestGetCoursesWithPagination(res, query, currentCourseId, directionIndex, sortByField, 'search');
 }
 
 /**

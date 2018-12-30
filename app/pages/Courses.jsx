@@ -24,7 +24,7 @@ class Courses extends Component {
 		this.state = {
 			paginationIndexPage: 1,
 			fieldSearchTyping: '',
-			activeItemSortBy: 'created_at'
+			sortByField: 'created_at'
 		};
 	}
 
@@ -89,16 +89,17 @@ class Courses extends Component {
 
 	loadDatas(currentCourseId = false, directionIndex = false) {
 		const { fetchCategoryAction, fetchCoursesByFieldAction } = this.props;
+		const { sortByField } = this.state;
 		const { categoryType, categoryValue } = this.getCategoriesFromParamsForPayload();
 
 		// If fetch for pagination:
 		if (currentCourseId && directionIndex) {
-			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryValue, currentCourseId, directionIndex });
+			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryValue, currentCourseId, directionIndex, sortByField });
 		} else {
 			const category = (this.props.params && this.props.params.category) || '';
 			const subcategory = (this.props.params && this.props.params.subcategory) || '';
 			fetchCategoryAction(category, subcategory);
-			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryValue });
+			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryValue, sortByField });
 		}
 	}
 
@@ -110,13 +111,13 @@ class Courses extends Component {
 			paginationIndexPage: 1 // reset
 		}, () => {
 			const { categoryType, categoryValue } = this.getCategoriesFromParamsForPayload();
-			this.props.fetchCoursesBySearchAction(this.state.fieldSearchTyping, { keyReq: categoryType, valueReq: categoryValue });
+			this.props.fetchCoursesBySearchAction(this.state.fieldSearchTyping, { keyReq: categoryType, valueReq: categoryValue, sortByField: this.state.sortByField });
 		});
 	};
 
 	handlePaginationChange = (e, { activePage }) => {
 		const { courses, fetchCoursesBySearchAction } = this.props;
-		const { fieldSearchTyping, paginationIndexPage } = this.state;
+		const { fieldSearchTyping, paginationIndexPage, sortByField } = this.state;
 		if (activePage === paginationIndexPage) return;
 
 		const directionIndex = activePage - paginationIndexPage;
@@ -127,7 +128,7 @@ class Courses extends Component {
 		// If pagination at search:
 		if (fieldSearchTyping !== '') {
 			const { categoryType, categoryValue } = this.getCategoriesFromParamsForPayload();
-			fetchCoursesBySearchAction(fieldSearchTyping, { keyReq: categoryType, valueReq: categoryValue }, currentCourseId, directionIndex);
+			fetchCoursesBySearchAction(fieldSearchTyping, { keyReq: categoryType, valueReq: categoryValue, sortByField }, currentCourseId, directionIndex);
 			return;
 		}
 
@@ -136,10 +137,19 @@ class Courses extends Component {
 	};
 
 	handleSortBy = (e, { name }) => {
-		this.setState({ activeItemSortBy: name });
+		const { fetchCoursesByFieldAction, fetchCoursesBySearchAction } = this.props;
+		const { fieldSearchTyping } = this.state;
+		const { categoryType, categoryValue } = this.getCategoriesFromParamsForPayload();
 
-		// if (...) this.props.fetchCoursesByFieldAction({ keyReq, valueReq, sortBy, currentCourseId, directionIndex });
-		// if (...) this.props.fetchCoursesBySearchAction(fieldSearchTyping, { keyReq, valueReq, sortBy }, currentCourseId, directionIndex);
+		this.setState({ sortByField: name, paginationIndexPage: 1 });
+
+		// If search query:
+		if (fieldSearchTyping !== '') {
+			fetchCoursesBySearchAction(fieldSearchTyping, { keyReq: categoryType, valueReq: categoryValue, sortByField: name });
+		} else {
+			// Else if normal query:
+			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryValue, sortByField: name });
+		}
 	};
 
 	renderSubCategories(categoryParam) {
@@ -207,7 +217,7 @@ class Courses extends Component {
 
 	render() {
 		const { courses, coursesPagesCount, category, params } = this.props;
-		const { fieldSearchTyping, paginationIndexPage, activeItemSortBy } = this.state;
+		const { fieldSearchTyping, paginationIndexPage, sortByField } = this.state;
 		const subCategory = this.getInfosSubCategory();
 		const currentCategoryString = typeof subCategory.name !== 'undefined' ? subCategory.name : category.name;
 
@@ -235,26 +245,26 @@ class Courses extends Component {
 						<Menu pointing secondary>
 							<Menu.Item
 								name="created_at"
-								content="Date"
-								active={activeItemSortBy === 'created_at'}
+								content="New"
+								active={sortByField === 'created_at'}
 								onClick={this.handleSortBy}
 							/>
 							<Menu.Item
 								name="stars.average"
 								content="Best average"
-								active={activeItemSortBy === 'stars.average'}
+								active={sortByField === 'stars.average'}
 								onClick={this.handleSortBy}
 							/>
 							<Menu.Item
 								name="stars.numberOfTimeVoted"
 								content="Most voted"
-								active={activeItemSortBy === 'stars.numberOfTimeVoted'}
+								active={sortByField === 'stars.numberOfTimeVoted'}
 								onClick={this.handleSortBy}
 							/>
 							<Menu.Item
 								name="uId"
 								content="User"
-								active={activeItemSortBy === 'uId'}
+								active={sortByField === 'uId'}
 								onClick={this.handleSortBy}
 							/>
 						</Menu>
