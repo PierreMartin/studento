@@ -102,12 +102,13 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- Améliorer perfs codeMIrror
+- remonter en haut au change page
+- Deploiment sur OVH
+- Améliorer perfs codeMIrror + auto scroll + css sur la hauteur de l'editeur
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 
 moins urgent :
-- Deploiment sur OVH
 - Auth facebook google...
 - courseToolbar : Add to fav - download to PDF
 - comments -> render: styles (gras, bold, emoji, ...) + code editor
