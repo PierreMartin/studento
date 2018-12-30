@@ -36,9 +36,8 @@ class CoursesListDashboard extends Component {
 			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
 		} else if (paginationEditor.lastActivePage > 1) {
 			// If lastActivePage > 1st page:
-			const directionIndex = paginationEditor.lastActivePage - 1;
-			const currentCourseId = paginationEditor.lastCourseId;
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
+			const activePage = paginationEditor.lastActivePage;
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
 		}
 	}
 
@@ -67,8 +66,7 @@ class CoursesListDashboard extends Component {
 
 				// If no more course on (page > 1) : goto 1st page
 				if ((courses.length === 1 || !courses) && paginationEditor.lastActivePage > 1) {
-					const currentCourseId = courses[0] && courses[0]._id;
-					setPaginationCoursesEditorAction(1, currentCourseId);
+					setPaginationCoursesEditorAction(1);
 					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
 				}
 			});
@@ -96,16 +94,13 @@ class CoursesListDashboard extends Component {
 	};
 
 	handlePaginationChange = (e, { activePage }) => {
-		const { fetchCoursesByFieldAction, paginationEditor, setPaginationCoursesEditorAction, courses, userMe } = this.props;
+		const { fetchCoursesByFieldAction, paginationEditor, setPaginationCoursesEditorAction, userMe } = this.props;
 		const lastActivePage = paginationEditor.lastActivePage;
 
 		if (activePage === lastActivePage) return;
 
-		const currentCourseId = courses[0] && courses[0]._id;
-		const directionIndex = activePage - lastActivePage;
-
-		setPaginationCoursesEditorAction(activePage, currentCourseId);
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
+		setPaginationCoursesEditorAction(activePage);
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
 	};
 
 	renderCoursesList(courses) {
@@ -225,8 +220,7 @@ CoursesListDashboard.propTypes = {
 	coursesPagesCount: PropTypes.number,
 
 	paginationEditor: PropTypes.shape({
-		lastActivePage: PropTypes.number,
-		lastCourseId: PropTypes.string
+		lastActivePage: PropTypes.number
 	}),
 
 	userMe: PropTypes.shape({

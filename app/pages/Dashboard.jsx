@@ -50,8 +50,7 @@ Dashboard.propTypes = {
 	coursesPagesCount: PropTypes.number,
 
 	paginationEditor: PropTypes.shape({
-		lastActivePage: PropTypes.number,
-		lastCourseId: PropTypes.string
+		lastActivePage: PropTypes.number
 	}),
 
 	courses: PropTypes.arrayOf(PropTypes.shape({

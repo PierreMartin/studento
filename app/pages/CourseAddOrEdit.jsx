@@ -243,11 +243,10 @@ class CourseAddOrEdit extends Component {
 			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
 				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 				if (courses.length % 12 === 0) { // 12 => numberItemPerPage setted in controller
-					const currentCourseId = courses[0] && courses[0]._id;
-					const directionIndex = (indexPagination + 1) - indexPagination;
+					const activePage = indexPagination + 1;
 
-					setPaginationCoursesEditorAction(indexPagination + 1, currentCourseId);
-					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
+					setPaginationCoursesEditorAction(activePage);
+					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
 				}
 			});
 		}
@@ -331,8 +330,7 @@ CourseAddOrEdit.propTypes = {
 	}),
 
 	paginationEditor: PropTypes.shape({
-		lastActivePage: PropTypes.number,
-		lastCourseId: PropTypes.string
+		lastActivePage: PropTypes.number
 	}),
 
 	categories: PropTypes.arrayOf(PropTypes.shape({

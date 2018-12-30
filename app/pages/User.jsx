@@ -44,16 +44,13 @@ class User extends Component {
 	}
 
 	handlePaginationChange = (e, { activePage }) => {
-		const { fetchCoursesByFieldAction, courses, userMe } = this.props;
+		const { fetchCoursesByFieldAction, userMe } = this.props;
 		const { paginationIndexPage } = this.state;
 		if (activePage === paginationIndexPage) return;
 
-		const directionIndex = activePage - paginationIndexPage;
-		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
-
 		this.setState({ paginationIndexPage: activePage });
 
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, currentCourseId, directionIndex });
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
 	}
 
 

@@ -3,10 +3,10 @@ import User from '../models/user';
 
 const numberItemPerPage = 12;
 
-
-const requestGetCoursesWithPagination = (res, query, currentCourseId, directionIndex, sortByField = 'created_at', typeReq) => {
+// Pagination by skip - no the best for perfs but works with sort by
+const requestGetCoursesWithPagination = (res, query, activePage, sortByField = 'created_at', typeReq) => {
 	// 1st page:
-	if (typeof currentCourseId === 'undefined') {
+	if (typeof activePage === 'undefined' || activePage === 1) {
 		Course.find(query)
 			.sort({ [sortByField]: -1 })
 			.limit(numberItemPerPage)
@@ -25,21 +25,20 @@ const requestGetCoursesWithPagination = (res, query, currentCourseId, directionI
 					}
 
 					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
-					return res.status(200).json({ message: `courses by ${typeReq} fetched`, courses, pagesCount });
+					return res.status(200).json({ message: `courses by ${typeReq} fetched`, courses, coursesCount, pagesCount });
 				});
 			});
-	} else if (directionIndex >= 0) {
-		// Go to page >
+	} else if (activePage > 1) {
 		Course.find(query)
 			.sort({ [sortByField]: -1 })
-			.skip(directionIndex * numberItemPerPage)
+			.skip((activePage - 1) * numberItemPerPage)
 			.limit(numberItemPerPage)
 			.populate('uId', '_id username avatarMainSrc.avatar28')
 			.populate('category_info', 'name description picto')
 			.exec((err, courses) => {
 				if (err) {
 					console.error(err);
-					return res.status(500).json({ message: `A error happen at the fetching courses by ${typeReq} >>`, err });
+					return res.status(500).json({ message: `A error happen at the fetching courses by ${typeReq} >><<`, err });
 				}
 
 				Course.count(query).exec((err, coursesCount) => {
@@ -49,31 +48,7 @@ const requestGetCoursesWithPagination = (res, query, currentCourseId, directionI
 					}
 
 					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
-					return res.status(200).json({ message: `courses by ${typeReq} fetched >`, courses, pagesCount });
-				});
-			});
-	} else {
-		// Go to page <
-		Course.find(query)
-			.sort({ [sortByField]: -1 })
-			.skip((Math.abs(directionIndex) - 1) * numberItemPerPage)
-			.limit(numberItemPerPage)
-			.populate('uId', '_id username avatarMainSrc.avatar28')
-			.populate('category_info', 'name description picto')
-			.exec((err, courses) => {
-				if (err) {
-					console.error(err);
-					return res.status(500).json({ message: `A error happen at the fetching courses by ${typeReq} <<`, err });
-				}
-
-				Course.count(query).exec((err, coursesCount) => {
-					if (err) {
-						console.error(err);
-						return res.status(500).json({ message: `A error happen at the fetching courses count by ${typeReq}`, err });
-					}
-
-					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
-					return res.status(200).json({ message: `courses by ${typeReq} fetched <`, courses, pagesCount });
+					return res.status(200).json({ message: `courses by ${typeReq} fetched ><`, courses, coursesCount, pagesCount });
 				});
 			});
 	}
@@ -83,19 +58,19 @@ const requestGetCoursesWithPagination = (res, query, currentCourseId, directionI
  * POST /api/getcourses
  */
 export function allByField(req, res) {
-	const { keyReq, valueReq, currentCourseId, directionIndex, sortByField } = req.body;
+	const { keyReq, valueReq, activePage, sortByField } = req.body;
 
 	let query = {};
 	if (keyReq !== 'all' && valueReq !== 'all') query = { [keyReq]: valueReq };
 
-	requestGetCoursesWithPagination(res, query, currentCourseId, directionIndex, sortByField, 'field');
+	requestGetCoursesWithPagination(res, query, activePage, sortByField, 'field');
 }
 
 /**
  * POST /api/getcoursesbysearch
  */
 export function allBySearch(req, res) {
-	const { keyReq, valueReq, typing, currentCourseId, directionIndex, sortByField } = req.body;
+	const { keyReq, valueReq, typing, activePage, sortByField } = req.body;
 
 	if (!typing) return;
 
@@ -110,7 +85,7 @@ export function allBySearch(req, res) {
 	if (typeof keyReq === 'undefined' && valueReq !== 'all') query.category = valueReq;
 	if (typeof keyReq !== 'undefined' && valueReq !== 'all') query[keyReq] = valueReq;
 
-	requestGetCoursesWithPagination(res, query, currentCourseId, directionIndex, sortByField, 'search');
+	requestGetCoursesWithPagination(res, query, activePage, sortByField, 'search');
 }
 
 /**

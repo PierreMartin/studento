@@ -87,14 +87,14 @@ class Courses extends Component {
 		return { categoryType, categoryValue };
 	}
 
-	loadDatas(currentCourseId = false, directionIndex = false) {
+	loadDatas(activePage = false) {
 		const { fetchCategoryAction, fetchCoursesByFieldAction } = this.props;
 		const { sortByField } = this.state;
 		const { categoryType, categoryValue } = this.getCategoriesFromParamsForPayload();
 
 		// If fetch for pagination:
-		if (currentCourseId && directionIndex) {
-			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryValue, currentCourseId, directionIndex, sortByField });
+		if (activePage) {
+			fetchCoursesByFieldAction({ keyReq: categoryType, valueReq: categoryValue, activePage, sortByField });
 		} else {
 			const category = (this.props.params && this.props.params.category) || '';
 			const subcategory = (this.props.params && this.props.params.subcategory) || '';
@@ -116,24 +116,21 @@ class Courses extends Component {
 	};
 
 	handlePaginationChange = (e, { activePage }) => {
-		const { courses, fetchCoursesBySearchAction } = this.props;
+		const { fetchCoursesBySearchAction } = this.props;
 		const { fieldSearchTyping, paginationIndexPage, sortByField } = this.state;
 		if (activePage === paginationIndexPage) return;
-
-		const directionIndex = activePage - paginationIndexPage;
-		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
 
 		this.setState({ paginationIndexPage: activePage });
 
 		// If pagination at search:
 		if (fieldSearchTyping !== '') {
 			const { categoryType, categoryValue } = this.getCategoriesFromParamsForPayload();
-			fetchCoursesBySearchAction(fieldSearchTyping, { keyReq: categoryType, valueReq: categoryValue, sortByField }, currentCourseId, directionIndex);
+			fetchCoursesBySearchAction(fieldSearchTyping, { keyReq: categoryType, valueReq: categoryValue, sortByField }, activePage);
 			return;
 		}
 
 		// Else if pagination normal:
-		this.loadDatas(currentCourseId, directionIndex);
+		this.loadDatas(activePage);
 	};
 
 	handleSortBy = (e, { name }) => {

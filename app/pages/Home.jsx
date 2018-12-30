@@ -91,20 +91,17 @@ class Home extends Component {
 	};
 
 	handlePaginationChange = (e, { activePage }) => {
-		const { fetchCoursesByFieldAction, courses, fetchCoursesBySearchAction } = this.props;
+		const { fetchCoursesByFieldAction, fetchCoursesBySearchAction } = this.props;
 		const { category, subCategory, paginationIndexPage, fieldSearchTyping } = this.state;
 		if (activePage === paginationIndexPage) return;
 
-		const directionIndex = activePage - paginationIndexPage;
-		const currentCourseId = courses[0] && courses[0]._id; // id of first record on current page.
-
 		this.setState({ paginationIndexPage: activePage });
 
-		if (category.lastClicked !== null) return fetchCoursesByFieldAction({ keyReq: 'category', valueReq: category.lastClicked, currentCourseId, directionIndex });
-		if (subCategory.lastClicked !== null) return fetchCoursesByFieldAction({ keyReq: 'subCategory', valueReq: subCategory.lastClicked, currentCourseId, directionIndex });
-		if (fieldSearchTyping !== '') return fetchCoursesBySearchAction(fieldSearchTyping, { valueReq: this.state.fieldSearchSelect }, currentCourseId, directionIndex);
+		if (category.lastClicked !== null) return fetchCoursesByFieldAction({ keyReq: 'category', valueReq: category.lastClicked, activePage });
+		if (subCategory.lastClicked !== null) return fetchCoursesByFieldAction({ keyReq: 'subCategory', valueReq: subCategory.lastClicked, activePage });
+		if (fieldSearchTyping !== '') return fetchCoursesBySearchAction(fieldSearchTyping, { valueReq: this.state.fieldSearchSelect }, activePage);
 
-		fetchCoursesByFieldAction({ keyReq: 'all', valueReq: 'all', currentCourseId, directionIndex });
+		fetchCoursesByFieldAction({ keyReq: 'all', valueReq: 'all', activePage });
 	};
 
 	renderSubCategories(categoryParam) {

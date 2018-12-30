@@ -8,10 +8,10 @@ const getFieldsMissing = res => res.response && res.response.data && res.respons
 
 
 /************************ Set last pagination values ***********************/
-export function setPaginationCoursesEditorAction(lastActivePage, lastCourseId) {
+export function setPaginationCoursesEditorAction(lastActivePage) {
 	return {
 		type: types.SET_PAGINATION_COURSES_EDITOR,
-		paginationEditor: { lastActivePage, lastCourseId }
+		paginationEditor: { lastActivePage }
 	};
 }
 
@@ -47,7 +47,7 @@ export function fetchCoursesByFieldAction(param) {
 }
 
 /************************ Get courses by search ***********************/
-export function fetchCoursesBySearchAction(typing, query, currentCourseId, directionIndex) {
+export function fetchCoursesBySearchAction(typing, query, activePage) {
 	return (dispatch) => {
 		if (typeof typing === 'undefined') return;
 
@@ -65,7 +65,7 @@ export function fetchCoursesBySearchAction(typing, query, currentCourseId, direc
 			});
 		}
 
-		fetchCoursesBySearchRequest(typing, query, currentCourseId, directionIndex)
+		fetchCoursesBySearchRequest(typing, query, activePage)
 			.then((res) => {
 				if (res.status === 200) return dispatch(fetchCoursesByIdSuccess(res.data));
 			})

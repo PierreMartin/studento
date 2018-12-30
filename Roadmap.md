@@ -18,7 +18,9 @@ $> use studento
 $> show collections
 
 db.courses.find()
-db.courses.find({ category: 'technology' }, { _id:0, title: 1 } ).sort({ 'stars.average': 1 }).pretty()
+
+Pagination :
+db.courses.find({ category: 'technology' }, { _id:0, title: 1 } ).sort({ 'stars.average': 1 }).skip(page * limit).limit(limit).pretty()
 
 db.users.remove({})
 db.users.update({}, {$unset: {avatarsSrc: 1}}, false, true)
@@ -100,7 +102,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- Ajouter un bouton (comme zalando) pour trier sur TOUTES les datas -> faire requete pour ca
 - afficher nombre d'items par request
 
 - Améliorer perfs codeMIrror
@@ -131,7 +132,7 @@ moins urgent :
 # TODO faire toutes les requetes comme ca:
 const query = [{ keyReq, valueReq }] || { keyReq, valueReq } || {};
 const querySearch = [{ keyReq, fieldSearchTyping }] || {};
-const queryPagination = { currentCourseId, directionIndex } || {};
+const queryPagination = activePage || 1;
 const queryOption = { sortBy: name, filter: toto } || {};
 
 this.props.fetchSomethingAction(query, queryPagination, queryOption);

@@ -10,7 +10,7 @@ import User from '../models/user';
 import bcrypt from 'bcrypt-nodejs';
 import { calculateAge } from '../../../toolbox/toolbox';
 
-const numberItemPerPage = 6;
+const numberItemPerPage = 12;
 
 // S3 AWS:
 aws.config.region = 'eu-west-3';
@@ -23,16 +23,18 @@ let nameImage = '';
  * POST /api/getusers
  */
 export function all(req, res) {
-	const { keyReq, valueReq, currentUserId, directionIndex } = req.body;
+	const { keyReq, valueReq, activePage } = req.body;
 
 	let query = {};
 	if (keyReq !== 'all' && valueReq !== 'all') query = { [keyReq]: valueReq };
 
+	const sortByField = 'created_at';
+
 	// 1st page:
-	if (typeof currentUserId === 'undefined') {
+	if (typeof activePage === 'undefined' || activePage === 1) {
 		User.find(query)
+			.sort({ [sortByField]: -1 })
 			.limit(numberItemPerPage)
-			.sort({ _id: 1 })
 			.exec((err, users) => {
 				if (err) {
 					console.error(err);
@@ -49,31 +51,17 @@ export function all(req, res) {
 					return res.status(200).json({ message: 'users by field fetched', users, pagesCount });
 				});
 			});
-	} else if (directionIndex >= 0) {
-		// Go to page >
-		User.find({ ...query, _id: {$gte: currentUserId }})
-			.skip(directionIndex * numberItemPerPage)
+	} else if (activePage > 1) {
+		User.find(query)
+			.sort({ [sortByField]: -1 })
+			.skip((activePage - 1) * numberItemPerPage)
 			.limit(numberItemPerPage)
-			.sort({ _id: 1 })
 			.exec((err, users) => {
 				if (err) {
 					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the fetching users by field >>', err });
+					return res.status(500).json({ message: 'A error happen at the fetching users by field >><<', err });
 				}
-				return res.status(200).json({ message: 'users by field fetched >', users });
-			});
-	} else {
-		// Go to page <
-		User.find({ ...query, _id: {$lt: currentUserId }})
-			.skip((Math.abs(directionIndex) - 1) * numberItemPerPage)
-			.limit(numberItemPerPage)
-			.sort({ _id: -1 })
-			.exec((err, users) => {
-				if (err) {
-					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the fetching users by field <<', err });
-				}
-				return res.status(200).json({ message: 'users by field fetched <', users: users.reverse() });
+				return res.status(200).json({ message: 'users by field fetched ><', users });
 			});
 	}
 }
