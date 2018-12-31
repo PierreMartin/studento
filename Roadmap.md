@@ -102,8 +102,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- remonter en haut au change page
-- Deploiment sur OVH
+- CONDITIONS GENERALES D’UTILISATION + MENTIONS LEGALES + Deploiment sur OVH
 - Améliorer perfs codeMIrror + auto scroll + css sur la hauteur de l'editeur
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies

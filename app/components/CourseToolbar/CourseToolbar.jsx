@@ -47,9 +47,9 @@ class CourseToolbar extends Component {
 		let numberOfVote = 'No vote';
 
 		if (stars.numberOfTimeVoted === 1) {
-			numberOfVote = stars.numberOfTimeVoted + ' vote';
+			numberOfVote = stars.numberOfTimeVoted + ' note';
 		} else if (stars.numberOfTimeVoted > 1) {
-			numberOfVote = stars.numberOfTimeVoted + ' votes';
+			numberOfVote = stars.numberOfTimeVoted + ' notes';
 		}
 
 		return (
@@ -74,7 +74,7 @@ class CourseToolbar extends Component {
 				) : '' }
 
 				<Menu.Item name="star">
-					<Rating disabled={disableRating} rating={average} maxRating={5} style={{ marginBottom: '13px' }} onRate={this.handleRating} />
+					<Rating disabled={disableRating} icon="star" rating={average} maxRating={5} style={{ marginBottom: '13px' }} onRate={this.handleRating} />
 					{ numberOfVote }
 				</Menu.Item>
 			</Menu>

@@ -14,6 +14,11 @@ const routes = createRoutes(store);
 
 
 function onUpdate() {
+	const { action } = this.state && this.state.location;
+
+	// When change route:
+	if (action === 'PUSH') window.scrollTo(0, 0);
+
   // Prevent duplicate fetches when first loaded.
   if (window.__INITIAL_STATE__ !== null) {
     window.__INITIAL_STATE__ = null;
