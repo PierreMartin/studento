@@ -7,6 +7,8 @@ import LayoutMainApp from './components/layouts/LayoutMainApp/LayoutMainApp';
 import LayoutSettings from './components/layouts/LayoutSettings/LayoutSettings';
 import Home from './pages/Home';
 import About from './pages/About';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import SettingsProfile from './pages/SettingsProfile';
 import SettingsAvatar from './pages/SettingsAvatar';
 import SettingsMail from './pages/SettingsMail';
@@ -83,6 +85,8 @@ export default (store) => {
 				<Route path="/users" component={Users} onEnter={requireAuth} />
 				<Route path="/user/:id" component={User} onEnter={requireAuth} />
 				<Route path="/about" component={About} />
+				<Route path="/terms" component={TermsOfService} />
+				<Route path="/privacy-policy" component={PrivacyPolicy} />
 				<Route path="/courses/:category/:subcategory" component={Courses} />
 
 				<Route path="/settings" component={LayoutSettings} onEnter={requireAuth} >

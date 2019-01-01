@@ -18,14 +18,13 @@ const Footer = () => {
 							<List link inverted>
 								<List.Item as={Link} to={'/'}>Home</List.Item>
 								<List.Item as={Link} to={'/about'}>About</List.Item>
-								<List.Item as={Link} to={'/users'}>Users</List.Item>
 							</List>
 						</Grid.Column>
 						<Grid.Column width={3}>
 							<Header inverted as="h4" content="Services" />
 							<List link inverted>
-								<List.Item as={Link} to={'/about'}>Why share courses</List.Item>
-								<List.Item as={Link} to={'/about'}>How to create a course</List.Item>
+								<List.Item as={Link} to={'/term'}>Terms of service - Conditions Générales d'Utilisation (CGU)</List.Item>
+								<List.Item as={Link} to={'/privacy-policy'}>Privacy Policy - Politique de confidentialité</List.Item>
 							</List>
 						</Grid.Column>
 						<Grid.Column width={7}>

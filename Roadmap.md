@@ -102,12 +102,16 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- CONDITIONS GENERALES D’UTILISATION + MENTIONS LEGALES + Deploiment sur OVH
+- supprimer mon compte
+- formulaire de contact ?
+- Deploiment sur OVH
 - Améliorer perfs codeMIrror + auto scroll + css sur la hauteur de l'editeur
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 
 moins urgent :
+- schémas
+- image dans les cours
 - Auth facebook google...
 - courseToolbar : Add to fav - download to PDF
 - comments -> render: styles (gras, bold, emoji, ...) + code editor
@@ -135,3 +139,10 @@ const queryOption = { sortBy: name, filter: toto } || {};
 
 this.props.fetchSomethingAction(query, queryPagination, queryOption);
 this.props.searchSomethingAction(querySearch, queryPagination, queryOption);
+
+Le site internet propose les services suivants :
+- La publication de cours pouvant contenir : des notes (texte), des astuces, des idées, du code source, des formules mathématiques, des schémas...
+- La possibilité de donner des notes aux courses.
+- La possibilité d'ajouter des commentaires associé à un cours.
+- La possibilité de pouvoir communiquer avec d'autre utilisateur par un chat en temps réel.
+- La possibilité de completer les informations de sont profil : nom, prénom, age, intérêts, profession...
