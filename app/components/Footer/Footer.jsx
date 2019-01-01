@@ -23,7 +23,7 @@ const Footer = () => {
 						<Grid.Column width={3}>
 							<Header inverted as="h4" content="Services" />
 							<List link inverted>
-								<List.Item as={Link} to={'/term'}>Terms of service - Conditions Générales d'Utilisation (CGU)</List.Item>
+								<List.Item as={Link} to={'/terms'}>Terms of service - Conditions Générales d'Utilisation (CGU)</List.Item>
 								<List.Item as={Link} to={'/privacy-policy'}>Privacy Policy - Politique de confidentialité</List.Item>
 							</List>
 						</Grid.Column>
