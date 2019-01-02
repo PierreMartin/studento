@@ -108,6 +108,8 @@ $ ./scripts/generate_menu.sh
 - Améliorer perfs codeMIrror + auto scroll + css sur la hauteur de l'editeur
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
+- Google analytique
+- RGPD cookie banner - voir express-session - fait ca en localStorage   componentDidMount de la Home -> setConsentRGPDAction(getLocalStorage('key'))  - dans LayoutMainWeb on récup isConsentRGPD du store
 
 moins urgent :
 - schémas
