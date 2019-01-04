@@ -9,9 +9,7 @@ module.exports = (env = {}) => {
   const isBrowser = env.browser;
   console.log(`Running webpack in ${process.env.NODE_ENV} mode on ${isBrowser ? 'browser': 'server'}`);
 
-  if (!isProduction) {
-		require('dotenv').config();
-  }
+  require('dotenv').config();
 
   const hotMiddlewareScript = 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true';
   const node = { __dirname: true, __filename: true };
