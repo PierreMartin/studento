@@ -16,7 +16,7 @@
     "lint:fix": "eslint --ext .js,.jsx app server --fix",
     "clean": "rimraf public/assets && rimraf compiled",
     "postinstall": "npm run build",
-    "start": "cross-env NODE_ENV=production node compiled/server.js",
+    "start": "cross-env NODE_ENV=production PORT=80 node compiled/server.js",
     "dev": "cross-env NODE_ENV=development nodemon",
     "build:dev": "cross-env NODE_ENV=development npm run webpack -- --env.server",
     "build": "npm run clean && cross-env NODE_ENV=production npm run webpack -- --env.browser && cross-env NODE_ENV=production npm run webpack -- --env.server",

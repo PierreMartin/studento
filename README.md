@@ -2,7 +2,7 @@
 
 Platform for share the courses for students
 
-Demo : https://studento.herokuapp.com (please wait 30s to wake up the Heroku server)
+Demo : https://hubnote.app
 
 /!\ The project is under active development
 
