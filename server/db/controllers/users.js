@@ -183,6 +183,8 @@ const createUniqueName = (file) => {
 	nameImage = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.${ext}`;
 };
 
+console.log('=====> ', S3_BUCKET);
+
 // For S3 only
 const uploadS3 = multer({
 	limits: { fileSize: maxSize },
