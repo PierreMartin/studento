@@ -21,17 +21,16 @@ const Footer = () => {
 							</List>
 						</Grid.Column>
 						<Grid.Column width={3}>
-							<Header inverted as="h4" content="Services" />
+							<Header inverted as="h4" content="Terms & Privacy" />
 							<List link inverted>
 								<List.Item as={Link} to={'/terms'}>Terms of service - Conditions Générales d'Utilisation (CGU)</List.Item>
 								<List.Item as={Link} to={'/privacy-policy'}>Privacy Policy - Politique de confidentialité</List.Item>
 							</List>
 						</Grid.Column>
 						<Grid.Column width={7}>
-							<Header as="h4" inverted>Pierre Martin</Header>
-							<p>Powered by NodeJs, MongoDB, React and Redux</p>
-							<p>Source code available on <a href="https://github.com/PierreMartin/studento" rel="noopener noreferrer" target="_blank">Github</a></p>
-							<p>Copyright © 2018 Pierre Martin - All rights reserved</p>
+							<Header as="h4" inverted>HubNote</Header>
+							<p><a href="mailto:pierremartin.pro@gmail.com?subject=Demande%information%HubNote">Contact</a></p>
+							<p>Copyright © 2019 HubNote - All rights reserved</p>
 						</Grid.Column>
 					</Grid.Row>
 				</Grid>
