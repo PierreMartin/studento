@@ -42,8 +42,8 @@ class Home extends Component {
 
 	getMetaData() {
 		return {
-			title: 'Home | Studento',
-			meta: [{ name: 'description', content: 'Studento' }],
+			title: 'HubNote | Home',
+			meta: [{ name: 'description', content: 'HubNote' }],
 			link: []
 		};
 	}
@@ -131,7 +131,6 @@ class Home extends Component {
 						<Header as="h1" content="Start to share you courses / knowledges with the world" inverted className={cx('title')} />
 						<Header as="h2" content="Farewell flying leaves - HubNote is simple to use and allows you to create a course in a few clicks" inverted className={cx('sub-title')} />
 						{ !authentification.authenticated && <Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }
-						{ !authentification.authenticated && <Message compact icon="info circle" content="Please login (or signup) for test the main features." style={{width: 'auto'}} size="small" /> }
 					</Container>
 				</Segment>
 
