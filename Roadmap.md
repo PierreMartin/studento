@@ -101,6 +101,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- voir bug quand créer 1er new course + pas faire de push
 - supprimer mon compte
 - formulaire de contact ?
 - Deploiment sur OVH
