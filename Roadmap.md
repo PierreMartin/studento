@@ -99,6 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- favicon
 - voir bug quand créer 1er new course + pas faire de .push()
 - supprimer compte user
 
@@ -107,6 +108,7 @@ $ ./scripts/generate_menu.sh
 - Resolve vulnerabilities in dependencies
 - Google analytique
 - RGPD cookie banner - voir express-session - fait ca en localStorage   componentDidMount de la Home -> setConsentRGPDAction(getLocalStorage('key'))  - dans LayoutMainWeb on récup isConsentRGPD du store
+- referencement
 
 moins urgent :
 - schémas

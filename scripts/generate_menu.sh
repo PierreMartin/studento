@@ -4,7 +4,7 @@ if [ -e server/data/categories.json ]; then
         echo "file exist :)"
 
         # mongo
-        # mongo --eval 'use studento;'
+        # mongo --eval 'use hubnote;'
         # mongo --eval 'db.categories.remove({});'
 
         jq -c '.categories[]' server/data/categories.json | while read i; do

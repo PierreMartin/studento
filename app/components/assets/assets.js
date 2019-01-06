@@ -13,7 +13,7 @@ const metaAssets = () => {
     { name: 'mobile-web-app-capable', content: 'yes' },
     { name: 'apple-mobile-web-app-capable', content: 'yes' },
     { name: 'apple-mobile-web-app-status-bar-style', content: 'black' },
-    { name: 'apple-mobile-web-app-title', content: 'reactGo' },
+    { name: 'apple-mobile-web-app-title', content: 'HubNote' },
     { name: 'msapplication-TileImage', content: msFavicon },
     { name: 'msapplication-TileColor', content: '#3372DF' }
   ];
@@ -30,6 +30,6 @@ const linkAssets = () => {
   return links;
 };
 
-export const title = 'Studento';
+export const title = 'HubNote';
 export const meta = metaAssets();
 export const link = linkAssets();

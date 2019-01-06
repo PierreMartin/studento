@@ -19,8 +19,8 @@ class About extends Component {
 
 	getMetaData() {
 		return {
-			title: 'About | Studento',
-			meta: [{ name: 'description', content: 'About' }],
+			title: 'HubNote | About HubNote',
+			meta: [{ name: 'description', content: 'About HubNote' }],
 			link: []
 		};
 	}
@@ -43,14 +43,25 @@ class About extends Component {
 							<img src={hubNoteLogo} alt="Logo HubNote" />
 						</div>
 
-						<Header as="h2" content="About studento" />
-						<p>Studento is a global e-learning that allows many participants to master new skills and achieve their goals by following courses</p>
+						<Header as="h2" content="About HubNote" />
+						<p>Create, discover, save time, organize, share, browse the others, collaborate.</p>
+						<p>HubNote is a social network that allows to take yours classes / courses / notes / tips... for a best organisation and share them.</p>
+
+						<div style={{ textAlign: 'left' }}>
+							The app offers the following services:
+							<ul>
+								<li>The publication of courses that can contain: notes (text), tips, ideas, source code, mathematical formulas, diagrams ...</li>
+								<li>The possibility to give notes to the course</li>
+								<li>The ability to add comments associated to a course</li>
+								<li>The ability to communicate with another user by a chat in real time</li>
+							</ul>
+						</div>
 
 						<Accordion fluid styled>
 
 							<Accordion.Title active={activeIndex === 0} index={0} onClick={this.handleClick}><Icon name="dropdown" />Is it only for student?</Accordion.Title>
 							<Accordion.Content active={activeIndex === 0}>
-								<p>Studento is not only for student, but userfull at work, at home and for all domains: for cooking, in computing / software development, in searching, gardening, do-it-yourself...</p>
+								<p>HubNote is not only for student, but userfull at work, at home and for all domains: for cooking, in computing / software development, in searching, gardening, do-it-yourself...</p>
 							</Accordion.Content>
 
 							<Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}><Icon name="dropdown" />What kinds of courses are there?</Accordion.Title>

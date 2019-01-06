@@ -1,4 +1,4 @@
-## Studento
+## HubNote
 
 Platform for share the courses for students
 

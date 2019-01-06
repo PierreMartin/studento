@@ -12,7 +12,7 @@ class PrivacyPolicy extends Component {
 	getMetaData() {
 		return {
 			title: 'HubNote | Privacy policy | Connects between students | Take study notes | Take yours classes for a best organisation and share them | Note taking for students | create, discover, Save time, organize, share, browse the others, collaborate | courses, studies, DIY, tips, notes and knowledge between students',
-			meta: [{ name: 'description', content: 'HubNote | Privacy policy Studento | Connects students | Take study notes | Take yours classes for a best organisation and share them | Note taking for students | create, discover, Save time, organize, share, browse the others, collaborate | courses, studies, DIY, tips, notes and knowledge between students' }],
+			meta: [{ name: 'description', content: 'HubNote | Privacy policy | Connects students | Take study notes | Take yours classes for a best organisation and share them | Note taking for students | create, discover, Save time, organize, share, browse the others, collaborate | courses, studies, DIY, tips, notes and knowledge between students' }],
 			link: []
 		};
 	}
