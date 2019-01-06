@@ -9,8 +9,9 @@ import { fetchCategoriesAction } from '../../../actions/category';
 import { logoutAction } from '../../../actions/authentification';
 import { openTchatboxSuccess } from '../../../actions/tchat';
 import { Button, Container, Menu, Segment, Dropdown, Icon } from 'semantic-ui-react';
+import hubNoteLogo from '../../../images/logo_hubnote_white_menu.png';
 // import classNames from 'classnames/bind';
-// import styles from '../../../css/main.scss';
+// import styles from './css/navMain.scss';
 
 // const cx = classNames.bind(styles);
 
@@ -92,7 +93,7 @@ class NavigationMain extends Component {
 
 	renderDropdownCategories(categories) {
 		return (
-			<Dropdown item simple text="Categories" title="Categories" style={{ alignSelf: 'center' }}>
+			<Dropdown item simple text="Categories" title="Categories">
 				<Dropdown.Menu style={{ marginTop: '0px' }}>
 					{ categories.map((cat, keyCat) => {
 						return (
@@ -153,7 +154,7 @@ class NavigationMain extends Component {
 				<Container>
 					<Menu inverted pointing secondary>
 						<Menu.Item position="left">
-							<Menu.Item as={Link} to="/" active={typeof pathUrl === 'undefined'}>Home</Menu.Item>
+							<Menu.Item as={Link} to="/"><img src={hubNoteLogo} alt="Logo HubNote" /></Menu.Item>
 							{ this.renderDropdownCategories(categories) }
 							<Menu.Item as={Link} to="/about" active={pathUrl === '/about'}>About</Menu.Item>
 							{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" active={pathUrl === '/users' || pathUrl === '/user/:id'}>Users</Menu.Item>) : ''}

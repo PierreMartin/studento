@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Container, Header, Segment, Accordion, Icon } from 'semantic-ui-react';
+import hubNoteLogo from '../images/logo_hubnote_200.png';
+import classNames from 'classnames/bind';
+import stylesMain from '../css/main.scss';
 
+const cx = classNames.bind(stylesMain);
 
 class About extends Component {
 	constructor(props) {
@@ -35,6 +39,10 @@ class About extends Component {
 			<LayoutPage {...this.getMetaData()}>
 				<Segment textAlign="center" vertical>
 					<Container text>
+						<div className={cx('logo')}>
+							<img src={hubNoteLogo} alt="Logo HubNote" />
+						</div>
+
 						<Header as="h2" content="About studento" />
 						<p>Studento is a global e-learning that allows many participants to master new skills and achieve their goals by following courses</p>
 

@@ -142,7 +142,6 @@ export function logoutAction() {
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(logoutSuccess());
-					toast.success('Lougout');
 				} else {
 					dispatch(logoutError());
 				}

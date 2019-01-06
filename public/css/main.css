@@ -6,16 +6,16 @@ This file is used for overload the existant css
     max-width: none !important;
 }
 
-/* MAIN MENU & FOOTER */
+/***************************** MAIN MENU & FOOTER ******************************/
 .ui.inverted.segment, .ui.primary.inverted.segment {
-    background-color: #40c6f2 !important;
+    background-color: #39b4dc !important;
 }
 
 
-/* MAIN MENU */
+/****************************** MAIN MENU ******************************/
 .ui.secondary.inverted.pointing.menu {
     border: none;
-    padding-top: 19px;
+    padding-top: 14px;
 }
 
 .ui.secondary.inverted.menu .link.item, .ui.secondary.inverted.menu a.item {
@@ -24,9 +24,14 @@ This file is used for overload the existant css
 }
 
 .ui.secondary.inverted.pointing.menu .item {
+    align-self: center;
     font-weight: 900;
     padding-top: 0;
     padding-bottom: 5px;
+}
+
+.ui.menu .item>img:not(.ui) {
+    width: inherit;
 }
 
 
@@ -41,7 +46,7 @@ This file is used for overload the existant css
     padding: 0 !important;
 }
 
-/* Markdown render */
+/****************************** Markdown render ******************************/
 .md-column-1 {
     width: 100%;
     padding: 4px;

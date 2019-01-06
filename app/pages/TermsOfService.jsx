@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Container, Segment } from 'semantic-ui-react';
+import hubNoteLogo from '../images/logo_hubnote_200.png';
+import classNames from 'classnames/bind';
+import stylesMain from '../css/main.scss';
+
+const cx = classNames.bind(stylesMain);
 
 
 class TermsOfService extends Component {
@@ -16,6 +21,10 @@ class TermsOfService extends Component {
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<Segment vertical>
+					<div className={cx('logo')}>
+						<img src={hubNoteLogo} alt="Logo HubNote" />
+					</div>
+
 					<Container text>
 						<div style={{ whiteSpace: 'pre-line', fontSize: '1rem', color: '#3a3a3a' }}>
 							{`

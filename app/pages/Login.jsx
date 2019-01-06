@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loginAction, signupAction, typingLoginSignupAction } from '../actions/authentification';
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
+import hubNoteLogo from '../images/logo_hubnote_200.png';
 import classNames from 'classnames/bind';
 import styles from './css/login.scss';
 import stylesMain from '../css/main.scss';
@@ -91,8 +92,12 @@ class Login extends Component {
 		}
 
 		return (
-			<div className={cx('login-form')} >
-				<Grid textAlign="center" style={{ height: '100%' }} verticalAlign="middle">
+			<div className={cx('login-form')}>
+				<div className={cx('logo')}>
+					<img src={hubNoteLogo} alt="Logo HubNote" />
+				</div>
+
+				<Grid textAlign="center" verticalAlign="middle" className={cx('form')}>
 					<Grid.Column style={{ maxWidth: 450 }}>
 						<Header as="h2" textAlign="center">{signup ? 'Signup a new account' : 'Login to your account'}</Header>
 
@@ -102,8 +107,6 @@ class Login extends Component {
 								<Form.Input fluid icon="user" iconPosition="left" label="E-mail" placeholder="E-mail address" name="email" error={missingRequiredField.email} onChange={this.handleInputChange} />
 								<Form.Input fluid icon="lock" iconPosition="left" label="Password" placeholder="Password" type="password" name="password" error={missingRequiredField.password} onChange={this.handleInputChange} />
 								<Message error content={messages} />
-
-								<Message className={cx('info-message')} header="Note" content="For testing, you can use a existing account (e-mail: test@test.com password: 1111) or create a new." />
 
 								<Button fluid size="large">{ signup ? 'Signup' : 'Login' }</Button>
 							</Segment>
