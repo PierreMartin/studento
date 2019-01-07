@@ -39,6 +39,44 @@ class CourseAddOrEditMd extends Component {
 		this.editorCmMini = null;
 		this.timerRenderPreview = null;
 		this.CodeMirror = null;
+		this.defaultMessageEditor = `For start to take notes, **remove** this sample content or **modify** this one
+
+[Example link](http://hubnote.app)
+
+# Lists example:
+- List A
+- List B
+
+1. list A
+1. list B
+
+# Table example:
+------
+| Tables   |      Are      |  Cool |
+|----------|:-------------:|------:|
+| col 1 is |  left-aligned | $1600 |
+| col 2 is |    centered   |   $12 |
+| col 3 is | right-aligned |    $1 |
+
+# Titles example:
+-----
+
+## Title main
+lorem lorem...
+
+### sub-title 1
+lorem lorem...
+
+### sub-title 2
+lorem lorem...
+
+
+# Code sample example:
+\`\`\`javascript
+const myVar = 'content...';
+\`\`\`
+
+		`;
 
 		// Init for generate headings wrap:
 		this.indexHeader = 0;
@@ -160,6 +198,8 @@ class CourseAddOrEditMd extends Component {
 			mode: 'gfm'
 		});
 
+		this.editorCm.setValue((this.props.course && this.props.course.content) || this.defaultMessageEditor);
+
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
 		this.templateRendering();
@@ -198,16 +238,13 @@ class CourseAddOrEditMd extends Component {
 			// Init for generate headings wrap:
 			this.indexHeader = 0;
 			this.headersList = [];
+			const content = (this.props.course && this.props.course.content) || this.defaultMessageEditor;
 
-			const fields = this.getFieldsVal({}, this.props.course);
-
-			this.editorCm.setValue(fields.content);
+			this.editorCm.setValue(content);
 
 			this.setState({
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
-				fieldsTyping: {
-					template: {}
-				},
+				fieldsTyping: {content, template: {}},
 				isEditorChanged: false
 			});
 
@@ -649,23 +686,13 @@ class CourseAddOrEditMd extends Component {
 
 	setStateContentMarkedSanitized(params = {}) {
 		const content = ((typeof params.valueEditor !== 'undefined') ? params.valueEditor : this.props.course && this.props.course.content) || '';
+		const oldStateTyping = this.state.fieldsTyping;
 		const contentMarkedSanitized = DOMPurify.sanitize(marked(content || ''));
 
-		if (params.editorCmChanged) {
-			const oldStateTyping = this.state.fieldsTyping;
-
-			return this.setState({
-				contentMarkedSanitized,
-				fieldsTyping: {...oldStateTyping, ...{ content: params.valueEditor }},
-				isEditorChanged: true
-			}, () => {
-				HighlightRendering(hljs);
-				kaTexRendering(katex, params.valueEditor);
-			});
-		}
-
 		this.setState({
-			contentMarkedSanitized
+			contentMarkedSanitized,
+			fieldsTyping: {...oldStateTyping, ...{ content: params.valueEditor }},
+			isEditorChanged: params.editorCmChanged
 		}, () => {
 			HighlightRendering(hljs);
 			kaTexRendering(katex, params.valueEditor);
@@ -730,7 +757,7 @@ class CourseAddOrEditMd extends Component {
 						<div className={cx('editor-container')}>
 							<div className={cx('editor-edition')}>
 								<Form error={addOrEditMissingField.content} size="small">
-									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" defaultValue={fields.content} />
+									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
 									{/*
 									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ height: (heightDocument - 44) + 'px' }} />
 									<Message error content="the content is required" className={cx('editor-edition-error-message')} />
