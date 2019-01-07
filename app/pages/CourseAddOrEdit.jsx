@@ -22,6 +22,7 @@ if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
 	require('tinymce/plugins/codesample');
 	require('tinymce/plugins/link');
 	require('tinymce/plugins/image');
+	require('tinymce/plugins/textcolor');
 }
 
 const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse, ...stylesCourse});
