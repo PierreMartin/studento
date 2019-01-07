@@ -242,7 +242,9 @@ class CourseAddOrEdit extends Component {
 			data.fields.type = 'wy';
 			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
 				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
-				if (courses.length % 12 === 0) { // 12 => numberItemPerPage setted in controller
+
+				// Goto next page if last item:
+				if ((courses.length + 1) % 13 === 0) {
 					const activePage = indexPagination + 1;
 
 					setPaginationCoursesEditorAction(activePage);

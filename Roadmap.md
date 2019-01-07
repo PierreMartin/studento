@@ -99,8 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- favicon
-- voir bug quand créer 1er new course + pas faire de .push()
+- pas faire de .push()
 - supprimer compte user
 
 - Améliorer perfs codeMIrror + auto scroll + css sur la hauteur de l'editeur

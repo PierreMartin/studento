@@ -127,7 +127,7 @@ class EditorPanelExplorer extends Component {
 	renderCoursesList() {
 		const { courses, course } = this.props;
 
-		if (courses.length === 0) return;
+		if (courses.length === 0) return 'You don\'t have course';
 
 		return courses.map((c) => {
 			const isTypeMarkDown = c.type !== 'wy';
@@ -182,10 +182,7 @@ class EditorPanelExplorer extends Component {
 		const selectTemplatesHeaders = [
 			{ label: 'h1', name: 'columnH1' },
 			{ label: 'h2', name: 'columnH2' },
-			{ label: 'h3', name: 'columnH3' },
-			{ label: 'h4', name: 'columnH4' },
-			{ label: 'h5', name: 'columnH5' },
-			{ label: 'h6', name: 'columnH6' }
+			{ label: 'h3', name: 'columnH3' }
 		];
 
 		return (

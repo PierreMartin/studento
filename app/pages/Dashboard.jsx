@@ -25,12 +25,6 @@ class Dashboard extends Component {
 			<LayoutPage {...this.getMetaData()}>
 				<Segment vertical>
 					<Container text>
-						<Header as="h2" icon="pie graph" content="Stats" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
-						<p>coming soon</p>
-						<div>...</div>
-					</Container>
-
-					<Container text>
 						<Header as="h2" icon="list" content="My courses" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
 						<CoursesListDashboard
 							courses={courses}
@@ -39,7 +33,6 @@ class Dashboard extends Component {
 							paginationEditor={paginationEditor}
 						/>
 					</Container>
-
 				</Segment>
 			</LayoutPage>
 		);
