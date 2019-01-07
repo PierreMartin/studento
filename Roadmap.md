@@ -99,7 +99,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- pas faire de .push()
 - supprimer compte user
 
 - Améliorer perfs codeMIrror + auto scroll + css sur la hauteur de l'editeur

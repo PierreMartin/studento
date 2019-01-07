@@ -32,7 +32,7 @@ const all = (state = [], action) => {
 				}
 			} else if (action.course && ((action.coursesPagesCount === 0 || action.coursesPagesCount === 1) || action.coursesPagesCount === action.indexPagination) && state.length < 12) {  // 12 => numberItemPerPage setted in controller
 				// If new course:
-				return [...state, action.course]; // add the data only if we here on the last page for handle the pagination
+				return [action.course, ...state]; // add the data only if we here on the last page for handle the pagination
 			}
 
 			return state;
