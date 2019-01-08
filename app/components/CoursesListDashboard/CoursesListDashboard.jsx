@@ -157,9 +157,9 @@ class CoursesListDashboard extends Component {
 			<div className={cx('courses-container')}>
 				{ (courses.length <= 0) ?
 					<div>
-						<div className={cx('no-courses')}>You don't have some courses yet</div>
-						<Button basic color="grey" content="Add new course" icon="add" as={Link} to="/course/create/new" style={{ margin: '5px' }} />
-						<Button basic color="grey" content="Add new Markdown course (for developer)" icon="add" as={Link} to="/courseMd/create/new" style={{ margin: '5px' }} />
+						<div className={cx('no-courses')}>You don't have some notes yet</div>
+						<Button basic color="grey" content="Add new Note" icon="add" as={Link} to="/course/create/new" style={{ margin: '5px' }} />
+						<Button basic color="grey" content="Add new Markdown Note (for developer)" icon="add" as={Link} to="/courseMd/create/new" style={{ margin: '5px' }} />
 					</div>
 					:
 					<Table celled unstackable compact="very" sortable fixed>
@@ -182,8 +182,8 @@ class CoursesListDashboard extends Component {
 							<Table.Row>
 								<Table.HeaderCell colSpan="6">
 									<Popup trigger={<Button basic color="grey" icon="file" floated="right" content="New course" />} flowing hoverable>
-										<Button basic color="grey" size="small" icon="file text" as={Link} to="/course/create/new" content="New course" />
-										<Button basic color="grey" size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown course" />
+										<Button basic color="grey" size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
+										<Button basic color="grey" size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
 									</Popup>
 
 									{ coursesPagesCount > 1 && this.renderPagination(coursesPagesCount, paginationEditor) }
@@ -195,10 +195,10 @@ class CoursesListDashboard extends Component {
 
 
 				<Modal open={deleteCourse.isModalOpened} onClose={this.handleOpenModalForDeleteCourse({})}>
-					<Modal.Header>Delete a course</Modal.Header>
+					<Modal.Header>Delete a note</Modal.Header>
 					<Modal.Content image>
 						<Modal.Description>
-							<Header>Are you sure to delete the course "{deleteCourse.courseTitle}"?</Header>
+							<Header>Are you sure to delete this note "{deleteCourse.courseTitle}"?</Header>
 							<p>ATTENTION this action is irreversible!</p>
 						</Modal.Description>
 					</Modal.Content>

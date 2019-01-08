@@ -127,7 +127,7 @@ class EditorPanelExplorer extends Component {
 	renderCoursesList() {
 		const { courses, course } = this.props;
 
-		if (courses.length === 0) return 'You don\'t have course';
+		if (courses.length === 0) return 'You don\'t have note';
 
 		return courses.map((c) => {
 			const isTypeMarkDown = c.type !== 'wy';
@@ -192,12 +192,12 @@ class EditorPanelExplorer extends Component {
 						<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
 
 						<Popup trigger={<Button icon="file" />} flowing hoverable>
-							<Button basic size="small" icon="file text" as={Link} to="/course/create/new" content="New course" />
-							<Button basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown course" />
+							<Button basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
+							<Button basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
 						</Popup>
 
 						{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={handleOnSubmit} />} content="Save" /> }
-						{ !isEditing ? <Button disabled icon="sticky note outline" /> : <Popup trigger={<Button icon="sticky note outline" as={Link} to={`/course/${course._id}`} />} content="See the course (you should save before)" /> }
+						{ !isEditing ? <Button disabled icon="sticky note outline" /> : <Popup trigger={<Button icon="sticky note outline" as={Link} to={`/course/${course._id}`} />} content="See the note (you should save before)" /> }
 					</Button.Group>
 				</div>
 
@@ -209,7 +209,7 @@ class EditorPanelExplorer extends Component {
 				<div className={cx('panel-explorer-properties')}>
 					<Form error={messagesError.props.children.length > 0} size="small" onSubmit={handleOnSubmit}>
 						<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} />
-						<Form.TextArea label="Description" placeholder="The description of your course..." name="description" value={fields.description || ''} onChange={handleInputChange} />
+						<Form.TextArea label="Description" placeholder="The description of your Note..." name="description" value={fields.description || ''} onChange={handleInputChange} />
 
 						<Form.Select required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} />
 						{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={handleInputChange} /> : '' }

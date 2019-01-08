@@ -22,7 +22,7 @@ class Users extends Component {
 	getMetaData() {
 		return {
 			title: 'Users list',
-			meta: [{ name: 'description', content: 'bla blah' }],
+			meta: [{ name: 'description', content: 'List of users' }],
 			link: []
 		};
 	}

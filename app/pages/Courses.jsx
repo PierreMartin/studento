@@ -47,7 +47,7 @@ class Courses extends Component {
 
 		return {
 			title: currentCategoryString || '',
-			meta: [{ name: 'description', content: 'Courses by categories' }],
+			meta: [{ name: 'description', content: 'Notes by categories' }],
 			link: []
 		};
 	}

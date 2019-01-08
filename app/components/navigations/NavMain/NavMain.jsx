@@ -124,7 +124,7 @@ class NavigationMain extends Component {
 				<Dropdown item text={userMe.username} title="Settings">
 					<Dropdown.Menu>
 						<Dropdown.Item icon="user" text="Your profile" as={Link} to={'/user/' + userMe._id} />
-						<Dropdown.Item icon="dashboard" text="Your courses" as={Link} to="/dashboard" />
+						<Dropdown.Item icon="dashboard" text="Your Notes" as={Link} to="/dashboard" />
 						<Dropdown.Item icon="settings" text="Edit your profile" as={Link} to="/settings" />
 						<Dropdown.Item icon="user outline" text="Logout" as={Link} to="/" onClick={logoutAction} />
 					</Dropdown.Menu>
@@ -136,10 +136,10 @@ class NavigationMain extends Component {
 	renderDropdownAddCourse(authentification) {
 		if (authentification.authenticated) {
 			return (
-				<Dropdown item icon="add" title="Add a course">
+				<Dropdown item icon="add" title="Add a Note">
 					<Dropdown.Menu>
-						<Dropdown.Item icon="add" text="Add a course" as={Link} to="/course/create/new" />
-						<Dropdown.Item icon="add" text="Add a Markdown course" as={Link} to="/courseMd/create/new" />
+						<Dropdown.Item icon="add" text="Add a Note" as={Link} to="/course/create/new" />
+						<Dropdown.Item icon="add" text="Add a Markdown Note" as={Link} to="/courseMd/create/new" />
 					</Dropdown.Menu>
 				</Dropdown>
 			);

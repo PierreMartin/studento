@@ -16,7 +16,7 @@ const CourseInfos = ({ course }) => {
 	return (
 		<div className={cx('header-container')}>
 			<h3 className={cx('header-title')}>{course.title}</h3>
-			<div className={cx('header-description')}>{course.description || 'no description'}</div>
+			<div className={cx('header-description')}>{course.description || 'No description'}</div>
 			<Icon className={cx('header-category')} name={categoryInfo.picto || 'code'} size="big" />
 			<div className={cx('header-subcategories')}>
 				{ course.subCategories && course.subCategories.map((subCat, i) => {

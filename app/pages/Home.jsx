@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
-import { Button, Container, Header, Icon, Segment, Divider, Message } from 'semantic-ui-react';
+import { Button, Container, Header, Icon, Segment, Divider } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
 import CourseSearch from '../components/CourseSearch/CourseSearch';
@@ -128,8 +128,8 @@ class Home extends Component {
       <LayoutPage {...this.getMetaData()}>
 				<Segment inverted textAlign="center" vertical className={cx('home-header-segment')}>
 					<Container className={cx('home-header-container')} style={styles} >
-						<Header as="h1" content="Start to share you courses / knowledges with the world" inverted className={cx('title')} />
-						<Header as="h2" content="Farewell flying leaves - HubNote is simple to use and allows you to create a course in a few clicks" inverted className={cx('sub-title')} />
+						<Header as="h1" content="Start to share your notes with the world" inverted className={cx('title')} />
+						<Header as="h2" content="Goodbye flying paper - HubNote is a social network that allows to take and share yours notes in class, at works, for tips or all other domain." inverted className={cx('sub-title')} />
 						{ !authentification.authenticated && <Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }
 					</Container>
 				</Segment>

@@ -12,8 +12,8 @@ import { Segment, Container, Header } from 'semantic-ui-react';
 class Dashboard extends Component {
 	getMetaData() {
 		return {
-			title: 'Dashboard',
-			meta: [{ name: 'description', content: 'My dashboard' }],
+			title: 'My Notes',
+			meta: [{ name: 'description', content: 'My Notes' }],
 			link: []
 		};
 	}
@@ -25,7 +25,7 @@ class Dashboard extends Component {
 			<LayoutPage {...this.getMetaData()}>
 				<Segment vertical>
 					<Container text>
-						<Header as="h2" icon="list" content="My courses" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
+						<Header as="h2" icon="list" content="My Notes" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
 						<CoursesListDashboard
 							courses={courses}
 							userMe={userMe}

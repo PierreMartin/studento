@@ -168,7 +168,7 @@ const myVar = 'content...';
 			// value: fields.content, // already set by the textarea
 			lineNumbers: true,
 			codeFold: true,
-			placeholder: 'Write you course here...',
+			placeholder: 'Write you note here...',
 			dragDrop: false,
 			autofocus: true,
 			readOnly: false,
@@ -284,8 +284,8 @@ const myVar = 'content...';
 
 	getMetaData() {
 		return {
-			title: 'Add a Markdown course',
-			meta: [{ name: 'description', content: 'Add a Markdown course...' }],
+			title: 'Add a Markdown Note',
+			meta: [{ name: 'description', content: 'Add a Markdown Note...' }],
 			link: []
 		};
 	}

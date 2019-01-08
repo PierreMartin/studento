@@ -37,7 +37,39 @@ class CourseAddOrEdit extends Component {
 		// Tiny MCE Editor:
 		this.handleEditorChange = this.handleEditorChange.bind(this);
 
-		this.defaultMessageEditor = 'You\'re content here...';
+		this.defaultMessageEditor = `<h2 style="text-align: center;"><span style="color: #ff6600;"><img height="150" width="150" alt="Logo Hubnote" src="https://s3.eu-west-3.amazonaws.com/studento/150_36858799_1546961527198.jpg" style="color: #000000; font-size: 14px;"></span></h2>
+<h2 style="text-align: center;"><span style="color: #ff6600;">Title here</span></h2>
+<p>&nbsp;</p>
+<p>For <span style="background-color: #ffff00;">start to take notes</span>, <strong>remove</strong> this <span style="color: #999999;">sample content</span> or <strong>modify</strong> this one.</p>
+<p><a rel="noopener" href="https://hubnote.app" title="Example link">https://hubnote.ap</a></p>
+<h2>Table example:</h2>
+<table border="1" style="border-collapse: collapse; width: 100%;">
+<tbody>
+<tr>
+<td style="width: 33.3333%; text-align: center;"><strong>Table</strong></td>
+<td style="width: 33.3333%; text-align: center;"><strong>Are&nbsp;</strong></td>
+<td style="width: 33.3333%; text-align: center;"><strong>Cool</strong></td>
+</tr>
+<tr>
+<td style="width: 33.3333%; text-align: left;">Col 1</td>
+<td style="width: 33.3333%; text-align: center;">left-aligned</td>
+<td style="width: 33.3333%; text-align: right;">$33</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<h1>Titles Level 1</h1>
+<h2>Titles Level 2</h2>
+<h3>Titles Level 3</h3>
+<h4>Titles Level 4</h4>
+<h5>Titles Level 5</h5>
+<h6>Titles Level 5</h6>
+<p>&nbsp;</p>
+<h2>Code sample example:</h2>
+<pre class="language-javascript"><code>const myvar = 'content...';</code></pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>`;
+
 		this.idEditor = 'tinyEditor';
 
 		this.state = {
@@ -86,8 +118,8 @@ class CourseAddOrEdit extends Component {
 
 	getMetaData() {
 		return {
-			title: 'Add course',
-			meta: [{ name: 'description', content: 'Add course...' }],
+			title: 'Add a Note',
+			meta: [{ name: 'description', content: 'Add a Note...' }],
 			link: []
 		};
 	}

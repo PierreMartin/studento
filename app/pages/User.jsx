@@ -33,7 +33,7 @@ class User extends Component {
 	getMetaData() {
 		return {
 			title: 'User profile',
-			meta: [{ name: 'description', content: 'bla blah' }],
+			meta: [{ name: 'description', content: 'User profile' }],
 			link: []
 		};
 	}
@@ -69,7 +69,7 @@ class User extends Component {
 
 				<Segment vertical>
 					<Container text style={{ marginBottom: '40px' }}>
-						<Header as="h2" icon="student" content="His courses" />
+						<Header as="h2" icon="student" content="His Notes" />
 						<CoursesList
 							courses={courses}
 							coursesPagesCount={coursesPagesCount}

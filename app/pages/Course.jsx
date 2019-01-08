@@ -79,8 +79,8 @@ class Course extends Component {
 
 	getMetaData() {
 		return {
-			title: 'Course',
-			meta: [{ name: 'description', content: 'bla blah' }],
+			title: 'HubNote | Note',
+			meta: [{ name: 'description', content: 'Note' }],
 			link: []
 		};
 	}
