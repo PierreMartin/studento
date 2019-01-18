@@ -11,8 +11,7 @@ import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import SettingsProfile from './pages/SettingsProfile';
 import SettingsAvatar from './pages/SettingsAvatar';
-import SettingsMail from './pages/SettingsMail';
-import SettingsPassword from './pages/SettingsPassword';
+import SettingsAccount from './pages/SettingsAccount';
 import Login from './pages/Login';
 import Users from './pages/Users';
 import User from './pages/User';
@@ -93,8 +92,7 @@ export default (store) => {
 					<IndexRoute component={SettingsProfile} onEnter={requireAuth} />
 					<Route path="profile" component={SettingsProfile} onEnter={requireAuth} />
 					<Route path="avatar" component={SettingsAvatar} onEnter={requireAuth} />
-					<Route path="mail" component={SettingsMail} onEnter={requireAuth} />
-					<Route path="password" component={SettingsPassword} onEnter={requireAuth} />
+					<Route path="account" component={SettingsAccount} onEnter={requireAuth} />
 				</Route>
 
 				<Route path="/dashboard" component={Dashboard} onEnter={requireAuth} />
