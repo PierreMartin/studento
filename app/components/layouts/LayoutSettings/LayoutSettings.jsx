@@ -13,15 +13,17 @@ const LayoutSettings = ({ children }) => {
 		};
 	}
 
+	const pathUrl = children.props && children.props.route && children.props.route.path;
+
 	return (
 		<LayoutPage {...getMetaData()}>
 			<Segment vertical style={{ minHeight: 800 }}>
 				<Grid container>
-					<Grid.Column mobile={16} tablet={4} computer={4}>
-						<SettingsNavigation />
+					<Grid.Column mobile={16} tablet={5} computer={5}>
+						<SettingsNavigation pathUrl={pathUrl} />
 					</Grid.Column>
 
-					<Grid.Column stretched mobile={16} tablet={12} computer={12}>
+					<Grid.Column stretched mobile={16} tablet={11} computer={11}>
 						<Segment>
 							{children || <p>Click on a link for display the list</p>}
 						</Segment>
