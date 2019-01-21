@@ -59,9 +59,9 @@ class SettingsProfile extends Component {
 		fields.gender = ((typeof typingUpdateUserState.gender !== 'undefined') ? typingUpdateUserState.gender : userMe.gender) || '';
 		fields.country = ((typeof typingUpdateUserState.country !== 'undefined') ? typingUpdateUserState.country : userMe.country) || '';
 		fields.city = ((typeof typingUpdateUserState.city !== 'undefined') ? typingUpdateUserState.city : userMe.city) || '';
-		fields.birthDateDay = ((typeof typingUpdateUserState.birthDateDay !== 'undefined') ? parseInt(typingUpdateUserState.birthDateDay, 10) : userMe.birthDateDay) || null;
-		fields.birthDateMonth = ((typeof typingUpdateUserState.birthDateMonth !== 'undefined') ? parseInt(typingUpdateUserState.birthDateMonth, 10) : userMe.birthDateMonth) || null;
-		fields.birthDateYear = ((typeof typingUpdateUserState.birthDateYear !== 'undefined') ? parseInt(typingUpdateUserState.birthDateYear, 10) : userMe.birthDateYear) || null;
+		fields.birthDateDay = ((typeof typingUpdateUserState.birthDateDay !== 'undefined') ? parseInt(typingUpdateUserState.birthDateDay, 10) : userMe.birthDateDay) || undefined;
+		fields.birthDateMonth = ((typeof typingUpdateUserState.birthDateMonth !== 'undefined') ? parseInt(typingUpdateUserState.birthDateMonth, 10) : userMe.birthDateMonth) || undefined;
+		fields.birthDateYear = ((typeof typingUpdateUserState.birthDateYear !== 'undefined') ? parseInt(typingUpdateUserState.birthDateYear, 10) : userMe.birthDateYear) || undefined;
 		fields.about = ((typeof typingUpdateUserState.about !== 'undefined') ? typingUpdateUserState.about : userMe.about) || '';
 
 		return fields;

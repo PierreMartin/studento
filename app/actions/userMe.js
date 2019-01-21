@@ -39,6 +39,8 @@ export function requiredFieldsError(fields) {
 }
 
 export function updateUserAction(data, id) {
+	if (!data || Object.keys(data).length === 0) return;
+
 	return (dispatch) => {
 		return updateUserRequest(data, id)
 			.then((response) => {
