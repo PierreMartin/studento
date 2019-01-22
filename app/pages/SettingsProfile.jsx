@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { typingUpdateUserAction, updateUserAction } from '../actions/userMe';
+import { typingUpdateUserAction, updateUserAction, emptyErrorsUserUpdateAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Form, Message } from 'semantic-ui-react';
 import BirthdateField from '../components/common/BirthdateField/BirthdateField';
@@ -15,6 +15,10 @@ class SettingsProfile extends Component {
 		super(props);
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
+	}
+
+	componentDidMount() {
+		this.props.emptyErrorsUserUpdateAction();
 	}
 
 	getOptionsFormsSelect() {
@@ -153,9 +157,11 @@ class SettingsProfile extends Component {
 }
 
 SettingsProfile.propTypes = {
-	typingUpdateUserAction: PropTypes.func.isRequired,
+	typingUpdateUserAction: PropTypes.func,
+	updateUserAction: PropTypes.func,
+	emptyErrorsUserUpdateAction: PropTypes.func,
+
 	typingUpdateUserState: PropTypes.object,
-	updateUserAction: PropTypes.func.isRequired,
 	updateMissingRequiredField: PropTypes.object,
 	updateMessageError: PropTypes.string,
 
@@ -176,4 +182,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { typingUpdateUserAction, updateUserAction })(SettingsProfile);
+export default connect(mapStateToProps, { typingUpdateUserAction, updateUserAction, emptyErrorsUserUpdateAction })(SettingsProfile);

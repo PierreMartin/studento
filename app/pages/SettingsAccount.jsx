@@ -1,24 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { updateUserAction } from '../actions/userMe';
+import { updateUserAction, emptyErrorsUserUpdateAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Form, Message, Button } from 'semantic-ui-react';
-import classNames from 'classnames/bind';
-import styles from '../css/main.scss';
+// import classNames from 'classnames/bind';
+// import styles from '../css/main.scss';
 
-const cx = classNames.bind(styles);
+// const cx = classNames.bind(styles);
 
 class SettingsAccount extends Component {
 	constructor(props) {
 		super(props);
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
-		// TODO delete Email + Password
 
 		this.state = {
 			fieldsTypingUpdateUser: {}
 		};
+	}
+
+	componentDidMount() {
+		this.props.emptyErrorsUserUpdateAction();
 	}
 
 	getMetaData() {
@@ -113,7 +116,8 @@ class SettingsAccount extends Component {
 }
 
 SettingsAccount.propTypes = {
-	updateUserAction: PropTypes.func.isRequired,
+	updateUserAction: PropTypes.func,
+	emptyErrorsUserUpdateAction: PropTypes.func,
 	updateMissingRequiredField: PropTypes.object,
 	updateMessageError: PropTypes.string,
 
@@ -133,4 +137,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { updateUserAction })(SettingsAccount);
+export default connect(mapStateToProps, { updateUserAction, emptyErrorsUserUpdateAction })(SettingsAccount);

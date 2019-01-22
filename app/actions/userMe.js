@@ -38,6 +38,10 @@ export function requiredFieldsError(fields) {
 	};
 }
 
+export function emptyErrorsUserUpdateAction() {
+	return { type: types.EMPTY_ERRORS_UPDATING_USER };
+}
+
 export function updateUserAction(data, id) {
 	if (!data || Object.keys(data).length === 0) return;
 

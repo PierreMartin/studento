@@ -79,6 +79,7 @@ const updateMessageError = (state = '', action) => {
 	switch (action.type) {
 		case types.UPDATE_USER_SUCCESS:
 		case types.LOGOUT_SUCCESS_USER:
+		case types.EMPTY_ERRORS_UPDATING_USER:
 			return '';
 		case types.UPDATE_USER_FAILURE:
 			return action.messageError;
@@ -94,6 +95,7 @@ const updateMissingRequiredField = (state = {}, action) => {
 		case types.LOGOUT_SUCCESS_USER:
 		case types.UPDATE_USER_SUCCESS:
 		case types.UPDATE_USER_FAILURE:
+		case types.EMPTY_ERRORS_UPDATING_USER:
 			return {};
 		default:
 			return state;
