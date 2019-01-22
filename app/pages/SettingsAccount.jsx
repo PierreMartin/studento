@@ -68,7 +68,9 @@ class SettingsAccount extends Component {
 
 	handleSubmitDeleteAccount() {
 		const { deleteUserAccountAction, userMe } = this.props;
-		deleteUserAccountAction(userMe._id);
+		const { fieldsTypingUpdateUser } = this.state;
+
+		deleteUserAccountAction(userMe._id, fieldsTypingUpdateUser.passwordDelete);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 import { updateUserRequest, createAvatarUserRequest, createAvatarS3UserRequest, defaultAvatarUserRequest, deleteUserAccountRequest } from './../api';
 import { toast } from 'react-toastify';
+import { push } from 'react-router-redux';
 import * as types from 'types';
 
 const getMessage = res => res.response && res.response.data && res.response.data.message;
@@ -168,13 +169,14 @@ export function deleteUserAccountFailure(messageError) {
 	};
 }
 
-export function deleteUserAccountAction(userMeId) {
-	if (!userMeId) return;
+export function deleteUserAccountAction(userMeId, password) {
+	if (!userMeId && (typeof password !== 'string' || password.length === 0)) return;
 
 	return (dispatch) => {
-		return deleteUserAccountRequest(userMeId)
+		return deleteUserAccountRequest(userMeId, password)
 			.then((response) => {
 				if (response.status === 200) {
+					dispatch(push('/home'));
 					dispatch(deleteUserAccountSuccess(response.data));
 					toast.success(response.data.message);
 				} else {

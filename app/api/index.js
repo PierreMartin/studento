@@ -228,8 +228,8 @@ export const defaultAvatarUserRequest = (avatarId, idUser) => {
 };
 
 // Delete user account
-export const deleteUserAccountRequest = (userMeId) => {
-	return api().deleteUserAccount(userMeId)
+export const deleteUserAccountRequest = (userMeId, password) => {
+	return api().deleteUserAccount(userMeId, password)
 		.then((res) => {
 			return Promise.resolve(res);
 		})

@@ -414,19 +414,37 @@ export function setDefaultAvatar(req, res) {
 }
 
 /**
- * DELETE api/deleteuseraccount/:usermeid
+ * DELETE api/deleteuseraccount/:usermeid/:password
  */
 export function deleteById(req, res) {
-	const userMeId = req.params.usermeid;
+	const { usermeid, password } = req.params;
 
-	User.deleteOne({ _id: userMeId }).exec((err) => {
+	// TODO check password + req.logOut
+
+	if (password) console.log('hashSync = ', bcrypt.hashSync(password));
+
+	User.findOne({ _id: usermeid }).exec((err, user) => {
 		if (err) {
 			console.error(err);
-			return res.status(500).json({ message: 'A error happen at the deleting user account', err });
+			return res.status(500).json({ message: 'A error happen at the deleting user account - getUser', err });
+		}
+
+		bcrypt.compare(password, user.password, (err, isMatch) => {
+			if (err) return console.error(err);
+			console.log('isMatch password = ', isMatch);
+		});
+	});
+
+	/*
+	User.deleteOne({ _id: usermeid }).exec((err) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ message: 'A error happen at the deleting user account - deleteUser', err });
 		}
 
 		return res.status(200).json({ message: 'Your account has been deleted' });
 	});
+	*/
 }
 
 export default {

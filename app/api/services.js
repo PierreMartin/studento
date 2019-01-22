@@ -113,9 +113,9 @@ export function api() {
 			data: { avatarId }
 		}),
 
-		deleteUserAccount: userMeId => localClient.request({
+		deleteUserAccount: (userMeId, password) => localClient.request({
 			method: 'DELETE',
-			url: '/api/deleteuseraccount/' + userMeId
+			url: '/api/deleteuseraccount/' + userMeId + '/' + password
 		}),
 
 		// Tchat
