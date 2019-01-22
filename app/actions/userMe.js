@@ -16,11 +16,25 @@ export function typingUpdateUserAction(nameField, valueField) {
 	};
 }
 
+// backendError
 export function updateUserError(messageError) {
 	return {
 		type: types.UPDATE_USER_FAILURE,
 		messageError
 	};
+}
+
+// missingFieldsError
+export function requiredFieldsError(fields) {
+	return {
+		type: types.UPDATE_USER_MISSING_REQUIRED_FIELDS,
+		fields
+	};
+}
+
+// empty be or missing errors
+export function emptyErrorsUserUpdateAction() {
+	return { type: types.EMPTY_ERRORS_UPDATING_USER };
 }
 
 export function updateUserSuccess(res) {
@@ -29,17 +43,6 @@ export function updateUserSuccess(res) {
 		message: res.message,
 		userObj: res.data
 	};
-}
-
-export function requiredFieldsError(fields) {
-	return {
-		type: types.UPDATE_USER_MISSING_REQUIRED_FIELDS,
-		fields
-	};
-}
-
-export function emptyErrorsUserUpdateAction() {
-	return { type: types.EMPTY_ERRORS_UPDATING_USER };
 }
 
 export function updateUserAction(data, id) {
