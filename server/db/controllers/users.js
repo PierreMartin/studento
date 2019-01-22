@@ -419,9 +419,7 @@ export function setDefaultAvatar(req, res) {
 export function deleteById(req, res) {
 	const { usermeid, password } = req.params;
 
-	// TODO check password + req.logOut
-
-	if (password) console.log('hashSync = ', bcrypt.hashSync(password));
+	// TODO  voir dans passport c'est quoi => req.logOut
 
 	User.findOne({ _id: usermeid }).exec((err, user) => {
 		if (err) {

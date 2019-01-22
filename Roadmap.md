@@ -99,7 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- supprimer compte user => transactions
+- supprimer compte user => transactions + affichage erreurs form
 
 - Améliorer perfs codeMIrror + auto scroll + css sur la hauteur de l'editeur
 - Améliorer design + HomePage + RWD (stackable)
@@ -128,6 +128,14 @@ moins urgent :
 - refacto les notifications + gerer toutes les erreurs
 - check si un username / email est deja utilisé
 - supprimer le fichier de l'avatar si update
+
+
+# AUTH - LOGIN :
+=> controller login() { CALL passport.authenticate('local') }
+=> passport/local.js 
+=> model CALL comparePassword()
+=> controller login() { passport.authenticate() { HERE } }
+=> controller login() { passport.authenticate() { CALL req.logIn } } si dedant, on est authentifié
 
 
 # TODO faire toutes les requetes comme ca:
