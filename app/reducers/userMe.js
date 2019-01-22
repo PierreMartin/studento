@@ -17,6 +17,7 @@ const data = (state = {}, action) => {
 		case types.LOGIN_ERROR_USER:
 		case types.SIGNUP_ERROR_USER:
 		case types.LOGOUT_SUCCESS_USER:
+		case types.DELETE_USER_ACCOUNT_SUCCESS:
 			return {};
 		case types.UPDATE_USER_AVATAR_SUCCESS:
 			if (action.avatarSrc) {
@@ -69,6 +70,7 @@ const typingUpdateUserState = (state = {}, action) => {
 		case types.UPDATE_USER_SUCCESS:
 		case types.UPDATE_USER_FAILURE:
 		case types.LOGOUT_SUCCESS_USER:
+		case types.DELETE_USER_ACCOUNT_SUCCESS:
 			return {};
 		default:
 			return state;
@@ -79,6 +81,7 @@ const updateMessageError = (state = '', action) => {
 	switch (action.type) {
 		case types.UPDATE_USER_SUCCESS:
 		case types.LOGOUT_SUCCESS_USER:
+		case types.DELETE_USER_ACCOUNT_SUCCESS:
 		case types.EMPTY_ERRORS_UPDATING_USER:
 			return '';
 		case types.UPDATE_USER_FAILURE:
@@ -93,6 +96,7 @@ const updateMissingRequiredField = (state = {}, action) => {
 		case types.UPDATE_USER_MISSING_REQUIRED_FIELDS:
 			return action.fields;
 		case types.LOGOUT_SUCCESS_USER:
+		case types.DELETE_USER_ACCOUNT_SUCCESS:
 		case types.UPDATE_USER_SUCCESS:
 		case types.UPDATE_USER_FAILURE:
 		case types.EMPTY_ERRORS_UPDATING_USER:

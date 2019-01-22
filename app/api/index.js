@@ -227,6 +227,17 @@ export const defaultAvatarUserRequest = (avatarId, idUser) => {
 		});
 };
 
+// Delete user account
+export const deleteUserAccountRequest = (userMeId) => {
+	return api().deleteUserAccount(userMeId)
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
 /********************************************** Tchat ***********************************************/
 export const getChannelsByUserIdRequest = (userMeId) => {
 	return api().getChannels(userMeId)

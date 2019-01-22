@@ -113,6 +113,11 @@ export function api() {
 			data: { avatarId }
 		}),
 
+		deleteUserAccount: userMeId => localClient.request({
+			method: 'DELETE',
+			url: '/api/deleteuseraccount/' + userMeId
+		}),
+
 		// Tchat
 		getChannels: userMeId => localClient.request({
 			method: 'GET',

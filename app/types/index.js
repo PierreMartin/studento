@@ -96,6 +96,10 @@ export const SET_MAIN_USER_AVATAR_FAILURE = 'SET_MAIN_USER_AVATAR_FAILURE';
 // Empty the errors messages at edit user:
 export const EMPTY_ERRORS_UPDATING_USER = 'EMPTY_ERRORS_UPDATING_USER';
 
+// Delete user account
+export const DELETE_USER_ACCOUNT_SUCCESS = 'DELETE_USER_ACCOUNT_SUCCESS';
+export const DELETE_USER_ACCOUNT_FAILURE = 'DELETE_USER_ACCOUNT_FAILURE';
+
 /***************************************** Tchat ********************************************/
 export const ADD_TCHATBOX = 'ADD_TCHATBOX';
 export const REMOVE_TCHATBOX = 'REMOVE_TCHATBOX';

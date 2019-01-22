@@ -1,4 +1,4 @@
-import { updateUserRequest, createAvatarUserRequest, createAvatarS3UserRequest, defaultAvatarUserRequest } from './../api';
+import { updateUserRequest, createAvatarUserRequest, createAvatarS3UserRequest, defaultAvatarUserRequest, deleteUserAccountRequest } from './../api';
 import { toast } from 'react-toastify';
 import * as types from 'types';
 
@@ -149,6 +149,40 @@ export function avatarMainAction(avatarId, idUser) {
 			})
 			.catch((err) => {
 				dispatch(defaultAvatarUserError(getMessage(err)));
+			});
+	};
+}
+
+/***************************************** DELETE USER ACCOUNT ********************************************/
+export function deleteUserAccountSuccess(res) {
+	return {
+		type: types.DELETE_USER_ACCOUNT_SUCCESS,
+		message: res.message
+	};
+}
+
+export function deleteUserAccountFailure(messageError) {
+	return {
+		type: types.DELETE_USER_ACCOUNT_FAILURE,
+		messageError
+	};
+}
+
+export function deleteUserAccountAction(userMeId) {
+	if (!userMeId) return;
+
+	return (dispatch) => {
+		return deleteUserAccountRequest(userMeId)
+			.then((response) => {
+				if (response.status === 200) {
+					dispatch(deleteUserAccountSuccess(response.data));
+					toast.success(response.data.message);
+				} else {
+					dispatch(deleteUserAccountFailure(getMessage(response)));
+				}
+			})
+			.catch((err) => {
+				dispatch(deleteUserAccountFailure(getMessage(err)));
 			});
 	};
 }

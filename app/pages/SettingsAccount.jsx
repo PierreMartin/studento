@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { updateUserAction, emptyErrorsUserUpdateAction } from '../actions/userMe';
+import { updateUserAction, emptyErrorsUserUpdateAction, deleteUserAccountAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Form, Message, Button, Modal, Header, Icon } from 'semantic-ui-react';
 // import classNames from 'classnames/bind';
@@ -67,8 +67,8 @@ class SettingsAccount extends Component {
 	}
 
 	handleSubmitDeleteAccount() {
-		console.log('DELETE');
-		// this.props.deleteUserAccountAction(userMeId).then(() => { REDIRECTION } );
+		const { deleteUserAccountAction, userMe } = this.props;
+		deleteUserAccountAction(userMe._id);
 	}
 
 	/**
@@ -163,6 +163,7 @@ class SettingsAccount extends Component {
 SettingsAccount.propTypes = {
 	updateUserAction: PropTypes.func,
 	emptyErrorsUserUpdateAction: PropTypes.func,
+	deleteUserAccountAction: PropTypes.func,
 	updateMissingRequiredField: PropTypes.object,
 	updateMessageError: PropTypes.string,
 
@@ -182,4 +183,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { updateUserAction, emptyErrorsUserUpdateAction })(SettingsAccount);
+export default connect(mapStateToProps, { updateUserAction, emptyErrorsUserUpdateAction, deleteUserAccountAction })(SettingsAccount);

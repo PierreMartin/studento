@@ -46,6 +46,7 @@ export default (app) => {
 		app.post('/api/getusers', usersController.all);
 		app.get('/api/getuser/:id', usersController.oneById);
 		app.put('/api/updateuser/:id', usersController.update);
+		app.delete('/api/deleteuseraccount/:usermeid', usersController.deleteById);
 
 		// avatars Local:
 		app.post('/api/addavatar/:userId/:avatarId', usersController.uploadAvatarMulter, usersController.uploadAvatar);

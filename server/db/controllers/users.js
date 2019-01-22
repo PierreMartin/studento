@@ -413,6 +413,22 @@ export function setDefaultAvatar(req, res) {
 	});
 }
 
+/**
+ * DELETE api/deleteuseraccount/:usermeid
+ */
+export function deleteById(req, res) {
+	const userMeId = req.params.usermeid;
+
+	User.deleteOne({ _id: userMeId }).exec((err) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ message: 'A error happen at the deleting user account', err });
+		}
+
+		return res.status(200).json({ message: 'Your account has been deleted' });
+	});
+}
+
 export default {
 	all,
 	oneById,
@@ -421,5 +437,6 @@ export default {
 	uploadAvatarMulterS3,
 	uploadAvatar,
 	uploadAvatarS3,
-	setDefaultAvatar
+	setDefaultAvatar,
+	deleteById
 };
