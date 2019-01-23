@@ -99,8 +99,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- supprimer compte user => transactions
-
 - Améliorer perfs codeMIrror + auto scroll + css sur la hauteur de l'editeur
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
@@ -109,6 +107,7 @@ $ ./scripts/generate_menu.sh
 - referencement
 
 moins urgent :
+- transactions => replica set with just one member (or run-rs) + Mongoose 5.2.0
 - schémas
 - image dans les cours
 - Auth facebook google...
