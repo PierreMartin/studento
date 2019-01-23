@@ -83,7 +83,7 @@ class SettingsAccount extends Component {
 		const errorsField = {};
 
 		if (missingRequiredField.password) errorsField.password = 'The password is required ';
-		if (missingRequiredField.passwordDelete) errorsField.passwordDelete = 'The password is required ';
+		if (missingRequiredField.passwordDelete) errorsField.passwordDelete = missingRequiredField.passwordDeleteMessage; // Message from backend
 		if (missingRequiredField.email) errorsField.email = 'The mail is required ';
 		if (messageErrorState && messageErrorState.length > 0) errorsField.errorBackend = messageErrorState;
 

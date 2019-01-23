@@ -414,35 +414,44 @@ export function setDefaultAvatar(req, res) {
 }
 
 /**
- * DELETE api/deleteuseraccount/:usermeid/:password
+ * DELETE api/deleteuseraccount
  */
 export function deleteById(req, res) {
-	const { usermeid, password } = req.params;
+	const { userMeId, password } = req.body;
+
+	// handling required fields - if password empty or contain space:
+	if (password === '' || (typeof password !== 'undefined' && password.trim() === '')) {
+		return res.status(400).json({ errorField: { passwordDelete: true, passwordDeleteMessage: 'The password is required and must contain no space' } });
+	}
 
 	// TODO  voir dans passport c'est quoi => req.logOut
 
-	User.findOne({ _id: usermeid }).exec((err, user) => {
+	User.findOne({ _id: userMeId }).exec((err, user) => {
 		if (err) {
 			console.error(err);
 			return res.status(500).json({ message: 'A error happen at the deleting user account - getUser', err });
 		}
 
 		bcrypt.compare(password, user.password, (err, isMatch) => {
-			if (err) return console.error(err);
-			console.log('isMatch password = ', isMatch);
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ message: 'A error happen at the deleting user account - getUser', err });
+			}
+
+			if (!isMatch) return res.status(400).json({ errorField: { passwordDelete: true, passwordDeleteMessage: 'The password you given no match' } });
+
+			/*
+			User.deleteOne({ _id: userMeId }).exec((err) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'A error happen at the deleting user account - deleteUser', err });
+				}
+
+				return res.status(200).json({ message: 'Your account has been deleted' });
+			});
+			*/
 		});
 	});
-
-	/*
-	User.deleteOne({ _id: usermeid }).exec((err) => {
-		if (err) {
-			console.error(err);
-			return res.status(500).json({ message: 'A error happen at the deleting user account - deleteUser', err });
-		}
-
-		return res.status(200).json({ message: 'Your account has been deleted' });
-	});
-	*/
 }
 
 export default {

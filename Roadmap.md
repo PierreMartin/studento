@@ -99,7 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- supprimer compte user => transactions + affichage erreurs form
+- supprimer compte user => transactions
 
 - Améliorer perfs codeMIrror + auto scroll + css sur la hauteur de l'editeur
 - Améliorer design + HomePage + RWD (stackable)

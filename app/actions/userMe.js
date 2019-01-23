@@ -184,7 +184,13 @@ export function deleteUserAccountAction(userMeId, password) {
 				}
 			})
 			.catch((err) => {
-				dispatch(deleteUserAccountFailure(getMessage(err)));
+				if (err.response.data.errorField) {
+					// missing required fields :
+					dispatch(requiredFieldsError(getFieldsMissing(err)));
+				} else {
+					// others errors :
+					dispatch(deleteUserAccountFailure(getMessage(err)));
+				}
 			});
 	};
 }
