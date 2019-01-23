@@ -10,6 +10,7 @@ const messageError = (state = '', action) => {
 		case types.LOGIN_SUCCESS_USER:
 		case types.SIGNUP_SUCCESS_USER:
 		case types.LOGOUT_SUCCESS_USER:
+		case types.DELETE_USER_ACCOUNT_SUCCESS:
 			return '';
 		case types.LOGIN_ERROR_USER:
 		case types.SIGNUP_ERROR_USER:
@@ -28,6 +29,7 @@ const isWaiting = (state = false, action) => {
 		case types.LOGIN_SUCCESS_USER:
 		case types.SIGNUP_SUCCESS_USER:
 		case types.LOGOUT_SUCCESS_USER:
+		case types.DELETE_USER_ACCOUNT_SUCCESS:
 		case types.LOGIN_ERROR_USER:
 		case types.SIGNUP_ERROR_USER:
 		case types.LOGOUT_ERROR_USER:
@@ -46,6 +48,7 @@ const authenticated = (state = false, action) => {
 		case types.LOGIN_ERROR_USER:
 		case types.SIGNUP_ERROR_USER:
 		case types.LOGOUT_SUCCESS_USER:
+		case types.DELETE_USER_ACCOUNT_SUCCESS:
 			return false;
 		default:
 			return state;
@@ -60,6 +63,7 @@ const typingLoginSignupState = (state = {}, action) => {
 		case types.LOGIN_SUCCESS_USER:
 		case types.SIGNUP_SUCCESS_USER:
 		case types.LOGOUT_SUCCESS_USER:
+		case types.DELETE_USER_ACCOUNT_SUCCESS:
 			return {};
 		case types.LOGIN_ERROR_USER:
 		case types.SIGNUP_ERROR_USER:
@@ -76,6 +80,7 @@ const missingRequiredField = (state = {}, action) => {
 		case types.LOGIN_SUCCESS_USER:
 		case types.SIGNUP_SUCCESS_USER:
 		case types.LOGOUT_SUCCESS_USER:
+		case types.DELETE_USER_ACCOUNT_SUCCESS:
 		case types.LOGIN_ERROR_USER:
 		case types.SIGNUP_ERROR_USER:
 		case types.LOGOUT_ERROR_USER:

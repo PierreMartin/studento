@@ -155,11 +155,8 @@ export function avatarMainAction(avatarId, idUser) {
 }
 
 /***************************************** DELETE USER ACCOUNT ********************************************/
-export function deleteUserAccountSuccess(res) {
-	return {
-		type: types.DELETE_USER_ACCOUNT_SUCCESS,
-		message: res.message
-	};
+export function deleteUserAccountSuccess() {
+	return { type: types.DELETE_USER_ACCOUNT_SUCCESS };
 }
 
 export function deleteUserAccountFailure(messageError) {
@@ -176,8 +173,8 @@ export function deleteUserAccountAction(userMeId, password) {
 		return deleteUserAccountRequest(userMeId, password)
 			.then((response) => {
 				if (response.status === 200) {
-					dispatch(push('/home'));
-					dispatch(deleteUserAccountSuccess(response.data));
+					dispatch(deleteUserAccountSuccess());
+					dispatch(push('/'));
 					toast.success(response.data.message);
 				} else {
 					dispatch(deleteUserAccountFailure(getMessage(response)));

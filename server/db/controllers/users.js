@@ -424,8 +424,6 @@ export function deleteById(req, res) {
 		return res.status(400).json({ errorField: { passwordDelete: true, passwordDeleteMessage: 'The password is required and must contain no space' } });
 	}
 
-	// TODO  voir dans passport c'est quoi => req.logOut
-
 	User.findOne({ _id: userMeId }).exec((err, user) => {
 		if (err) {
 			console.error(err);
@@ -440,16 +438,15 @@ export function deleteById(req, res) {
 
 			if (!isMatch) return res.status(400).json({ errorField: { passwordDelete: true, passwordDeleteMessage: 'The password you given no match' } });
 
-			/*
 			User.deleteOne({ _id: userMeId }).exec((err) => {
 				if (err) {
 					console.error(err);
 					return res.status(500).json({ message: 'A error happen at the deleting user account - deleteUser', err });
 				}
 
+				req.logout();
 				return res.status(200).json({ message: 'Your account has been deleted' });
 			});
-			*/
 		});
 	});
 }
