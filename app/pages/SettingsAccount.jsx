@@ -42,7 +42,8 @@ class SettingsAccount extends Component {
 		const { fieldsTypingUpdateUser } = this.state;
 		const fields = {};
 
-		fields.password = ((typeof fieldsTypingUpdateUser.password !== 'undefined') ? fieldsTypingUpdateUser.password : '') || null;
+		fields.passwordUpdateChecking = ((typeof fieldsTypingUpdateUser.passwordUpdateChecking !== 'undefined') ? fieldsTypingUpdateUser.passwordUpdateChecking : '') || null;
+		fields.password = ((typeof fieldsTypingUpdateUser.password !== 'undefined') ? fieldsTypingUpdateUser.password : '') || null; // TODO rename passwordUpdate
 		fields.passwordDelete = ((typeof fieldsTypingUpdateUser.passwordDelete !== 'undefined') ? fieldsTypingUpdateUser.passwordDelete : '') || null;
 		fields.email = ((typeof fieldsTypingUpdateUser.email !== 'undefined') ? fieldsTypingUpdateUser.email : userMe.email) || null;
 
@@ -56,9 +57,20 @@ class SettingsAccount extends Component {
 		const { fieldsTypingUpdateUser } = this.state;
 
 		updateUserAction(fieldsTypingUpdateUser, userMe._id);
+		this.setState({ fieldsTypingUpdateUser: {} });
 	}
 
 	handleInputChange(event, field) {
+		// If input change for update password:
+		if (field.name === 'passwordUpdateChecking' || field.name === 'password') {
+			return this.setState({ fieldsTypingUpdateUser: {
+					passwordUpdateChecking: this.state.fieldsTypingUpdateUser.passwordUpdateChecking,
+					password: this.state.fieldsTypingUpdateUser.password,
+					[field.name]: field.value
+			} });
+		}
+
+		// If input change for other datas:
 		this.setState({ fieldsTypingUpdateUser: { [field.name]: field.value } });
 	}
 
@@ -82,7 +94,8 @@ class SettingsAccount extends Component {
 	dispayFieldsErrors(missingRequiredField, messageErrorState) {
 		const errorsField = {};
 
-		if (missingRequiredField.password) errorsField.password = 'The password is required ';
+		if (missingRequiredField.passwordUpdateChecking) errorsField.passwordUpdateChecking = missingRequiredField.passwordUpdateCheckingMessage; // Message from backend
+		if (missingRequiredField.password) errorsField.password = missingRequiredField.passwordMessage; // Message from backend // TODO rename passwordUpdate
 		if (missingRequiredField.passwordDelete) errorsField.passwordDelete = missingRequiredField.passwordDeleteMessage; // Message from backend
 		if (missingRequiredField.email) errorsField.email = 'The mail is required ';
 		if (messageErrorState && messageErrorState.length > 0) errorsField.errorBackend = messageErrorState;
@@ -95,7 +108,7 @@ class SettingsAccount extends Component {
 		const { fieldsTypingUpdateUser, isModalForDeleteAccountOpened } = this.state;
 		const fields = this.getFieldsVal();
 		const messagesErrors = this.dispayFieldsErrors(updateMissingRequiredField, updateMessageError);
-		const disabledPasswordButton = typeof fieldsTypingUpdateUser.password === 'undefined' || fieldsTypingUpdateUser.password === '';
+		const disabledPasswordButton = (typeof fieldsTypingUpdateUser.passwordUpdateChecking === 'undefined' || fieldsTypingUpdateUser.passwordUpdateChecking === '') || (typeof fieldsTypingUpdateUser.password === 'undefined' || fieldsTypingUpdateUser.password === '');
 		const disabledPasswordDelButton = typeof fieldsTypingUpdateUser.passwordDelete === 'undefined' || fieldsTypingUpdateUser.passwordDelete === '';
 		const disabledEmailButton = typeof fieldsTypingUpdateUser.email === 'undefined' || fieldsTypingUpdateUser.email === '';
 
@@ -104,9 +117,10 @@ class SettingsAccount extends Component {
 				<div style={{ marginBottom: '30px' }}>
 					<h3>Change password</h3>
 					<Segment>
-						<Form error={updateMissingRequiredField.password} size="small" onSubmit={this.handleOnSubmit}>
-							<Form.Input required label="New Password" placeholder="New Password" name="password" value={fields.password || ''} type="password" error={updateMissingRequiredField.password} onChange={this.handleInputChange} />
-							<Message error content={messagesErrors.password} />
+						<Form error={updateMissingRequiredField.password || updateMissingRequiredField.passwordUpdateChecking} size="small" onSubmit={this.handleOnSubmit}>
+							<Form.Input required label="Your actual Password" placeholder="Your actual Password" name="passwordUpdateChecking" value={fields.passwordUpdateChecking || ''} type="password" error={updateMissingRequiredField.passwordUpdateChecking} onChange={this.handleInputChange} />
+							<Form.Input required label="Set your new Password" placeholder="Set your new Password" name="password" value={fields.password || ''} type="password" error={updateMissingRequiredField.password} onChange={this.handleInputChange} />
+							<Message error content={messagesErrors.password || messagesErrors.passwordUpdateChecking} />
 							<Form.Button disabled={disabledPasswordButton}>Submit</Form.Button>
 						</Form>
 					</Segment>

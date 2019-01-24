@@ -92,7 +92,14 @@ export function update(req, res) {
 	// handling required fields :
 	errorField.username = data.username === '' ? true : undefined;
 	errorField.email = data.email === '' || (typeof data.email !== 'undefined' && data.email.trim() === '') ? true : undefined;
-	errorField.password = data.password === '' || (typeof data.password !== 'undefined' && data.password.trim() === '') ? true : undefined;
+	if (data.passwordUpdateChecking === '' || (typeof data.passwordUpdateChecking !== 'undefined' && data.passwordUpdateChecking.trim() === '')) {
+		errorField.passwordUpdateChecking = true;
+		errorField.passwordUpdateCheckingMessage = 'The actual password is required';
+	}
+	if (data.password === '' || (typeof data.password !== 'undefined' && data.password.trim() === '')) {
+		errorField.password = true;
+		errorField.passwordMessage = 'The new password is required';
+	}
 
 	const condiBirthDate1 = typeof data.birthDateDay === 'undefined' && typeof data.birthDateMonth === 'undefined' && typeof data.birthDateYear !== 'undefined';
 	const condiBirthDate2 = typeof data.birthDateDay === 'undefined' && typeof data.birthDateMonth !== 'undefined' && typeof data.birthDateYear === 'undefined';
@@ -119,23 +126,48 @@ export function update(req, res) {
 	// displaying required fields :
 	for (const key in errorField) {
 		if (errorField[key] === true) {
-			return res.status(400).json({errorField});
+			return res.status(400).json({ errorField });
 		}
-	}
-
-	if (data.password) {
-		data.password = bcrypt.hashSync(data.password);
 	}
 
 	if (!id || !data) {
 		return res.status(400).json({message: 'A error happen at the updating profile, no data'});
 	}
 
-	User.findOneAndUpdate({_id: id}, data, (err) => {
-		if (err) return res.status(500).json({message: 'A error happen at the updating profile'});
+	// If password updating:
+	if (typeof data.password !== 'undefined' && typeof data.passwordUpdateChecking !== 'undefined') {
+		return User.findOne({ _id: id }).exec((err, user) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ message: 'A error happen at the password updating - getUser', err });
+			}
 
-		return res.status(200).json({message: 'You\'re profile as been updated!', data});
-	});
+			return bcrypt.compare(data.passwordUpdateChecking, user.password, (err, isMatch) => {
+				if (err) {
+					console.error(err);
+					return res.status(500).json({ message: 'A error happen at the password updating - bcrypt.compare', err });
+				}
+
+				if (!isMatch) return res.status(400).json({ errorField: { passwordUpdateChecking: true, passwordUpdateCheckingMessage: 'The actual password you given is not correct' } });
+
+				const newPassword = bcrypt.hashSync(data.password);
+				return User.findOneAndUpdate({_id: id}, { password: newPassword }, (err) => {
+					if (err) return res.status(500).json({ message: 'A error happen at the password updating' });
+
+					return res.status(200).json({ message: 'You\'re password as been updated!', data });
+				});
+			});
+		});
+	}
+
+	// If user profile datas updating:
+	if (typeof data.password === 'undefined' && typeof data.passwordUpdateChecking === 'undefined') {
+		User.findOneAndUpdate({_id: id}, data, (err) => {
+			if (err) return res.status(500).json({message: 'A error happen at the updating profile'});
+
+			return res.status(200).json({message: 'You\'re profile as been updated!', data});
+		});
+	}
 }
 
 
