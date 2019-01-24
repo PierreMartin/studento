@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import aws from 'aws-sdk';
 import { unlinkSync } from 'fs';
 import User from '../models/user';
+import Course from '../models/courses';
 import bcrypt from 'bcrypt-nodejs';
 import { calculateAge } from '../../../toolbox/toolbox';
 
@@ -438,16 +439,22 @@ export function deleteById(req, res) {
 
 			if (!isMatch) return res.status(400).json({ errorField: { passwordDelete: true, passwordDeleteMessage: 'The password you given is not correct' } });
 
-			User.deleteOne({ _id: userMeId }).exec((err) => {
+			// TODO do transaction
+			Course.deleteMany({ uId: userMeId }).exec((err) => {
 				if (err) {
 					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the deleting user account - deleteUser', err });
+					return res.status(500).json({ message: 'A error happen at the deleting user notes - deleteNotes', err });
 				}
 
-				// Course.delete({ author: userMeId });
+				User.deleteOne({ _id: userMeId }).exec((err) => {
+					if (err) {
+						console.error(err);
+						return res.status(500).json({ message: 'A error happen at the deleting user account - deleteUser', err });
+					}
 
-				req.logout();
-				return res.status(200).json({ message: 'Your account has been deleted' });
+					req.logout();
+					return res.status(200).json({ message: 'Your account has been deleted' });
+				});
 			});
 		});
 	});

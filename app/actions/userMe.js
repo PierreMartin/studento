@@ -186,7 +186,9 @@ export function deleteUserAccountAction(userMeId, password) {
 					dispatch(requiredFieldsError(getFieldsMissing(err)));
 				} else {
 					// others errors :
-					dispatch(deleteUserAccountFailure(getMessage(err)));
+					const errorMessage = getMessage(err);
+					dispatch(deleteUserAccountFailure(errorMessage));
+					toast.error(errorMessage);
 				}
 			});
 	};
