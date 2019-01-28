@@ -39,10 +39,10 @@ const BirthdateField = ({ fields, updateMissingRequiredField, typingUpdateUserAc
 		<Segment>
 			<Header as="h4" icon="birthday" content="Birthdate" />
 			<Form.Group widths="equal">
-				<Form.Select label="Day" options={options.day} placeholder="Day" width={8} name="birthDateDay" value={fields.birthDateDay || ''} error={updateMissingRequiredField.birthDateDay} onChange={handleSelectDateChange()} />
-				<Form.Select label="Month" options={options.month} placeholder="Month" width={8} name="birthDateMonth" value={fields.birthDateMonth || ''} error={updateMissingRequiredField.birthDateMonth} onChange={handleSelectDateChange()} />
+				<Form.Select label="Day" options={options.day} placeholder="Day" width={8} name="birthDateDay" value={fields.birthDateDay || ''} error={updateMissingRequiredField.birthDateDay && updateMissingRequiredField.birthDateDay.length > 0} onChange={handleSelectDateChange()} />
+				<Form.Select label="Month" options={options.month} placeholder="Month" width={8} name="birthDateMonth" value={fields.birthDateMonth || ''} error={updateMissingRequiredField.birthDateMonth && updateMissingRequiredField.birthDateMonth.length > 0} onChange={handleSelectDateChange()} />
 			</Form.Group>
-			<Form.Select label="Year" options={options.year} placeholder="Year" width={16} name="birthDateYear" value={fields.birthDateYear || ''} error={updateMissingRequiredField.birthDateYear} onChange={handleSelectDateChange()} />
+			<Form.Select label="Year" options={options.year} placeholder="Year" width={16} name="birthDateYear" value={fields.birthDateYear || ''} error={updateMissingRequiredField.birthDateYear && updateMissingRequiredField.birthDateYear.length > 0} onChange={handleSelectDateChange()} />
 		</Segment>
 	);
 };

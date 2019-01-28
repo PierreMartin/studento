@@ -85,29 +85,10 @@ class SettingsAccount extends Component {
 		deleteUserAccountAction(userMe._id, fieldsTypingUpdateUser.passwordDelete);
 	}
 
-	/**
-	 * Display a error if a field is wrong
-	 * @param {object} missingRequiredField - true if the field is missing
-	 * @param {string} messageErrorState - Back-end message error
-	 * @return {object} the final messages if error
-	 * */
-	dispayFieldsErrors(missingRequiredField, messageErrorState) {
-		const errorsField = {};
-
-		if (missingRequiredField.passwordUpdateChecking) errorsField.passwordUpdateChecking = missingRequiredField.passwordUpdateCheckingMessage; // Message from backend
-		if (missingRequiredField.password) errorsField.password = missingRequiredField.passwordMessage; // Message from backend // TODO rename passwordUpdate
-		if (missingRequiredField.passwordDelete) errorsField.passwordDelete = missingRequiredField.passwordDeleteMessage; // Message from backend
-		if (missingRequiredField.email) errorsField.email = 'The mail is required ';
-		if (messageErrorState && messageErrorState.length > 0) errorsField.errorBackend = messageErrorState;
-
-		return errorsField;
-	}
-
 	render() {
 		const { updateMissingRequiredField, updateMessageError } = this.props;
 		const { fieldsTypingUpdateUser, isModalForDeleteAccountOpened } = this.state;
 		const fields = this.getFieldsVal();
-		const messagesErrors = this.dispayFieldsErrors(updateMissingRequiredField, updateMessageError);
 		const disabledPasswordButton = (typeof fieldsTypingUpdateUser.passwordUpdateChecking === 'undefined' || fieldsTypingUpdateUser.passwordUpdateChecking === '') || (typeof fieldsTypingUpdateUser.password === 'undefined' || fieldsTypingUpdateUser.password === '');
 		const disabledPasswordDelButton = typeof fieldsTypingUpdateUser.passwordDelete === 'undefined' || fieldsTypingUpdateUser.passwordDelete === '';
 		const disabledEmailButton = typeof fieldsTypingUpdateUser.email === 'undefined' || fieldsTypingUpdateUser.email === '';
@@ -117,10 +98,10 @@ class SettingsAccount extends Component {
 				<div style={{ marginBottom: '30px' }}>
 					<h3>Change password</h3>
 					<Segment>
-						<Form error={updateMissingRequiredField.password || updateMissingRequiredField.passwordUpdateChecking} size="small" onSubmit={this.handleOnSubmit}>
-							<Form.Input required label="Your actual Password" placeholder="Your actual Password" name="passwordUpdateChecking" value={fields.passwordUpdateChecking || ''} type="password" error={updateMissingRequiredField.passwordUpdateChecking} onChange={this.handleInputChange} />
-							<Form.Input required label="Set your new Password" placeholder="Set your new Password" name="password" value={fields.password || ''} type="password" error={updateMissingRequiredField.password} onChange={this.handleInputChange} />
-							<Message error content={messagesErrors.password || messagesErrors.passwordUpdateChecking} />
+						<Form error={(updateMissingRequiredField.passwordUpdate && updateMissingRequiredField.passwordUpdate.length > 0) || (updateMissingRequiredField.passwordUpdateChecking && updateMissingRequiredField.passwordUpdateChecking.length > 0)} size="small" onSubmit={this.handleOnSubmit}>
+							<Form.Input required label="Your actual Password" placeholder="Your actual Password" name="passwordUpdateChecking" value={fields.passwordUpdateChecking || ''} type="password" error={updateMissingRequiredField.passwordUpdateChecking && updateMissingRequiredField.passwordUpdateChecking.length > 0} onChange={this.handleInputChange} />
+							<Form.Input required label="Set your new Password" placeholder="Set your new Password" name="password" value={fields.password || ''} type="password" error={updateMissingRequiredField.passwordUpdate && updateMissingRequiredField.passwordUpdate.length > 0} onChange={this.handleInputChange} />
+							<Message error content={updateMissingRequiredField.passwordUpdate || updateMissingRequiredField.passwordUpdateChecking} />
 							<Form.Button disabled={disabledPasswordButton}>Submit</Form.Button>
 						</Form>
 					</Segment>
@@ -129,15 +110,15 @@ class SettingsAccount extends Component {
 				<div style={{ marginBottom: '30px' }}>
 					<h3>Change email</h3>
 					<Segment>
-						<Form error={updateMissingRequiredField.email} size="small" onSubmit={this.handleOnSubmit}>
-							<Form.Input required label="New E-mail" placeholder="New E-mail" name="email" value={fields.email || ''} type="text" error={updateMissingRequiredField.email} onChange={this.handleInputChange} />
-							<Message error content={messagesErrors.email} />
+						<Form error={updateMissingRequiredField.email && updateMissingRequiredField.email.length > 0} size="small" onSubmit={this.handleOnSubmit}>
+							<Form.Input required label="New E-mail" placeholder="New E-mail" name="email" value={fields.email || ''} type="text" error={updateMissingRequiredField.email && updateMissingRequiredField.email.length > 0} onChange={this.handleInputChange} />
+							<Message error content={updateMissingRequiredField.email} />
 							<Form.Button disabled={disabledEmailButton}>Submit</Form.Button>
 						</Form>
 					</Segment>
 				</div>
 
-				{ messagesErrors.errorBackend && messagesErrors.errorBackend.length > 0 && <Message error content={messagesErrors.errorBackend} /> }
+				{ updateMessageError && updateMessageError.length > 0 && <Message error content={updateMessageError} /> }
 
 				<div>
 					<h3>Delete account</h3>
@@ -157,12 +138,12 @@ class SettingsAccount extends Component {
 
 							<p>Please type in your password to confirm.</p>
 
-							<Form error={updateMissingRequiredField.passwordDelete} size="small" onSubmit={this.handleSubmitDeleteAccount}>
+							<Form error={updateMissingRequiredField.passwordDelete && updateMissingRequiredField.passwordDelete.length > 0} size="small" onSubmit={this.handleSubmitDeleteAccount}>
 								<Form.Group>
-									<Form.Input width={4} required placeholder="Your Password" name="passwordDelete" value={fields.passwordDelete || ''} type="password" error={updateMissingRequiredField.passwordDelete} onChange={this.handleInputChange} />
+									<Form.Input width={4} required placeholder="Your Password" name="passwordDelete" value={fields.passwordDelete || ''} type="password" error={updateMissingRequiredField.passwordDelete && updateMissingRequiredField.passwordDelete.length > 0} onChange={this.handleInputChange} />
 									<Form.Button width={8} disabled={disabledPasswordDelButton} color="red" content="I confirm delete my account" />
 								</Form.Group>
-								<Message error content={messagesErrors.passwordDelete} />
+								<Message error content={updateMissingRequiredField.passwordDelete} />
 							</Form>
 
 						</Modal.Description>

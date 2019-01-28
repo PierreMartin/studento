@@ -87,27 +87,18 @@ class SettingsProfile extends Component {
 
 	/**
 	 * Display a error if a field is wrong
-	 * @param {object} missingRequiredField - object with true as key if a field is missing
+	 * @param {object} missingRequiredField - object with string if the field is missing
 	 * @param {string} messageErrorState - message from back-end
 	 * @return {HTML} the final message if error
 	 * */
 	dispayFieldsErrors(missingRequiredField, messageErrorState) {
-		const errorsField = [];
-		if (missingRequiredField.username) {
-			errorsField.push({message: 'the username is required ', key: 'username'});
-		}
-
-		if (missingRequiredField.birthDateFull) {
-			errorsField.push({message: 'All the fields birthDate is required ', key: 'birthDate'});
-		}
-
 		if (messageErrorState && messageErrorState.length > 0) {
-			errorsField.push({message: messageErrorState, key: 'backendError'});
+			return <div className={cx('error-message')}>{messageErrorState}</div>;
 		}
 
-		const messagesListNode = errorsField.map((errorField, key) => {
+		const messagesListNode = Object.values(missingRequiredField).map((errorField, key) => {
 			return (
-				<li key={key}>{errorField.message}</li>
+				<li key={key}>{errorField}</li>
 			);
 		});
 
@@ -125,7 +116,7 @@ class SettingsProfile extends Component {
 				<h4>Settings Profile</h4>
 
 				<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
-					<Form.Input required label="Username" placeholder="Username" name="username" value={fields.username || ''} error={updateMissingRequiredField.username} onChange={this.handleInputChange} />
+					<Form.Input required label="Username" placeholder="Username" name="username" value={fields.username || ''} error={updateMissingRequiredField.username && updateMissingRequiredField.username.length > 0} onChange={this.handleInputChange} />
 
 					<Form.Select label="Job / current position" options={options.position} placeholder="Job / current position" name="position" value={fields.position || ''} onChange={this.handleInputChange} />
 					<Form.Input label="Domain of studing / working" placeholder="Domain of studing / working" name="domain" value={fields.domain || ''} onChange={this.handleInputChange} />

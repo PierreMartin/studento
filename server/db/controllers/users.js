@@ -90,15 +90,20 @@ export function update(req, res) {
 	const errorField = {};
 
 	// handling required fields :
-	errorField.username = data.username === '' ? true : undefined;
-	errorField.email = data.email === '' || (typeof data.email !== 'undefined' && data.email.trim() === '') ? true : undefined;
-	if (data.passwordUpdateChecking === '' || (typeof data.passwordUpdateChecking !== 'undefined' && data.passwordUpdateChecking.trim() === '')) {
-		errorField.passwordUpdateChecking = true;
-		errorField.passwordUpdateCheckingMessage = 'The actual password is required';
+	if (data.username === '' || (typeof data.username !== 'undefined' && data.username.trim() === '')) {
+		errorField.username = 'The username is required ';
 	}
+
+	if (data.email === '' || (typeof data.email !== 'undefined' && data.email.trim() === '')) {
+		errorField.email = 'The email is required ';
+	}
+
+	if (data.passwordUpdateChecking === '' || (typeof data.passwordUpdateChecking !== 'undefined' && data.passwordUpdateChecking.trim() === '')) {
+		errorField.passwordUpdateChecking = 'The actual password is required ';
+	}
+
 	if (data.password === '' || (typeof data.password !== 'undefined' && data.password.trim() === '')) {
-		errorField.password = true;
-		errorField.passwordMessage = 'The new password is required';
+		errorField.passwordUpdate = 'The new password is required ';
 	}
 
 	const condiBirthDate1 = typeof data.birthDateDay === 'undefined' && typeof data.birthDateMonth === 'undefined' && typeof data.birthDateYear !== 'undefined';
@@ -111,24 +116,21 @@ export function update(req, res) {
 
 	// check if the birthDate is half full:
 	if (condiBirthDate1 || condiBirthDate2 || condiBirthDate3 || condiBirthDate4 || condiBirthDate5 || condiBirthDate6) {
-		errorField.birthDateFull = true;
-		errorField.birthDateDay = typeof data.birthDateDay === 'undefined';
-		errorField.birthDateMonth = typeof data.birthDateMonth === 'undefined';
-		errorField.birthDateYear = typeof data.birthDateYear === 'undefined';
+		errorField.birthDateFull = 'All the fields for the birthdate are required ';
+
+		if (typeof data.birthDateDay === 'undefined') errorField.birthDateDay = 'The day is required ';
+		if (typeof data.birthDateMonth === 'undefined') errorField.birthDateMonth = 'The month is required ';
+		if (typeof data.birthDateYear === 'undefined') errorField.birthDateYear = 'The year is required ';
 	} else if (condiBirthDateFull) {
 		const birthDateFull = new Date(data.birthDateYear, data.birthDateMonth, data.birthDateDay);
-		errorField.birthDateFull = Object.prototype.toString.call(birthDateFull) !== '[object Date]';
+		if (Object.prototype.toString.call(birthDateFull) !== '[object Date]') errorField.birthDateFull = 'The birtdate is not a date format';
 
 		data.birthDate = birthDateFull.getTime();
 		data.age = calculateAge(birthDateFull);
 	}
 
 	// displaying required fields :
-	for (const key in errorField) {
-		if (errorField[key] === true) {
-			return res.status(400).json({ errorField });
-		}
-	}
+	if (Object.keys(errorField).length > 0) return res.status(400).json({ errorField });
 
 	if (!id || !data) {
 		return res.status(400).json({message: 'A error happen at the updating profile, no data'});
@@ -148,7 +150,7 @@ export function update(req, res) {
 					return res.status(500).json({ message: 'A error happen at the password updating - bcrypt.compare', err });
 				}
 
-				if (!isMatch) return res.status(400).json({ errorField: { passwordUpdateChecking: true, passwordUpdateCheckingMessage: 'The actual password you given is not correct' } });
+				if (!isMatch) return res.status(400).json({ errorField: { passwordUpdateChecking: 'The actual password you given is not correct ' } });
 
 				const newPassword = bcrypt.hashSync(data.password);
 				return User.findOneAndUpdate({_id: id}, { password: newPassword }, (err) => {
@@ -454,7 +456,7 @@ export function deleteById(req, res) {
 
 	// handling required fields - if password empty or contain space:
 	if (password === '' || (typeof password !== 'undefined' && password.trim() === '')) {
-		return res.status(400).json({ errorField: { passwordDelete: true, passwordDeleteMessage: 'The password is required and must contain no space' } });
+		return res.status(400).json({ errorField: { passwordDelete: 'The password is required and must contain no space' } });
 	}
 
 	User.findOne({ _id: userMeId }).exec((err, user) => {
@@ -469,7 +471,7 @@ export function deleteById(req, res) {
 				return res.status(500).json({ message: 'A error happen at the deleting user account - getUser', err });
 			}
 
-			if (!isMatch) return res.status(400).json({ errorField: { passwordDelete: true, passwordDeleteMessage: 'The password you given is not correct' } });
+			if (!isMatch) return res.status(400).json({ errorField: { passwordDelete: 'The password you given is not correct' } });
 
 			// TODO do transaction
 			Course.deleteMany({ uId: userMeId }).exec((err) => {
