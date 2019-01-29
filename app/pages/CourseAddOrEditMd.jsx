@@ -168,7 +168,7 @@ const myVar = 'content...';
 			// value: fields.content, // already set by the textarea
 			lineNumbers: true,
 			codeFold: true,
-			placeholder: 'Write you note here...',
+			// placeholder: 'Write you note here...',
 			dragDrop: false,
 			autofocus: true,
 			readOnly: false,
@@ -176,7 +176,6 @@ const myVar = 'content...';
 			tabSize: 4,
 			indentUnit: 4,
 			lineWrapping: true,
-			viewportMargin: Infinity,
 			extraKeys: {
 				'Ctrl-Space': 'autocomplete',
 				'Ctrl-Q': cm => cm.foldCode(cm.getCursor())
@@ -221,7 +220,7 @@ const myVar = 'content...';
 				if (isBigFile) {
 					this.setStateContentMarkedSanitized({ editorCmChanged: true, valueEditor });
 				}
-			}, 200);
+			}, 100);
 
 			// ------- Small course -------
 			if (!isBigFile) {
@@ -573,7 +572,6 @@ const myVar = 'content...';
 				tabSize: 4,
 				indentUnit: 4,
 				lineWrapping: true,
-				viewportMargin: Infinity,
 				extraKeys: {
 					'Ctrl-Space': 'autocomplete',
 					'Ctrl-Q': cm => cm.foldCode(cm.getCursor())

@@ -99,7 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- Améliorer perfs codeMIrror + auto scroll + css sur la hauteur de l'editeur
+- auto scroll + css sur la hauteur de l'editeur
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 - Google analytique
