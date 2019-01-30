@@ -21,7 +21,7 @@ const renderTchatBoxs = (channelsListOpen) => {
 const LayoutMainApp = ({ children, channelsListOpen }) => {
 	return (
 		<div>
-			<div className={cx('layout-container')}>{children}</div>
+			<div className={cx('layout-container-app')}>{children}</div>
 			<ToastContainer />
 			{ renderTchatBoxs(channelsListOpen) }
 		</div>

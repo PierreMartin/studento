@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import ReactDOM from 'react-dom';
 import marked from 'marked';
 import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
@@ -90,7 +91,7 @@ const myVar = 'content...';
 			fieldsModalSetStyleTyping: {},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
-			heightDocument: 0,
+			heightEditor: (typeof window !== 'undefined' && window.innerHeight) || 500,
 			openModalSetStyle: {},
 			codeLanguageSelected: '',
 			isEditorChanged: false
@@ -99,6 +100,7 @@ const myVar = 'content...';
 
 	componentDidMount() {
 		// Resize element child to 100% height:
+		this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 550;
 		this.updateWindowDimensions();
 		window.addEventListener('resize', this.updateWindowDimensions);
 
@@ -228,7 +230,8 @@ const myVar = 'content...';
 			}
 		});
 
-		this.editorCm.setSize('auto', window.innerHeight - 44);
+		const { heightEditor } = this.getHeigthElements();
+		this.editorCm.setSize('auto', heightEditor);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -255,7 +258,16 @@ const myVar = 'content...';
 	}
 
 	componentWillUnmount() {
+		this.updateWindowDimensions();
 		window.removeEventListener('resize', this.updateWindowDimensions);
+	}
+
+	getHeigthElements() {
+		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
+		let heightEditor = heightDocument;
+		if (this.heightPanel > heightDocument) heightEditor = this.heightPanel;
+
+		return { heightEditor };
 	}
 
 	getOptionsFormsSelect() {
@@ -303,7 +315,8 @@ const myVar = 'content...';
 	}
 
 	updateWindowDimensions() {
-		this.setState({ heightDocument: window.innerHeight });
+		const { heightEditor } = this.getHeigthElements();
+		this.setState({ heightEditor });
 	}
 
 	handleOnSubmit(event) {
@@ -699,7 +712,7 @@ const myVar = 'content...';
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightDocument, openModalSetStyle, codeLanguageSelected, isEditorChanged } = this.state;
+		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { codeLanguagesOptions } = this.getOptionsFormsSelect();
 
@@ -724,6 +737,7 @@ const myVar = 'content...';
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-light')}>
 					<EditorPanelExplorer
+						ref={(el) => { this.editorPanelExplorer = el; }}
 						userMe={userMe}
 						course={course}
 						courses={courses}
@@ -757,13 +771,13 @@ const myVar = 'content...';
 								<Form error={addOrEditMissingField.content} size="small">
 									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
 									{/*
-									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ height: (heightDocument - 44) + 'px' }} />
+									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ height: (heightEditor) + 'px' }} />
 									<Message error content="the content is required" className={cx('editor-edition-error-message')} />
 									*/}
 								</Form>
 							</div>
 
-							<div className={cx('container-page-light', 'preview')} style={{ height: (heightDocument - 44) + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refPreview = el; }} />
+							<div className={cx('container-page-light', 'preview')} style={{ height: heightEditor + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refPreview = el; }} />
 						</div>
 					</div>
 				</div>

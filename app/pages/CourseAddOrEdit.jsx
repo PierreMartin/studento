@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import ReactDOM from 'react-dom';
 import TinyEditor from '../components/TinyEditor/TinyEditor';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
@@ -32,7 +33,6 @@ class CourseAddOrEdit extends Component {
 		super(props);
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
-		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 
 		// Tiny MCE Editor:
 		this.handleEditorChange = this.handleEditorChange.bind(this);
@@ -78,15 +78,11 @@ class CourseAddOrEdit extends Component {
 			},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
-			heightDocument: (typeof window !== 'undefined' && window.innerHeight) || 600,
 			isEditorChanged: false
 		};
 	}
 
 	componentDidMount() {
-		// Resize element child to 100% height:
-		window.addEventListener('resize', this.updateWindowDimensions);
-
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
 		// this.templateRendering();
@@ -112,8 +108,13 @@ class CourseAddOrEdit extends Component {
 		}
 	}
 
-	componentWillUnmount() {
-		window.removeEventListener('resize', this.updateWindowDimensions);
+	getHeigthElements() {
+		const heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 550;
+		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
+		let heightEditor = heightDocument - 102;
+		if (heightPanel > heightDocument) heightEditor = heightPanel;
+
+		return { heightEditor };
 	}
 
 	getMetaData() {
@@ -287,19 +288,17 @@ class CourseAddOrEdit extends Component {
 		}
 	}
 
-	updateWindowDimensions() {
-		this.setState({ heightDocument: window.innerHeight });
-	}
-
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { category, isEditing, fieldsTyping, heightDocument, isEditorChanged } = this.state;
+		const { category, isEditing, fieldsTyping, isEditorChanged } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
+		const { heightEditor } = this.getHeigthElements();
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-light')}>
 					<EditorPanelExplorer
+						ref={(el) => { this.editorPanelExplorer = el; }}
 						userMe={userMe}
 						course={course}
 						courses={courses}
@@ -324,7 +323,7 @@ class CourseAddOrEdit extends Component {
 							onEditorChange={this.handleEditorChange}
 							content={fields.content}
 							tinymce={tinymce}
-							heightDocument={heightDocument}
+							heightDocument={heightEditor}
 						/>
 					</div>
 				</div>
