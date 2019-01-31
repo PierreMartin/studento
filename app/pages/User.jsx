@@ -63,7 +63,11 @@ class User extends Component {
 
 				<Segment vertical>
 					<Container text>
-						<UserSingle userFront={userFront} userMe={userMe} handleOpenChatBox={this.handleOpenChatBox} />
+						<UserSingle
+							userFront={userFront}
+							userMe={userMe}
+							handleOpenChatBox={this.handleOpenChatBox}
+						/>
 					</Container>
 				</Segment>
 

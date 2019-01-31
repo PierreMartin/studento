@@ -82,7 +82,7 @@ export default (store) => {
 			<Route component={LayoutMainWeb}>
 				<IndexRoute component={Home} />
 				<Route path="/users" component={Users} onEnter={requireAuth} />
-				<Route path="/user/:id" component={User} onEnter={requireAuth} />
+				<Route path="/user/:id" component={User} />
 				<Route path="/about" component={About} />
 				<Route path="/terms" component={TermsOfService} />
 				<Route path="/privacy-policy" component={PrivacyPolicy} />

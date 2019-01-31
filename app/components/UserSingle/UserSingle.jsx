@@ -36,7 +36,7 @@ const UserSingle = ({ userFront, userMe, handleOpenChatBox }) => {
 
 			<div className={cx('user-actions-container')}>
 				{/* !isMyProfile ? <Button size="small" basic><Icon name="add user" />Add</Button> : '' */}
-				{ !isMyProfile ? <Button size="small" basic onClick={handleOpenChatBox} ><Icon name="talk" />Message</Button> : '' }
+				{ !isMyProfile && userMe._id ? <Button size="small" basic onClick={handleOpenChatBox} ><Icon name="talk" />Message</Button> : '' }
 				{ isMyProfile ? <Button as={Link} to="/settings" size="small" basic><Icon name="settings" />Edit my profile</Button> : '' }
 			</div>
 
