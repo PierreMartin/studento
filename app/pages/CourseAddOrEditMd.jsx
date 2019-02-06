@@ -35,6 +35,11 @@ class CourseAddOrEditMd extends Component {
 		this.handleLanguageChange = this.handleLanguageChange.bind(this);
 		this.handleInputModalSetStyleChange = this.handleInputModalSetStyleChange.bind(this);
 
+		// Scroll:
+		this.handleScroll = this.handleScroll.bind(this);
+		this.timerHandleScroll = null;
+		this.scrollingTarget = null;
+
 		this.rendererMarked = null;
 		this.editorCm = null;
 		this.editorCmMini = null;
@@ -94,7 +99,8 @@ const myVar = 'content...';
 			heightEditor: (typeof window !== 'undefined' && window.innerHeight) || 500,
 			openModalSetStyle: {},
 			codeLanguageSelected: '',
-			isEditorChanged: false
+			isEditorChanged: false,
+			isButtonAutoScrollActive: true
 		};
 	}
 
@@ -690,6 +696,10 @@ const myVar = 'content...';
 			case 'file image outline':
 				this.handleOpenModalSetStyle({ isOpened: true, type: 'file image outline', title: 'Image', desc: 'Add a image' });
 				break;
+			case 'auto scoll':
+				this.setState({ isButtonAutoScrollActive: !this.state.isButtonAutoScrollActive });
+				this.refContentPreview.scrollTo(0, this.editorCm.getScrollInfo().top);
+				break;
 			default:
 				break;
 		}
@@ -710,9 +720,26 @@ const myVar = 'content...';
 		});
 	}
 
+	handleScroll(source) {
+		return () => {
+			if (this.scrollingTarget === null) this.scrollingTarget = source;
+			if (!this.state.isButtonAutoScrollActive || this.scrollingTarget !== source) return;
+
+			if (source === 'editor') {
+				this.refContentPreview.scrollTo(0, this.editorCm.getScrollInfo().top);
+			} else if (source === 'preview') {
+				this.editorCm.getScrollerElement().scrollTo(0, this.refContentPreview.scrollTop);
+			}
+
+			// Debounce:
+			clearInterval(this.timerHandleScroll);
+			this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
+		};
+	}
+
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged } = this.state;
+		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isButtonAutoScrollActive } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { codeLanguagesOptions } = this.getOptionsFormsSelect();
 
@@ -761,13 +788,18 @@ const myVar = 'content...';
 							<Button.Group basic size="small">
 								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
 							</Button.Group>
+
 							<Button.Group basic size="small">
 								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
+							</Button.Group>
+
+							<Button.Group basic size="small" floated="right">
+								<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />
 							</Button.Group>
 						</div>
 
 						<div className={cx('editor-container')}>
-							<div className={cx('editor-edition')}>
+							<div className={cx('editor-edition')} onScroll={this.handleScroll('editor')}>
 								<Form error={addOrEditMissingField.content} size="small">
 									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
 									{/*
@@ -777,7 +809,7 @@ const myVar = 'content...';
 								</Form>
 							</div>
 
-							<div className={cx('container-page-light', 'preview')} style={{ height: heightEditor + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refPreview = el; }} />
+							<div className={cx('container-page-light', 'preview')} style={{ height: heightEditor + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refContentPreview = el; }} onScroll={this.handleScroll('preview')} />
 						</div>
 					</div>
 				</div>
