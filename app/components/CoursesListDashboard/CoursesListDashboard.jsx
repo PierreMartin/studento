@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import moment from 'moment';
-import { Icon, Table, Button, Header, Modal, Pagination, Popup } from 'semantic-ui-react';
+import { Icon, Table, Button, Header, Modal, Pagination, Popup, Rating } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { fetchCoursesByFieldAction, deleteCourseAction, doSortCoursesAction, setPaginationCoursesEditorAction } from '../../actions/courses';
 import classNames from 'classnames/bind';
@@ -109,6 +109,15 @@ class CoursesListDashboard extends Component {
 		return courses.map((course, key) => {
 			const courseDate = moment(course.created_at).format('L, h:mm:ss a');
 			const pathCourseToEdit = course.type !== 'wy' ? `/courseMd/edit/${course._id}` : `/course/edit/${course._id}`;
+			const stars = course.stars || {};
+			const average = stars.average || 0;
+			let numberOfVote = 'No vote';
+
+			if (stars.numberOfTimeVoted === 1) {
+				numberOfVote = stars.numberOfTimeVoted + ' note';
+			} else if (stars.numberOfTimeVoted > 1) {
+				numberOfVote = stars.numberOfTimeVoted + ' notes';
+			}
 
 			return (
 				<Table.Row key={key}>
@@ -123,7 +132,9 @@ class CoursesListDashboard extends Component {
 							<Header.Content><Header.Subheader>{courseDate}</Header.Subheader></Header.Content>
 						</Header>
 					</Table.Cell>
-					<Table.Cell><Icon color="red" name="star" /> 121</Table.Cell>
+					<Table.Cell style={{ fontSize: '1rem', color: 'rgba(0,0,0,.6)' }}>
+						<Rating disabled icon="star" rating={average} maxRating={5} /><br /> { numberOfVote }
+					</Table.Cell>
 					<Table.Cell><Button color="grey" content="Edit" icon="settings" size="tiny" as={Link} to={pathCourseToEdit} /></Table.Cell>
 					<Table.Cell><Button inverted color="red" content="Delete" icon="remove" size="tiny" onClick={this.handleOpenModalForDeleteCourse({ courseId: course._id, courseTitle: course.title })} /></Table.Cell>
 				</Table.Row>
@@ -233,7 +244,12 @@ CoursesListDashboard.propTypes = {
 		category: PropTypes.string,
 		subCategories: PropTypes.array,
 		isPrivate: PropTypes.bool,
-		content: PropTypes.string
+		content: PropTypes.string,
+
+		stars: PropTypes.shape({
+			average: PropTypes.number,
+			numberOfTimeVoted: PropTypes.number
+		})
 	})).isRequired
 };
 
