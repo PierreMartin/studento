@@ -8,6 +8,7 @@ import hljs from 'highlight.js/lib/highlight.js';
 import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
+import SectionsGeneratorForScrolling from '../components/common/SectionsGeneratorForScrolling';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../actions/courses';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
@@ -25,6 +26,7 @@ class CourseAddOrEditMd extends Component {
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+		this.resetSectionsForScrolling = this.resetSectionsForScrolling.bind(this);
 		this.handleClickToolbar = this.handleClickToolbar.bind(this);
 
 		// modal:
@@ -39,6 +41,10 @@ class CourseAddOrEditMd extends Component {
 		this.handleScroll = this.handleScroll.bind(this);
 		this.timerHandleScroll = null;
 		this.scrollingTarget = null;
+		this._sectionsForScrolling = null;
+		this.prevNumberTitlesInEditor = 0;
+		this.selectors = [];
+		for (let i = 1; i < 6; i++) this.selectors.push(`.cm-header-${i}`, `h${i}`);
 
 		this.rendererMarked = null;
 		this.editorCm = null;
@@ -109,6 +115,7 @@ const myVar = 'content...';
 		this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 550;
 		this.updateWindowDimensions();
 		window.addEventListener('resize', this.updateWindowDimensions);
+		window.addEventListener('resize', this.resetSectionsForScrolling);
 
 		// Load highlight.js Languages:
 		hljsLoadLanguages(hljs);
@@ -243,6 +250,12 @@ const myVar = 'content...';
 	componentDidUpdate(prevProps) {
 		// Change pages:
 		if (prevProps.course !== this.props.course) {
+			// handling scrolling:
+			this._sectionsForScrolling = {
+				editor: SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()),
+				preview: SectionsGeneratorForScrolling.fromElement(this.refContentPreview)
+			};
+
 			// Init for generate headings wrap:
 			this.indexHeader = 0;
 			this.headersList = [];
@@ -266,6 +279,7 @@ const myVar = 'content...';
 	componentWillUnmount() {
 		this.updateWindowDimensions();
 		window.removeEventListener('resize', this.updateWindowDimensions);
+		window.removeEventListener('resize', this.resetSectionsForScrolling);
 	}
 
 	getHeigthElements() {
@@ -720,22 +734,46 @@ const myVar = 'content...';
 		});
 	}
 
+	get sections() {
+		// TODO voir quand CM add content in DOM
+		const numberTitlesInEditor = SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()).length;
+		if (this._sectionsForScrolling === null || this.prevNumberTitlesInEditor < numberTitlesInEditor) {
+			this._sectionsForScrolling = {
+				editor: SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()),
+				preview: SectionsGeneratorForScrolling.fromElement(this.refContentPreview)
+			};
+			this.prevNumberTitlesInEditor = numberTitlesInEditor;
+		}
+
+		return this._sectionsForScrolling;
+	}
+
 	handleScroll(source) {
-		return () => {
-			// Debounce:
-			clearInterval(this.timerHandleScroll);
-			this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
+		return (e) => {
+			this.resetScrolling(); // For re enable the other container to scroll
 
 			if (this.scrollingTarget === null) this.scrollingTarget = source;
 			if (!this.state.isButtonAutoScrollActive || this.scrollingTarget !== source) return;
 
+			const target = source === 'preview' ? 'editor' : 'preview';
+			const scrollTopTarget = SectionsGeneratorForScrolling.getScrollPosition(e.target.scrollTop, this.sections[source], this.sections[target]);
+
 			if (source === 'editor') {
-				this.refContentPreview.scrollTo(0, this.editorCm.getScrollInfo().top);
+				this.refContentPreview.scrollTop = scrollTopTarget;
 			} else if (source === 'preview') {
-				this.editorCm.getScrollerElement().scrollTo(0, this.refContentPreview.scrollTop);
+				this.editorCm.getScrollerElement().scrollTop = scrollTopTarget;
 			}
 		};
 	}
+
+	// Scrolling
+	resetScrolling() {
+		clearInterval(this.timerHandleScroll);
+		this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
+	}
+
+	// Scrolling
+	resetSectionsForScrolling = () => { this._sectionsForScrolling = null; };
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
