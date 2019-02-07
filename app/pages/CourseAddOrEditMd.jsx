@@ -722,6 +722,10 @@ const myVar = 'content...';
 
 	handleScroll(source) {
 		return () => {
+			// Debounce:
+			clearInterval(this.timerHandleScroll);
+			this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
+
 			if (this.scrollingTarget === null) this.scrollingTarget = source;
 			if (!this.state.isButtonAutoScrollActive || this.scrollingTarget !== source) return;
 
@@ -730,10 +734,6 @@ const myVar = 'content...';
 			} else if (source === 'preview') {
 				this.editorCm.getScrollerElement().scrollTo(0, this.refContentPreview.scrollTop);
 			}
-
-			// Debounce:
-			clearInterval(this.timerHandleScroll);
-			this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
 		};
 	}
 
@@ -794,7 +794,7 @@ const myVar = 'content...';
 							</Button.Group>
 
 							<Button.Group basic size="small" floated="right">
-								<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />
+								<Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" />
 							</Button.Group>
 						</div>
 

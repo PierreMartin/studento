@@ -72,3 +72,9 @@ This file is used for overload the existant css
     vertical-align: top;
     padding: 4px;
 }
+
+/*********************************** Editor ***********************************/
+/* Editor Toolbar */
+.ui.button.toggle.active, .ui.buttons .button.toggle.active, .ui.toggle.buttons .active.button {
+    background-color: rgba(0,0,0,.6) !important;
+}
