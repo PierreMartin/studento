@@ -45,7 +45,7 @@ class CourseAddOrEditMd extends Component {
 		this.selectors = [];
 		for (let i = 1; i < 6; i++) this.selectors.push(`.cm-header-${i}`, `h${i}`);
 
-		// Scroll sync - handle re-rendering in CM editor:
+		// Scroll sync - when re-rendering in CM editor:
 		this.numberViewportChanged = 0;
 		this.prevNumberViewportChanged = 0;
 		this.prevArrTitlesinEditor = [];
@@ -247,7 +247,7 @@ const myVar = 'content...';
 			}
 		});
 
-		// Scroll sync - handle re-rendering in CM editor:
+		// Scroll sync - when re-rendering in CM editor:
 		this.editorCm.on('viewportChange', () => { this.numberViewportChanged++; });
 
 		const { heightEditor } = this.getHeigthElements();
