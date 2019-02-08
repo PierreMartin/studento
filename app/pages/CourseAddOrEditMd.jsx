@@ -258,6 +258,7 @@ const myVar = 'content...';
 		// Change pages:
 		if (prevProps.course !== this.props.course) {
 			// handling scrolling:
+			// TODO bug here - timeout ?
 			this._sectionsForScrolling = {
 				editor: SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()),
 				preview: SectionsGeneratorForScrolling.fromElement(this.refContentPreview)
@@ -764,11 +765,11 @@ const myVar = 'content...';
 		return (e) => {
 			this.resetScrolling(); // For re enable the other container to scroll
 
-			if (this.scrollingTarget === null) this.scrollingTarget = source;
-			if (!this.state.isButtonAutoScrollActive || this.scrollingTarget !== source) return;
-
 			const target = source === 'preview' ? 'editor' : 'preview';
 			const scrollTopTarget = SectionsGeneratorForScrolling.getScrollPosition(e.target.scrollTop, this.sections[source], this.sections[target]);
+
+			if (this.scrollingTarget === null) this.scrollingTarget = source;
+			if (!this.state.isButtonAutoScrollActive || this.scrollingTarget !== source) return;
 
 			if (source === 'editor') {
 				this.refContentPreview.scrollTop = scrollTopTarget;

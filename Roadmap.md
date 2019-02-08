@@ -99,7 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- auto scroll - syncro aux titles
+- auto scroll - fix
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 - Google analytique
