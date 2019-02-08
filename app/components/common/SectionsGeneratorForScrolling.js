@@ -4,16 +4,30 @@ for (let i = 1; i < 6; i++) {
 }
 
 export default class SectionsGeneratorForScrolling {
-	static fromElement(element) {
+	static fromElement(element, haveNewViewportInEditor = false, prevArrTitlesinEditor = []) {
 		const matches = element.querySelectorAll(selectors.join(', '));
+		const reRenderingCmEditor = prevArrTitlesinEditor.length > 0 && haveNewViewportInEditor;
+		let sections = [];
 		let previous = 0;
-		const sections = [];
+		let lastPrevious; // For when re-rendering in CM Editor
+
+		if (reRenderingCmEditor) {
+			lastPrevious = prevArrTitlesinEditor[prevArrTitlesinEditor.length - 1][1];
+			sections = prevArrTitlesinEditor;
+		}
 
 		matches.forEach((title) => {
 			const offsetTop = this.offsetTop(title, element);
-			// TODO if (element === 'editor' && offsetTop > prevArrEditor[arrEditor.length - 1][1]) sections.push([...prevArrEditor, previous, offsetTop]);
-			sections.push([previous, offsetTop]);
-			previous = offsetTop;
+
+			if (reRenderingCmEditor && offsetTop > prevArrTitlesinEditor[prevArrTitlesinEditor.length - 1][1]) {
+				// Re-rendering in CM Editor:
+				sections.push([lastPrevious, offsetTop]);
+				lastPrevious = offsetTop;
+			} else if ((element.className === 'CodeMirror-scroll' && prevArrTitlesinEditor.length === 0) || element.className !== 'CodeMirror-scroll') {
+				// First time scrolled:
+				sections.push([previous, offsetTop]);
+				previous = offsetTop;
+			}
 		});
 
 		sections.push([previous, element.scrollHeight]);

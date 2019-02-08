@@ -42,9 +42,13 @@ class CourseAddOrEditMd extends Component {
 		this.timerHandleScroll = null;
 		this.scrollingTarget = null;
 		this._sectionsForScrolling = null;
-		this.prevNumberTitlesInEditor = 0;
 		this.selectors = [];
 		for (let i = 1; i < 6; i++) this.selectors.push(`.cm-header-${i}`, `h${i}`);
+
+		// Scroll sync - handle re-rendering in CM editor:
+		this.numberViewportChanged = 0;
+		this.prevNumberViewportChanged = 0;
+		this.prevArrTitlesinEditor = [];
 
 		this.rendererMarked = null;
 		this.editorCm = null;
@@ -242,6 +246,9 @@ const myVar = 'content...';
 				this.setStateContentMarkedSanitized({ editorCmChanged: true, valueEditor });
 			}
 		});
+
+		// Scroll sync - handle re-rendering in CM editor:
+		this.editorCm.on('viewportChange', () => { this.numberViewportChanged++; });
 
 		const { heightEditor } = this.getHeigthElements();
 		this.editorCm.setSize('auto', heightEditor);
@@ -735,14 +742,19 @@ const myVar = 'content...';
 	}
 
 	get sections() {
-		// TODO voir quand CM add content in DOM
-		const numberTitlesInEditor = SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()).length;
-		if (this._sectionsForScrolling === null || this.prevNumberTitlesInEditor < numberTitlesInEditor) {
+		const isFirstTimeScrolled = this._sectionsForScrolling === null;
+		const haveNewViewportInEditor = this.numberViewportChanged > this.prevNumberViewportChanged;
+
+		if (isFirstTimeScrolled || haveNewViewportInEditor) {
+			const titlesInEditor = SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement(), haveNewViewportInEditor, this.prevArrTitlesinEditor);
+
 			this._sectionsForScrolling = {
-				editor: SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()),
+				editor: titlesInEditor,
 				preview: SectionsGeneratorForScrolling.fromElement(this.refContentPreview)
 			};
-			this.prevNumberTitlesInEditor = numberTitlesInEditor;
+
+			this.prevNumberViewportChanged = this.numberViewportChanged;
+			this.prevArrTitlesinEditor = titlesInEditor;
 		}
 
 		return this._sectionsForScrolling;
