@@ -9,7 +9,7 @@ export default class SectionsGeneratorForScrolling {
 		const reRenderingCmEditor = prevArrTitlesinEditor.length > 0 && haveNewViewportInEditor;
 		let sections = [];
 		let previous = 0;
-		let lastPrevious; // For when re-rendering in CM Editor
+		let lastPrevious = 0; // For when re-rendering in CM Editor
 
 		if (reRenderingCmEditor) {
 			lastPrevious = prevArrTitlesinEditor[prevArrTitlesinEditor.length - 1][1];
@@ -19,18 +19,23 @@ export default class SectionsGeneratorForScrolling {
 		matches.forEach((title) => {
 			const offsetTop = this.offsetTop(title, element);
 
-			if (reRenderingCmEditor && offsetTop > prevArrTitlesinEditor[prevArrTitlesinEditor.length - 1][1]) {
-				// Re-rendering in CM Editor:
+			if (reRenderingCmEditor && offsetTop > lastPrevious) {
+				// When re-rendering - for CM Editor, push only the last items:
 				sections.push([lastPrevious, offsetTop]);
 				lastPrevious = offsetTop;
 			} else if ((element.className === 'CodeMirror-scroll' && prevArrTitlesinEditor.length === 0) || element.className !== 'CodeMirror-scroll') {
-				// First time scrolled:
+				// First time scrolled - for all:
 				sections.push([previous, offsetTop]);
 				previous = offsetTop;
 			}
 		});
 
-		sections.push([previous, element.scrollHeight]);
+		/* Logs:
+		if (element.className === 'CodeMirror-scroll') console.log('sections ===> ', sections);
+		if (element.className === 'CodeMirror-scroll' && typeof prevArrTitlesinEditor[prevArrTitlesinEditor.length - 1] !== 'undefined') console.log('last prev sections ===> ', prevArrTitlesinEditor[prevArrTitlesinEditor.length - 1][1]);
+		*/
+
+		// sections.push([previous, element.scrollHeight]);
 		return sections;
 	}
 
