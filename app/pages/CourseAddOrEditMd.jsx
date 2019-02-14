@@ -48,6 +48,7 @@ class CourseAddOrEditMd extends Component {
 		this.prevNumberViewportChanged = 0;
 		this.prevArrTitlesinEditor = [];
 
+		this.isComponentDidUpdated = false;
 		this.rendererMarked = null;
 		this.editorCm = null;
 		this.editorCmMini = null;
@@ -255,23 +256,14 @@ const myVar = 'content...';
 	componentDidUpdate(prevProps) {
 		// Change pages:
 		if (prevProps.course !== this.props.course) {
+			this.isComponentDidUpdated = true;
+
 			// Init for generate headings wrap:
 			this.indexHeader = 0;
 			this.headersList = [];
 			const content = (this.props.course && this.props.course.content) || this.defaultMessageEditor;
 
 			this.editorCm.setValue(content);
-
-			/*********************** handling scrolling: *****************************/
-			// Init scroll sync - when re-rendering in CM editor:
-			this.numberViewportChanged = 0;
-			this.prevNumberViewportChanged = 0;
-			this.prevArrTitlesinEditor = [];
-
-			this._sectionsForScrolling = {
-				editor: SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()),
-				preview: SectionsGeneratorForScrolling.fromElement(this.refContentPreview) // TODO pas bon, mettre ca dans setStateContentMarkedSanitized() avec var global (isComonentUpdated)
-			};
 
 			this.setState({
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
@@ -729,6 +721,20 @@ const myVar = 'content...';
 		}
 	};
 
+	initScrollAfterComponentDidUpdate() {
+		// Init scroll sync - when re-rendering in CM editor:
+		this.numberViewportChanged = 0;
+		this.prevNumberViewportChanged = 0;
+		this.prevArrTitlesinEditor = [];
+
+		this.editorCm.refresh();
+
+		this._sectionsForScrolling = {
+			editor: SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()),
+			preview: SectionsGeneratorForScrolling.fromElement(this.refContentPreview)
+		};
+	}
+
 	setStateContentMarkedSanitized(params = {}) {
 		const content = ((typeof params.valueEditor !== 'undefined') ? params.valueEditor : this.props.course && this.props.course.content) || '';
 		const oldStateTyping = this.state.fieldsTyping;
@@ -739,6 +745,10 @@ const myVar = 'content...';
 			fieldsTyping: {...oldStateTyping, ...{ content: params.valueEditor }},
 			isEditorChanged: params.editorCmChanged
 		}, () => {
+			if (this.isComponentDidUpdated) {
+				this.initScrollAfterComponentDidUpdate();
+				this.isComponentDidUpdated = false;
+			}
 			HighlightRendering(hljs);
 			kaTexRendering(katex, params.valueEditor);
 		});
