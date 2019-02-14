@@ -42,8 +42,6 @@ class CourseAddOrEditMd extends Component {
 		this.timerHandleScroll = null;
 		this.scrollingTarget = null;
 		this._sectionsForScrolling = null;
-		this.selectors = [];
-		for (let i = 1; i < 6; i++) this.selectors.push(`.cm-header-${i}`, `h${i}`);
 
 		// Scroll sync - when re-rendering in CM editor:
 		this.numberViewportChanged = 0;
@@ -257,19 +255,23 @@ const myVar = 'content...';
 	componentDidUpdate(prevProps) {
 		// Change pages:
 		if (prevProps.course !== this.props.course) {
-			// handling scrolling:
-			// TODO bug here - timeout ?
-			this._sectionsForScrolling = {
-				editor: SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()),
-				preview: SectionsGeneratorForScrolling.fromElement(this.refContentPreview)
-			};
-
 			// Init for generate headings wrap:
 			this.indexHeader = 0;
 			this.headersList = [];
 			const content = (this.props.course && this.props.course.content) || this.defaultMessageEditor;
 
 			this.editorCm.setValue(content);
+
+			/*********************** handling scrolling: *****************************/
+			// Init scroll sync - when re-rendering in CM editor:
+			this.numberViewportChanged = 0;
+			this.prevNumberViewportChanged = 0;
+			this.prevArrTitlesinEditor = [];
+
+			this._sectionsForScrolling = {
+				editor: SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()),
+				preview: SectionsGeneratorForScrolling.fromElement(this.refContentPreview) // TODO pas bon, mettre ca dans setStateContentMarkedSanitized() avec var global (isComonentUpdated)
+			};
 
 			this.setState({
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
