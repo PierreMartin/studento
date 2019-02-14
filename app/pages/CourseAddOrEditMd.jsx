@@ -728,6 +728,8 @@ const myVar = 'content...';
 		this.prevArrTitlesinEditor = [];
 
 		this.editorCm.refresh();
+		this.refContentPreview.scrollTop = 0;
+		this.editorCm.getScrollerElement().scrollTop = 0;
 
 		this._sectionsForScrolling = {
 			editor: SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()),
@@ -775,6 +777,8 @@ const myVar = 'content...';
 
 	handleScroll(source) {
 		return (e) => {
+			if (e.target.scrollTop === 0) return; // When typing, we pass in onScroll :(
+
 			this.resetScrolling(); // For re enable the other container to scroll
 
 			const target = source === 'preview' ? 'editor' : 'preview';
