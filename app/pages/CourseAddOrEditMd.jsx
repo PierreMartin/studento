@@ -106,6 +106,7 @@ const myVar = 'content...';
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
 			heightEditor: (typeof window !== 'undefined' && window.innerHeight) || 500,
+			widthEditor: 200,
 			openModalSetStyle: {},
 			codeLanguageSelected: '',
 			isEditorChanged: false,
@@ -249,8 +250,9 @@ const myVar = 'content...';
 		// Scroll sync - when re-rendering in CM editor:
 		this.editorCm.on('viewportChange', () => { this.numberViewportChanged++; });
 
-		const { heightEditor } = this.getHeigthElements();
-		this.editorCm.setSize('auto', heightEditor);
+		const { widthEditor, heightEditor } = this.getSizeEditor();
+		console.log('this.state.widthEditor ', this.state.widthEditor);
+		this.editorCm.setSize(widthEditor, heightEditor);
 
 		setTimeout(() => this.initScrolling(), 20); // For Firefox because it keep the scroll position after reload
 	}
@@ -286,12 +288,13 @@ const myVar = 'content...';
 		window.removeEventListener('resize', this.resetSectionsForScrolling);
 	}
 
-	getHeigthElements() {
+	getSizeEditor() {
 		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
 		let heightEditor = heightDocument;
+		const widthEditor = this.refEditorContainer.offsetWidth / 2;
 		if (this.heightPanel > heightDocument) heightEditor = this.heightPanel;
 
-		return { heightEditor };
+		return { widthEditor, heightEditor };
 	}
 
 	getOptionsFormsSelect() {
@@ -339,8 +342,8 @@ const myVar = 'content...';
 	}
 
 	updateWindowDimensions() {
-		const { heightEditor } = this.getHeigthElements();
-		this.setState({ heightEditor });
+		const { widthEditor, heightEditor } = this.getSizeEditor();
+		this.setState({ widthEditor, heightEditor });
 	}
 
 	handleOnSubmit(event) {
@@ -878,7 +881,7 @@ const myVar = 'content...';
 							</Button.Group>
 						</div>
 
-						<div className={cx('editor-container')}>
+						<div className={cx('editor-container')} ref={(el) => { this.refEditorContainer = el; }}>
 							<div className={cx('editor-edition')} onScroll={this.handleScroll('editor')}>
 								<Form error={addOrEditMissingField.content} size="small">
 									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
