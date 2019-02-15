@@ -67,13 +67,11 @@ export default class SectionsGeneratorForScrolling {
 	static getScrollPosition(y, sourceSections, targetSections) {
 		const indexSection = this.getIndex(y, sourceSections);
 		const section = sourceSections[indexSection];
-
 		if (typeof section === 'undefined') return false;
 
 		const percentage = (y - section[0]) / (section[1] - section[0]);
-		// console.log('============= percentage (/1) ', percentage);
-		// console.log('============= indexSection ', indexSection);
 		const targetSection = targetSections[indexSection];
+		if (typeof targetSection === 'undefined') return;
 
 		return targetSection[0] + (percentage * (targetSection[1] - targetSection[0]));
 	}

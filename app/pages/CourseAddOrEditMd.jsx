@@ -785,7 +785,10 @@ const myVar = 'content...';
 			const scrollTopTarget = SectionsGeneratorForScrolling.getScrollPosition(e.target.scrollTop, this.sections[source], this.sections[target]);
 
 			// If error (scrolled to fast)
-			if (scrollTopTarget === false) return this.initScrollAfterComponentDidUpdate();
+			if (scrollTopTarget === false) {
+				console.error('Error, scroll too fast');
+				return this.initScrollAfterComponentDidUpdate();
+			}
 
 			if (this.scrollingTarget === null) this.scrollingTarget = source;
 			if (!this.state.isButtonAutoScrollActive || this.scrollingTarget !== source) return;
