@@ -251,6 +251,8 @@ const myVar = 'content...';
 
 		const { heightEditor } = this.getHeigthElements();
 		this.editorCm.setSize('auto', heightEditor);
+
+		setTimeout(() => this.initScrolling(), 20); // For Firefox because it keep the scroll position after reload
 	}
 
 	componentDidUpdate(prevProps) {
@@ -721,7 +723,7 @@ const myVar = 'content...';
 		}
 	};
 
-	initScrollAfterComponentDidUpdate() {
+	initScrolling() {
 		// Init scroll sync - use when re-rendering in CM editor:
 		this.numberViewportChanged = 0;
 		this.prevNumberViewportChanged = 0;
@@ -748,7 +750,7 @@ const myVar = 'content...';
 			isEditorChanged: params.editorCmChanged
 		}, () => {
 			if (this.isComponentDidUpdated) {
-				this.initScrollAfterComponentDidUpdate();
+				this.initScrolling();
 				this.isComponentDidUpdated = false;
 			}
 			HighlightRendering(hljs);
@@ -779,7 +781,7 @@ const myVar = 'content...';
 		return (e) => {
 			if (e.target.scrollTop === 0) return; // When typing, we pass in onScroll :(
 
-			this.resetScrolling(); // For re enable the other container to scroll
+			this.resetTargetScrolling(); // For re enable the other container to scroll
 
 			const target = source === 'preview' ? 'editor' : 'preview';
 			const scrollTopTarget = SectionsGeneratorForScrolling.getScrollPosition(e.target.scrollTop, this.sections[source], this.sections[target]);
@@ -787,7 +789,7 @@ const myVar = 'content...';
 			// If error (scrolled to fast)
 			if (scrollTopTarget === false) {
 				console.error('Error, scroll too fast');
-				setTimeout(() => this.initScrollAfterComponentDidUpdate(), 20);
+				setTimeout(() => this.initScrolling(), 20);
 				return;
 			}
 
@@ -803,7 +805,7 @@ const myVar = 'content...';
 	}
 
 	// Scrolling
-	resetScrolling() {
+	resetTargetScrolling() {
 		clearInterval(this.timerHandleScroll);
 		this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
 	}
@@ -812,7 +814,7 @@ const myVar = 'content...';
 	resetSectionsForScrolling = () => {
 		// For the cases when we are in the middle of the editor (so we can don't have the first elements in DOM), the elements upper can have the offset changed.
 		// Therefore we need to go to the top for re calculate the offsets
-		this.initScrollAfterComponentDidUpdate();
+		this.initScrolling();
 	};
 
 	render() {
