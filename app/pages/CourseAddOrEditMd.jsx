@@ -787,7 +787,8 @@ const myVar = 'content...';
 			// If error (scrolled to fast)
 			if (scrollTopTarget === false) {
 				console.error('Error, scroll too fast');
-				return this.initScrollAfterComponentDidUpdate();
+				setTimeout(() => this.initScrollAfterComponentDidUpdate(), 20);
+				return;
 			}
 
 			if (this.scrollingTarget === null) this.scrollingTarget = source;
