@@ -58,11 +58,18 @@ export default class SectionsGeneratorForScrolling {
 	}
 
 	/**
-	 * Return the final target position in container (in pixel)
+	 * For get the final target position in container (in pixel)
+	 * @param  {number} y - scrollTop position given by onScroll()
+	 * @param  {array} sourceSections - arr of the sources sections
+	 * @param  {array} targetSections - arr of the target sections
+	 * @return {number} return the value in pixel for the full offset in the editor and the preview - or false if error (scrolled to fast...)
 	 * */
 	static getScrollPosition(y, sourceSections, targetSections) {
 		const indexSection = this.getIndex(y, sourceSections);
 		const section = sourceSections[indexSection];
+
+		if (typeof section === 'undefined') return false;
+
 		const percentage = (y - section[0]) / (section[1] - section[0]);
 		// console.log('============= percentage (/1) ', percentage);
 		// console.log('============= indexSection ', indexSection);

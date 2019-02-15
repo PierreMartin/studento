@@ -784,6 +784,9 @@ const myVar = 'content...';
 			const target = source === 'preview' ? 'editor' : 'preview';
 			const scrollTopTarget = SectionsGeneratorForScrolling.getScrollPosition(e.target.scrollTop, this.sections[source], this.sections[target]);
 
+			// If error (scrolled to fast)
+			if (scrollTopTarget === false) return this.initScrollAfterComponentDidUpdate();
+
 			if (this.scrollingTarget === null) this.scrollingTarget = source;
 			if (!this.state.isButtonAutoScrollActive || this.scrollingTarget !== source) return;
 
