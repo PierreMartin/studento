@@ -722,7 +722,7 @@ const myVar = 'content...';
 	};
 
 	initScrollAfterComponentDidUpdate() {
-		// Init scroll sync - when re-rendering in CM editor:
+		// Init scroll sync - use when re-rendering in CM editor:
 		this.numberViewportChanged = 0;
 		this.prevNumberViewportChanged = 0;
 		this.prevArrTitlesinEditor = [];
@@ -732,8 +732,8 @@ const myVar = 'content...';
 		this.editorCm.getScrollerElement().scrollTop = 0;
 
 		this._sectionsForScrolling = {
-			editor: SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement()),
-			preview: SectionsGeneratorForScrolling.fromElement(this.refContentPreview)
+			editor: SectionsGeneratorForScrolling.getOffsetTopTitles(this.editorCm.getScrollerElement()),
+			preview: SectionsGeneratorForScrolling.getOffsetTopTitles(this.refContentPreview)
 		};
 	}
 
@@ -761,11 +761,11 @@ const myVar = 'content...';
 		const haveNewViewportInEditor = this.numberViewportChanged > this.prevNumberViewportChanged;
 
 		if (isFirstTimeScrolled || haveNewViewportInEditor) {
-			const titlesInEditor = SectionsGeneratorForScrolling.fromElement(this.editorCm.getScrollerElement(), haveNewViewportInEditor, this.prevArrTitlesinEditor);
+			const titlesInEditor = SectionsGeneratorForScrolling.getOffsetTopTitles(this.editorCm.getScrollerElement(), haveNewViewportInEditor, this.prevArrTitlesinEditor);
 
 			this._sectionsForScrolling = {
 				editor: titlesInEditor,
-				preview: SectionsGeneratorForScrolling.fromElement(this.refContentPreview)
+				preview: SectionsGeneratorForScrolling.getOffsetTopTitles(this.refContentPreview)
 			};
 
 			this.prevNumberViewportChanged = this.numberViewportChanged;
@@ -801,8 +801,12 @@ const myVar = 'content...';
 		this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
 	}
 
-	// Scrolling
-	resetSectionsForScrolling = () => { this._sectionsForScrolling = null; };
+	// Scrolling - at resizing
+	resetSectionsForScrolling = () => {
+		// For the cases when we are in the middle of the editor (so we can don't have the first elements in DOM), the elements upper can have the offset changed.
+		// Therefore we need to go to the top for re calculate the offsets
+		this.initScrollAfterComponentDidUpdate();
+	};
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;

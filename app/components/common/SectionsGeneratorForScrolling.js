@@ -4,7 +4,14 @@ for (let i = 1; i < 6; i++) {
 }
 
 export default class SectionsGeneratorForScrolling {
-	static fromElement(element, haveNewViewportInEditor = false, prevArrTitlesinEditor = []) {
+	/**
+	 * Get the offset positions of the title in in editor and in the preview
+	 * @param  {html} element - the target element in DOM (editor and preview)
+	 * @param  {boolean} haveNewViewportInEditor - true when CodeMirror create new element in DOM at scroll
+	 * @param  {array} prevArrTitlesinEditor - the last offset's titles if already scrolled
+	 * @return {array} the offset's titles
+	 * */
+	static getOffsetTopTitles(element, haveNewViewportInEditor = false, prevArrTitlesinEditor = []) {
 		const matches = element.querySelectorAll(selectors.join(', '));
 		const reRenderingCmEditor = prevArrTitlesinEditor.length > 0 && haveNewViewportInEditor;
 		let sections = [];
