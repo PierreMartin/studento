@@ -105,8 +105,7 @@ const myVar = 'content...';
 			fieldsModalSetStyleTyping: {},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
-			heightEditor: (typeof window !== 'undefined' && window.innerHeight) || 500,
-			widthEditor: 200,
+			heightEditor: 0,
 			openModalSetStyle: {},
 			codeLanguageSelected: '',
 			isEditorChanged: false,
@@ -250,9 +249,8 @@ const myVar = 'content...';
 		// Scroll sync - when re-rendering in CM editor:
 		this.editorCm.on('viewportChange', () => { this.numberViewportChanged++; });
 
-		const { widthEditor, heightEditor } = this.getSizeEditor();
-		console.log('this.state.widthEditor ', this.state.widthEditor);
-		this.editorCm.setSize(widthEditor, heightEditor);
+		const { heightEditor } = this.getSizeEditor();
+		this.editorCm.setSize(null, heightEditor);
 
 		setTimeout(() => this.initScrolling(), 20); // For Firefox because it keep the scroll position after reload
 	}
@@ -290,11 +288,10 @@ const myVar = 'content...';
 
 	getSizeEditor() {
 		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
-		let heightEditor = heightDocument;
-		const widthEditor = this.refEditorContainer.offsetWidth / 2;
+		let heightEditor = heightDocument - 50;
 		if (this.heightPanel > heightDocument) heightEditor = this.heightPanel;
 
-		return { widthEditor, heightEditor };
+		return { heightEditor };
 	}
 
 	getOptionsFormsSelect() {
@@ -342,8 +339,10 @@ const myVar = 'content...';
 	}
 
 	updateWindowDimensions() {
-		const { widthEditor, heightEditor } = this.getSizeEditor();
-		this.setState({ widthEditor, heightEditor });
+		const { heightEditor } = this.getSizeEditor();
+
+		if (this.editorCm) this.editorCm.setSize(null, heightEditor);
+		this.setState({ heightEditor });
 	}
 
 	handleOnSubmit(event) {
