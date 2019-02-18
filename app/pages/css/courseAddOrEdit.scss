@@ -3,7 +3,7 @@
   flex-direction: row;
 
   .editor-container-full {
-    flex: 1 0 0;
+    flex: 1 0 50%;
 
     .editor-toolbar {
       // height: 44px;
@@ -19,7 +19,7 @@
 
       // EDITOR
       .editor-edition {
-        flex: 1 0 0;
+        flex: 1 0 53%;
         // .editor-edition-error-message { position: absolute; bottom: 0; }
 
         form div { margin: 0; word-wrap: break-word; word-break: break-all; }
@@ -28,7 +28,7 @@
       // PREVIEW
       .preview {
         position: relative;
-        flex: 1 0 0;
+        flex: 1 0 47%;
         overflow: scroll;
         margin: 0;
         min-height: inherit;
@@ -76,7 +76,7 @@
 
       .button-group {
         .button {
-          // style buttons
+          /* style buttons */
         }
       }
     }
