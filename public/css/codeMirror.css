@@ -5,3 +5,7 @@
 .CodeMirror {
     border-right: 1px solid #8F938F;
 }
+
+.CodeMirror-wrap pre {
+    word-break: inherit !important;
+}

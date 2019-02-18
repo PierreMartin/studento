@@ -3,33 +3,37 @@
   flex-direction: row;
 
   .editor-container-full {
-    width: 70%; // TODO voir ca
+    flex: 1 0 0;
 
     .editor-toolbar {
-      height: 44px;
+      // height: 44px;
       width: 100%;
       padding: 4px;
+
+      .button-group { margin: 3px 7px 3px 0; }
     }
 
     .editor-container {
       display: flex;
       flex-direction: row;
 
+      // EDITOR
       .editor-edition {
-        width: 50%;
+        flex: 1 0 0;
+        // .editor-edition-error-message { position: absolute; bottom: 0; }
 
-        .editor-edition-error-message {
-          position: absolute;
-          bottom: 0;
-        }
+        form div { margin: 0; word-wrap: break-word; word-break: break-all; }
+      }
 
-        form div {
-          margin: 0;
-          textarea {
-            font-size: 14px;
-            padding: 20px;
-          }
-        }
+      // PREVIEW
+      .preview {
+        position: relative;
+        flex: 1 0 0;
+        overflow: scroll;
+        margin: 0;
+        min-height: inherit;
+        box-shadow: none;
+        border-radius: 0;
       }
     }
   }
@@ -69,6 +73,12 @@
     .editor-toolbar {
       background-color: #fff;
       border-bottom: 1px solid #8F938F;
+
+      .button-group {
+        .button {
+          // style buttons
+        }
+      }
     }
   }
 }

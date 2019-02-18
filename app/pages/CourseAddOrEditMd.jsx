@@ -867,20 +867,20 @@ const myVar = 'content...';
 
 					<div className={cx('editor-container-full')}>
 						<div className={cx('editor-toolbar')}>
-							<Button.Group basic size="small">
+							<Button.Group basic size="small" className={cx('button-group')}>
 								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
 							</Button.Group>
 
-							<Button.Group basic size="small">
+							<Button.Group basic size="small" className={cx('button-group')}>
 								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
 							</Button.Group>
 
-							<Button.Group basic size="small" floated="right">
+							<Button.Group basic size="small" className={cx('button-group')}>
 								<Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" />
 							</Button.Group>
 						</div>
 
-						<div className={cx('editor-container')} ref={(el) => { this.refEditorContainer = el; }}>
+						<div className={cx('editor-container')}>
 							<div className={cx('editor-edition')} onScroll={this.handleScroll('editor')}>
 								<Form error={addOrEditMissingField.content} size="small">
 									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />

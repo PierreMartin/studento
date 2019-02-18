@@ -2,10 +2,9 @@ $lines-color: #8F938F;
 
 @mixin init() {
   display: block;
-  margin: 0 15px 15px 0;
+  margin: 20px 0 15px 0;
   min-height: 600px;
   padding: 20px;
-  margin-top: 20px;
   border: 1px solid #e3e3e3;
   border-radius: 5px;
   // box-shadow: 0 0 1px 1px rgba(20, 23, 28, .1), 0 3px 1px 0 rgba(20, 23, 28, .1);
@@ -14,7 +13,7 @@ $lines-color: #8F938F;
   word-break: break-all;
   white-space: normal;
 
-  h1, h2, h3, h4, h5, h6 { position: relative; padding: 0;  word-wrap: break-word; word-break: break-all; white-space: normal; }
+  h1, h2, h3, h4, h5, h6 { position: relative; padding: 0; word-wrap: break-word; word-break: break-all; white-space: normal; }
 
   h1 { font-size: 35px; margin: 0 0 24px 0; font-weight: 800; }
   h2 { font-size: 18px; margin: 8px 0 16px 0; font-weight: 800; }
@@ -98,14 +97,4 @@ $lines-color: #8F938F;
       background-color: #f5f5f5;
     }
   }
-}
-
-.preview {
-  position: relative;
-  width: 50%;
-  overflow: scroll;
-  margin: 0;
-  min-height: inherit;
-  box-shadow: none;
-  border-radius: 0;
 }

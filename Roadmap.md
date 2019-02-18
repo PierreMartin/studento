@@ -99,7 +99,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- empecher editor de s'elargir
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 - Google analytique
