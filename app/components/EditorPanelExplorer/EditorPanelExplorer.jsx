@@ -186,7 +186,7 @@ class EditorPanelExplorer extends Component {
 		];
 
 		return (
-			<div className={cx('panel-explorer-container')}>
+			<div className={cx('panel-explorer-container')} id="panel-explorer-container">
 				<div className={cx('panel-explorer-nav-bar')}>
 					<Button.Group basic size="small">
 						<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
@@ -197,7 +197,7 @@ class EditorPanelExplorer extends Component {
 						</Popup>
 
 						{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={handleOnSubmit} />} content="Save" /> }
-						{ !isEditing ? <Button disabled icon="sticky note outline" /> : <Popup trigger={<Button icon="sticky note outline" as={Link} to={`/course/${course._id}`} />} content="See the note (you should save before)" /> }
+						{ !isEditing ? <Button disabled icon="eye" /> : <Popup trigger={<Button icon="eye" as={Link} to={`/course/${course._id}`} />} content="See the note (you should save before)" /> }
 					</Button.Group>
 				</div>
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 import marked from 'marked';
@@ -720,6 +721,10 @@ const myVar = 'content...';
 				this.setState({ isButtonAutoScrollActive: !this.state.isButtonAutoScrollActive });
 				this.refContentPreview.scrollTo(0, this.editorCm.getScrollInfo().top);
 				break;
+			case 'toggle preview':
+				// TODO finir la
+				// this.setState({ isPreviewModeActive: !this.state.isPreviewModeActive });
+				break;
 			default:
 				break;
 		}
@@ -867,6 +872,18 @@ const myVar = 'content...';
 
 					<div className={cx('editor-container-full')}>
 						<div className={cx('editor-toolbar')}>
+							<Button.Group basic size="small" className={cx('button-group', 'buttons-group-for-mobile')} id="buttons-group-for-mobile">
+								<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
+
+								<Popup trigger={<Button icon="file" />} flowing hoverable>
+									<Button basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
+									<Button basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
+								</Popup>
+
+								{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
+								{ !isEditing ? <Button disabled icon="eye" /> : <Popup trigger={<Button toggle icon="eye" basic className={cx('button')} active={true} onClick={this.handleClickToolbar('toggle preview')} />} content="See the note (you should save before)" /> }
+							</Button.Group>
+
 							<Button.Group basic size="small" className={cx('button-group')}>
 								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
 							</Button.Group>
@@ -881,7 +898,7 @@ const myVar = 'content...';
 						</div>
 
 						<div className={cx('editor-container')}>
-							<div className={cx('editor-edition')} onScroll={this.handleScroll('editor')}>
+							<div className={cx('editor-edition')} id="editor-edition" onScroll={this.handleScroll('editor')}>
 								<Form error={addOrEditMissingField.content} size="small">
 									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
 									{/*
@@ -891,7 +908,7 @@ const myVar = 'content...';
 								</Form>
 							</div>
 
-							<div className={cx('container-page-light', 'preview')} style={{ height: heightEditor + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refContentPreview = el; }} onScroll={this.handleScroll('preview')} />
+							<div className={cx('container-page-light', 'preview')} id="preview" style={{ height: heightEditor + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refContentPreview = el; }} onScroll={this.handleScroll('preview')} />
 						</div>
 					</div>
 				</div>
