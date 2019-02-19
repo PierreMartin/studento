@@ -896,13 +896,17 @@ const myVar = 'content...';
 								<Popup trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={this.handleClickToolbar('toggle preview')} />} content="Preview mode" />
 							</Button.Group>
 
-							<Button.Group basic size="small" className={cx('button-group')}>
-								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
-							</Button.Group>
+							{ !isPreviewModeActive || !isMobile ? (
+								<Button.Group basic size="small" className={cx('button-group')}>
+									{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
+								</Button.Group>
+							) : '' }
 
-							<Button.Group basic size="small" className={cx('button-group')}>
-								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
-							</Button.Group>
+							{ !isPreviewModeActive || !isMobile ? (
+								<Button.Group basic size="small" className={cx('button-group')}>
+									{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
+								</Button.Group>
+							) : '' }
 
 							{ !isMobile ? (
 								<Button.Group basic size="small" className={cx('button-group')}>
