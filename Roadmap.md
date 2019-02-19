@@ -103,6 +103,8 @@ $ ./scripts/generate_menu.sh
     - afficher / cacher le EditorPanelExplorer avec animation
     - gerer les champs obligatoire manquants (afficher EditorPanelExplorer)
 
+- add button 'preview' and 'go to the public page (you should save before)' note in destock
+
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 - Google analytique
