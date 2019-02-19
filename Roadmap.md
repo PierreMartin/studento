@@ -100,7 +100,7 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - Editor for mobile
-    - disable scroll sync (detecter le width du windows en js)
+    - disable scroll sync (detecter le width du windows en js avec   window.matchMedia("(min-width: 600px)").matches)
     - afficher / cacher le EditorPanelExplorer avec animation
     - gerer les champs obligatoire manquants (afficher EditorPanelExplorer)
 

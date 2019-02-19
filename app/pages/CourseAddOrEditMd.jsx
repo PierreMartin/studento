@@ -111,7 +111,8 @@ const myVar = 'content...';
 			codeLanguageSelected: '',
 			isEditorChanged: false,
 			isButtonAutoScrollActive: true,
-			isPreviewModeActive: false
+			isPreviewModeActive: false, // only for mobile
+			isMobile: false
 		};
 	}
 
@@ -344,7 +345,9 @@ const myVar = 'content...';
 		const { heightEditor } = this.getSizeEditor();
 
 		if (this.editorCm) this.editorCm.setSize(null, heightEditor);
-		this.setState({ heightEditor });
+
+		if (window.matchMedia('(max-width: 768px)').matches) return this.setState({ heightEditor, isMobile: true });
+		this.setState({ heightEditor, isMobile: false });
 	}
 
 	handleOnSubmit(event) {
@@ -786,7 +789,7 @@ const myVar = 'content...';
 
 	handleScroll(source) {
 		return (e) => {
-			if (e.target.scrollTop === 0) return; // When typing, we pass in onScroll :(
+			if (e.target.scrollTop === 0 || this.state.isMobile) return; // (e.target.scrollTop === 0) ==>  When typing, we pass in onScroll :(
 
 			this.resetTargetScrolling(); // For re enable the other container to scroll
 
@@ -826,7 +829,7 @@ const myVar = 'content...';
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isButtonAutoScrollActive, isPreviewModeActive } = this.state;
+		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isButtonAutoScrollActive, isPreviewModeActive, isMobile } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { codeLanguagesOptions } = this.getOptionsFormsSelect();
 
@@ -902,9 +905,11 @@ const myVar = 'content...';
 								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
 							</Button.Group>
 
-							<Button.Group basic size="small" className={cx('button-group')}>
-								<Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" />
-							</Button.Group>
+							{ !isMobile ? (
+								<Button.Group basic size="small" className={cx('button-group')}>
+									<Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" />
+								</Button.Group>
+							) : '' }
 						</div>
 
 						<div className={cx('editor-container')}>
