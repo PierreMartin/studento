@@ -27,7 +27,6 @@ class CourseAddOrEditMd extends Component {
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-		this.resetSectionsForScrolling = this.resetSectionsForScrolling.bind(this);
 		this.handleClickToolbar = this.handleClickToolbar.bind(this);
 
 		// modal:
@@ -121,7 +120,6 @@ const myVar = 'content...';
 		this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 550;
 		this.updateWindowDimensions();
 		window.addEventListener('resize', this.updateWindowDimensions);
-		window.addEventListener('resize', this.resetSectionsForScrolling);
 
 		// Load highlight.js Languages:
 		hljsLoadLanguages(hljs);
@@ -286,7 +284,6 @@ const myVar = 'content...';
 	componentWillUnmount() {
 		this.updateWindowDimensions();
 		window.removeEventListener('resize', this.updateWindowDimensions);
-		window.removeEventListener('resize', this.resetSectionsForScrolling);
 	}
 
 	getSizeEditor() {
@@ -348,6 +345,10 @@ const myVar = 'content...';
 
 		if (window.matchMedia('(max-width: 768px)').matches) return this.setState({ heightEditor, isMobile: true });
 		this.setState({ heightEditor, isMobile: false });
+
+		// For the cases when we are in the middle of the editor (so we can don't have the first elements in DOM), the elements upper can have the offset changed.
+		// Therefore we need to go to the top for re calculate the offsets
+		this.initScrolling();
 	}
 
 	handleOnSubmit(event) {
@@ -734,6 +735,8 @@ const myVar = 'content...';
 	};
 
 	initScrolling() {
+		if (this.state.isMobile || !this.editorCm) return;
+
 		// Init scroll sync - use when re-rendering in CM editor:
 		this.numberViewportChanged = 0;
 		this.prevNumberViewportChanged = 0;
@@ -819,13 +822,6 @@ const myVar = 'content...';
 		clearInterval(this.timerHandleScroll);
 		this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
 	}
-
-	// Scrolling - at resizing
-	resetSectionsForScrolling = () => {
-		// For the cases when we are in the middle of the editor (so we can don't have the first elements in DOM), the elements upper can have the offset changed.
-		// Therefore we need to go to the top for re calculate the offsets
-		this.initScrolling();
-	};
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
