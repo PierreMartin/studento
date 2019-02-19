@@ -99,6 +99,11 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- Editor for mobile
+    - disable scroll sync (detecter le width du windows en js)
+    - afficher / cacher le EditorPanelExplorer avec animation
+    - gerer les champs obligatoire manquants (afficher EditorPanelExplorer)
+
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 - Google analytique

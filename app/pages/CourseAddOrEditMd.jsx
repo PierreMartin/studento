@@ -110,7 +110,8 @@ const myVar = 'content...';
 			openModalSetStyle: {},
 			codeLanguageSelected: '',
 			isEditorChanged: false,
-			isButtonAutoScrollActive: true
+			isButtonAutoScrollActive: true,
+			isPreviewModeActive: false
 		};
 	}
 
@@ -722,8 +723,7 @@ const myVar = 'content...';
 				this.refContentPreview.scrollTo(0, this.editorCm.getScrollInfo().top);
 				break;
 			case 'toggle preview':
-				// TODO finir la
-				// this.setState({ isPreviewModeActive: !this.state.isPreviewModeActive });
+				this.setState({ isPreviewModeActive: !this.state.isPreviewModeActive });
 				break;
 			default:
 				break;
@@ -826,7 +826,7 @@ const myVar = 'content...';
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isButtonAutoScrollActive } = this.state;
+		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isButtonAutoScrollActive, isPreviewModeActive } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { codeLanguagesOptions } = this.getOptionsFormsSelect();
 
@@ -846,6 +846,16 @@ const myVar = 'content...';
 			{ icon: 'linkify', content: 'Add a link' },
 			{ icon: 'file image outline', content: 'Add image' }
 		];
+
+		// Styles css:
+		const stylesEditor = {};
+		const stylesPreview = { height: heightEditor + 'px' };
+
+		// When mobile mode and button 'see' active:
+		if (isPreviewModeActive) {
+			stylesEditor.display = 'none';
+			stylesPreview.display = 'block';
+		}
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -881,7 +891,7 @@ const myVar = 'content...';
 								</Popup>
 
 								{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
-								{ !isEditing ? <Button disabled icon="eye" /> : <Popup trigger={<Button toggle icon="eye" basic className={cx('button')} active={true} onClick={this.handleClickToolbar('toggle preview')} />} content="See the note (you should save before)" /> }
+								<Popup trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={this.handleClickToolbar('toggle preview')} />} content="Preview mode" />
 							</Button.Group>
 
 							<Button.Group basic size="small" className={cx('button-group')}>
@@ -898,7 +908,7 @@ const myVar = 'content...';
 						</div>
 
 						<div className={cx('editor-container')}>
-							<div className={cx('editor-edition')} id="editor-edition" onScroll={this.handleScroll('editor')}>
+							<div className={cx('editor-edition')} id="editor-edition" style={stylesEditor} onScroll={this.handleScroll('editor')}>
 								<Form error={addOrEditMissingField.content} size="small">
 									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
 									{/*
@@ -908,7 +918,7 @@ const myVar = 'content...';
 								</Form>
 							</div>
 
-							<div className={cx('container-page-light', 'preview')} id="preview" style={{ height: heightEditor + 'px' }} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refContentPreview = el; }} onScroll={this.handleScroll('preview')} />
+							<div className={cx('container-page-light', 'preview')} id="preview" style={stylesPreview} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refContentPreview = el; }} onScroll={this.handleScroll('preview')} />
 						</div>
 					</div>
 				</div>
