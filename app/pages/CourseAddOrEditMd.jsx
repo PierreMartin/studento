@@ -850,9 +850,12 @@ const myVar = 'content...';
 		const stylesEditor = {};
 		const stylesPreview = { height: heightEditor + 'px' };
 
-		// When mobile mode and button 'see' active:
-		if (isPreviewModeActive) {
+		// When mobile mode and button 'preview' active:
+		if (isMobile && isPreviewModeActive) {
 			stylesEditor.display = 'none';
+			stylesPreview.display = 'block';
+		} else if (!isMobile) {
+			stylesEditor.display = 'block';
 			stylesPreview.display = 'block';
 		}
 
