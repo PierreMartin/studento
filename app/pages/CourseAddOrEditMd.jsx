@@ -11,6 +11,7 @@ import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
 import SectionsGeneratorForScrolling from '../components/common/SectionsGeneratorForScrolling';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../actions/courses';
+import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Form, Button, Popup, Modal, Header } from 'semantic-ui-react';
@@ -28,6 +29,7 @@ class CourseAddOrEditMd extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleClickToolbar = this.handleClickToolbar.bind(this);
+		this.handleOpenMenuPanel = this.handleOpenMenuPanel.bind(this);
 
 		// modal:
 		this.editorInModalDidMount = this.editorInModalDidMount.bind(this);
@@ -111,7 +113,8 @@ const myVar = 'content...';
 			isEditorChanged: false,
 			isButtonAutoScrollActive: true,
 			isPreviewModeActive: false, // only for mobile
-			isMobile: false
+			isMobile: false,
+			isMenuPanelOpen: false
 		};
 	}
 
@@ -734,6 +737,10 @@ const myVar = 'content...';
 		}
 	};
 
+	handleOpenMenuPanel() {
+		this.setState({ isMenuPanelOpen: !this.state.isMenuPanelOpen });
+	}
+
 	initScrolling() {
 		if (this.state.isMobile || !this.editorCm) return;
 
@@ -825,7 +832,7 @@ const myVar = 'content...';
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isButtonAutoScrollActive, isPreviewModeActive, isMobile } = this.state;
+		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isButtonAutoScrollActive, isPreviewModeActive, isMobile, isMenuPanelOpen } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { codeLanguagesOptions } = this.getOptionsFormsSelect();
 
@@ -862,8 +869,11 @@ const myVar = 'content...';
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-light')}>
+					<ButtonOpenMenuPanel handleOpenMenuPanel={this.handleOpenMenuPanel} isMenuPanelOpen={isMenuPanelOpen} />
+
 					<EditorPanelExplorer
 						ref={(el) => { this.editorPanelExplorer = el; }}
+						isOpen={isMenuPanelOpen}
 						userMe={userMe}
 						course={course}
 						courses={courses}
@@ -882,7 +892,7 @@ const myVar = 'content...';
 						fromPage="md"
 					/>
 
-					<div className={cx('editor-container-full')}>
+					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
 						<div className={cx('editor-toolbar')}>
 							<Button.Group basic size="small" className={cx('button-group', 'buttons-group-for-mobile')} id="buttons-group-for-mobile">
 								<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
@@ -916,7 +926,7 @@ const myVar = 'content...';
 						</div>
 
 						<div className={cx('editor-container')}>
-							<div className={cx('editor-edition')} id="editor-edition" style={stylesEditor} onScroll={this.handleScroll('editor')}>
+							<div className={cx('editor-edition')} style={stylesEditor} onScroll={this.handleScroll('editor')}>
 								<Form error={addOrEditMissingField.content} size="small">
 									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
 									{/*

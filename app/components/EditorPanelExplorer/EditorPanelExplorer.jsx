@@ -163,6 +163,7 @@ class EditorPanelExplorer extends Component {
 
 	render() {
 		const {
+			isOpen,
 			course,
 			coursesPagesCount,
 			addOrEditMissingField,
@@ -186,7 +187,7 @@ class EditorPanelExplorer extends Component {
 		];
 
 		return (
-			<div className={cx('panel-explorer-container')} id="panel-explorer-container">
+			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')}>
 				<div className={cx('panel-explorer-nav-bar')}>
 					<Button.Group basic size="small">
 						<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
@@ -243,6 +244,7 @@ class EditorPanelExplorer extends Component {
 }
 
 EditorPanelExplorer.propTypes = {
+	isOpen: PropTypes.bool,
 	fromPage: PropTypes.string,
 	isEditorChanged: PropTypes.bool,
 

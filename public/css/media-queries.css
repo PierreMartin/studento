@@ -6,13 +6,8 @@
 /* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
 @media screen and (max-width: 768px) {
     /************************** Editor *********************/
-    #panel-explorer-container, #preview {
-        display: none;
-    }
-
-    #buttons-group-for-mobile {
-        display: inline-flex;
-    }
+    #preview { display: none; }
+    #buttons-group-for-mobile { display: inline-flex; }
 
     /*********************** Markdown render *****************/
     #container-page-view .md-column-1 {
