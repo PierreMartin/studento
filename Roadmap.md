@@ -100,7 +100,6 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - Editor for mobile
-    - afficher / cacher le EditorPanelExplorer avec animation
     - gerer les champs obligatoire manquants (afficher EditorPanelExplorer)
 
 - add button 'preview' and 'go to the public page (you should save before)' note in destock

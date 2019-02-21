@@ -120,7 +120,7 @@ const myVar = 'content...';
 
 	componentDidMount() {
 		// Resize element child to 100% height:
-		this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 550;
+		this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
 		this.updateWindowDimensions();
 		window.addEventListener('resize', this.updateWindowDimensions);
 
@@ -291,8 +291,9 @@ const myVar = 'content...';
 
 	getSizeEditor() {
 		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
-		let heightEditor = heightDocument - 50;
+		let heightEditor = heightDocument;
 		if (this.heightPanel > heightDocument) heightEditor = this.heightPanel;
+		heightEditor -= 50;
 
 		return { heightEditor };
 	}
