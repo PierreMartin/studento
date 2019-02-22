@@ -99,6 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- style pagination
 - Editor for mobile
     - gerer les champs obligatoire manquants (afficher EditorPanelExplorer)
 
