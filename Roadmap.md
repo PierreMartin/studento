@@ -99,6 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- mettre boutons 'gotoLists', 'gotoPage', 'save', 'preview', 'openPanel', 'new' dans la partie éditor
 - style pagination
 - Editor for mobile
     - gerer les champs obligatoire manquants (afficher EditorPanelExplorer)
