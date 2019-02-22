@@ -6,7 +6,7 @@ const postcssReporter = require('postcss-reporter');
 const PATHS = require('../paths');
 
 module.exports = ({ production = false, browser = false } = {}) => {
-  const localIdentName = 'localIdentName=[name]__[local]___[hash:base64:5]';
+  const localIdentName = '[name]__[local]___[hash:base64:5]';
 
   const createCssLoaders = embedCssInBundle => ([
     {

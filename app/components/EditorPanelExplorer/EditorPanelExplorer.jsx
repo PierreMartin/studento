@@ -189,16 +189,16 @@ class EditorPanelExplorer extends Component {
 		return (
 			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')}>
 				<div className={cx('panel-explorer-nav-bar')}>
-					<Button.Group basic size="small">
-						<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
+					<Button.Group basic size="small" id="panel-explorer_button-group" floated="right">
+						<Popup inverted trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
 
-						<Popup trigger={<Button icon="file" />} flowing hoverable>
-							<Button basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-							<Button basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
+						<Popup inverted trigger={<Button icon="file" />} flowing hoverable>
+							<Button basic inverted size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
+							<Button basic inverted size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
 						</Popup>
 
-						{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={handleOnSubmit} />} content="Save" /> }
-						{ !isEditing ? <Button disabled icon="eye" /> : <Popup trigger={<Button icon="eye" as={Link} to={`/course/${course._id}`} />} content="See the note (you should save before)" /> }
+						{ !isEditorChanged ? <Popup inverted trigger={<Button disabled icon="save" onClick={handleOnSubmit} />} content="Save" /> : <Popup inverted trigger={<Button icon="save" onClick={handleOnSubmit} />} content="Save" /> }
+						{ !isEditing ? <Button disabled icon="eye" /> : <Popup inverted trigger={<Button icon="eye" as={Link} to={`/course/${course._id}`} />} content="See the note (you should save before)" /> }
 					</Button.Group>
 				</div>
 
@@ -208,24 +208,24 @@ class EditorPanelExplorer extends Component {
 				</div>
 
 				<div className={cx('panel-explorer-properties')}>
-					<Form error={messagesError.props.children.length > 0} size="small" onSubmit={handleOnSubmit}>
+					<Form error={messagesError.props.children.length > 0} size="mini" onSubmit={handleOnSubmit}>
 						<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} />
 						<Form.TextArea label="Description" placeholder="The description of your Note..." name="description" value={fields.description || ''} onChange={handleInputChange} />
 
-						<Form.Select required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} />
+						<Form.Select className={cx('select')} required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} />
 						{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={handleInputChange} /> : '' }
 
 						<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={handleInputChange} />
 
 						{ fromPage !== 'wy' ? (
-							<Segment>
-								<Header as="h4" icon="edit" content="Templates" />
-								<Form.Field inline className={cx('header-select-container')}>
+							<Segment className={cx('form-templates-container')}>
+								<Header as="h4" icon="edit" content="Templates" className={cx('header')} />
+								<Form.Field inline className={cx('form-templates')}>
 									{ selectTemplatesHeaders.map((select, key) => {
 										return (
 											<div key={key}>
 												<label htmlFor={select.name}>{select.label}</label>
-												<Select className={cx('header-select')} name={select.name} options={columnsOptions} value={fields.template[select.name] || 1} onChange={handleInputChange} />
+												<Select className={cx('input-select')} name={select.name} options={columnsOptions} value={fields.template[select.name] || 1} onChange={handleInputChange} />
 											</div>
 										);
 									}) }
@@ -235,7 +235,7 @@ class EditorPanelExplorer extends Component {
 
 						<Message error content={messagesError} />
 
-						{ isDisableButtonSubmit ? <Form.Button basic disabled>Save properties</Form.Button> : <Form.Button basic>Save properties</Form.Button> }
+						<Form.Button basic fluid inverted disabled={isDisableButtonSubmit}>Save properties</Form.Button>
 					</Form>
 				</div>
 			</div>
