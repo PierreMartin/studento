@@ -99,9 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- style pagination
-- Editor for mobile
-    - gerer les champs obligatoire manquants (afficher EditorPanelExplorer)
+- style pagination + separation des types de notes dans la liste
 
 - add button 'preview' and 'go to the public page (you should save before)' note in destock
 
