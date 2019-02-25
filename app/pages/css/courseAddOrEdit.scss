@@ -13,10 +13,11 @@
 
     .editor-toolbar {
       width: 100%;
-      padding: 4px 4px 4px 50px;
+      padding: 4px;
+      transition: padding-left .5s;
 
+      &.add-margin { padding-left: 50px; }
       .button-group { margin: 3px 7px 3px 0; }
-      .buttons-group-for-mobile { display: none; }
     }
 
     .editor-container {

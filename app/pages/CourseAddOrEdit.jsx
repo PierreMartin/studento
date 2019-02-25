@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
+import { Link } from 'react-router';
 import TinyEditor from '../components/TinyEditor/TinyEditor';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
 import { kaTexRendering } from '../components/common/renderingCourse';
 import { createCourseAction, updateCourseAction, emptyErrorsAction, fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../actions/courses';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
+import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
+import { Button, Popup } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -33,6 +36,7 @@ class CourseAddOrEdit extends Component {
 		super(props);
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleOpenMenuPanel = this.handleOpenMenuPanel.bind(this);
 
 		// Tiny MCE Editor:
 		this.handleEditorChange = this.handleEditorChange.bind(this);
@@ -78,7 +82,8 @@ class CourseAddOrEdit extends Component {
 			},
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
-			isEditorChanged: false
+			isEditorChanged: false,
+			isMenuPanelOpen: false
 		};
 	}
 
@@ -224,6 +229,10 @@ class CourseAddOrEdit extends Component {
 		};
 	}
 
+	handleOpenMenuPanel() {
+		this.setState({ isMenuPanelOpen: !this.state.isMenuPanelOpen });
+	}
+
 	handleInputChange(event, field) {
 		const oldStateTyping = this.state.fieldsTyping;
 
@@ -290,15 +299,18 @@ class CourseAddOrEdit extends Component {
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { category, isEditing, fieldsTyping, isEditorChanged } = this.state;
+		const { category, isEditing, fieldsTyping, isEditorChanged, isMenuPanelOpen } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { heightEditor } = this.getHeigthElements();
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-light')}>
+					<ButtonOpenMenuPanel handleOpenMenuPanel={this.handleOpenMenuPanel} isMenuPanelOpen={isMenuPanelOpen} />
+
 					<EditorPanelExplorer
 						ref={(el) => { this.editorPanelExplorer = el; }}
+						isOpen={isMenuPanelOpen}
 						userMe={userMe}
 						course={course}
 						courses={courses}
@@ -317,7 +329,21 @@ class CourseAddOrEdit extends Component {
 						fromPage="wy"
 					/>
 
-					<div className={cx('editor-container-full')}>
+					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
+						<div className={cx('editor-toolbar', !isMenuPanelOpen ? 'add-margin' : '')}>
+							<Button.Group basic size="small" className={cx('button-group')}>
+								<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
+
+								<Popup trigger={<Button icon="file" />} flowing hoverable>
+									<Button basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
+									<Button basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
+								</Popup>
+
+								{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
+								{ !isEditing ? <Button disabled icon="at" /> : <Popup inverted trigger={<Button icon="at" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
+							</Button.Group>
+						</div>
+
 						<TinyEditor
 							id={this.idEditor}
 							onEditorChange={this.handleEditorChange}

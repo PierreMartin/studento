@@ -189,6 +189,7 @@ class EditorPanelExplorer extends Component {
 		return (
 			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')}>
 				<div className={cx('panel-explorer-nav-bar')}>
+					{/*
 					<Button.Group basic size="small" id="panel-explorer_button-group" floated="right">
 						<Popup inverted trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
 
@@ -200,6 +201,7 @@ class EditorPanelExplorer extends Component {
 						{ !isEditorChanged ? <Popup inverted trigger={<Button disabled icon="save" onClick={handleOnSubmit} />} content="Save" /> : <Popup inverted trigger={<Button icon="save" onClick={handleOnSubmit} />} content="Save" /> }
 						{ !isEditing ? <Button disabled icon="eye" /> : <Popup inverted trigger={<Button icon="eye" as={Link} to={`/course/${course._id}`} />} content="See the note (you should save before)" /> }
 					</Button.Group>
+					*/}
 				</div>
 
 				<div className={cx('panel-explorer-tree-folder')}>

@@ -112,7 +112,7 @@ const myVar = 'content...';
 			codeLanguageSelected: '',
 			isEditorChanged: false,
 			isButtonAutoScrollActive: true,
-			isPreviewModeActive: false, // only for mobile
+			isPreviewModeActive: false,
 			isMobile: false,
 			isMenuPanelOpen: false
 		};
@@ -743,7 +743,7 @@ const myVar = 'content...';
 	}
 
 	initScrolling() {
-		if (this.state.isMobile || !this.editorCm) return;
+		if (this.state.isMobile || this.state.isPreviewModeActive || !this.editorCm) return;
 
 		// Init scroll sync - use when re-rendering in CM editor:
 		this.numberViewportChanged = 0;
@@ -800,7 +800,7 @@ const myVar = 'content...';
 
 	handleScroll(source) {
 		return (e) => {
-			if (e.target.scrollTop === 0 || this.state.isMobile) return; // (e.target.scrollTop === 0) ==>  When typing, we pass in onScroll :(
+			if (e.target.scrollTop === 0 || this.state.isMobile || this.state.isPreviewModeActive) return; // (e.target.scrollTop === 0) ==>  When typing, we pass in onScroll :(
 
 			this.resetTargetScrolling(); // For re enable the other container to scroll
 
@@ -858,12 +858,8 @@ const myVar = 'content...';
 		const stylesEditor = {};
 		const stylesPreview = { height: heightEditor + 'px' };
 
-		// When mobile mode and button 'preview' active:
-		if (isMobile && isPreviewModeActive) {
+		if (isPreviewModeActive) {
 			stylesEditor.display = 'none';
-			stylesPreview.display = 'block';
-		} else if (!isMobile) {
-			stylesEditor.display = 'block';
 			stylesPreview.display = 'block';
 		}
 
@@ -894,36 +890,41 @@ const myVar = 'content...';
 					/>
 
 					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
-						<div className={cx('editor-toolbar')}>
-							<Button.Group basic size="small" className={cx('button-group', 'buttons-group-for-mobile')} id="buttons-group-for-mobile">
-								<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
-
-								<Popup trigger={<Button icon="file" />} flowing hoverable>
-									<Button basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-									<Button basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
-								</Popup>
-
-								{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
-								<Popup trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={this.handleClickToolbar('toggle preview')} />} content="Preview mode" />
-							</Button.Group>
-
-							{ !isPreviewModeActive || !isMobile ? (
+						<div>
+							<div className={cx('editor-toolbar', !isMenuPanelOpen ? 'add-margin' : '')}>
 								<Button.Group basic size="small" className={cx('button-group')}>
-									{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
-								</Button.Group>
-							) : '' }
+									<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
 
-							{ !isPreviewModeActive || !isMobile ? (
-								<Button.Group basic size="small" className={cx('button-group')}>
-									{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
-								</Button.Group>
-							) : '' }
+									<Popup trigger={<Button icon="file" />} flowing hoverable>
+										<Button basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
+										<Button basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
+									</Popup>
 
-							{ !isMobile ? (
-								<Button.Group basic size="small" className={cx('button-group')}>
-									<Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" />
+									{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
+									<Popup trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={this.handleClickToolbar('toggle preview')} />} content="Preview mode" />
+									{ !isEditing ? <Button disabled icon="at" /> : <Popup inverted trigger={<Button icon="at" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
 								</Button.Group>
-							) : '' }
+							</div>
+
+							<div className={cx('editor-toolbar')}>
+								{ !isPreviewModeActive ? (
+									<Button.Group basic size="small" className={cx('button-group')}>
+										{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
+									</Button.Group>
+								) : '' }
+
+								{ !isPreviewModeActive ? (
+									<Button.Group basic size="small" className={cx('button-group')}>
+										{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
+									</Button.Group>
+								) : '' }
+
+								{ !isPreviewModeActive && !isMobile ? (
+									<Button.Group basic size="small" className={cx('button-group')}>
+										<Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" />
+									</Button.Group>
+								) : '' }
+							</div>
 						</div>
 
 						<div className={cx('editor-container')}>
