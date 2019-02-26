@@ -83,7 +83,7 @@ class CourseAddOrEdit extends Component {
 			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 			category: { lastSelected: null },
 			isEditorChanged: false,
-			isMenuPanelOpen: false
+			isMenuPanelOpen: (this.props.location && this.props.location.state && this.props.location.state.isMenuPanelOpen) || false
 		};
 	}
 

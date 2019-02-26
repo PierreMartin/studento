@@ -114,7 +114,7 @@ const myVar = 'content...';
 			isButtonAutoScrollActive: true,
 			isPreviewModeActive: false,
 			isMobile: false,
-			isMenuPanelOpen: false
+			isMenuPanelOpen: (this.props.location && this.props.location.state && this.props.location.state.isMenuPanelOpen) || false
 		};
 	}
 

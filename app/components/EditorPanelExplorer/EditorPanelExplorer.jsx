@@ -131,7 +131,8 @@ class EditorPanelExplorer extends Component {
 
 		return courses.map((c) => {
 			const isTypeMarkDown = c.type !== 'wy';
-			const pathCourseToEdit = isTypeMarkDown ? `/courseMd/edit/${c._id}` : `/course/edit/${c._id}`;
+			const pathname = isTypeMarkDown ? `/courseMd/edit/${c._id}` : `/course/edit/${c._id}`;
+			const pathCourseToEdit = { pathname, state: { isMenuPanelOpen: true } };
 			const icon = isTypeMarkDown ? 'file' : 'file text';
 			const isActive = course._id === c._id;
 

@@ -99,7 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- style pagination + separation des types de notes dans la liste
+- style pagination + faire une zone de scroll dans la liste des notes dans les Editors
 
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
