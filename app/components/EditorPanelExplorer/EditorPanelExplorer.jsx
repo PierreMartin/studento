@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../../actions/courses';
 import { fetchCategoriesAction } from '../../actions/category';
-import { Segment, Popup, Button, List, Form, Header, Message, Select, Icon, Pagination } from 'semantic-ui-react';
+import { Segment, List, Form, Header, Message, Select, Icon, Pagination } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/editorPanelExplorer.scss';
 
@@ -147,6 +147,7 @@ class EditorPanelExplorer extends Component {
 
 		return (
 			<Pagination
+				inverted
 				activePage={paginationEditor.lastActivePage}
 				boundaryRange={1}
 				siblingRange={1}
@@ -207,7 +208,9 @@ class EditorPanelExplorer extends Component {
 
 				<div className={cx('panel-explorer-tree-folder')}>
 					<List className={cx('panel-explorer-tree-folder-itemslist')} link>{ this.renderCoursesList()}</List>
-					{ coursesPagesCount > 1 && this.renderPaginationCoursesList() }
+					<div style={{ textAlign: 'center' }}>
+						{ coursesPagesCount > 1 && this.renderPaginationCoursesList() }
+					</div>
 				</div>
 
 				<div className={cx('panel-explorer-properties')}>

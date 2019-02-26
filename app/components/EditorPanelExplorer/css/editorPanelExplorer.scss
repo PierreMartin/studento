@@ -2,8 +2,7 @@ $colorFontDarkTheme: #999;
 
 .panel-explorer-container {
   position: absolute;
-  height: 100%;
-  min-height: 820px;
+  min-height: 100%;
   top: 0;
   left: -260px;
   display: flex;
@@ -35,21 +34,31 @@ $colorFontDarkTheme: #999;
   }
 
   .panel-explorer-tree-folder-itemslist {
-    a:first-child, a:last-child {
-      padding: 5px 20px 5px 20px !important;
-    }
+    overflow-x: scroll;
+    height: 230px;
+
     a {
       padding: 5px 20px 5px 20px  !important;
       color: $colorFontDarkTheme !important;
       font-weight: 900;
       border-bottom: 1px solid #444;
+      transition: .25s !important;
+
+      &:first-child, &:last-child {
+        padding: 5px 20px 5px 20px !important;
+      }
+
+      &.active-course {
+        background-color: #555 !important;
+        color: #fff !important;
+      }
+      &:hover {
+        background-color: #555;
+      }
+
       i { color: $colorFontDarkTheme !important; }
     }
-    a.active-course {
-      background-color: #555;
-      color: #fff !important;
-      border-radius: 2px;
-    }
+
   }
 
   .panel-explorer-properties {
