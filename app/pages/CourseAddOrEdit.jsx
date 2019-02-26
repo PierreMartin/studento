@@ -275,25 +275,33 @@ class CourseAddOrEdit extends Component {
 			data.fields = {...fieldsTyping, template: { ...template } };
 			data.modifiedAt = new Date().toISOString();
 			data.courseId = course._id;
-			updateCourseAction(data).then(() => {
-				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
-			});
+			updateCourseAction(data)
+				.then(() => {
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+				})
+				.catch(() => {
+					this.setState({ isMenuPanelOpen: true });
+				});
 		} else {
 			data.fields = fieldsTyping;
 			data.userMeId = userMe._id;
 			data.createdAt = new Date().toISOString();
 			data.fields.type = 'wy';
-			createCourseAction(data, coursesPagesCount, indexPagination).then(() => {
-				this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+			createCourseAction(data, coursesPagesCount, indexPagination)
+				.then(() => {
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 
-				// Goto next page if last item:
-				if ((courses.length + 1) % 13 === 0) {
-					const activePage = indexPagination + 1;
+					// Goto next page if last item:
+					if ((courses.length + 1) % 13 === 0) {
+						const activePage = indexPagination + 1;
 
-					setPaginationCoursesEditorAction(activePage);
-					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
-				}
-			});
+						setPaginationCoursesEditorAction(activePage);
+						fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
+					}
+				})
+				.catch(() => {
+					this.setState({ isMenuPanelOpen: true });
+				});
 		}
 	}
 
