@@ -293,7 +293,7 @@ const myVar = 'content...';
 		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
 		let heightEditor = heightDocument;
 		if (this.heightPanel > heightDocument) heightEditor = this.heightPanel;
-		heightEditor -= 50;
+		heightEditor -= 105;
 
 		return { heightEditor };
 	}

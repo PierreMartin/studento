@@ -101,8 +101,6 @@ $ ./scripts/generate_menu.sh
 ### TODO :
 - style pagination + separation des types de notes dans la liste
 
-- add button 'preview' and 'go to the public page (you should save before)' note in destock
-
 - Améliorer design + HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 - Google analytique
