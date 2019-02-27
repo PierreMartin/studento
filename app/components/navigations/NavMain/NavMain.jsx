@@ -10,10 +10,10 @@ import { logoutAction } from '../../../actions/authentification';
 import { openTchatboxSuccess } from '../../../actions/tchat';
 import { Button, Container, Menu, Segment, Dropdown, Icon } from 'semantic-ui-react';
 import hubNoteLogo from '../../../images/logo_hubnote_white_menu.png';
-// import classNames from 'classnames/bind';
-// import styles from './css/navMain.scss';
+import classNames from 'classnames/bind';
+import styles from './css/navMain-mediaqueries.scss';
 
-// const cx = classNames.bind(styles);
+const cx = classNames.bind(styles);
 
 
 class NavigationMain extends Component {
@@ -150,17 +150,17 @@ class NavigationMain extends Component {
 		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl, categories } = this.props;
 
 		return (
-			<Segment inverted style={{ marginBottom: '0', padding: '0', height: '55px' }}>
+			<Segment inverted style={{ marginBottom: '0', padding: '0', height: '55px' }} className={cx('menu-segment')}>
 				<Container>
-					<Menu inverted pointing secondary>
-						<Menu.Item position="left">
-							<Menu.Item as={Link} to="/"><img src={hubNoteLogo} alt="Logo HubNote" /></Menu.Item>
+					<Menu inverted pointing secondary className={cx('menu-container')}>
+						<Menu.Item position="left" className={cx('left')}>
+							<Menu.Item as={Link} to="/" className={cx('home')}><img src={hubNoteLogo} alt="Logo HubNote" /></Menu.Item>
 							{ this.renderDropdownCategories(categories) }
 							<Menu.Item as={Link} to="/about" active={pathUrl === '/about'}>About</Menu.Item>
 							{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" active={pathUrl === '/users' || pathUrl === '/user/:id'}>Users</Menu.Item>) : ''}
 						</Menu.Item>
 
-						<Menu.Item position="right">
+						<Menu.Item position="right" className={cx('right')}>
 							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
 							{ this.renderDropdownAddCourse(authentification) }
 

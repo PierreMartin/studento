@@ -1,0 +1,36 @@
+/* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
+@media screen and (max-width: 700px) {
+  .menu-segment {
+    height: inherit !important;
+
+    .menu-container {
+      display: block;
+
+      .left, .right {
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+
+        [class~=item] {
+          padding: 12px 10px !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
+        [class~=active] {
+          background-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .home {
+          text-align: center;
+          display: block;
+        }
+      }
+
+      .right {
+        [class~=item]:last-of-type {
+          border-bottom: none !important;
+        }
+      }
+    }
+  }
+}
