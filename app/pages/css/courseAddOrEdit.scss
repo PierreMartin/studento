@@ -1,3 +1,5 @@
+@import '../../css/common/colors.scss';
+
 @mixin init() {
   display: flex;
   flex-direction: row;
@@ -18,7 +20,7 @@
       &.toolbar-settings {
         position: fixed;
         z-index: 9;
-        background-color: #151515;
+        background-color: $colorBgVeryDark;
         transition: padding-left .5s;
 
         .button-group {

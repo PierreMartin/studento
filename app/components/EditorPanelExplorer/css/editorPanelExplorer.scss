@@ -1,3 +1,4 @@
+@import '../../../css/common/colors.scss';
 $colorFontDarkTheme: #999;
 
 .panel-explorer-container {
@@ -16,9 +17,7 @@ $colorFontDarkTheme: #999;
   &.menu-open { left: 0; }
 
   .nav-bar {
-    z-index: 6;
-    width: 260px;
-    background-color: #151515;
+    background-color: $colorBgVeryDark;
     height: 48px;
 
     /*
