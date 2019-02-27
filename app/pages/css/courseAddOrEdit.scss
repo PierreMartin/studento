@@ -11,16 +11,40 @@
 
     &.menu-open { left: 260px; }
 
-    .editor-toolbar {
+    .toolbar {
       width: 100%;
       padding: 4px;
-      transition: padding-left .5s;
+
+      &.toolbar-settings {
+        position: fixed;
+        z-index: 9;
+        background-color: #151515;
+        transition: padding-left .5s;
+
+        .button-group {
+          border: 1px solid #555;
+          margin: 3px 7px 3px 0;
+
+          [role="button"]:first-child { border-left: none; }
+          [role="button"] { border-left: 1px solid #555; color: white !important; &:hover, &:focus, &:active { background-color: #555 !important; } }
+          button[disabled] { border-color: #555 !important; opacity: 1 !important; color: #555 !important; }
+        }
+      }
+
+      &.toolbar-editor {
+        padding-top: 50px;
+        border-bottom: 1px solid #ddd;
+      }
 
       &.add-margin { padding-left: 50px; }
       .button-group { margin: 3px 7px 3px 0; }
     }
 
-    .editor-container {
+    .tiny-editor-container {
+      padding-top: 50px;
+    }
+
+    .md-editor-container {
       display: flex;
       flex-direction: row;
 
@@ -50,7 +74,7 @@
   @include init();
 
   .editor-container-full {
-    .editor-toolbar {
+    .toolbar {
       background-color: #1A1A17;
       border-bottom: 1px solid #8F938F;
 
@@ -65,7 +89,7 @@
       }
     }
 
-    .editor-container {
+    .md-editor-container {
       .editor-edition {
         border-right: 1px solid rgba(0,0,0,.1);
       }
@@ -77,7 +101,7 @@
   @include init();
 
   .editor-container-full {
-    .editor-toolbar {
+    .toolbar {
       background-color: #fff;
       border-bottom: 1px solid #8F938F;
 

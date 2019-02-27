@@ -15,13 +15,14 @@ $colorFontDarkTheme: #999;
 
   &.menu-open { left: 0; }
 
-  .panel-explorer-nav-bar {
-    width: 100%;
+  .nav-bar {
+    z-index: 6;
+    width: 260px;
     background-color: #151515;
     height: 48px;
-    // padding: 4px;
 
     /*
+    padding: 4px;
     div[id="panel-explorer_button-group"] {
       border: 1px solid #888;
       margin: 3px 7px 3px 0;
@@ -36,6 +37,17 @@ $colorFontDarkTheme: #999;
   .panel-explorer-tree-folder-itemslist {
     overflow-x: scroll;
     height: 230px;
+    border-top: 1px solid #555;
+    border-bottom: 1px solid #555;
+
+    .message-empty-note {
+      position: relative;
+      top: 50%;
+      margin-top: -5px;
+      text-align: center;
+      color: $colorFontDarkTheme;
+      font-weight: 900;
+    }
 
     a {
       padding: 5px 20px 5px 20px  !important;
@@ -58,7 +70,6 @@ $colorFontDarkTheme: #999;
 
       i { color: $colorFontDarkTheme !important; }
     }
-
   }
 
   .panel-explorer-properties {

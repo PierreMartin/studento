@@ -865,6 +865,7 @@ const myVar = 'content...';
 		// Styles css:
 		const stylesEditor = {};
 		const stylesPreview = { height: heightEditor + 'px' };
+		const stylePopup = { fontWeight: '900' };
 
 		if (isPreviewModeActive) {
 			stylesEditor.display = 'none';
@@ -899,22 +900,22 @@ const myVar = 'content...';
 
 					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
 						<div>
-							<div className={cx('editor-toolbar', !isMenuPanelOpen ? 'add-margin' : '')}>
+							<div className={cx('toolbar', 'toolbar-settings', !isMenuPanelOpen ? 'add-margin' : '')}>
 								<Button.Group basic size="small" className={cx('button-group')}>
-									<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
+									<Popup style={stylePopup} inverted trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Exit (you should save before)" />
 
-									<Popup trigger={<Button icon="file" />} flowing hoverable>
-										<Button basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-										<Button basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
+									<Popup trigger={<Button icon="file" />} flowing hoverable inverted>
+										<Button style={stylePopup} inverted basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
+										<Button style={stylePopup} inverted basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
 									</Popup>
 
-									{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
-									<Popup trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={this.handleClickToolbar('toggle preview')} />} content="Preview mode" />
-									{ !isEditing ? <Button disabled icon="at" /> : <Popup inverted trigger={<Button icon="at" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
+									{ !isEditorChanged ? <Popup style={stylePopup} inverted trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup style={stylePopup} inverted trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
+									<Popup style={stylePopup} inverted trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={this.handleClickToolbar('toggle preview')} />} content="Preview mode" />
+									{ !isEditing ? <Button disabled icon="arrow circle up" /> : <Popup style={stylePopup} inverted trigger={<Button icon="arrow circle up" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
 								</Button.Group>
 							</div>
 
-							<div className={cx('editor-toolbar')}>
+							<div className={cx('toolbar', 'toolbar-editor')}>
 								{ !isPreviewModeActive ? (
 									<Button.Group basic size="small" className={cx('button-group')}>
 										{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
@@ -935,7 +936,7 @@ const myVar = 'content...';
 							</div>
 						</div>
 
-						<div className={cx('editor-container')}>
+						<div className={cx('md-editor-container')}>
 							<div className={cx('editor-edition')} style={stylesEditor} onScroll={this.handleScroll('editor')}>
 								<Form error={addOrEditMissingField.content} size="small">
 									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />

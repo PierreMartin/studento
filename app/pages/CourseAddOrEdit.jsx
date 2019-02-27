@@ -310,6 +310,7 @@ class CourseAddOrEdit extends Component {
 		const { category, isEditing, fieldsTyping, isEditorChanged, isMenuPanelOpen } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { heightEditor } = this.getHeigthElements();
+		const stylePopup = { fontWeight: '900' };
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -338,27 +339,29 @@ class CourseAddOrEdit extends Component {
 					/>
 
 					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
-						<div className={cx('editor-toolbar', !isMenuPanelOpen ? 'add-margin' : '')}>
+						<div className={cx('toolbar', 'toolbar-settings', !isMenuPanelOpen ? 'add-margin' : '')}>
 							<Button.Group basic size="small" className={cx('button-group')}>
-								<Popup trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
+								<Popup style={stylePopup} inverted trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Exit (you should save before)" />
 
-								<Popup trigger={<Button icon="file" />} flowing hoverable>
-									<Button basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-									<Button basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
+								<Popup trigger={<Button icon="file" />} flowing hoverable inverted>
+									<Button style={stylePopup} inverted basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
+									<Button style={stylePopup} inverted basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
 								</Popup>
 
-								{ !isEditorChanged ? <Popup trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
-								{ !isEditing ? <Button disabled icon="at" /> : <Popup inverted trigger={<Button icon="at" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
+								{ !isEditorChanged ? <Popup style={stylePopup} inverted trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup style={stylePopup} inverted trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
+								{ !isEditing ? <Button disabled icon="arrow circle up" /> : <Popup style={stylePopup} inverted trigger={<Button icon="arrow circle up" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
 							</Button.Group>
 						</div>
 
-						<TinyEditor
-							id={this.idEditor}
-							onEditorChange={this.handleEditorChange}
-							content={fields.content}
-							tinymce={tinymce}
-							heightDocument={heightEditor}
-						/>
+						<div className={cx('tiny-editor-container')}>
+							<TinyEditor
+								id={this.idEditor}
+								onEditorChange={this.handleEditorChange}
+								content={fields.content}
+								tinymce={tinymce}
+								heightDocument={heightEditor}
+							/>
+						</div>
 					</div>
 				</div>
 			</LayoutPage>

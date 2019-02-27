@@ -127,7 +127,7 @@ class EditorPanelExplorer extends Component {
 	renderCoursesList() {
 		const { courses, course } = this.props;
 
-		if (courses.length === 0) return 'You don\'t have note';
+		if (courses.length === 0) return <div className={cx('message-empty-note')}>No yet note</div>;
 
 		return courses.map((c) => {
 			const isTypeMarkDown = c.type !== 'wy';
@@ -166,7 +166,6 @@ class EditorPanelExplorer extends Component {
 	render() {
 		const {
 			isOpen,
-			course,
 			coursesPagesCount,
 			addOrEditMissingField,
 			handleOnSubmit,
@@ -174,7 +173,6 @@ class EditorPanelExplorer extends Component {
 			fields,
 			category,
 			isEditing,
-			isEditorChanged,
 			handleInputChange,
 			fromPage
 		} = this.props;
@@ -190,7 +188,7 @@ class EditorPanelExplorer extends Component {
 
 		return (
 			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')}>
-				<div className={cx('panel-explorer-nav-bar')}>
+				<div className={cx('nav-bar')}>
 					{/*
 					<Button.Group basic size="small" id="panel-explorer_button-group" floated="right">
 						<Popup inverted trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
@@ -252,7 +250,7 @@ class EditorPanelExplorer extends Component {
 EditorPanelExplorer.propTypes = {
 	isOpen: PropTypes.bool,
 	fromPage: PropTypes.string,
-	isEditorChanged: PropTypes.bool,
+	// isEditorChanged: PropTypes.bool,
 
 	course: PropTypes.shape({
 		_id: PropTypes.string,
