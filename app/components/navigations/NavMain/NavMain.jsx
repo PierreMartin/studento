@@ -93,8 +93,8 @@ class NavigationMain extends Component {
 
 	renderDropdownCategories(categories) {
 		return (
-			<Dropdown item simple text="Categories" title="Categories">
-				<Dropdown.Menu style={{ marginTop: '0px' }}>
+			<Dropdown item simple text="Categories" title="Categories" className={cx('menu-categories')}>
+				<Dropdown.Menu style={{ marginTop: '0px' }} className="dropdown-categories">
 					{ categories.map((cat, keyCat) => {
 						return (
 							<Dropdown.Item key={keyCat} name={`/courses/${cat.key}/list`} onClick={this.handleCategoriesItemClick}>
@@ -121,8 +121,8 @@ class NavigationMain extends Component {
 	renderDropdownProfile(userMe, authentification, logoutAction) {
 		if (authentification.authenticated) {
 			return (
-				<Dropdown item text={userMe.username} title="Settings">
-					<Dropdown.Menu>
+				<Dropdown item text={userMe.username} title="Settings" className={cx('menu-profile')}>
+					<Dropdown.Menu className="dropdown-profile">
 						<Dropdown.Item icon="user" text="Your profile" as={Link} to={'/user/' + userMe._id} />
 						<Dropdown.Item icon="dashboard" text="Your Notes" as={Link} to="/dashboard" />
 						<Dropdown.Item icon="settings" text="Edit your profile" as={Link} to="/settings" />
@@ -151,10 +151,10 @@ class NavigationMain extends Component {
 
 		return (
 			<Segment inverted style={{ marginBottom: '0', padding: '0', height: '55px' }} className={cx('menu-segment')}>
-				<Container>
+				<Container id="container">
 					<Menu inverted pointing secondary className={cx('menu-container')}>
 						<Menu.Item position="left" className={cx('left')}>
-							<Menu.Item as={Link} to="/" className={cx('home')}><img src={hubNoteLogo} alt="Logo HubNote" /></Menu.Item>
+							<Menu.Item as={Link} to="/" className={cx('menu-home')}><img src={hubNoteLogo} alt="Logo HubNote" /></Menu.Item>
 							{ this.renderDropdownCategories(categories) }
 							<Menu.Item as={Link} to="/about" active={pathUrl === '/about'}>About</Menu.Item>
 							{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" active={pathUrl === '/users' || pathUrl === '/user/:id'}>Users</Menu.Item>) : ''}

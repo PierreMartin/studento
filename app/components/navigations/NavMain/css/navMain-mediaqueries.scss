@@ -1,36 +1,95 @@
 /* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
 @media screen and (max-width: 700px) {
-  .menu-segment {
-    height: inherit !important;
+    .menu-segment {
+      position: fixed !important;
+      z-index: 999;
+      margin-bottom: 0 !important;
+      padding: 0 !important;
+      height: 100% !important;
+      width: 300px;
 
-    .menu-container {
-      display: block;
-
-      .left, .right {
+      div[id=container] {
         margin: 0 !important;
-        padding: 0 !important;
-        display: block !important;
 
-        [class~=item] {
-          padding: 12px 10px !important;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-        }
-
-        [class~=active] {
-          background-color: rgba(255, 255, 255, 0.2) !important;
-        }
-
-        .home {
-          text-align: center;
+        .menu-container {
           display: block;
-        }
-      }
 
-      .right {
-        [class~=item]:last-of-type {
-          border-bottom: none !important;
+          .left, .right {
+            margin: 0 !important;
+            padding: 0 !important;
+            display: block !important;
+
+            [class~=item] {
+              padding: 12px 10px !important;
+              line-height: 18px;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+
+              [class~=dropdown-categories], [class~=dropdown-profile] { position: static; }
+
+              &:hover { background-color: rgba(0, 0, 0, 0.05) !important; }
+              &:hover[class~=active] [class~=dropdown-profile] { background-color: transparent !important; }
+
+              /********************** a home ********************/
+              &.menu-home {
+                text-align: center;
+                display: block;
+              }
+
+              /**************** dropdown categories ***************/
+              &.menu-categories {
+                display: block;
+
+                [class~=dropdown-categories] {
+                  a {
+                  }
+                }
+
+                /* Active on dropdown: */
+                &[class~=active] div[class~=text] {
+                  text-decoration: underline !important;
+                }
+              }
+
+              /***************** dropdown profile **************/
+              &.menu-profile {
+                display: block;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+
+                [class~=dropdown-profile] {
+                  border: none;
+                  box-shadow: none;
+                  background-color: inherit !important;
+
+                  a {
+                    border-bottom: none !important;
+                  }
+                }
+
+                div[class~=text], i {
+                  padding-left: 10px !important;
+                  padding-right: 10px !important;
+                }
+
+                /* Active on dropdown: */
+                &[class~=active] div[class~=text] {
+                  text-decoration: underline !important;
+                }
+              }
+            }
+
+            /* Active on a: */
+            a[class~=item][class~=active] {
+              text-decoration: underline !important;
+            }
+          }
+
+          .right {
+            [class~=item]:last-of-type {
+              border-bottom: none !important;
+            }
+          }
         }
       }
     }
-  }
 }
