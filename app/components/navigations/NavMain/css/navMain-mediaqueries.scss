@@ -31,7 +31,7 @@
 
               &:hover { background-color: #39b4dc !important; }
               &:hover[class~=active] [class~=dropdown-profile] { background-color: transparent !important; }
-              &:hover[class~=active] [class~=dropdown-profile] [class~=item]:hover { background-color: transparent !important; border-left: 2px solid white !important; font-weight: 900 !important; }
+              &:hover[class~=active] [class~=dropdown-profile] [class~=item]:hover { background-color: transparent !important; border-left: 4px solid white !important; font-weight: 900 !important; }
 
               /********************** a home ********************/
               &.menu-home {
@@ -49,7 +49,7 @@
 
                 /* Active on dropdown: */
                 &[class~=active] div[class~=text] {
-                  /* border-left: 2px solid white !important; */
+                  /* border-left: 4px solid #39b4dc !important; */
                 }
               }
 
@@ -76,14 +76,14 @@
 
                 /* Active on dropdown: */
                 &[class~=active] div[class~=text] {
-                  /* border-left: 2px solid white !important; */
+                  /* border-left: 4px solid #39b4dc !important; */
                 }
               }
             }
 
             /* Active on a: */
             a[class~=item][class~=active] {
-              border-left: 2px solid white !important;
+              border-left: 4px solid #39b4dc !important;
             }
           }
 
