@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import UnreadNotifMessages from '../../UnreadMessages/UnreadNotifMessages';
 import UnreadModalMessages from '../../UnreadMessages/UnreadModalMessages';
+import NavMainMobile from './NavMainMobile';
 import { fetchCategoriesAction } from '../../../actions/category';
 import { logoutAction } from '../../../actions/authentification';
 import { openTchatboxSuccess } from '../../../actions/tchat';
@@ -176,6 +177,9 @@ class NavigationMain extends Component {
 							{ !authentification.authenticated ? (<Button as={Link} to="/signup" active={pathUrl === '/signup'} inverted style={{marginLeft: '0.5em'}}>Sign Up</Button>) : ''}
 						</Menu.Item>
 					</Menu>
+
+					<NavMainMobile categories={categories} userMe={userMe} />
+
 				</Container>
 			</Segment>
 		);
