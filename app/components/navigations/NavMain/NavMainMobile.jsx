@@ -8,8 +8,8 @@ import styles from './css/navMainMobile.scss';
 const cx = classNames.bind(styles);
 
 class NavMainMobile extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.handleOpenCategory = this.handleOpenCategory.bind(this);
 		this.handleOpenSubCategory = this.handleOpenSubCategory.bind(this);
 
