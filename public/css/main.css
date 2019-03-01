@@ -8,7 +8,7 @@ This file is used for overload the existant css
 
 /***************************** MAIN MENU & FOOTER ******************************/
 .ui.inverted.segment, .ui.primary.inverted.segment {
-    background-color: #39b4dc !important;
+    background-color: #39b4dc;
 }
 
 
