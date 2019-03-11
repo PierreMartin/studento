@@ -178,7 +178,7 @@ class NavigationMain extends Component {
 						</Menu.Item>
 					</Menu>
 
-					<NavMainMobile categories={categories} userMe={userMe} authentification={authentification} />
+					<NavMainMobile categories={categories} userMe={userMe} authentification={authentification} pathUrl={pathUrl} />
 
 				</Container>
 			</Segment>

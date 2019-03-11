@@ -15,7 +15,7 @@ class NavMainMobile extends Component {
 
 		this.state = {
 			isMenuCategoryOpen: false,
-			isMenuSubCategoryOpen: -1 // === close
+			indexSubCategoryOpened: -1 // === close
 		};
 	}
 
@@ -28,20 +28,20 @@ class NavMainMobile extends Component {
 	}
 
 	handleOpenSubCategory(index) {
-		return () => this.setState({ isMenuSubCategoryOpen: index });
+		return () => this.setState({ indexSubCategoryOpened: index });
 	}
 
 	render() {
-		const { categories, userMe, authentification } = this.props;
-		const { isMenuCategoryOpen, isMenuSubCategoryOpen } = this.state;
+		const { categories, userMe, authentification, pathUrl } = this.props;
+		const { isMenuCategoryOpen, indexSubCategoryOpened } = this.state;
 
 		return (
 			<nav className={cx('container')}>
 				<div className={cx('mobile-nav-main')}>
 					<ul>
 						<li><Link className={cx('arrow-after')} onClick={this.handleOpenCategory(true)}>Categories</Link></li>
-						<li className={cx('active')}><Link to="/about">About</Link></li>
-						{ authentification.authenticated && <li><Link to="/users">Users</Link></li> }
+						<li className={cx(pathUrl === '/about' ? 'active' : '')}><Link to="/about">About</Link></li>
+						{ authentification.authenticated && <li className={cx(pathUrl === '/users' ? 'active' : '')}><Link to="/users">Users</Link></li> }
 						{ authentification.authenticated && <li><Link to="/">{userMe.username}</Link></li> }
 						{ authentification.authenticated && <li><Link to="/" className={cx('arrow-after')}>Add a note</Link></li> }
 						{ authentification.authenticated && <li><Link to="/">Messages</Link></li> }
@@ -54,25 +54,34 @@ class NavMainMobile extends Component {
 							<li><Link className={cx('arrow-before')} onClick={this.handleOpenCategory(false)}>Go back</Link></li>
 						</ul>
 					</header>
-					{/* return categories.map(...) */}
-					<ul>
-						<li><Link onClick={this.handleOpenSubCategory(0)}>1</Link></li>
-						<li><Link onClick={this.handleOpenSubCategory(1)}>2</Link></li>
-						<li><Link onClick={this.handleOpenSubCategory(2)}>3</Link></li>
+					<ul className={cx('list')} >
+						{ categories && categories.length > 0 && categories.map((cat, indexCat) => {
+								return (
+									<li key={indexCat}>
+										<Link className={cx('link')} to={`/courses/${cat.key}/list`}>{ cat.name }</Link>
+										<Link className={cx('arrow-after')} onClick={this.handleOpenSubCategory(indexCat)} />
+									</li>
+								);
+						}) }
 					</ul>
 				</div>
 
-				<div className={cx('sub-category', isMenuSubCategoryOpen !== -1 ? 'active' : '')}>
+				<div className={cx('sub-category', indexSubCategoryOpened !== -1 ? 'active' : '')}>
 					<header>
 						<ul>
 							<li><Link className={cx('arrow-before')} onClick={this.handleOpenSubCategory(-1)}>Go back</Link></li>
 						</ul>
 					</header>
-					{/* return categories[isMenuSubCategoryOpen].subCategories(...) */}
 					<ul>
-						<li><Link to="/">3a</Link></li>
-						<li><Link to="/">3b</Link></li>
-						<li><Link to="/">3c</Link></li>
+						{ categories[indexSubCategoryOpened] && categories[indexSubCategoryOpened].subCategories && categories[indexSubCategoryOpened].subCategories.length > 0 ?
+							categories[indexSubCategoryOpened].subCategories.map((subCat, indexSubCat) => {
+								return (
+									<li key={indexSubCat}>
+										<Link to={`/courses/${categories[indexSubCategoryOpened].key}/${subCat.key}`}>{ subCat.name }</Link>
+									</li>
+								);
+							}) : ''
+						}
 					</ul>
 				</div>
 			</nav>
@@ -83,6 +92,7 @@ class NavMainMobile extends Component {
 
 NavMainMobile.propTypes = {
 	authentification: PropTypes.object,
+	pathUrl: PropTypes.string,
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,

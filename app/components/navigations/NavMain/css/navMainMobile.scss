@@ -18,6 +18,7 @@
   ul { margin: 0; padding: 0; }
 
   ul li {
+    border-bottom: 1px solid rgba(255, 255, 255, .2);
     transition: background-color .3s;
 
     &:hover, &:focus, &:active {
@@ -34,7 +35,7 @@
     display: block;
     padding: 12px 10px;
     color: #fff;
-    border-bottom: 1px solid rgba(255, 255, 255, .2);
+    cursor: pointer;
 
     &.arrow-after:after {
       content: '>';
@@ -71,6 +72,26 @@
 
     header {
       a { padding: 12px 10px; color: #fff; }
+    }
+  }
+
+  .category {
+    ul.list li { position: relative; }
+
+    ul.list li a {
+      display: inline-block;
+
+      &.link { width: 70%; }
+      &.arrow-after { padding: 0; }
+
+      &.arrow-after:after {
+        top: 0;
+        right: 0;
+        border-left: 1px solid rgba(255, 255, 255, .2);
+        height: 100%;
+        width: 70px;
+        padding: 12px 20px;
+      }
     }
   }
 
