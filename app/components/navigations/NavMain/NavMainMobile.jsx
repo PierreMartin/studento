@@ -13,11 +13,13 @@ class NavMainMobile extends Component {
 		this.handleOpenCategory = this.handleOpenCategory.bind(this);
 		this.handleOpenSubCategory = this.handleOpenSubCategory.bind(this);
 		this.handleOpenProfile = this.handleOpenProfile.bind(this);
+		this.handleOpenAddNote = this.handleOpenAddNote.bind(this);
 
 		this.state = {
 			isMenuCategoryOpen: false,
 			indexSubCategoryOpened: -1, // === close
-			isMenuProfileOpen: false
+			isMenuProfileOpen: false,
+			isMenuAddNoteOpen: false
 		};
 	}
 
@@ -33,9 +35,13 @@ class NavMainMobile extends Component {
 		return () => this.setState({ isMenuProfileOpen: doOpen });
 	}
 
+	handleOpenAddNote(doOpen) {
+		return () => this.setState({ isMenuAddNoteOpen: doOpen });
+	}
+
 	render() {
 		const { categories, userMe, authentification, pathUrl, logoutAction } = this.props;
-		const { isMenuCategoryOpen, indexSubCategoryOpened, isMenuProfileOpen } = this.state;
+		const { isMenuCategoryOpen, indexSubCategoryOpened, isMenuProfileOpen, isMenuAddNoteOpen } = this.state;
 
 		return (
 			<nav className={cx('container')}>
@@ -45,8 +51,7 @@ class NavMainMobile extends Component {
 						<li className={cx(pathUrl === '/about' ? 'active' : '')}><Link to="/about">About</Link></li>
 						{ authentification.authenticated && <li className={cx(pathUrl === '/users' ? 'active' : '')}><Link to="/users">Users</Link></li> }
 						{ authentification.authenticated && <li><Link className={cx('arrow-after')} onClick={this.handleOpenProfile(true)}>{userMe.username}</Link></li> }
-						{ authentification.authenticated && <li><Link to="/" className={cx('arrow-after')}>Add a note</Link></li> }
-						{ authentification.authenticated && <li><Link to="/">Messages</Link></li> }
+						{ authentification.authenticated && <li><Link className={cx('arrow-after')} onClick={this.handleOpenAddNote(true)}>Add a note</Link></li> }
 					</ul>
 				</div>
 
@@ -98,6 +103,18 @@ class NavMainMobile extends Component {
 						<li><Link to="/dashboard">Your notes</Link></li>
 						<li><Link to="/settings">Edit your profile</Link></li>
 						<li><Link to="/" onClick={logoutAction}>Logout</Link></li>
+					</ul>
+				</div>
+
+				<div className={cx('add-note', isMenuAddNoteOpen ? 'active' : '')}>
+					<header>
+						<ul>
+							<li><Link className={cx('arrow-before')} onClick={this.handleOpenAddNote(false)}>Go back</Link></li>
+						</ul>
+					</header>
+					<ul>
+						<li><Link to="/course/create/new" >Add a Note</Link></li>
+						<li><Link to="/courseMd/create/new">Add a Markdown Note</Link></li>
 					</ul>
 				</div>
 			</nav>

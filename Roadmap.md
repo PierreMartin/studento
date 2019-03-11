@@ -99,6 +99,9 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- sous categories comme udemy?
+- display messages tchat in top navbar
+
 - display=none dans le style sur le menu mobile ??
 - mettre text blanc + weight 900 dans footer (link en underlink)
 

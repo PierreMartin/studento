@@ -59,7 +59,7 @@
     height: 100%;
   }
 
-  .category, .sub-category, .profile {
+  .category, .sub-category, .profile, .add-note {
     background-color: #333;
     overflow-y: auto;
     transition: 600ms cubic-bezier(.42, 0, 0, .99);
@@ -96,7 +96,7 @@
     }
   }
 
-  .category.active, .sub-category.active, .profile.active {
+  .category.active, .sub-category.active, .profile.active, .add-note.active {
     transform: translate3d(0, 0, 0);
   }
 }
