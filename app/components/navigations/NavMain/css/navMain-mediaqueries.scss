@@ -7,12 +7,12 @@
       .menu-container {
         display: block;
 
-        .right { display: none; }
+        .right { display: none !important; }
+        .left { display: block !important; }
 
         .left, .right {
           margin: 0 !important;
           padding: 0 !important;
-          display: block !important;
 
           [class~=item] {
             display: none !important;

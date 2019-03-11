@@ -32,47 +32,47 @@ class NavMainMobile extends Component {
 	}
 
 	render() {
-		const { categories, userMe } = this.props;
+		const { categories, userMe, authentification } = this.props;
 		const { isMenuCategoryOpen, isMenuSubCategoryOpen } = this.state;
 
 		return (
 			<nav className={cx('container')}>
 				<div className={cx('mobile-nav-main')}>
 					<ul>
-						<li><a href="#" className={cx('arrow-after')} onClick={this.handleOpenCategory(true)}>Categories</a></li>
-						<li className={cx('active')}><a href="/about">About</a></li>
-						<li><a href="/users">Users</a></li>
-						<li><a href="#">{userMe.username}</a></li>
-						<li><a href="#" className={cx('arrow-after')}>Add a note</a></li>
-						<li><a href="#">Messages</a></li>
+						<li><Link className={cx('arrow-after')} onClick={this.handleOpenCategory(true)}>Categories</Link></li>
+						<li className={cx('active')}><Link to="/about">About</Link></li>
+						{ authentification.authenticated && <li><Link to="/users">Users</Link></li> }
+						{ authentification.authenticated && <li><Link to="/">{userMe.username}</Link></li> }
+						{ authentification.authenticated && <li><Link to="/" className={cx('arrow-after')}>Add a note</Link></li> }
+						{ authentification.authenticated && <li><Link to="/">Messages</Link></li> }
 					</ul>
 				</div>
 
 				<div className={cx('category', isMenuCategoryOpen ? 'active' : '')}>
 					<header>
 						<ul>
-							<li><a href="#" className={cx('arrow-before')} onClick={this.handleOpenCategory(false)}>Go back</a></li>
+							<li><Link className={cx('arrow-before')} onClick={this.handleOpenCategory(false)}>Go back</Link></li>
 						</ul>
 					</header>
 					{/* return categories.map(...) */}
 					<ul>
-						<li><a href="#" onClick={this.handleOpenSubCategory(0)}>1</a></li>
-						<li><a href="#" onClick={this.handleOpenSubCategory(1)}>2</a></li>
-						<li><a href="#" onClick={this.handleOpenSubCategory(2)}>3</a></li>
+						<li><Link onClick={this.handleOpenSubCategory(0)}>1</Link></li>
+						<li><Link onClick={this.handleOpenSubCategory(1)}>2</Link></li>
+						<li><Link onClick={this.handleOpenSubCategory(2)}>3</Link></li>
 					</ul>
 				</div>
 
 				<div className={cx('sub-category', isMenuSubCategoryOpen !== -1 ? 'active' : '')}>
 					<header>
 						<ul>
-							<li><a href="#" className={cx('arrow-before')} onClick={this.handleOpenSubCategory(-1)}>Go back</a></li>
+							<li><Link className={cx('arrow-before')} onClick={this.handleOpenSubCategory(-1)}>Go back</Link></li>
 						</ul>
 					</header>
 					{/* return categories[isMenuSubCategoryOpen].subCategories(...) */}
 					<ul>
-						<li><a href="#">3a</a></li>
-						<li><a href="#">3b</a></li>
-						<li><a href="#">3c</a></li>
+						<li><Link to="/">3a</Link></li>
+						<li><Link to="/">3b</Link></li>
+						<li><Link to="/">3c</Link></li>
 					</ul>
 				</div>
 			</nav>
@@ -82,6 +82,8 @@ class NavMainMobile extends Component {
 
 
 NavMainMobile.propTypes = {
+	authentification: PropTypes.object,
+
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
 		email: PropTypes.string,
