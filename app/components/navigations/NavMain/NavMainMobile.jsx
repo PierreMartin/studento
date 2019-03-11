@@ -12,15 +12,13 @@ class NavMainMobile extends Component {
 		super(props);
 		this.handleOpenCategory = this.handleOpenCategory.bind(this);
 		this.handleOpenSubCategory = this.handleOpenSubCategory.bind(this);
+		this.handleOpenProfile = this.handleOpenProfile.bind(this);
 
 		this.state = {
 			isMenuCategoryOpen: false,
-			indexSubCategoryOpened: -1 // === close
+			indexSubCategoryOpened: -1, // === close
+			isMenuProfileOpen: false
 		};
-	}
-
-	componentDidMount() {
-		//
 	}
 
 	handleOpenCategory(doOpen) {
@@ -31,9 +29,13 @@ class NavMainMobile extends Component {
 		return () => this.setState({ indexSubCategoryOpened: index });
 	}
 
+	handleOpenProfile(doOpen) {
+		return () => this.setState({ isMenuProfileOpen: doOpen });
+	}
+
 	render() {
-		const { categories, userMe, authentification, pathUrl } = this.props;
-		const { isMenuCategoryOpen, indexSubCategoryOpened } = this.state;
+		const { categories, userMe, authentification, pathUrl, logoutAction } = this.props;
+		const { isMenuCategoryOpen, indexSubCategoryOpened, isMenuProfileOpen } = this.state;
 
 		return (
 			<nav className={cx('container')}>
@@ -42,7 +44,7 @@ class NavMainMobile extends Component {
 						<li><Link className={cx('arrow-after')} onClick={this.handleOpenCategory(true)}>Categories</Link></li>
 						<li className={cx(pathUrl === '/about' ? 'active' : '')}><Link to="/about">About</Link></li>
 						{ authentification.authenticated && <li className={cx(pathUrl === '/users' ? 'active' : '')}><Link to="/users">Users</Link></li> }
-						{ authentification.authenticated && <li><Link to="/">{userMe.username}</Link></li> }
+						{ authentification.authenticated && <li><Link className={cx('arrow-after')} onClick={this.handleOpenProfile(true)}>{userMe.username}</Link></li> }
 						{ authentification.authenticated && <li><Link to="/" className={cx('arrow-after')}>Add a note</Link></li> }
 						{ authentification.authenticated && <li><Link to="/">Messages</Link></li> }
 					</ul>
@@ -84,6 +86,20 @@ class NavMainMobile extends Component {
 						}
 					</ul>
 				</div>
+
+				<div className={cx('profile', isMenuProfileOpen ? 'active' : '')}>
+					<header>
+						<ul>
+							<li><Link className={cx('arrow-before')} onClick={this.handleOpenProfile(false)}>Go back</Link></li>
+						</ul>
+					</header>
+					<ul>
+						<li><Link to={`/user/${userMe._id}`}>Your profile</Link></li>
+						<li><Link to="/dashboard">Your notes</Link></li>
+						<li><Link to="/settings">Edit your profile</Link></li>
+						<li><Link to="/" onClick={logoutAction}>Logout</Link></li>
+					</ul>
+				</div>
 			</nav>
 		);
 	}
@@ -93,6 +109,7 @@ class NavMainMobile extends Component {
 NavMainMobile.propTypes = {
 	authentification: PropTypes.object,
 	pathUrl: PropTypes.string,
+	logoutAction: PropTypes.func,
 
 	userMe: PropTypes.shape({
 		username: PropTypes.string,
