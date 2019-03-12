@@ -49,6 +49,7 @@ class NavMainMobile extends Component {
 	render() {
 		const { isOpen, categories, userMe, authentification, pathUrl, logoutAction } = this.props;
 		const { isMenuCategoryOpen, indexSubCategoryOpened, isMenuProfileOpen, isMenuAddNoteOpen } = this.state;
+		const categorySelected = categories[indexSubCategoryOpened];
 
 		return (
 			<nav className={cx('container', isOpen ? 'menu-open' : '')}>
@@ -65,17 +66,12 @@ class NavMainMobile extends Component {
 				<div className={cx('category', isMenuCategoryOpen ? 'active' : '')}>
 					<header>
 						<ul>
-							<li><Link className={cx('arrow-before')} onClick={this.handleOpenCategory(false)}>Go back</Link></li>
+							<li><Link className={cx('arrow-before')} onClick={this.handleOpenCategory(false)}>Back to menu</Link></li>
 						</ul>
 					</header>
 					<ul className={cx('list')} >
 						{ categories && categories.length > 0 && categories.map((cat, indexCat) => {
-								return (
-									<li key={indexCat}>
-										<Link className={cx('link')} to={`/courses/${cat.key}/list`}>{ cat.name }</Link>
-										<Link className={cx('arrow-after')} onClick={this.handleOpenSubCategory(indexCat)} />
-									</li>
-								);
+							return (<li key={indexCat}><Link className={cx('arrow-after')} onClick={this.handleOpenSubCategory(indexCat)}>{ cat.name }</Link></li>);
 						}) }
 					</ul>
 				</div>
@@ -83,17 +79,15 @@ class NavMainMobile extends Component {
 				<div className={cx('sub-category', indexSubCategoryOpened !== -1 ? 'active' : '')}>
 					<header>
 						<ul>
-							<li><Link className={cx('arrow-before')} onClick={this.handleOpenSubCategory(-1)}>Go back</Link></li>
+							{ categorySelected && categorySelected.name && <li><Link className={cx('arrow-before')} onClick={this.handleOpenSubCategory(-1)}>{ categorySelected.name }</Link></li> }
 						</ul>
 					</header>
 					<ul>
-						{ categories[indexSubCategoryOpened] && categories[indexSubCategoryOpened].subCategories && categories[indexSubCategoryOpened].subCategories.length > 0 ?
-							categories[indexSubCategoryOpened].subCategories.map((subCat, indexSubCat) => {
-								return (
-									<li key={indexSubCat}>
-										<Link to={`/courses/${categories[indexSubCategoryOpened].key}/${subCat.key}`}>{ subCat.name }</Link>
-									</li>
-								);
+						{ categorySelected && categorySelected.key && <li><Link className={cx('link')} to={`/courses/${categorySelected.key}/list`}>All</Link></li> }
+
+						{ categorySelected && categorySelected.subCategories && categorySelected.subCategories.length > 0 ?
+							categorySelected.subCategories.map((subCat, indexSubCat) => {
+								return (<li key={indexSubCat}><Link to={`/courses/${categorySelected.key}/${subCat.key}`}>{ subCat.name }</Link></li>);
 							}) : ''
 						}
 					</ul>
