@@ -1,0 +1,74 @@
+@import '../../../css/common/colors.scss';
+
+/* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
+@media screen and (max-width: 700px) {
+  .menu-button {
+    display: block !important;
+  }
+}
+
+.menu-button {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 55px;
+  height: 55px;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  outline: none;
+  z-index: 999999999;
+  background-color: transparent;
+
+  span {
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    margin: auto;
+    display: block;
+    border-radius: 100%;
+    width: 5px; height: 5px;
+    background-color: #fff;
+
+    &.opening-animation::before   { animation: morphToCross 250ms ease forwards; }
+    &.opening-animation::after    { animation: morphToCross2 250ms ease forwards; }
+
+    &.closing-animation::before   { animation: morphToKebab 250ms ease forwards; animation-direction: reverse; }
+    &.closing-animation::after    { animation: morphToKebab2 250ms ease forwards; animation-direction: reverse; }
+
+    &::before, &::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      margin: auto;
+      display: block;
+      border-radius: 100%;
+      width: 5px; height: 5px;
+      background-color: #fff;
+    }
+  }
+}
+
+@keyframes morphToCross {
+  0% { transform:translateY(-8px); }
+  50% { transform:translateY(0); border-radius:100%; width:5px; height:5px; }
+  100% { transform:rotate(45deg) translateY(0); border-radius:99em; width:3px; height:16px; }
+}
+
+@keyframes morphToCross2 {
+  0% { transform:translateY(8px); }
+  50% { transform:translateY(0); border-radius:100%; width:5px; height:5px; }
+  100% { transform:rotate(-45deg) translateY(0); border-radius:99em; width:3px; height:16px; }
+}
+
+@keyframes morphToKebab {
+  0% { transform:translateY(-8px); }
+  50% { transform:translateY(0); border-radius:100%; width:5px; height:5px; }
+  100% { transform:rotate(45deg) translateY(0); border-radius:99em; width:3px; height:16px; }
+}
+
+@keyframes morphToKebab2 {
+  0% { transform:translateY(8px); }
+  50% { transform:translateY(0); border-radius:100%; width:5px; height:5px; }
+  100% { transform:rotate(-45deg) translateY(0); border-radius:99em; width:3px; height:16px;}
+}

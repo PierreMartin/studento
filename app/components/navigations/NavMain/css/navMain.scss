@@ -1,3 +1,14 @@
+.menu-segment {
+  position: fixed !important;
+  top: 0;
+  width: 100%;
+  z-index: 999999;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 55px;
+}
+
+
 /* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
 @media screen and (max-width: 700px) {
   .menu-segment {

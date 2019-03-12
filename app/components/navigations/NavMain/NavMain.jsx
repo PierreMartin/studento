@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import UnreadNotifMessages from '../../UnreadMessages/UnreadNotifMessages';
 import UnreadModalMessages from '../../UnreadMessages/UnreadModalMessages';
+import ButtonOpenMenuMobile from '../../ButtonOpenMenuMobile/ButtonOpenMenuMobile';
 import NavMainMobile from './NavMainMobile';
 import { fetchCategoriesAction } from '../../../actions/category';
 import { logoutAction } from '../../../actions/authentification';
@@ -12,7 +13,7 @@ import { openTchatboxSuccess } from '../../../actions/tchat';
 import { Button, Container, Menu, Segment, Dropdown, Icon } from 'semantic-ui-react';
 import hubNoteLogo from '../../../images/logo_hubnote_white_menu.png';
 import classNames from 'classnames/bind';
-import styles from './css/navMain-mediaqueries.scss';
+import styles from './css/navMain.scss';
 
 const cx = classNames.bind(styles);
 
@@ -21,6 +22,7 @@ class NavigationMain extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isMenuMobileOpen: false,
 			openModalUnreadNotifMessages: false
 		};
 
@@ -29,10 +31,22 @@ class NavigationMain extends Component {
 
 		// handle open modal:
 		this.handleClickOpenModalUnreadMessages = this.handleClickOpenModalUnreadMessages.bind(this);
-		this.handleClickOutsideUnreadContent = this.handleClickOutsideUnreadContent.bind(this);
+		this.handleClickOutsideContent = this.handleClickOutsideContent.bind(this);
 
 		// handle open tchatBox:
 		this.handleClickOpenTchatBox = this.handleClickOpenTchatBox.bind(this);
+
+		// handle open menu mobile:
+		this.handleOpenMenuMobile = this.handleOpenMenuMobile.bind(this);
+	}
+
+	componentWillMount() {
+		// when change location, close the menu mobile:
+		if (browserHistory) {
+			this.unlisten = browserHistory.listen(() => {
+				this.setState({ isMenuMobileOpen: false });
+			});
+		}
 	}
 
 	componentDidMount() {
@@ -40,11 +54,12 @@ class NavigationMain extends Component {
 		if (categories.length === 0) this.props.fetchCategoriesAction();
 
 		// Obliged to use addEventListener for handle the events outside a element
-		document.addEventListener('mousedown', this.handleClickOutsideUnreadContent);
+		document.addEventListener('mouseup', this.handleClickOutsideContent);
 	}
 
 	componentWillUnmount() {
-		document.removeEventListener('mousedown', this.handleClickOutsideUnreadContent);
+		document.removeEventListener('mouseup', this.handleClickOutsideContent);
+		if (browserHistory) this.unlisten();
 	}
 
 	/**
@@ -56,16 +71,27 @@ class NavigationMain extends Component {
 	}
 
 	/**
-	 * When <UnreadNotifMessages /> is opened and clicked outside of him
+	 * When contents are opened and clicked outside of him
 	 * @param {object} event - the event datas
 	 * @return {void}
 	 * */
-	handleClickOutsideUnreadContent(event) {
-		const unreadContentNode = ReactDOM.findDOMNode(this.unreadContentRef); // No yet the 16.3 for use the ref DOM
+	handleClickOutsideContent(event) {
+		const unreadContentNode = ReactDOM.findDOMNode(this.unreadContentRef);
+		const menuMobileNode = ReactDOM.findDOMNode(this.menuMobileRef);
+		const buttonMenuMobileNode = ReactDOM.findDOMNode(this.buttonMenuMobileRef);
 
-		// If don't click on unreadContentNode:
+		// Click outside unreadContentNode:
 		if (this.state.openModalUnreadNotifMessages && unreadContentNode && !unreadContentNode.contains(event.target)) {
 			this.setState({ openModalUnreadNotifMessages: false });
+		}
+
+		// Click outside menuMobileNode:
+		if (
+			this.state.isMenuMobileOpen &&
+			menuMobileNode && !menuMobileNode.contains(event.target) &&
+			buttonMenuMobileNode && !buttonMenuMobileNode.contains(event.target)
+		) {
+			this.setState({ isMenuMobileOpen: false });
 		}
 	}
 
@@ -91,6 +117,10 @@ class NavigationMain extends Component {
 		e.stopPropagation();
 		browserHistory.push(name);
 	};
+
+	handleOpenMenuMobile() {
+		this.setState({ isMenuMobileOpen: !this.state.isMenuMobileOpen });
+	}
 
 	renderDropdownCategories(categories) {
 		return (
@@ -149,45 +179,56 @@ class NavigationMain extends Component {
 
 	render() {
 		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl, categories } = this.props;
+		const { openModalUnreadNotifMessages, isMenuMobileOpen } = this.state;
 
 		return (
-			<Segment inverted style={{ marginBottom: '0', padding: '0', height: '55px' }} className={cx('menu-segment')}>
-				<Container id="container">
-					<Menu inverted pointing secondary className={cx('menu-container')}>
-						<Menu.Item position="left" className={cx('left')}>
-							<Menu.Item as={Link} to="/" className={cx('menu-home')}><img src={hubNoteLogo} alt="Logo HubNote" /></Menu.Item>
-							{ this.renderDropdownCategories(categories) }
-							<Menu.Item as={Link} to="/about" active={pathUrl === '/about'}>About</Menu.Item>
-							{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" active={pathUrl === '/users' || pathUrl === '/user/:id'}>Users</Menu.Item>) : ''}
-						</Menu.Item>
+			<div>
+				<ButtonOpenMenuMobile
+					ref={(el) => { this.buttonMenuMobileRef = el; }}
+					handleOpenMenuMobile={this.handleOpenMenuMobile}
+					isMenuMobileOpen={isMenuMobileOpen}
+				/>
 
-						<Menu.Item position="right" className={cx('right')}>
-							{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
-							{ this.renderDropdownAddCourse(authentification) }
+				<NavMainMobile
+					ref={(el) => { this.menuMobileRef = el; }}
+					isOpen={isMenuMobileOpen}
+					categories={categories}
+					userMe={userMe}
+					authentification={authentification}
+					pathUrl={pathUrl}
+					logoutAction={logoutAction}
+				/>
 
-							{ authentification.authenticated ? (
-								<div ref={(el) => { this.unreadContentRef = el; }} >
-									<Menu.Item onClick={this.handleClickOpenModalUnreadMessages} ><UnreadNotifMessages socket={socket} /></Menu.Item>
-									{ this.state.openModalUnreadNotifMessages && <UnreadModalMessages handleClickOpenTchatBox={this.handleClickOpenTchatBox} unreadMessages={unreadMessages} /> }
-								</div>
+				<Segment inverted className={cx('menu-segment')}>
+					<Container id="container">
+						<Menu inverted pointing secondary className={cx('menu-container')}>
+							<Menu.Item position="left" className={cx('left')}>
+								<Menu.Item as={Link} to="/" className={cx('menu-home')}><img src={hubNoteLogo} alt="Logo HubNote" /></Menu.Item>
+								{ this.renderDropdownCategories(categories) }
+								<Menu.Item as={Link} to="/about" active={pathUrl === '/about'}>About</Menu.Item>
+								{ authentification.authenticated ? (<Menu.Item as={Link} to="/users" active={pathUrl === '/users' || pathUrl === '/user/:id'}>Users</Menu.Item>) : ''}
+							</Menu.Item>
+
+							<Menu.Item position="right" className={cx('right')}>
+								{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
+								{ this.renderDropdownAddCourse(authentification) }
+
+								{ authentification.authenticated ? (
+									<div ref={(el) => { this.unreadContentRef = el; }} >
+										<Menu.Item onClick={this.handleClickOpenModalUnreadMessages} ><UnreadNotifMessages socket={socket} /></Menu.Item>
+										{ openModalUnreadNotifMessages && <UnreadModalMessages handleClickOpenTchatBox={this.handleClickOpenTchatBox} unreadMessages={unreadMessages} /> }
+									</div>
 								) : ''}
 
-							{/* authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''*/}
-							{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" active={pathUrl === '/login'}>Log in</Menu.Item>) : ''}
-							{ !authentification.authenticated ? (<Button as={Link} to="/signup" active={pathUrl === '/signup'} inverted style={{marginLeft: '0.5em'}}>Sign Up</Button>) : ''}
-						</Menu.Item>
-					</Menu>
+								{/* authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''*/}
+								{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" active={pathUrl === '/login'}>Log in</Menu.Item>) : ''}
+								{ !authentification.authenticated ? (<Button as={Link} to="/signup" active={pathUrl === '/signup'} inverted style={{marginLeft: '0.5em'}}>Sign Up</Button>) : ''}
+							</Menu.Item>
+						</Menu>
 
-					<NavMainMobile
-						categories={categories}
-						userMe={userMe}
-						authentification={authentification}
-						pathUrl={pathUrl}
-						logoutAction={logoutAction}
-					/>
-
-				</Container>
-			</Segment>
+					</Container>
+				</Segment>
+			</div>
 		);
 	}
 }

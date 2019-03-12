@@ -151,6 +151,7 @@ const queryOption = { sortBy: name, filter: toto } || {};
 this.props.fetchSomethingAction(query, queryPagination, queryOption);
 this.props.searchSomethingAction(querySearch, queryPagination, queryOption);
 
+Facilité l'acces à l'imformation
 Le site internet propose les services suivants :
 - La publication de cours pouvant contenir : des notes (texte), des astuces, des idées, du code source, des formules mathématiques, des schémas...
 - La possibilité de donner des notes aux courses.

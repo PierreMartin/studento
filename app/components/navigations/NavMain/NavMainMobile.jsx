@@ -23,6 +23,13 @@ class NavMainMobile extends Component {
 		};
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.isOpen !== this.props.isOpen && !this.props.isOpen) {
+			// init all states when close menu:
+			this.setState({ isMenuCategoryOpen: false, indexSubCategoryOpened: -1, isMenuProfileOpen: false, isMenuAddNoteOpen: false });
+		}
+	}
+
 	handleOpenCategory(doOpen) {
 		return () => this.setState({ isMenuCategoryOpen: doOpen });
 	}
@@ -40,11 +47,11 @@ class NavMainMobile extends Component {
 	}
 
 	render() {
-		const { categories, userMe, authentification, pathUrl, logoutAction } = this.props;
+		const { isOpen, categories, userMe, authentification, pathUrl, logoutAction } = this.props;
 		const { isMenuCategoryOpen, indexSubCategoryOpened, isMenuProfileOpen, isMenuAddNoteOpen } = this.state;
 
 		return (
-			<nav className={cx('container')}>
+			<nav className={cx('container', isOpen ? 'menu-open' : '')}>
 				<div className={cx('mobile-nav-main')}>
 					<ul>
 						<li><Link className={cx('arrow-after')} onClick={this.handleOpenCategory(true)}>Categories</Link></li>
@@ -124,6 +131,7 @@ class NavMainMobile extends Component {
 
 
 NavMainMobile.propTypes = {
+	isOpen: PropTypes.bool,
 	authentification: PropTypes.object,
 	pathUrl: PropTypes.string,
 	logoutAction: PropTypes.func,

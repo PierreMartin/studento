@@ -8,7 +8,7 @@
 body {
   margin: 0;
   font-family: $fontMontserrat;
-  // background: url(/img/bgblanc.jpg) repeat;
+  /* background: url(/img/bgblanc.jpg) repeat; */
 }
 
 body ::-webkit-scrollbar {
@@ -16,6 +16,7 @@ body ::-webkit-scrollbar {
 }
 
 .layout-container {
+  margin-top: 55px; /* the height of the nav */
   min-height:940px;
 }
 
