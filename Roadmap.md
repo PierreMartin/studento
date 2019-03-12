@@ -101,7 +101,6 @@ $ ./scripts/generate_menu.sh
 ### TODO :
 - sous categories comme udemy?
 - display messages tchat in top navbar
-
 - display=none dans le style sur le menu mobile ??
 - mettre text blanc + weight 900 dans footer (link en underlink)
 
@@ -112,17 +111,17 @@ $ ./scripts/generate_menu.sh
 - referencement
 
 moins urgent :
-- transactions => replica set with just one member (or run-rs) + Mongoose 5.2.0
-- schémas
-- image dans les cours
+- pouvoir uploader images dans les cours
+- pouvoir mettre schémas dans les cours
 - Auth facebook google...
 - courseToolbar : Add to fav - download to PDF
 - comments -> render: styles (gras, bold, emoji, ...) + code editor
 - comments -> send notification with socket.io to author of course (Fetch all my courses + where commentedBy.length > 0)
 - starings -> send notification with socket.io to author of course
 - duplicate style (lists, checksList...) when enter on new line
+- faire menu catégories aside comme grafikart, en destock uniquement
 
-- Voir pk on a le props precedent à chaque changement de page
+- transactions => replica set with just one member (or run-rs) + Mongoose 5.2.0
 - améliorer la requet d'upate de l'user comme pour les courses
 
 - this.state.typingArr => le mettre dans le store de redux (gerer les cas ou l'un ecrit, l'autre a pas encore ouvert la popup)
