@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
+import { Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/navMainMobile.scss';
 
@@ -71,7 +72,14 @@ class NavMainMobile extends Component {
 					</header>
 					<ul className={cx('list')} >
 						{ categories && categories.length > 0 && categories.map((cat, indexCat) => {
-							return (<li key={indexCat}><Link className={cx('arrow-after')} onClick={this.handleOpenSubCategory(indexCat)}>{ cat.name }</Link></li>);
+							return (
+								<li key={indexCat}>
+									<Link className={cx('arrow-after')} onClick={this.handleOpenSubCategory(indexCat)}>
+										<Icon name={cat.picto} />
+										{ cat.name }
+									</Link>
+								</li>
+							);
 						}) }
 					</ul>
 				</div>

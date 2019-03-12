@@ -41,9 +41,9 @@
     color: #fff;
     cursor: pointer;
 
-    &.arrow-before {
-      padding-left: 50px;
-    }
+    i { margin-right: 8px; }
+
+    &.arrow-before { padding-left: 50px; }
 
     &.arrow-before:before {
       content: '<';
