@@ -54,12 +54,23 @@
 }
 
 /* TABLETTES */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 770px) {
   .home-header-segment {
     .home-header-container {
       .title {
         font-size: 30px;
       }
+    }
+  }
+
+  .courses-container {
+    .categories {
+      margin-bottom: 12px;
+      button { padding: .4em .8em .4em; }
+    }
+
+    .sub-categories {
+      button { padding: .4em .8em .4em; }
     }
   }
 }
