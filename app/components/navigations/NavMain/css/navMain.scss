@@ -18,8 +18,7 @@
       .menu-container {
         display: block;
 
-        .right { display: none !important; }
-        .left { display: block !important; }
+        .left { display: block !important; } /* contain the Logo */
 
         .left, .right {
           margin: 0 !important;
@@ -34,6 +33,15 @@
             }
           }
         }
+
+        .right {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+        }
+
+        /* display items in menu */
+        .show[class~=item], .show [class~=item] { display: block !important; }
       }
     }
   }

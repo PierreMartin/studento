@@ -214,7 +214,7 @@ class NavigationMain extends Component {
 								{ this.renderDropdownAddCourse(authentification) }
 
 								{ authentification.authenticated ? (
-									<div ref={(el) => { this.unreadContentRef = el; }} >
+									<div ref={(el) => { this.unreadContentRef = el; }} className={cx('show')}>
 										<Menu.Item onClick={this.handleClickOpenModalUnreadMessages} ><UnreadNotifMessages socket={socket} /></Menu.Item>
 										{ openModalUnreadNotifMessages && <UnreadModalMessages handleClickOpenTchatBox={this.handleClickOpenTchatBox} unreadMessages={unreadMessages} /> }
 									</div>
