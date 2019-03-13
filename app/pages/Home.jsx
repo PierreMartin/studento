@@ -143,11 +143,9 @@ class Home extends Component {
 				<Segment vertical>
 					<Container text className={cx('courses-container')}>
 
-						<Divider horizontal className={cx('categories')}>
-							<Button.Group basic size="tiny">
-								{categories.map((cat, index) => (<Button key={index} active={category.lastClicked === cat.key} onClick={this.handleSelectCategory(cat.key, index)}>{cat.name}</Button>))}
-							</Button.Group>
-						</Divider>
+						<div className={cx('categories')}>
+							{categories.map((cat, index) => (<Button key={index} active={category.lastClicked === cat.key} onClick={this.handleSelectCategory(cat.key, index)}>{cat.name}</Button>))}
+						</div>
 
 						{ category.lastClicked && category.lastClicked.length > 0 ? this.renderSubCategories(categories[category.clickedIndex]) : ''}
 

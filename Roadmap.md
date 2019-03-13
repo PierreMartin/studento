@@ -99,7 +99,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- Améliorer design + HomePage + RWD (stackable)
+- HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 - Google analytique
 - RGPD cookie banner - voir express-session - fait ca en localStorage   componentDidMount de la Home -> setConsentRGPDAction(getLocalStorage('key'))  - dans LayoutMainWeb on récup isConsentRGPD du store

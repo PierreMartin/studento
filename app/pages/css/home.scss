@@ -43,6 +43,11 @@
 .courses-container {
   margin-bottom: 40px;
 
+  .categories {
+    text-align: center;
+    button { margin: 2px !important; }
+  }
+
   .sub-categories {
     button { margin: 2px !important; }
   }
