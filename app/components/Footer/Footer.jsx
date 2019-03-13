@@ -9,26 +9,26 @@ const cx = classNames.bind(styles);
 
 const Footer = () => {
 	return (
-		<Segment inverted vertical className={cx('footer-container')}>
+		<Segment vertical className={cx('footer-container')}>
 			<Container text>
-				<Grid divided inverted stackable>
+				<Grid divided stackable>
 					<Grid.Row className={cx('footer-row')}>
 						<Grid.Column width={3}>
-							<Header inverted as="h4" content="Navigation" />
-							<List link inverted>
+							<Header as="h4" content="Navigation" className={cx('header')} />
+							<List link>
 								<List.Item as={Link} to={'/'}>Home</List.Item>
 								<List.Item as={Link} to={'/about'}>About</List.Item>
 							</List>
 						</Grid.Column>
-						<Grid.Column width={3}>
-							<Header inverted as="h4" content="Terms & Privacy" />
-							<List link inverted>
+						<Grid.Column width={4}>
+							<Header as="h4" content="Terms & Privacy" className={cx('header')} />
+							<List link>
 								<List.Item as={Link} to={'/terms'}>Terms of service - Conditions Générales d'Utilisation (CGU)</List.Item>
 								<List.Item as={Link} to={'/privacy-policy'}>Privacy Policy - Politique de confidentialité</List.Item>
 							</List>
 						</Grid.Column>
-						<Grid.Column width={7}>
-							<Header as="h4" inverted>HubNote</Header>
+						<Grid.Column width={4}>
+							<Header as="h4" className={cx('header')}>HubNote</Header>
 							<p><a href="mailto:pierremartin.pro@gmail.com?subject=Demande%information%HubNote">Contact</a></p>
 							<p>Copyright © 2019 HubNote - All rights reserved</p>
 						</Grid.Column>

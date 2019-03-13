@@ -1,10 +1,35 @@
+@import '../../../css/common/colors.scss';
+
+
 .footer-container {
-  padding: 3em 0 !important;
+  padding: 2.5em 0 !important;
+  margin-top: 2.5em !important;
+  border-top: 2px solid #e3e3e3 !important;
 
-  a:link, a:visited { text-decoration: none; color: rgba(255, 255, 255, 0.6);  transition:.4s; }
-  a:hover, a:focus  { text-decoration: none; color: #fff; }
-  a:active          { text-decoration: none; color: rgba(255, 255, 255, 0.6); }
+  .footer-row {
+    .header {
+      font-size: 16px;
+      text-transform: uppercase;
+      color: $colorLogoBlue !important;
+    }
 
-  .footer-row p, .footer-row a { font-size: 13px; }
-  .footer-row a { margin-bottom: 8px; }
+    a:link, a:visited { text-decoration: none; transition: color .3s !important; }
+    a:hover, a:focus  { text-decoration: none; color: $colorLogoBlue !important }
+    a:active          { text-decoration: none; }
+
+    p, a { font-size: 13px; color: #000 !important; font-weight: 900; }
+    a { margin-bottom: 8px; }
+  }
+}
+
+
+/* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
+@media screen and (max-width: 700px) {
+  .footer-container {
+    text-align: center;
+
+    .footer-row {
+      div { border: none !important; }
+    }
+  }
 }
