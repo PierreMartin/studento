@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { ratingCourseAction } from '../../actions/courses';
-import { Icon, Menu, Rating } from 'semantic-ui-react';
+import { Icon, Menu, Popup, Rating, Header, Message } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/courseToolbar.scss';
 
@@ -74,7 +74,20 @@ class CourseToolbar extends Component {
 				) : '' }
 
 				<Menu.Item name="star">
-					<Rating disabled={disableRating} icon="star" rating={average} maxRating={5} style={{ marginBottom: '13px' }} onRate={this.handleRating} />
+
+					<Popup trigger={<Rating disabled={disableRating} icon="star" rating={average} maxRating={5} style={{ marginBottom: '13px' }} onRate={this.handleRating} />} flowing hoverable>
+						<Header as="h4">Give a score</Header>
+						<Message info icon size="mini">
+							<Icon name="attention" size="small" />
+							<Message.Header>
+								You can give a score for a note one time every 24h.
+								<br />
+								5/5 stars will correspond to a reliable note. 1/5 star will correspond to a unreliable note.
+								<br />
+								You can't give a score for your own notes
+							</Message.Header>
+						</Message>
+					</Popup>
 					{ numberOfVote }
 				</Menu.Item>
 			</Menu>

@@ -99,8 +99,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- mettre icon dans popup delete course (comme dans popup delete account)
-
 - HomePage + RWD (stackable)
 - Resolve vulnerabilities in dependencies
 - Google analytique

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import moment from 'moment';
-import { Icon, Table, Button, Header, Modal, Pagination, Popup, Rating } from 'semantic-ui-react';
+import { Icon, Table, Button, Header, Modal, Pagination, Popup, Rating, Message } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { fetchCoursesByFieldAction, deleteCourseAction, doSortCoursesAction, setPaginationCoursesEditorAction } from '../../actions/courses';
 import classNames from 'classnames/bind';
@@ -222,13 +222,16 @@ class CoursesListDashboard extends Component {
 					<Modal.Header>Delete a note</Modal.Header>
 					<Modal.Content image>
 						<Modal.Description>
-							<Header>Are you sure to delete this note "{deleteCourse.courseTitle}"?</Header>
-							<p>ATTENTION this action is irreversible!</p>
+							<Header>Are you sure to delete the note "{deleteCourse.courseTitle}"?</Header>
+							<Message icon color="red" size="mini">
+								<Icon name="attention" size="small" />
+								<Message.Content>This action will permanently delete your note.</Message.Content>
+							</Message>
 						</Modal.Description>
 					</Modal.Content>
 					<Modal.Actions>
 						<Button color="black" onClick={this.handleOpenModalForDeleteCourse({})}>Cancel</Button>
-						<Button icon="checkmark" color="red" labelPosition="right" content="Ok" onClick={this.handleSubmitDeleteCourse} />
+						<Button icon="checkmark" color="red" labelPosition="right" content="Delete the note" onClick={this.handleSubmitDeleteCourse} />
 					</Modal.Actions>
 				</Modal>
 			</div>
