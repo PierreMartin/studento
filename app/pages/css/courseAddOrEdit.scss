@@ -55,7 +55,7 @@
         flex: 1 0 53%;
         // .editor-edition-error-message { position: absolute; bottom: 0; }
 
-        form div { margin: 0; word-wrap: break-word; word-break: break-all; }
+        form div { margin: 0; word-wrap: break-word; word-break: break-word; }
       }
 
       // PREVIEW
@@ -67,6 +67,8 @@
         min-height: inherit;
         box-shadow: none;
         border-radius: 0;
+
+        img { max-width: 100%; }
       }
     }
   }
