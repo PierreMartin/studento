@@ -2,7 +2,32 @@
   min-height: 300px;
   text-align: center;
 
-  .no-courses {
-    margin-bottom: 10px;
+  .for-mobile { display: none; }
+
+  .cell-stars {
+    div { display: block; }
+    font-size: 1rem;
+    color: rgba(0,0,0,.6);
+  }
+
+  .no-courses { margin-bottom: 10px; }
+}
+
+
+/* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
+@media screen and (max-width: 770px) {
+  .courses-container {
+    .for-mobile { display: inline-block; color: #000; margin-right: 3px; }
+
+    .thead { display: none !important; }
+
+    .tbody {
+      tr {
+        td.cell-stars {  div { display: inline-block; }  }
+        td.cell-edit, td.cell-delete { display: inline-block !important; }
+        td.cell-edit { padding-right: 5px !important; }
+        td.cell-delete { padding-left: 0 !important; }
+      }
+    }
   }
 }

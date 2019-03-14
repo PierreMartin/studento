@@ -25,7 +25,7 @@ class Dashboard extends Component {
 			<LayoutPage {...this.getMetaData()}>
 				<Segment vertical>
 					<Container text>
-						<Header as="h2" icon="list" content="My Notes" style={{ fontSize: '1.7em', fontWeight: 'normal' }} />
+						{/* <Header as="h2" icon="list" content="My Notes" style={{ fontSize: '1.7em', fontWeight: 'normal' }} /> */}
 						<CoursesListDashboard
 							courses={courses}
 							userMe={userMe}

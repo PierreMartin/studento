@@ -106,12 +106,15 @@ class CoursesListDashboard extends Component {
 	renderCoursesList(courses) {
 		if (courses.length === 0) return;
 
+		const { userMe } = this.props;
+
 		return courses.map((course, key) => {
 			const courseDate = moment(course.created_at).format('L, h:mm:ss a');
 			const pathCourseToEdit = course.type !== 'wy' ? `/courseMd/edit/${course._id}` : `/course/edit/${course._id}`;
 			const stars = course.stars || {};
 			const average = stars.average || 0;
 			let numberOfVote = 'No vote';
+			const me = userMe._id === course.uId._id ? ' (me)' : '';
 
 			if (stars.numberOfTimeVoted === 1) {
 				numberOfVote = stars.numberOfTimeVoted + ' note';
@@ -122,21 +125,31 @@ class CoursesListDashboard extends Component {
 			return (
 				<Table.Row key={key}>
 					<Table.Cell>
-						<Header as="h4">
-							<Header.Content><Header.Subheader>{course.uId.username}</Header.Subheader></Header.Content>
-						</Header>
+						<Link to={`/course/${course._id}`}>{course.title}</Link>
 					</Table.Cell>
-					<Table.Cell><Link to={`/course/${course._id}`}>{course.title}</Link></Table.Cell>
+
+					<Table.Cell>
+						<span className={cx('for-mobile')}>Author:</span>
+						<Link to={`/user/${userMe._id}`}>{course.uId.username}</Link> {me}
+					</Table.Cell>
+
 					<Table.Cell>
 						<Header as="h4">
-							<Header.Content><Header.Subheader>{courseDate}</Header.Subheader></Header.Content>
+							<Header.Content><Header.Subheader>
+								<span className={cx('for-mobile')}>Created at:</span>
+								{courseDate}
+							</Header.Subheader></Header.Content>
 						</Header>
 					</Table.Cell>
-					<Table.Cell style={{ fontSize: '1rem', color: 'rgba(0,0,0,.6)' }}>
-						<Rating disabled icon="star" rating={average} maxRating={5} /><br /> { numberOfVote }
+
+					<Table.Cell className={cx('cell-stars')}>
+						<Rating disabled icon="star" rating={average} maxRating={5} />
+						<div>{ numberOfVote }</div>
 					</Table.Cell>
-					<Table.Cell><Button color="grey" content="Edit" icon="settings" size="tiny" as={Link} to={pathCourseToEdit} /></Table.Cell>
-					<Table.Cell><Button inverted color="red" content="Delete" icon="remove" size="tiny" onClick={this.handleOpenModalForDeleteCourse({ courseId: course._id, courseTitle: course.title })} /></Table.Cell>
+
+					<Table.Cell className={cx('cell-edit')}><Button color="grey" content="Edit" icon="settings" size="tiny" as={Link} to={pathCourseToEdit} /></Table.Cell>
+
+					<Table.Cell className={cx('cell-delete')}><Button inverted color="red" content="Delete" icon="remove" size="tiny" onClick={this.handleOpenModalForDeleteCourse({ courseId: course._id, courseTitle: course.title })} /></Table.Cell>
 				</Table.Row>
 			);
 		});
@@ -173,11 +186,11 @@ class CoursesListDashboard extends Component {
 						<Button basic color="grey" content="Add new Markdown Note (for developer)" icon="add" as={Link} to="/courseMd/create/new" style={{ margin: '5px' }} />
 					</div>
 					:
-					<Table celled unstackable compact="very" sortable fixed>
-						<Table.Header>
+					<Table celled compact="very" sortable fixed>
+						<Table.Header className={cx('thead')}>
 							<Table.Row>
-								<Table.HeaderCell>Author</Table.HeaderCell>
 								<Table.HeaderCell sorted={lastColumnClicked === 'title' ? direction : null} onClick={this.handleSort('title')}>Title</Table.HeaderCell>
+								<Table.HeaderCell>Author</Table.HeaderCell>
 								<Table.HeaderCell sorted={lastColumnClicked === 'created_at' ? direction : null} onClick={this.handleSort('created_at')}>Date</Table.HeaderCell>
 								<Table.HeaderCell>Stars</Table.HeaderCell>
 								<Table.HeaderCell>Edit</Table.HeaderCell>
@@ -185,7 +198,7 @@ class CoursesListDashboard extends Component {
 							</Table.Row>
 						</Table.Header>
 
-						<Table.Body>
+						<Table.Body className={cx('tbody')}>
 							{ this.renderCoursesList(courses) }
 						</Table.Body>
 
