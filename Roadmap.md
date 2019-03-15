@@ -99,7 +99,17 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- HomePage + RWD (stackable)
+- sync au scroll - ON DESACTIVE TOUT POUR LE MOMENT
+    - TOUT LE TEMPS DESACTIVE  - avoir le button ACTIVER LE SYNC UNIQUEMENT au click sur le button, juste un instant (evite plein de bugs)
+    - Faire le sync scroll quand on ECRIT
+    - BUG : il considere "----------" comme un titre
+
+- Editor - fermer panel apres load ou un save
+- ajouter login quand non authentifié en mobile
+- RWD sur settings -> avatar
+- voir bug apache (au load sur une note)
+
+- HomePage + RWD
 - Resolve vulnerabilities in dependencies
 - Google analytique
 - RGPD cookie banner - voir express-session - fait ca en localStorage   componentDidMount de la Home -> setConsentRGPDAction(getLocalStorage('key'))  - dans LayoutMainWeb on récup isConsentRGPD du store
