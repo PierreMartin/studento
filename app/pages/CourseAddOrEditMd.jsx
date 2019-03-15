@@ -111,7 +111,7 @@ const myVar = 'content...';
 			openModalSetStyle: {},
 			codeLanguageSelected: '',
 			isEditorChanged: false,
-			isButtonAutoScrollActive: true,
+			// isButtonAutoScrollActive: true,
 			isPreviewModeActive: false,
 			isMobile: false,
 			isMenuPanelOpen: (this.props.location && this.props.location.state && this.props.location.state.isMenuPanelOpen) || false
@@ -735,8 +735,13 @@ const myVar = 'content...';
 				this.handleOpenModalSetStyle({ isOpened: true, type: 'file image outline', title: 'Image', desc: 'Add a image' });
 				break;
 			case 'auto scoll':
-				this.setState({ isButtonAutoScrollActive: !this.state.isButtonAutoScrollActive });
-				this.refContentPreview.scrollTo(0, this.editorCm.getScrollInfo().top);
+				// this.setState({ isButtonAutoScrollActive: !this.state.isButtonAutoScrollActive });
+				// this.refContentPreview.scrollTo(0, this.editorCm.getScrollInfo().top);
+
+				/* TODO FAIRE ca, mais bug quand scroll trop vite
+				const scrollTopTarget = SectionsGeneratorForScrolling.getScrollPosition(this.editorCm.getScrollerElement().scrollTop, this.sections.editor, this.sections.preview);
+				this.refContentPreview.scrollTop = scrollTopTarget;
+				*/
 				break;
 			case 'toggle preview':
 				this.setState({ isPreviewModeActive: !this.state.isPreviewModeActive });
@@ -808,6 +813,8 @@ const myVar = 'content...';
 
 	handleScroll(source) {
 		return (e) => {
+			return; // TODO disable sync scroll for the moment
+
 			if (e.target.scrollTop === 0 || this.state.isMobile || this.state.isPreviewModeActive) return; // (e.target.scrollTop === 0) ==>  When typing, we pass in onScroll :(
 
 			this.resetTargetScrolling(); // For re enable the other container to scroll
@@ -823,7 +830,7 @@ const myVar = 'content...';
 			}
 
 			if (this.scrollingTarget === null) this.scrollingTarget = source;
-			if (!this.state.isButtonAutoScrollActive || this.scrollingTarget !== source) return;
+			if (/* !this.state.isButtonAutoScrollActive || */this.scrollingTarget !== source) return;
 
 			if (source === 'editor') {
 				this.refContentPreview.scrollTop = scrollTopTarget;
@@ -841,7 +848,7 @@ const myVar = 'content...';
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isButtonAutoScrollActive, isPreviewModeActive, isMobile, isMenuPanelOpen } = this.state;
+		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isPreviewModeActive, isMobile, isMenuPanelOpen } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { codeLanguagesOptions } = this.getOptionsFormsSelect();
 
@@ -930,7 +937,7 @@ const myVar = 'content...';
 
 								{ !isPreviewModeActive && !isMobile ? (
 									<Button.Group basic size="small" className={cx('button-group')}>
-										<Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" />
+										{/* <Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" /> */}
 									</Button.Group>
 								) : '' }
 							</div>

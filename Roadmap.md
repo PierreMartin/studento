@@ -99,11 +99,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- sync au scroll - ON DESACTIVE TOUT POUR LE MOMENT
-    - TOUT LE TEMPS DESACTIVE  - avoir le button ACTIVER LE SYNC UNIQUEMENT au click sur le button, juste un instant (evite plein de bugs)
-    - Faire le sync scroll quand on ECRIT
-    - BUG : il considere "----------" comme un titre
-
 - Editor - fermer panel apres load ou un save
 - ajouter login quand non authentifié en mobile
 - RWD sur settings -> avatar
@@ -116,6 +111,11 @@ $ ./scripts/generate_menu.sh
 - referencement
 
 moins urgent :
+- sync au scroll - "voir codemirror sync scroll" ou "limiter la vitesse du scroll a un maximum" sur Google mais probleme a cause du DOM qui se rend au fure et a mesure du scroll...
+    - TOUT LE TEMPS DESACTIVE  - avoir le button ACTIVER LE SYNC UNIQUEMENT au click sur le button, juste un instant (evite plein de bugs)
+    - Faire le sync scroll quand on ECRIT
+    - BUG : il considere "----------" comme un titre
+
 - pouvoir uploader images dans les cours
 - pouvoir mettre schémas dans les cours
 - Auth facebook google...
