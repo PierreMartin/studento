@@ -912,9 +912,11 @@ const myVar = 'content...';
 								<Button.Group basic size="small" className={cx('button-group')}>
 									<Popup style={stylePopup} inverted trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Exit (you should save before)" />
 
-									<Popup trigger={<Button icon="file" />} flowing hoverable inverted>
-										<Button style={stylePopup} inverted basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-										<Button style={stylePopup} inverted basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
+									<Popup trigger={<Button icon="file" />} flowing hoverable inverted on="click">
+										<div className={cx('buttons-add-note')}>
+											<Button style={stylePopup} inverted basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
+											<Button style={stylePopup} inverted basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
+										</div>
 									</Popup>
 
 									{ !isEditorChanged ? <Popup style={stylePopup} inverted trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup style={stylePopup} inverted trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
