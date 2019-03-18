@@ -165,7 +165,8 @@ class CourseAddOrEdit extends Component {
 					content: contentSanitized,
 					template: {}
 				},
-				isEditorChanged: false
+				isEditorChanged: false,
+				isMenuPanelOpen: false
 			}, () => {
 				kaTexRendering(katex, contentSanitized);
 			});
@@ -277,7 +278,7 @@ class CourseAddOrEdit extends Component {
 			data.courseId = course._id;
 			updateCourseAction(data)
 				.then(() => {
-					this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isMenuPanelOpen: false });
 				})
 				.catch(() => {
 					this.setState({ isMenuPanelOpen: true });
@@ -289,7 +290,7 @@ class CourseAddOrEdit extends Component {
 			data.fields.type = 'wy';
 			createCourseAction(data, coursesPagesCount, indexPagination)
 				.then(() => {
-					this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isMenuPanelOpen: false });
 
 					// Goto next page if last item:
 					if ((courses.length + 1) % 13 === 0) {

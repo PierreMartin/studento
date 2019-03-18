@@ -274,7 +274,8 @@ const myVar = 'content...';
 			this.setState({
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 				fieldsTyping: {content, template: {}},
-				isEditorChanged: false
+				isEditorChanged: false,
+				isMenuPanelOpen: false
 			});
 
 			const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
@@ -370,7 +371,7 @@ const myVar = 'content...';
 			data.courseId = course._id;
 			updateCourseAction(data)
 				.then(() => {
-						this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+						this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isMenuPanelOpen: false });
 					})
 				.catch(() => {
 					this.setState({ isMenuPanelOpen: true });
@@ -382,7 +383,7 @@ const myVar = 'content...';
 			data.fields.type = 'md';
 			createCourseAction(data, coursesPagesCount, indexPagination)
 				.then(() => {
-					this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isMenuPanelOpen: false });
 
 					// Goto next page if last item:
 					if ((courses.length + 1) % 13 === 0) {
