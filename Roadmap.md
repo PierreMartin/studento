@@ -99,7 +99,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- ajouter login quand non authentifié en mobile
 - RWD sur settings -> avatar
 - voir bug apache (au load sur une note)
 

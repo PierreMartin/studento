@@ -10,7 +10,7 @@ import NavMainMobile from './NavMainMobile';
 import { fetchCategoriesAction } from '../../../actions/category';
 import { logoutAction } from '../../../actions/authentification';
 import { openTchatboxSuccess } from '../../../actions/tchat';
-import { Button, Container, Menu, Segment, Dropdown, Icon } from 'semantic-ui-react';
+import { Button, Container, Menu, Segment, Dropdown, Icon, Popup } from 'semantic-ui-react';
 import hubNoteLogo from '../../../images/logo_hubnote_white_menu.png';
 import classNames from 'classnames/bind';
 import styles from './css/navMain.scss';
@@ -222,7 +222,20 @@ class NavigationMain extends Component {
 
 								{/* authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''*/}
 								{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" active={pathUrl === '/login'} className={cx('menu-login')}>Log in</Menu.Item>) : ''}
-								{ !authentification.authenticated ? (<Button as={Link} to="/signup" active={pathUrl === '/signup'} inverted className={cx('show', 'menu-signup')}>Sign Up</Button>) : ''}
+								{ !authentification.authenticated ? (<Button as={Link} to="/signup" active={pathUrl === '/signup'} inverted className={cx('menu-signup')}>Sign Up</Button>) : ''}
+
+								{/* Authentification for mobile: */}
+								{ !authentification.authenticated ? (
+									<div className={cx('menu-auth-for-mobile')}>
+										<Popup trigger={<Button inverted content="Log in / Sign Up" className={cx('button-auth-for-mobile')} />} flowing hoverable>
+											<Button.Group>
+												<Button size="small" as={Link} to="/login" active={pathUrl === '/login'}>Log in</Button>
+												<Button.Or />
+												<Button size="small" as={Link} to="/signup" active={pathUrl === '/signup'}>Sign Up</Button>
+											</Button.Group>
+										</Popup>
+									</div>
+								) : ''}
 							</Menu.Item>
 						</Menu>
 

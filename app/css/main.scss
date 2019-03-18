@@ -16,8 +16,8 @@ body ::-webkit-scrollbar {
 }
 
 .layout-container {
-  margin-top: 55px; /* the height of the nav */
-  min-height:940px;
+  padding-top: 55px; /* the height of the nav */
+  min-height: 540px;
 }
 
 .layout-container-app {
