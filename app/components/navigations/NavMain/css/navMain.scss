@@ -6,6 +6,13 @@
   margin: 0 !important;
   padding: 0 !important;
   height: 55px;
+
+  .right {
+    .menu-signup {
+      margin-left: 0.5em !important;
+      top: -3px !important;
+    }
+  }
 }
 
 
@@ -38,6 +45,20 @@
           position: absolute;
           top: 20px;
           right: 20px;
+
+          .menu-add-note {
+            padding-right: 0;
+            .dropdown-menu {
+              left: inherit !important;
+              right: 0 !important;
+            }
+          }
+
+          .menu-signup {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+            font-size: 13px !important;
+          }
         }
 
         /* display items in menu */

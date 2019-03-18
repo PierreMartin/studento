@@ -167,8 +167,8 @@ class NavigationMain extends Component {
 	renderDropdownAddCourse(authentification) {
 		if (authentification.authenticated) {
 			return (
-				<Dropdown item icon="add" title="Add a Note">
-					<Dropdown.Menu>
+				<Dropdown item icon="add" title="Add a Note" className={cx('show', 'menu-add-note')}>
+					<Dropdown.Menu className={cx('dropdown-menu')}>
 						<Dropdown.Item icon="add" text="Add a Note" as={Link} to="/course/create/new" />
 						<Dropdown.Item icon="add" text="Add a Markdown Note" as={Link} to="/courseMd/create/new" />
 					</Dropdown.Menu>
@@ -221,8 +221,8 @@ class NavigationMain extends Component {
 								) : ''}
 
 								{/* authentification.authenticated ? (<Menu.Item as="a"><Icon name="users" /><Label circular color="teal" size="mini" floating>22</Label></Menu.Item>) : ''*/}
-								{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" active={pathUrl === '/login'}>Log in</Menu.Item>) : ''}
-								{ !authentification.authenticated ? (<Button as={Link} to="/signup" active={pathUrl === '/signup'} inverted style={{marginLeft: '0.5em'}}>Sign Up</Button>) : ''}
+								{ !authentification.authenticated ? (<Menu.Item as={Link} to="/login" active={pathUrl === '/login'} className={cx('menu-login')}>Log in</Menu.Item>) : ''}
+								{ !authentification.authenticated ? (<Button as={Link} to="/signup" active={pathUrl === '/signup'} inverted className={cx('show', 'menu-signup')}>Sign Up</Button>) : ''}
 							</Menu.Item>
 						</Menu>
 
