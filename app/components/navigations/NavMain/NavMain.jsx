@@ -227,7 +227,7 @@ class NavigationMain extends Component {
 								{/* Authentification for mobile: */}
 								{ !authentification.authenticated ? (
 									<div className={cx('menu-auth-for-mobile')}>
-										<Popup trigger={<Button inverted content="Log in / Sign Up" className={cx('button-auth-for-mobile')} />} flowing hoverable on="click">
+										<Popup trigger={<Button inverted content="Sign up" className={cx('button-auth-for-mobile')} />} flowing hoverable on="click">
 											<Button.Group>
 												<Button size="small" as={Link} to="/login" active={pathUrl === '/login'}>Log in</Button>
 												<Button.Or />

@@ -99,7 +99,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- RWD sur settings -> avatar
 - voir bug apache (au load sur une note)
 
 - HomePage + RWD

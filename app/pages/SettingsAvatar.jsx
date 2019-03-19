@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { uploadAvatarUserAction, avatarMainAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { Button, Grid, Modal, Header, Message, Label } from 'semantic-ui-react';
+import { Button, Modal, Header, Message, Label } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import { pathImage } from './../../config/app';
@@ -169,15 +169,15 @@ class SettingsAvatar extends Component {
 			const isMainAvatar = avatarObj && i === avatarMainSrc.avatarId;
 
 			nodeItemsAvatar.push(
-				<Grid.Column width={6} key={i} className={cx('dropzone-column')} >
-					<div><strong>Image {i + 1}</strong><br /></div>
+				<div key={i} className={cx('column')} >
+					<div><strong>Avatar {i + 1}</strong><br /></div>
 					<Dropzone onDrop={this.dropHandler(i)} multiple={false} accept={'image/*'} className={cx('dropzone-input')} >
-						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar150')} />
+						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar')} />
 						{(isMainAvatar) ? <div className={cx('mainAvatar')}><Label ribbon>Default</Label></div> : ''}
 					</Dropzone>
 
-					{(isSettableMainAvatar) ? <Button basic size="tiny" style={{ margin: '5px' }} onClick={this.handleDefaultAvatar(i)}>Define as default</Button> : ''}
-				</Grid.Column>
+					<Button disabled={!isSettableMainAvatar} basic size="tiny" className={cx('button-set-main-avatar')} onClick={this.handleDefaultAvatar(i)}>Define as default</Button>
+				</div>
 			);
 		}
 
@@ -193,7 +193,6 @@ class SettingsAvatar extends Component {
 				<div>
 					<h2>Add a avatar</h2>
 					<p>Drag and drop a image or click for select a image.</p>
-					{/*<img src={src} alt="avatar" className={cx('avatar150')} />*/}
 
 					<Modal open={this.state.openModal} onClose={this.handleCloseModal}>
 						<Modal.Header>Cropp the image</Modal.Header>
@@ -216,11 +215,11 @@ class SettingsAvatar extends Component {
 						</Modal.Actions>
 					</Modal>
 
-					<Grid className={cx('dropzone-container')} id="formAvatar">
-						<Grid.Row className={cx('row')}>
+					<div className={cx('dropzone-container')} id="formAvatar">
+						<div className={cx('row')}>
 							{ this.renderItemsAvatar() }
-						</Grid.Row>
-					</Grid>
+						</div>
+					</div>
 
 					<Message header="Note" content="Don't forget to select a avatar as default." />
 
