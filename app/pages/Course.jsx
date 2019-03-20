@@ -8,7 +8,7 @@ import katex from 'katex';
 import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
 import { Container, Segment } from 'semantic-ui-react';
-import { addCommentAction, emptyErrorsCommentAction } from '../actions/courses';
+import { fetchCourseByFieldAction, addCommentAction, emptyErrorsCommentAction } from '../actions/courses';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CourseInfos from '../components/CourseInfos/CourseInfos';
 import CourseToolbar from '../components/CourseToolbar/CourseToolbar';
@@ -38,35 +38,40 @@ class Course extends Component {
 	}
 
 	componentDidMount() {
-		const isTypeMarkDown = this.props.course.type !== 'wy';
+		const { params, fetchCourseByFieldAction } = this.props;
 
-		// Load highlight.js Languages:
-		hljsLoadLanguages(hljs);
+		if (!params.id) return;
 
-		// ##################################### Marked #####################################
-		this.rendererMarked = new marked.Renderer();
-		marked.setOptions({
-			renderer: this.rendererMarked,
-			pedantic: false,
-			gfm: true,
-			tables: true,
-			breaks: true,
-			sanitize: true,
-			smartLists: true,
-			smartypants: false,
-			xhtml: false
+		fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: 'coursePage' }).then(() => {
+			const isTypeMarkDown = this.props.course.type !== 'wy';
+
+			// Load highlight.js Languages:
+			hljsLoadLanguages(hljs);
+
+			// ##################################### Marked #####################################
+			this.rendererMarked = new marked.Renderer();
+			marked.setOptions({
+				renderer: this.rendererMarked,
+				pedantic: false,
+				gfm: true,
+				tables: true,
+				breaks: true,
+				sanitize: true,
+				smartLists: true,
+				smartypants: false,
+				xhtml: false
+			});
+
+			// Highlight and Katex rendering:
+			require('katex/dist/katex.css');
+
+			this.props.emptyErrorsCommentAction();
+			if (isTypeMarkDown) this.templateRendering();
+			this.setStateContentMarkedSanitized();
 		});
-
-		// Highlight and Katex rendering:
-		require('katex/dist/katex.css');
-
-		// TODO    this.props.fetchCourseAction(id: '5454').then(() => {  this.setStateContentMarkedSanitized();  })    ET remove  componentDidUpdate();
-
-		this.props.emptyErrorsCommentAction();
-		if (isTypeMarkDown) this.templateRendering();
-		this.setStateContentMarkedSanitized();
 	}
 
+	/*
 	componentDidUpdate(prevProps) {
 		if (prevProps.course !== this.props.course) {
 			// Init for generate headings wrap:
@@ -76,6 +81,7 @@ class Course extends Component {
 			this.setStateContentMarkedSanitized();
 		}
 	}
+	*/
 
 	getMetaData() {
 		return {
@@ -227,6 +233,7 @@ class Course extends Component {
 }
 
 Course.propTypes = {
+	fetchCourseByFieldAction: PropTypes.func,
 	addCommentAction: PropTypes.func,
 	addCommentMissingField: PropTypes.object,
 	emptyErrorsCommentAction: PropTypes.func,
@@ -267,4 +274,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { addCommentAction, emptyErrorsCommentAction })(Course);
+export default connect(mapStateToProps, { fetchCourseByFieldAction, addCommentAction, emptyErrorsCommentAction })(Course);

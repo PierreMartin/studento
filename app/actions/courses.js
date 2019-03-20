@@ -1,5 +1,5 @@
 import * as types from './../types';
-import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, fetchCoursesBySearchRequest, deleteCourseRequest, addCommentRequest, ratingCourseRequest } from './../api';
+import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, fetchCoursesBySearchRequest, fetchCourseByFieldRequest, deleteCourseRequest, addCommentRequest, ratingCourseRequest } from './../api';
 import { toast } from 'react-toastify';
 import { push } from 'react-router-redux';
 
@@ -75,6 +75,37 @@ export function fetchCoursesBySearchAction(typing, query, activePage) {
 			});
 	};
 }
+
+/************************ Get course by id or a field ***********************/
+export function fetchCourseByFieldSuccess(res) {
+	return {
+		type: types.GET_COURSE_SUCCESS,
+		messageSuccess: res.message,
+		course: res.course
+	};
+}
+
+export function fetchCourseByFieldFailure(messageError) {
+	return {
+		type: types.GET_COURSE_FAILURE,
+		messageError
+	};
+}
+
+export function fetchCourseByFieldAction(param) {
+	if (!param.keyReq || !param.valueReq) return Promise.reject({});
+
+	return (dispatch) => {
+		return fetchCourseByFieldRequest(param)
+			.then((res) => {
+				if (res.status === 200) return dispatch(fetchCourseByFieldSuccess(res.data));
+			})
+			.catch((err) => {
+				return dispatch(fetchCourseByFieldFailure(getMessage(err)));
+			});
+	};
+}
+
 
 /************************ Create or edit course ***********************/
 export function addOrEditCourseSuccess(res, isUpdate, coursesPagesCount, indexPagination) {

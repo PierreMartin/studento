@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import { fetchCourseRequest, checkIfUserOwnerCourseRequest } from './api';
+import { checkIfUserOwnerCourseRequest } from './api';
 import App from './pages/App';
 import LayoutMainWeb from './components/layouts/LayoutMainWeb/LayoutMainWeb';
 import LayoutMainApp from './components/layouts/LayoutMainApp/LayoutMainApp';
@@ -96,16 +96,18 @@ export default (store) => {
 				</Route>
 
 				<Route path="/dashboard" component={Dashboard} onEnter={requireAuth} />
-				<Route path="/course/:id" component={Course} fetchData={fetchCourseRequest} />
+				<Route path="/course/:id" component={Course} />
 
 				<Route path="/login" component={Login} />
 				<Route path="/signup" component={Login} />
 			</Route>
 
 			<Route component={LayoutMainApp}>
-				<Route path="/course/:action/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
-				<Route path="/courseMd/:action/:id" component={CourseAddOrEditMd} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
+				<Route path="/course/:action/:id" component={CourseAddOrEdit} onEnter={requireAuthEditor} />
+				<Route path="/courseMd/:action/:id" component={CourseAddOrEditMd} onEnter={requireAuthEditor} />
 			</Route>
 		</Route>
   );
 };
+
+// TODO faire fetchCourseByField dans CourseAddOrEdit and CourseAddOrEditMd

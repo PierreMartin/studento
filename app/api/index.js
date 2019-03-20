@@ -1,7 +1,4 @@
 import { api } from './services';
-import * as types from 'types';
-
-const getMessage = res => res.response && res.response.data && res.response.data.message;
 
 /********************************************** Courses ***********************************************/
 // All by id or by field
@@ -26,24 +23,19 @@ export const fetchCoursesBySearchRequest = (typing, query, activePage) => {
 		});
 };
 
-// One by id
-export const fetchCourseRequest = (params, store) => {
+// One by id or by field
+export const fetchCourseByFieldRequest = (params) => {
 	// create:
-	if (params && params.action === 'create') {
-		store.dispatch({type: types.EMPTY_COURSE});
-		return Promise.resolve({});
-	}
+	if (params && params.action === 'create') return Promise.resolve({});
 
 	// edit or view:
-	if (params && (params.action === 'edit' || typeof params.action === 'undefined')) {
-		return api().getCourseById(params.id)
+	if (params && (params.action === 'edit' || params.action === 'coursePage')) {
+		return api().getCourseByField(params)
 			.then((res) => {
-				if (res.status === 200) {
-					store.dispatch({type: types.GET_COURSE_SUCCESS, course: res.data.course});
-				}
+				if (res.status === 200) return Promise.resolve(res);
 			})
 			.catch((err) => {
-				store.dispatch({type: types.GET_COURSE_FAILURE, message: getMessage(err)});
+				return Promise.reject(err);
 			});
 	}
 };

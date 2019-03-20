@@ -13,7 +13,7 @@ export default (app) => {
 	if (coursesController) {
 		app.post('/api/getcourses', coursesController.allByField);
 		app.post('/api/getcoursesbysearch', coursesController.allBySearch);
-		app.get('/api/getcourse/:id', coursesController.oneById);
+		app.post('/api/getcourse', coursesController.oneByField);
 		app.post('/api/addcourse', coursesController.add);
 		app.put('/api/updatecourse', coursesController.update);
 		app.delete('/api/deletecourse/:courseid', coursesController.deleteOne);

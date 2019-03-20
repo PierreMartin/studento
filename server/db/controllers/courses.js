@@ -89,12 +89,12 @@ export function allBySearch(req, res) {
 }
 
 /**
- * Get /api/getcourse/:id
+ * POST /api/getcourse
  */
-export function oneById(req, res) {
-	const { id } = req.params;
+export function oneByField(req, res) {
+	const { keyReq, valueReq } = req.body;
 
-	Course.findOne({ _id: id })
+	Course.findOne({ [keyReq]: valueReq })
 		.populate('uId', '_id username avatarMainSrc.avatar28')
 		.populate('category_info', 'name description picto')
 		.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28')
@@ -362,7 +362,7 @@ export function checkOwnerCourse(req, res) {
 export default {
 	allByField,
 	allBySearch,
-	oneById,
+	oneByField,
   add,
 	addComment,
 	ratingCourse,

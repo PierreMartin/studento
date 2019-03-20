@@ -16,9 +16,10 @@ export function api() {
 			url: '/api/getcoursesbysearch',
 			data: { typing, ...query, activePage }
 		}),
-		getCourseById: id => localClient.request({
-			method: 'GET',
-			url: '/api/getcourse/' + id
+		getCourseByField: param => localClient.request({
+			method: 'POST',
+			url: '/api/getcourse',
+			data: param
 		}),
 		createCourse: data => localClient.request({
 			method: 'POST',
