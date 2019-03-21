@@ -88,6 +88,13 @@ class CourseAddOrEdit extends Component {
 	}
 
 	componentDidMount() {
+		/*
+		const { params } = this.props;
+		fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action }).then(() => {
+			console.log(this.props.course);
+		});
+		*/
+
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
 		// this.templateRendering();

@@ -109,5 +109,3 @@ export default (store) => {
 		</Route>
   );
 };
-
-// TODO faire fetchCourseByField dans CourseAddOrEdit and CourseAddOrEditMd

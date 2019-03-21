@@ -42,7 +42,7 @@ class Course extends Component {
 
 		if (!params.id) return;
 
-		fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: 'coursePage' }).then(() => {
+		fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action }).then(() => {
 			const isTypeMarkDown = this.props.course.type !== 'wy';
 
 			// Load highlight.js Languages:

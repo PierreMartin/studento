@@ -29,7 +29,7 @@ export const fetchCourseByFieldRequest = (params) => {
 	if (params && params.action === 'create') return Promise.resolve({});
 
 	// edit or view:
-	if (params && (params.action === 'edit' || params.action === 'coursePage')) {
+	if (params && (params.action === 'edit' || typeof params.action === 'undefined')) {
 		return api().getCourseByField(params)
 			.then((res) => {
 				if (res.status === 200) return Promise.resolve(res);
