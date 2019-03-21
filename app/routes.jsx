@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import { checkIfUserOwnerCourseRequest } from './api';
+import { fetchCourseRequest, checkIfUserOwnerCourseRequest } from './api';
 import App from './pages/App';
 import LayoutMainWeb from './components/layouts/LayoutMainWeb/LayoutMainWeb';
 import LayoutMainApp from './components/layouts/LayoutMainApp/LayoutMainApp';
@@ -103,8 +103,8 @@ export default (store) => {
 			</Route>
 
 			<Route component={LayoutMainApp}>
-				<Route path="/course/:action/:id" component={CourseAddOrEdit} onEnter={requireAuthEditor} />
-				<Route path="/courseMd/:action/:id" component={CourseAddOrEditMd} onEnter={requireAuthEditor} />
+				<Route path="/course/:action/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
+				<Route path="/courseMd/:action/:id" component={CourseAddOrEditMd} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
 			</Route>
 		</Route>
   );

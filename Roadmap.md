@@ -99,8 +99,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- voir bug apache (au load sur une note)
-
 - HomePage + RWD
 - Resolve vulnerabilities in dependencies
 - Google analytique

@@ -1,4 +1,8 @@
 import { api } from './services';
+import * as types from 'types';
+
+const getMessage = res => res.response && res.response.data && res.response.data.message;
+
 
 /********************************************** Courses ***********************************************/
 // All by id or by field
@@ -23,7 +27,7 @@ export const fetchCoursesBySearchRequest = (typing, query, activePage) => {
 		});
 };
 
-// One by id or by field
+// One by id or by field - FROM ACTIONS
 export const fetchCourseByFieldRequest = (params) => {
 	// create:
 	if (params && params.action === 'create') return Promise.resolve({});
@@ -36,6 +40,28 @@ export const fetchCourseByFieldRequest = (params) => {
 			})
 			.catch((err) => {
 				return Promise.reject(err);
+			});
+	}
+};
+
+// One by id or by field - FROM ROUTINGS    (NOTES ==> allows to do setState() in componentDidMount() and to have Class Components nested)
+export const fetchCourseRequest = (params, store) => {
+	// create:
+	if (params && params.action === 'create') {
+		store.dispatch({type: types.EMPTY_COURSE});
+		return Promise.resolve({});
+	}
+
+	// edit or view:
+	if (params && (params.action === 'edit' || typeof params.action === 'undefined')) {
+		return api().getCourseByField({ keyReq: '_id', valueReq: params.id, action: params.action })
+			.then((res) => {
+				if (res.status === 200) {
+					store.dispatch({type: types.GET_COURSE_SUCCESS, course: res.data.course});
+				}
+			})
+			.catch((err) => {
+				store.dispatch({type: types.GET_COURSE_FAILURE, message: getMessage(err)});
 			});
 	}
 };

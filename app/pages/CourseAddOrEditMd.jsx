@@ -119,13 +119,6 @@ const myVar = 'content...';
 	}
 
 	componentDidMount() {
-		/*
-		const { params } = this.props;
-		fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action }).then(() => {
-			console.log(this.props.course);
-		});
-		*/
-
 		// Resize element child to 100% height:
 		this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
 		this.updateWindowDimensions();
