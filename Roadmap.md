@@ -99,6 +99,11 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- rendre les notes en privé gratuits + mettre une gauge dans menu user (au bout de 50% notes en privé -> alerte orange | 70% notes alerte rouge)
+- pouvoir uploader images dans les cours
+- Auth facebook google...
+- Commentaires sur une zone de texte
+
 - HomePage + RWD
 - Resolve vulnerabilities in dependencies
 - Google analytique
@@ -111,9 +116,7 @@ moins urgent :
     - Faire le sync scroll quand on ECRIT
     - BUG : il considere "----------" comme un titre
 
-- pouvoir uploader images dans les cours
 - pouvoir mettre schémas dans les cours
-- Auth facebook google...
 - courseToolbar : Add to fav - download to PDF
 - comments -> render: styles (gras, bold, emoji, ...) + code editor
 - comments -> send notification with socket.io to author of course (Fetch all my courses + where commentedBy.length > 0)
