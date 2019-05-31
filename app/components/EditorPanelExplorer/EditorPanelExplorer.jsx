@@ -26,11 +26,11 @@ class EditorPanelExplorer extends Component {
 		// If lastActivePage === 1st page:
 		if (paginationEditor.lastActivePage === 1) {
 			fetchCategoriesAction();
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true });
 		} else if (paginationEditor.lastActivePage > 1) {
 			// If lastActivePage > 1st page:
 			const activePage = paginationEditor.lastActivePage;
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
 		}
 	}
 
@@ -96,7 +96,7 @@ class EditorPanelExplorer extends Component {
 		if (activePage === lastActivePage) return;
 
 		setPaginationCoursesEditorAction(activePage);
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
 	};
 
 	/**
@@ -179,7 +179,7 @@ class EditorPanelExplorer extends Component {
 
 		const messagesError = this.dispayFieldsErrors();
 		const { categoriesOptions, subCategoriesOptions, columnsOptions } = this.getOptionsFormsSelect();
-		const isDisableButtonSubmit = !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && !fieldsTyping.isPrivate && (!fieldsTyping.template || (fieldsTyping.template && Object.keys(fieldsTyping.template).length === 0));
+		const isDisableButtonSubmit = !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && typeof fieldsTyping.isPrivate === 'undefined' && (!fieldsTyping.template || (fieldsTyping.template && Object.keys(fieldsTyping.template).length === 0));
 		const selectTemplatesHeaders = [
 			{ label: 'h1', name: 'columnH1' },
 			{ label: 'h2', name: 'columnH2' },
@@ -219,7 +219,7 @@ class EditorPanelExplorer extends Component {
 						<Form.Select className={cx('select')} required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} />
 						{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={handleInputChange} /> : '' }
 
-						<Form.Checkbox disabled label="Private" name="isPrivate" value={fields.isPrivate || ''} onChange={handleInputChange} />
+						<Form.Checkbox className={cx('checkbox')} toggle label="Private" name="isPrivate" checked={fields.isPrivate || false} onChange={handleInputChange} />
 
 						{ fromPage !== 'wy' ? (
 							<Segment className={cx('form-templates-container')}>

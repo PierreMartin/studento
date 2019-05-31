@@ -15,6 +15,8 @@ $> use hubnote
 $> show collections
 
 db.courses.find()
+db.courses.find({ category: 'technology' }, { _id:0, title: 1 } )                       // ALL for me
+db.courses.find({ category: 'technology', isPrivate: false }, { _id:0, title: 1 } )     // ALL for public
 
 Pagination :
 db.courses.find({ category: 'technology' }, { _id:0, title: 1 } ).sort({ 'stars.average': 1 }).skip(page * limit).limit(limit).pretty()
@@ -99,7 +101,10 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- rendre les notes en privé gratuits + mettre une gauge dans menu user (au bout de 50% notes en privé -> alerte orange | 70% notes alerte rouge)
+- revoir css !!
+- mettre une gauge dans menu user (au bout de 50% notes en privé -> alerte orange | 70% notes alerte rouge)
+- If courses(userMe._id).length > 1 => on affiche pas le text par default
+- Mettre input 'title' dans la barre en haut - si catégorie vide, on en met une par default
 - pouvoir uploader images dans les cours
 - Auth facebook google...
 - Commentaires sur une zone de texte

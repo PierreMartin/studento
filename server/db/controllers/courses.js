@@ -58,10 +58,12 @@ const requestGetCoursesWithPagination = (res, query, activePage, sortByField = '
  * POST /api/getcourses
  */
 export function allByField(req, res) {
-	const { keyReq, valueReq, activePage, sortByField } = req.body;
+	const { keyReq, valueReq, activePage, sortByField, showPrivate } = req.body;
 
 	let query = {};
 	if (keyReq !== 'all' && valueReq !== 'all') query = { [keyReq]: valueReq };
+	query.isPrivate = false;
+	if (showPrivate) delete query.isPrivate;
 
 	requestGetCoursesWithPagination(res, query, activePage, sortByField, 'field');
 }
@@ -70,7 +72,7 @@ export function allByField(req, res) {
  * POST /api/getcoursesbysearch
  */
 export function allBySearch(req, res) {
-	const { keyReq, valueReq, typing, activePage, sortByField } = req.body;
+	const { keyReq, valueReq, typing, activePage, sortByField, showPrivate } = req.body;
 
 	if (!typing) return;
 
@@ -80,6 +82,8 @@ export function allBySearch(req, res) {
 			{ content: { $regex: typing, $options: 'i' } }
 		]
 	};
+	query.isPrivate = false;
+	if (showPrivate) delete query.isPrivate;
 
 	// Add criteria if user selected a category at search:
 	if (typeof keyReq === 'undefined' && valueReq !== 'all') query.category = valueReq;

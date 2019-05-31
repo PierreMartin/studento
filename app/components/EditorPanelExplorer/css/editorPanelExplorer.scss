@@ -77,6 +77,15 @@ $colorFontDarkTheme: #999;
     label { opacity: 1 !important; color: $colorFontDarkTheme !important; &:after { color: white !important; } }
     input, textarea, .select > div { color: #777 !important; font-weight: 900; }
 
+    /* Form input checkbox */
+    .checkbox {
+      div[class~=checked] {
+        input:focus:checked~label, input:checked~label {
+          color: #fff !important;
+        }
+      }
+    }
+
     /* Form input select */
     .form-templates-container {
       background-color: transparent;

@@ -237,6 +237,11 @@ class CourseAddOrEdit extends Component {
 	handleInputChange(event, field) {
 		const oldStateTyping = this.state.fieldsTyping;
 
+		// Set isPrivate:
+		if (field.name === 'isPrivate') {
+			return this.setState({ fieldsTyping: { ...oldStateTyping, ...{[field.name]: field.checked } } });
+		}
+
 		// Set categories:
 		if (field.name === 'category') {
 			return this.setState({
@@ -297,7 +302,7 @@ class CourseAddOrEdit extends Component {
 						const activePage = indexPagination + 1;
 
 						setPaginationCoursesEditorAction(activePage);
-						fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
+						fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
 					}
 				})
 				.catch(() => {

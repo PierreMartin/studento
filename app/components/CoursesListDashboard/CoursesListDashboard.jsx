@@ -33,11 +33,11 @@ class CoursesListDashboard extends Component {
 
 		// If lastActivePage === 1st page:
 		if (paginationEditor.lastActivePage === 1) {
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true });
 		} else if (paginationEditor.lastActivePage > 1) {
 			// If lastActivePage > 1st page:
 			const activePage = paginationEditor.lastActivePage;
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
 		}
 	}
 
@@ -67,7 +67,7 @@ class CoursesListDashboard extends Component {
 				// If no more course on (page > 1) : goto 1st page
 				if ((courses.length === 1 || !courses) && paginationEditor.lastActivePage > 1) {
 					setPaginationCoursesEditorAction(1);
-					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id });
+					fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true });
 				}
 			});
 		}
@@ -100,7 +100,7 @@ class CoursesListDashboard extends Component {
 		if (activePage === lastActivePage) return;
 
 		setPaginationCoursesEditorAction(activePage);
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage });
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
 	};
 
 	renderCoursesList(courses) {

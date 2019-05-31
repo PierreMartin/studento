@@ -57,10 +57,11 @@ class NavMainMobile extends Component {
 				<div className={cx('mobile-nav-main')}>
 					<ul>
 						<li><Link className={cx('arrow-after')} onClick={this.handleOpenCategory(true)}>Categories</Link></li>
-						<li className={cx(pathUrl === '/about' ? 'active' : '')}><Link to="/about">About</Link></li>
+						{ authentification.authenticated && <li className={cx(pathUrl === '/dashboard' ? 'active' : '')}><Link to="/dashboard">Your notes</Link></li> }
 						{ authentification.authenticated && <li className={cx(pathUrl === '/users' ? 'active' : '')}><Link to="/users">Users</Link></li> }
 						{ authentification.authenticated && <li><Link className={cx('arrow-after')} onClick={this.handleOpenProfile(true)}>{userMe.username}</Link></li> }
 						{ authentification.authenticated && <li><Link className={cx('arrow-after')} onClick={this.handleOpenAddNote(true)}>Add a note</Link></li> }
+						<li className={cx(pathUrl === '/about' ? 'active' : '')}><Link to="/about">About</Link></li>
 					</ul>
 				</div>
 
@@ -109,7 +110,6 @@ class NavMainMobile extends Component {
 					</header>
 					<ul>
 						<li><Link to={`/user/${userMe._id}`}>Your profile</Link></li>
-						<li><Link to="/dashboard">Your notes</Link></li>
 						<li><Link to="/settings">Edit your profile</Link></li>
 						<li><Link to="/" onClick={logoutAction}>Logout</Link></li>
 					</ul>

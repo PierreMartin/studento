@@ -154,8 +154,8 @@ class NavigationMain extends Component {
 			return (
 				<Dropdown item text={userMe.username} title="Settings" className={cx('menu-profile')}>
 					<Dropdown.Menu className="dropdown-profile">
+						<Dropdown.Item icon="list ul" text="Your Notes" as={Link} to="/dashboard" />
 						<Dropdown.Item icon="user" text="Your profile" as={Link} to={'/user/' + userMe._id} />
-						<Dropdown.Item icon="dashboard" text="Your Notes" as={Link} to="/dashboard" />
 						<Dropdown.Item icon="settings" text="Edit your profile" as={Link} to="/settings" />
 						<Dropdown.Item icon="user outline" text="Logout" as={Link} to="/" onClick={logoutAction} />
 					</Dropdown.Menu>
