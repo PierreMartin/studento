@@ -66,6 +66,17 @@ export const fetchCourseRequest = (params, store) => {
 	}
 };
 
+// All number courses by id or by field
+export const getNumberCoursesRequest = (params) => {
+	return api().getNumberCourses(params)
+		.then((res) => {
+			if (res.status === 200) return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
 export const createCourseRequest = (data) => {
 	return api().createCourse(data)
 		.then((res) => {

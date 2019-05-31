@@ -21,6 +21,11 @@ export function api() {
 			url: '/api/getcourse',
 			data: param
 		}),
+		getNumberCourses: param => localClient.request({
+			method: 'POST',
+			url: '/api/getnumbercourses',
+			data: param
+		}),
 		createCourse: data => localClient.request({
 			method: 'POST',
 			url: '/api/addcourse',

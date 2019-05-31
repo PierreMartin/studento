@@ -13,6 +13,23 @@
       margin-left: 0.5em !important;
       top: -3px !important;
     }
+
+    .menu-profile {
+      .gauge {
+        border-bottom: 1px solid rgba(34,36,38,.15);
+        color: #000;
+        padding: .78571429em 1.14285714em;
+        font-size: 12px;
+        color: rgba(0,0,0,.87);
+        font-weight: 400;
+
+        .note {
+          margin-bottom: 3px;
+          &.priv { color: red; }
+          &.pub { color: green; }
+        }
+      }
+    }
   }
 }
 

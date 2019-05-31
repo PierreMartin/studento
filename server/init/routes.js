@@ -14,6 +14,7 @@ export default (app) => {
 		app.post('/api/getcourses', coursesController.allByField);
 		app.post('/api/getcoursesbysearch', coursesController.allBySearch);
 		app.post('/api/getcourse', coursesController.oneByField);
+		app.post('/api/getnumbercourses', coursesController.countByField);
 		app.post('/api/addcourse', coursesController.add);
 		app.put('/api/updatecourse', coursesController.update);
 		app.delete('/api/deletecourse/:courseid', coursesController.deleteOne);

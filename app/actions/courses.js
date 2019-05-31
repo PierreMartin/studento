@@ -1,5 +1,5 @@
 import * as types from './../types';
-import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, fetchCoursesBySearchRequest, fetchCourseByFieldRequest, deleteCourseRequest, addCommentRequest, ratingCourseRequest } from './../api';
+import { createCourseRequest, updateCourseRequest, fetchCoursesByFieldRequest, fetchCoursesBySearchRequest, fetchCourseByFieldRequest, getNumberCoursesRequest, deleteCourseRequest, addCommentRequest, ratingCourseRequest } from './../api';
 import { toast } from 'react-toastify';
 import { push } from 'react-router-redux';
 
@@ -44,6 +44,39 @@ export function fetchCoursesByFieldAction(param) {
 			.catch((err) => {
 				dispatch(fetchCoursesByIdFailure(getMessage(err)));
 			});
+	};
+}
+
+/************************ Get number of courses by field (for gauge) ***********************/
+export function getNumberCoursesSuccess(res) {
+	return {
+		type: types.GET_NUMBER_COURSES_SUCCESS,
+		numberCourses: res.numberCourses
+	};
+}
+
+export function getNumberCoursesFailure(messageError) {
+	return {
+		type: types.GET_NUMBER_COURSES_FAILURE,
+		messageError
+	};
+}
+
+function getNumberCoursesReq(dispatch, param) {
+	getNumberCoursesRequest(param)
+		.then((res) => {
+			if (res.status === 200) dispatch(getNumberCoursesSuccess(res.data));
+		})
+		.catch((err) => {
+			dispatch(getNumberCoursesFailure(getMessage(err)));
+		});
+}
+
+export function getNumberCoursesAction(param) {
+	if (!param.keyReq || !param.valueReq) return;
+
+	return (dispatch) => {
+		getNumberCoursesReq(dispatch, param);
 	};
 }
 
@@ -142,6 +175,9 @@ export function createCourseAction(data, coursesPagesCount, indexPagination) {
 					dispatch(push(pathCourseToEdit)); // redirection
 					toast.success(res.data.message);
 					dispatch(addOrEditCourseSuccess(res.data, false, coursesPagesCount, indexPagination));
+
+					// Request for re-get the number of courses for the gauge:
+					getNumberCoursesReq(dispatch, { keyReq: 'uId', valueReq: data.userMeId });
 					return Promise.resolve(res);
 				}
 			})
@@ -165,6 +201,9 @@ export function updateCourseAction(data) {
 				if (res.status === 200) {
 					toast.success(res.data.message);
 					dispatch(addOrEditCourseSuccess(res.data, true));
+
+					// Request for re-get the number of courses for the gauge:
+					getNumberCoursesReq(dispatch, { keyReq: 'uId', valueReq: data.userMeId });
 					return Promise.resolve(res);
 				}
 			})
@@ -203,7 +242,7 @@ export function deleteCourseFailure(messageError) {
 }
 
 export function deleteCourseAction(param) {
-	const { courseId, courseTitle } = param;
+	const { courseId, courseTitle, userMeId } = param;
 
 	if (!courseId || courseId.length < 1) return;
 
@@ -211,7 +250,12 @@ export function deleteCourseAction(param) {
 		return deleteCourseRequest(courseId)
 			.then((res) => {
 				toast.success(`course '${courseTitle}' deleted`);
-				if (res.status === 200) return dispatch(deleteCourseSuccess(res.data, param));
+				if (res.status === 200) {
+					// Request for re-get the number of courses for the gauge:
+					if (userMeId) { getNumberCoursesReq(dispatch, { keyReq: 'uId', valueReq: userMeId }); }
+
+					return dispatch(deleteCourseSuccess(res.data, param));
+				}
 			})
 			.catch((err) => {
 				const messageError = getMessage(err);

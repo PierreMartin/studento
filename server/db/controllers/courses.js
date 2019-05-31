@@ -114,6 +114,31 @@ export function oneByField(req, res) {
 }
 
 /**
+ * POST /api/getnumbercourses
+ */
+export function countByField(req, res) {
+	const { keyReq, valueReq } = req.body;
+
+	Course.count({ [keyReq]: valueReq, isPrivate: true })
+		.exec((err, priv) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ message: 'A error happen at the get private number courses', err });
+			}
+
+			Course.count({ [keyReq]: valueReq, isPrivate: false })
+				.exec((err, pub) => {
+					if (err) {
+						console.error(err);
+						return res.status(500).json({ message: 'A error happen at the get public number courses', err });
+					}
+
+					return res.status(200).json({ message: 'Get number courses', numberCourses: {priv, pub} });
+				});
+  });
+}
+
+/**
  * POST /api/addcourse
  */
 export function add(req, res) {
@@ -367,6 +392,7 @@ export default {
 	allByField,
 	allBySearch,
 	oneByField,
+	countByField,
   add,
 	addComment,
 	ratingCourse,

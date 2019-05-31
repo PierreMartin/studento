@@ -60,7 +60,7 @@ class CoursesListDashboard extends Component {
 		const { deleteCourse } = this.state;
 
 		if (deleteCourse && deleteCourse.courseId) {
-			deleteCourseAction(deleteCourse).then(() => {
+			deleteCourseAction({...deleteCourse, userMeId: userMe._id}).then(() => {
 				// Close modal :
 				this.setState({ deleteCourse: { isModalOpened: false, courseId: '', courseTitle: '' } });
 

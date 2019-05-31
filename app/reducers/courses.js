@@ -127,6 +127,19 @@ const pagesCount = (state = 0, action) => {
 	}
 };
 
+// For gauge:
+const numberCourses = (state = {}, action) => {
+	switch (action.type) {
+		case types.GET_NUMBER_COURSES_SUCCESS:
+			if (action.numberCourses && Object.keys(action.numberCourses).length > 0) return action.numberCourses;
+			return state;
+		case types.GET_NUMBER_COURSES_FAILURE:
+			return {};
+		default:
+			return state;
+	}
+};
+
 const paginationEditor = (state = { lastActivePage: 1 }, action) => {
 	switch (action.type) {
 		case types.SET_PAGINATION_COURSES_EDITOR:
@@ -155,8 +168,9 @@ const coursesReducer = combineReducers({
 	one,
 	addOrEditMissingField,
 	addOrEditFailure,
-	coursesCount,
-	pagesCount,
+	numberCourses, // for gauge
+	coursesCount, // for requests
+	pagesCount, // for requests
 	paginationEditor,
 	addCommentMissingField
 });

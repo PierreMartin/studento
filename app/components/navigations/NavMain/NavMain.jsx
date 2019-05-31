@@ -8,6 +8,7 @@ import UnreadModalMessages from '../../UnreadMessages/UnreadModalMessages';
 import ButtonOpenMenuMobile from '../../ButtonOpenMenuMobile/ButtonOpenMenuMobile';
 import NavMainMobile from './NavMainMobile';
 import { fetchCategoriesAction } from '../../../actions/category';
+import { getNumberCoursesAction } from '../../../actions/courses';
 import { logoutAction } from '../../../actions/authentification';
 import { openTchatboxSuccess } from '../../../actions/tchat';
 import { Button, Container, Menu, Segment, Dropdown, Icon, Popup } from 'semantic-ui-react';
@@ -50,11 +51,23 @@ class NavigationMain extends Component {
 	}
 
 	componentDidMount() {
-		const { categories } = this.props;
-		if (categories.length === 0) this.props.fetchCategoriesAction();
+		const { categories, numberCourses, userMe, fetchCategoriesAction, getNumberCoursesAction } = this.props;
+		if (categories.length === 0) fetchCategoriesAction();
+
+		// If authentified:
+		if (userMe._id) {
+			if (!numberCourses || (numberCourses && Object.keys(numberCourses).length === 0)) getNumberCoursesAction({ keyReq: 'uId', valueReq: userMe._id });
+		}
 
 		// Obliged to use addEventListener for handle the events outside a element
 		document.addEventListener('mouseup', this.handleClickOutsideContent);
+	}
+
+	componentDidUpdate(prevProps) {
+		const { userMe, numberCourses, getNumberCoursesAction } = this.props;
+		if (userMe._id && prevProps.userMe._id !== userMe._id) {
+			if (!numberCourses || (numberCourses && Object.keys(numberCourses).length === 0)) getNumberCoursesAction({ keyReq: 'uId', valueReq: userMe._id });
+		}
 	}
 
 	componentWillUnmount() {
@@ -149,11 +162,19 @@ class NavigationMain extends Component {
 		);
 	}
 
-	renderDropdownProfile(userMe, authentification, logoutAction) {
+	renderDropdownProfile(userMe, authentification, logoutAction, numberCourses) {
 		if (authentification.authenticated) {
 			return (
 				<Dropdown item text={userMe.username} title="Settings" className={cx('menu-profile')}>
 					<Dropdown.Menu className="dropdown-profile">
+						{
+							numberCourses && typeof numberCourses.priv !== 'undefined' && typeof numberCourses.pub !== 'undefined' ?
+								<div className={cx('gauge')}>
+									<div className={cx('note', 'priv')}>{numberCourses.priv} Private note{numberCourses.priv > 1 ? 's' : ''}</div>
+									<div className={cx('note', 'pub')}>{numberCourses.pub} Public note{numberCourses.pub > 1 ? 's' : ''}</div>
+								</div>
+							: ''
+						}
 						<Dropdown.Item icon="list ul" text="Your Notes" as={Link} to="/dashboard" />
 						<Dropdown.Item icon="user" text="Your profile" as={Link} to={'/user/' + userMe._id} />
 						<Dropdown.Item icon="settings" text="Edit your profile" as={Link} to="/settings" />
@@ -178,7 +199,7 @@ class NavigationMain extends Component {
 	}
 
 	render() {
-		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl, categories } = this.props;
+		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl, categories, numberCourses } = this.props;
 		const { openModalUnreadNotifMessages, isMenuMobileOpen } = this.state;
 
 		return (
@@ -210,7 +231,7 @@ class NavigationMain extends Component {
 							</Menu.Item>
 
 							<Menu.Item position="right" className={cx('right')}>
-								{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
+								{ this.renderDropdownProfile(userMe, authentification, logoutAction, numberCourses) }
 								{ this.renderDropdownAddCourse(authentification) }
 
 								{ authentification.authenticated ? (
@@ -258,6 +279,11 @@ NavigationMain.propTypes = {
 		password: PropTypes.string
 	}),
 
+	numberCourses: PropTypes.shape({
+		priv: PropTypes.number,
+		pub: PropTypes.number
+	}),
+
 	categories: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
 		name: PropTypes.string,
@@ -273,6 +299,7 @@ NavigationMain.propTypes = {
 	})),
 
 	fetchCategoriesAction: PropTypes.func,
+	getNumberCoursesAction: PropTypes.func,
 	logoutAction: PropTypes.func.isRequired,
 	openTchatboxSuccess: PropTypes.func
 };
@@ -280,10 +307,11 @@ NavigationMain.propTypes = {
 function mapStateToProps(state) {
 	return {
 		categories: state.categories.all,
+		numberCourses: state.courses.numberCourses,
 		authentification: state.authentification,
 		userMe: state.userMe.data,
 		unreadMessages: state.tchat.unreadMessages
 	};
 }
 
-export default connect(mapStateToProps, { fetchCategoriesAction, logoutAction, openTchatboxSuccess })(NavigationMain);
+export default connect(mapStateToProps, { fetchCategoriesAction, getNumberCoursesAction, logoutAction, openTchatboxSuccess })(NavigationMain);

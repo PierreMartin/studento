@@ -279,6 +279,7 @@ class CourseAddOrEdit extends Component {
 
 		if (isEditing) {
 			data.fields = {...fieldsTyping, template: { ...template } };
+			data.userMeId = userMe._id;
 			data.modifiedAt = new Date().toISOString();
 			data.courseId = course._id;
 			updateCourseAction(data)
