@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../../actions/courses';
 import { fetchCategoriesAction } from '../../actions/category';
-import { Segment, List, Form, Header, Message, Select, Icon, Pagination } from 'semantic-ui-react';
+import { Segment, List, Form, Header, Message, Select, Icon, Pagination, Popup } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/editorPanelExplorer.scss';
 
@@ -220,6 +220,16 @@ class EditorPanelExplorer extends Component {
 						{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={handleInputChange} /> : '' }
 
 						<Form.Checkbox className={cx('checkbox')} toggle label="Private" name="isPrivate" checked={fields.isPrivate || false} onChange={handleInputChange} />
+						<Popup trigger={<Icon className={cx('info')} name="info circle" size="big" color="grey" />} flowing hoverable>
+							<Message info icon size="mini">
+								<Icon name="info circle" size="small" />
+								<Message.Header>
+									The more notes you will have in private, the lower your 'sharing score' will be.
+									<br />
+									Don't forget that the goal of this platform is to share as much your knowledge.
+								</Message.Header>
+							</Message>
+						</Popup>
 
 						{ fromPage !== 'wy' ? (
 							<Segment className={cx('form-templates-container')}>

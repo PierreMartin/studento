@@ -79,11 +79,18 @@ $colorFontDarkTheme: #999;
 
     /* Form input checkbox */
     .checkbox {
+      display: inline-block;
+      margin-right: 8px;
       div[class~=checked] {
         input:focus:checked~label, input:checked~label {
           color: #fff !important;
         }
       }
+    }
+
+    .info {
+      display: inline-block;
+      vertical-align: top;
     }
 
     /* Form input select */
