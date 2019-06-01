@@ -219,7 +219,7 @@ const myVar = 'content...';
 			mode: 'gfm'
 		});
 
-		this.editorCm.setValue((this.props.course && this.props.course.content) || this.defaultMessageEditor);
+		this.editorCm.setValue((this.props.course && this.props.course.content) || '');
 
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
@@ -267,9 +267,16 @@ const myVar = 'content...';
 			// Init for generate headings wrap:
 			this.indexHeader = 0;
 			this.headersList = [];
-			const content = (this.props.course && this.props.course.content) || this.defaultMessageEditor;
+			let content = '';
 
-			this.editorCm.setValue(content);
+			const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
+			if (numberCoursesMd === 0) {
+				content = (this.props.course && this.props.course.content) || this.defaultMessageEditor;
+				this.editorCm.setValue(content);
+			} else {
+				content = (this.props.course && this.props.course.content) || '';
+				this.editorCm.setValue(content);
+			}
 
 			this.setState({
 				isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
@@ -282,6 +289,13 @@ const myVar = 'content...';
 
 			// Empty the errors when change course or create a new:
 			if ((Object.keys(addOrEditMissingField).length > 0) || addOrEditFailure.length > 0) emptyErrorsAction();
+		}
+
+		if (this.props.courses && prevProps.courses !== this.props.courses) {
+			const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
+			if (numberCoursesMd === 0) {
+				this.editorCm.setValue((this.props.course && this.props.course.content) || this.defaultMessageEditor);
+			}
 		}
 	}
 

@@ -102,7 +102,6 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - revoir css !!
-- If courses(userMe._id).length > 1 => on affiche pas le text par default
 - Mettre input 'title' dans la barre en haut - si catégorie vide, on en met une par default
 - pouvoir uploader images dans les cours
 - Auth facebook google...

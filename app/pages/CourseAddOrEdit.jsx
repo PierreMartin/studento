@@ -102,7 +102,12 @@ class CourseAddOrEdit extends Component {
 			// this.headersList = [];
 
 			// Update Tiny MCE Editor;
-			tinymce.EditorManager.get(this.idEditor).setContent(this.props.course.content || this.defaultMessageEditor);
+			const numberCoursesWy = this.props.courses && this.props.courses.filter(course => course.type === 'wy').length;
+			if (numberCoursesWy === 0) {
+				tinymce.EditorManager.get(this.idEditor).setContent(this.props.course.content || this.defaultMessageEditor);
+			} else {
+				tinymce.EditorManager.get(this.idEditor).setContent(this.props.course.content || '');
+			}
 
 			this.setContentSanitized({ callFrom: 'update' });
 
@@ -110,6 +115,13 @@ class CourseAddOrEdit extends Component {
 
 			// Empty the errors when change course or create a new:
 			if ((Object.keys(addOrEditMissingField).length > 0) || addOrEditFailure.length > 0) emptyErrorsAction();
+		}
+
+		if (this.props.courses && prevProps.courses !== this.props.courses) {
+			const numberCoursesWy = this.props.courses && this.props.courses.filter(course => course.type === 'wy').length;
+			if (numberCoursesWy === 0) {
+				tinymce.EditorManager.get(this.idEditor).setContent(this.props.course.content || this.defaultMessageEditor);
+			}
 		}
 	}
 
@@ -144,7 +156,7 @@ class CourseAddOrEdit extends Component {
 	}
 
 	setContentSanitized(params = {}) {
-		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || this.defaultMessageEditor;
+		const content = ((typeof params.contentCourse !== 'undefined') ? params.contentCourse : this.props.course && this.props.course.content) || '';
 		const contentSanitized = DOMPurify.sanitize(content);
 		const oldStateTyping = this.state.fieldsTyping;
 
