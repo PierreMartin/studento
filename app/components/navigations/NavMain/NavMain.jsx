@@ -162,19 +162,49 @@ class NavigationMain extends Component {
 		);
 	}
 
-	renderDropdownProfile(userMe, authentification, logoutAction, numberCourses) {
+	renderGauge() {
+		const { numberCourses } = this.props;
+		if (!numberCourses || typeof numberCourses.priv === 'undefined' || typeof numberCourses.pub === 'undefined') return null;
+
+		const freePrivatesForStart = 3; // n fist private notes who will not trigger the gauge
+		let stateGauge = 'green';
+		let percentPublic = 100;
+
+		if (numberCourses.priv >= freePrivatesForStart) {
+			percentPublic = (numberCourses.pub / (numberCourses.pub + numberCourses.priv)) * 100;
+			if (percentPublic >= 100) percentPublic = 100;
+
+			if (percentPublic < 30) {
+				stateGauge = 'red';
+			} else if (percentPublic < 50) {
+				stateGauge = 'orange';
+			}
+		}
+
+		return (
+			<div className={cx('gauge')}>
+				<div className={cx('title')}>Ratio private / public notes: <br /> (Triggered after {freePrivatesForStart} privates)</div>
+
+				<div>My sharing score:</div>
+				<div className={cx('score-progress-bar')}>
+					<div style={{ height: '10px', width: `${percentPublic}px`, backgroundColor: stateGauge }} />
+				</div>
+				<div className={cx('percent')}>{Math.floor(percentPublic)}%</div>
+
+				<div>
+					<div className={cx('note', 'priv')}>{numberCourses.priv} Private note{numberCourses.priv > 1 ? 's' : ''}</div>
+					<div className={cx('note', 'pub')}>{numberCourses.pub} Public note{numberCourses.pub > 1 ? 's' : ''}</div>
+				</div>
+			</div>
+		);
+	}
+
+	renderDropdownProfile(userMe, authentification, logoutAction) {
 		if (authentification.authenticated) {
 			return (
 				<Dropdown item text={userMe.username} title="Settings" className={cx('menu-profile')}>
 					<Dropdown.Menu className="dropdown-profile">
-						{
-							numberCourses && typeof numberCourses.priv !== 'undefined' && typeof numberCourses.pub !== 'undefined' ?
-								<div className={cx('gauge')}>
-									<div className={cx('note', 'priv')}>{numberCourses.priv} Private note{numberCourses.priv > 1 ? 's' : ''}</div>
-									<div className={cx('note', 'pub')}>{numberCourses.pub} Public note{numberCourses.pub > 1 ? 's' : ''}</div>
-								</div>
-							: ''
-						}
+						{ this.renderGauge() }
 						<Dropdown.Item icon="list ul" text="Your Notes" as={Link} to="/dashboard" />
 						<Dropdown.Item icon="user" text="Your profile" as={Link} to={'/user/' + userMe._id} />
 						<Dropdown.Item icon="settings" text="Edit your profile" as={Link} to="/settings" />
@@ -199,7 +229,7 @@ class NavigationMain extends Component {
 	}
 
 	render() {
-		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl, categories, numberCourses } = this.props;
+		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl, categories } = this.props;
 		const { openModalUnreadNotifMessages, isMenuMobileOpen } = this.state;
 
 		return (
@@ -231,7 +261,7 @@ class NavigationMain extends Component {
 							</Menu.Item>
 
 							<Menu.Item position="right" className={cx('right')}>
-								{ this.renderDropdownProfile(userMe, authentification, logoutAction, numberCourses) }
+								{ this.renderDropdownProfile(userMe, authentification, logoutAction) }
 								{ this.renderDropdownAddCourse(authentification) }
 
 								{ authentification.authenticated ? (

@@ -102,7 +102,6 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - revoir css !!
-- mettre une gauge dans menu user (au bout de 50% notes en privé -> alerte orange | 70% notes alerte rouge)
 - If courses(userMe._id).length > 1 => on affiche pas le text par default
 - Mettre input 'title' dans la barre en haut - si catégorie vide, on en met une par default
 - pouvoir uploader images dans les cours

@@ -23,6 +23,23 @@
         color: rgba(0,0,0,.87);
         font-weight: 400;
 
+        .title {
+          margin-bottom: 7px;
+          font-weight: 600;
+        }
+
+        .score-progress-bar {
+          display: inline-block;
+          vertical-align: -10px;
+          width: 100px;
+          margin: 3px 3px 10px 0;
+          background-color: #e4e4e4;
+        }
+
+        .percent {
+          display: inline-block;
+        }
+
         .note {
           margin-bottom: 3px;
           &.priv { color: red; }
