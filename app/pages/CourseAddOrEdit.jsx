@@ -7,11 +7,12 @@ import TinyEditor from '../components/TinyEditor/TinyEditor';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
 import { kaTexRendering } from '../components/common/renderingCourse';
+import { getOptionsFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
 import { createCourseAction, updateCourseAction, emptyErrorsAction, fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../actions/courses';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
-import { Button, Popup } from 'semantic-ui-react';
+import { Button, Popup, Form, Message, Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -299,7 +300,7 @@ class CourseAddOrEdit extends Component {
 					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isMenuPanelOpen: false });
 				})
 				.catch(() => {
-					this.setState({ isMenuPanelOpen: true });
+					// this.setState({ isMenuPanelOpen: true });
 				});
 		} else {
 			data.fields = fieldsTyping;
@@ -319,9 +320,38 @@ class CourseAddOrEdit extends Component {
 					}
 				})
 				.catch(() => {
-					this.setState({ isMenuPanelOpen: true });
+					// this.setState({ isMenuPanelOpen: true });
 				});
 		}
+	}
+
+	/**
+	 * Display a error if a field is wrong
+	 * addOrEditMissingField - object with true as key if a field is missing
+	 * addOrEditFailure - message from back-end
+	 * @return {string} the final message if error
+	 * */
+	dispayFieldsErrors() {
+		const { addOrEditMissingField, addOrEditFailure } = this.props;
+		let messagesNode = '';
+		const missingFieldArr = Object.keys(addOrEditMissingField);
+
+		if (missingFieldArr.length === 1) {
+			messagesNode = `The field ${missingFieldArr[0]} is required`;
+		} else if (missingFieldArr.length > 1) {
+			let fields = '';
+			let comma = ', ';
+			for (let i = 0; i < missingFieldArr.length; i++) {
+				if (i === missingFieldArr.length - 2) { comma = ' and '; }
+				if (i >= missingFieldArr.length - 1) { comma = ''; }
+				fields += `${missingFieldArr[i]}${comma}`;
+			}
+			messagesNode += `The fields ${fields} are required`;
+		}
+
+		if (addOrEditFailure && addOrEditFailure.length > 0) messagesNode += addOrEditFailure;
+
+		return messagesNode;
 	}
 
 	render() {
@@ -330,6 +360,9 @@ class CourseAddOrEdit extends Component {
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { heightEditor } = this.getHeigthElements();
 		const stylePopup = { fontWeight: '900' };
+		const { categoriesOptions } = getOptionsFormsSelect({ categories, course, category, isEditing });
+		const messagesError = this.dispayFieldsErrors();
+		const isPropertiesChanged = fieldsTyping.title || fieldsTyping.category;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -372,6 +405,26 @@ class CourseAddOrEdit extends Component {
 								{ !isEditorChanged ? <Popup style={stylePopup} inverted trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup style={stylePopup} inverted trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
 								{ !isEditing ? <Button disabled icon="arrow circle up" /> : <Popup style={stylePopup} inverted trigger={<Button icon="arrow circle up" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
 							</Button.Group>
+
+							<Form error={messagesError.length > 0} size="mini" onSubmit={this.handleOnSubmit} className={cx('form-properties')}>
+								<Form.Input size="tiny" required placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={this.handleInputChange} />
+								<Form.Select size="tiny" required placeholder="Category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
+
+								{
+									messagesError.length > 0 ? (
+										<Popup trigger={<Icon className={cx('error')} name="warning sign" size="big" color="red" />} flowing hoverable>
+											<Message error icon size="mini">
+												<Icon name="warning sign" size="small" />
+												<Message.Header>
+													{messagesError}
+												</Message.Header>
+											</Message>
+										</Popup>
+									) : null
+								}
+
+								<Form.Button size="tiny" basic fluid inverted disabled={!isPropertiesChanged && !isEditorChanged}>Save</Form.Button>
+							</Form>
 						</div>
 
 						<div className={cx('tiny-editor-container')}>

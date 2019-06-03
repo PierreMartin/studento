@@ -14,7 +14,8 @@ import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, empt
 import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { Form, Button, Popup, Modal, Header } from 'semantic-ui-react';
+import { getOptionsFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
+import { Form, Button, Popup, Modal, Header, Message, Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -313,29 +314,6 @@ const myVar = 'content...';
 		return { heightEditor };
 	}
 
-	getOptionsFormsSelect() {
-		const codeLanguagesOptions = [
-			{ key: 'markdown', text: 'markdown', value: 'markdown' },
-			{ key: 'javascript', text: 'Javascript', value: 'javascript' },
-			{ key: 'php', text: 'Php', value: 'php' },
-			{ key: 'python', text: 'Python', value: 'python' },
-			{ key: 'ruby', text: 'Ruby', value: 'ruby' },
-			{ key: 'sass', text: 'Sass', value: 'sass' },
-			{ key: 'shell', text: 'Shell', value: 'shell' },
-			{ key: 'sql', text: 'Sql', value: 'sql' },
-			{ key: 'stylus', text: 'Stylus', value: 'stylus' },
-			{ key: 'xml', text: 'XML', value: 'xml' },
-			{ key: 'coffeescript', text: 'Coffeescript', value: 'coffeescript' },
-			{ key: 'css', text: 'Css', value: 'css' },
-			{ key: 'cmake', text: 'Cmake', value: 'cmake' },
-			{ key: 'htmlmixed', text: 'HTML', value: 'htmlmixed' },
-			{ key: 'mathematica', text: 'Mathematica', value: 'mathematica' },
-			{ key: 'katex', text: 'Katex', value: 'katex' }
-		];
-
-		return { codeLanguagesOptions };
-	}
-
 	getMetaData() {
 		return {
 			title: 'Add a Markdown Note',
@@ -389,7 +367,7 @@ const myVar = 'content...';
 						this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isMenuPanelOpen: false });
 					})
 				.catch(() => {
-					this.setState({ isMenuPanelOpen: true });
+					// this.setState({ isMenuPanelOpen: true });
 				});
 		} else {
 			data.fields = fieldsTyping;
@@ -409,7 +387,7 @@ const myVar = 'content...';
 					}
 				})
 				.catch(() => {
-					this.setState({ isMenuPanelOpen: true });
+					// this.setState({ isMenuPanelOpen: true });
 				});
 		}
 	}
@@ -867,11 +845,41 @@ const myVar = 'content...';
 		this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
 	}
 
+	/**
+	 * Display a error if a field is wrong
+	 * addOrEditMissingField - object with true as key if a field is missing
+	 * addOrEditFailure - message from back-end
+	 * @return {string} the final message if error
+	 * */
+	dispayFieldsErrors() {
+		const { addOrEditMissingField, addOrEditFailure } = this.props;
+		let messagesNode = '';
+		const missingFieldArr = Object.keys(addOrEditMissingField);
+
+		if (missingFieldArr.length === 1) {
+			messagesNode = `The field ${missingFieldArr[0]} is required`;
+		} else if (missingFieldArr.length > 1) {
+			let fields = '';
+			let comma = ', ';
+			for (let i = 0; i < missingFieldArr.length; i++) {
+				if (i === missingFieldArr.length - 2) { comma = ' and '; }
+				if (i >= missingFieldArr.length - 1) { comma = ''; }
+				fields += `${missingFieldArr[i]}${comma}`;
+			}
+			messagesNode += `The fields ${fields} are required`;
+		}
+
+		if (addOrEditFailure && addOrEditFailure.length > 0) messagesNode += addOrEditFailure;
+
+		return messagesNode;
+	}
+
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
 		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isPreviewModeActive, isMobile, isMenuPanelOpen } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
-		const { codeLanguagesOptions } = this.getOptionsFormsSelect();
+		const { codeLanguagesOptions, categoriesOptions } = getOptionsFormsSelect({ categories, course, category, isEditing });
+		const messagesError = this.dispayFieldsErrors();
 
 		const buttonsToolbar = [
 			{ icon: 'bold', content: 'Bold' },
@@ -899,6 +907,8 @@ const myVar = 'content...';
 			stylesEditor.display = 'none';
 			stylesPreview.display = 'block';
 		}
+
+		const isPropertiesChanged = fieldsTyping.title || fieldsTyping.category;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -939,10 +949,29 @@ const myVar = 'content...';
 										</div>
 									</Popup>
 
-									{ !isEditorChanged ? <Popup style={stylePopup} inverted trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup style={stylePopup} inverted trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
 									<Popup style={stylePopup} inverted trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={this.handleClickToolbar('toggle preview')} />} content="Preview mode" />
 									{ !isEditing ? <Button disabled icon="arrow circle up" /> : <Popup style={stylePopup} inverted trigger={<Button icon="arrow circle up" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
 								</Button.Group>
+
+								<Form error={messagesError.length > 0} size="mini" onSubmit={this.handleOnSubmit} className={cx('form-properties')}>
+									<Form.Input size="tiny" required placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={this.handleInputChange} />
+									<Form.Select size="tiny" required placeholder="Category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
+
+									{
+										messagesError.length > 0 ? (
+											<Popup trigger={<Icon className={cx('error')} name="warning sign" size="big" color="red" />} flowing hoverable>
+												<Message error icon size="mini">
+													<Icon name="warning sign" size="small" />
+													<Message.Header>
+														{messagesError}
+													</Message.Header>
+												</Message>
+											</Popup>
+										) : null
+									}
+
+									<Form.Button size="tiny" basic fluid inverted disabled={!isPropertiesChanged && !isEditorChanged}>Save</Form.Button>
+								</Form>
 							</div>
 
 							<div className={cx('toolbar', 'toolbar-editor')}>

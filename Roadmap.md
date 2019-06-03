@@ -101,8 +101,8 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- revoir css !!
-- Mettre input 'title' dans la barre en haut - si catégorie vide, on en met une par default
+- EditorToolbar
+- RWD Toolbar
 - pouvoir uploader images dans les cours
 - Auth facebook google...
 - Commentaires sur une zone de texte
@@ -114,6 +114,9 @@ $ ./scripts/generate_menu.sh
 - referencement
 
 moins urgent :
+- refacto Editor => 1 top level component get datas | 1 component enfant pour les states (TOUS) | les petites enfants stateless
+- revoir css !!
+
 - sync au scroll - "voir codemirror sync scroll" ou "limiter la vitesse du scroll a un maximum" sur Google mais probleme a cause du DOM qui se rend au fure et a mesure du scroll...
     - TOUT LE TEMPS DESACTIVE  - avoir le button ACTIVER LE SYNC UNIQUEMENT au click sur le button, juste un instant (evite plein de bugs)
     - Faire le sync scroll quand on ECRIT

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { getOptionsFormsSelect } from './attributesForms';
 import { fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../../actions/courses';
 import { fetchCategoriesAction } from '../../actions/category';
 import { Segment, List, Form, Header, Message, Select, Icon, Pagination, Popup } from 'semantic-ui-react';
@@ -32,61 +33,6 @@ class EditorPanelExplorer extends Component {
 			const activePage = paginationEditor.lastActivePage;
 			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
 		}
-	}
-
-	getOptionsFormsSelect() {
-		const { categories, course, category, isEditing } = this.props;
-
-		let lastCategorySelected = category.lastSelected;
-
-		// If update and no yet select some Inputs:
-		if (isEditing && category.lastSelected === null) {
-			lastCategorySelected = course.category;
-		}
-
-		// CATEGORIES - Convert to Input formate:
-		const arrCatList = [];
-		if (categories.length > 0) {
-			for (let i = 0; i < categories.length; i++) {
-				arrCatList.push({
-					key: categories[i].key,
-					text: categories[i].name,
-					value: categories[i].key
-				});
-			}
-		}
-
-		// SUB CATEGORIES - 1) Get the category selected by the 1st Input:
-		let categorySelected = {};
-		if (categories.length > 0 && lastCategorySelected) {
-			for (let i = 0; i < categories.length; i++) {
-				if (categories[i].key === lastCategorySelected) {
-					categorySelected = categories[i];
-					break;
-				}
-			}
-		}
-
-		// SUB CATEGORIES - 2) Convert to Input formate:
-		const arrSubCatList = [];
-		if (categorySelected.subCategories && categorySelected.subCategories.length > 0) {
-			for (let i = 0; i < categorySelected.subCategories.length; i++) {
-				arrSubCatList.push({
-					key: categorySelected.subCategories[i].key,
-					text: categorySelected.subCategories[i].name,
-					value: categorySelected.subCategories[i].key
-				});
-			}
-		}
-
-		const columnsOptions = [
-			{ key: 1, text: '1 column', value: 1 },
-			{ key: 2, text: '2 columns', value: 2 },
-			{ key: 3, text: '3 columns', value: 3 },
-			{ key: 4, text: '4 columns', value: 4 }
-		];
-
-		return { categoriesOptions: arrCatList, subCategoriesOptions: arrSubCatList, columnsOptions };
 	}
 
 	handlePaginationChange = (e, { activePage }) => {
@@ -174,11 +120,13 @@ class EditorPanelExplorer extends Component {
 			category,
 			isEditing,
 			handleInputChange,
-			fromPage
+			fromPage,
+			categories,
+			course
 		} = this.props;
 
 		const messagesError = this.dispayFieldsErrors();
-		const { categoriesOptions, subCategoriesOptions, columnsOptions } = this.getOptionsFormsSelect();
+		const { categoriesOptions, subCategoriesOptions, columnsOptions } = getOptionsFormsSelect({ categories, course, category, isEditing });
 		const isDisableButtonSubmit = !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && typeof fieldsTyping.isPrivate === 'undefined' && (!fieldsTyping.template || (fieldsTyping.template && Object.keys(fieldsTyping.template).length === 0));
 		const selectTemplatesHeaders = [
 			{ label: 'h1', name: 'columnH1' },
