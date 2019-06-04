@@ -101,8 +101,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- EditorToolbar
-- RWD Toolbar
+- Bug hauteur editors
 - pouvoir uploader images dans les cours
 - Auth facebook google...
 - Commentaires sur une zone de texte

@@ -16,23 +16,6 @@ $colorFontDarkTheme: #999;
 
   &.menu-open { left: 0; }
 
-  .nav-bar {
-    background-color: $colorBgVeryDark;
-    height: 48px;
-
-    /*
-    padding: 4px;
-    div[id="panel-explorer_button-group"] {
-      border: 1px solid #888;
-      margin: 3px 7px 3px 0;
-
-      [role="button"]:first-child { border-left: none; }
-      [role="button"] { border-left: 1px solid #888; color: white !important; }
-      button[disabled] { border-color: #888 !important; opacity: 1 !important; color: #555 !important; }
-    }
-    */
-  }
-
   .panel-explorer-tree-folder-itemslist {
     overflow-x: scroll;
     height: 230px;

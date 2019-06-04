@@ -2,17 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
-import { Link } from 'react-router';
 import TinyEditor from '../components/TinyEditor/TinyEditor';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
 import { kaTexRendering } from '../components/common/renderingCourse';
-import { getOptionsFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
 import { createCourseAction, updateCourseAction, emptyErrorsAction, fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../actions/courses';
+import EditorToolbar from '../components/EditorToolbar/EditorToolbar';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
-import { Button, Popup, Form, Message, Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -359,15 +357,28 @@ class CourseAddOrEdit extends Component {
 		const { category, isEditing, fieldsTyping, isEditorChanged, isMenuPanelOpen } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { heightEditor } = this.getHeigthElements();
-		const stylePopup = { fontWeight: '900' };
-		const { categoriesOptions } = getOptionsFormsSelect({ categories, course, category, isEditing });
-		const messagesError = this.dispayFieldsErrors();
-		const isPropertiesChanged = fieldsTyping.title || fieldsTyping.category;
+		const offsetToolbar = 50;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-light')}>
 					<ButtonOpenMenuPanel handleOpenMenuPanel={this.handleOpenMenuPanel} isMenuPanelOpen={isMenuPanelOpen} />
+
+					<EditorToolbar
+						course={course}
+						categories={categories}
+						category={category}
+						isEditing={isEditing}
+						fields={fields}
+						fieldsTyping={fieldsTyping}
+						addOrEditMissingField={addOrEditMissingField}
+						addOrEditFailure={addOrEditFailure}
+						handleClickToolbar={this.handleClickToolbar}
+						handleInputChange={this.handleInputChange}
+						handleOnSubmit={this.handleOnSubmit}
+						isEditorChanged={isEditorChanged}
+						fromPage="wy"
+					/>
 
 					<EditorPanelExplorer
 						ref={(el) => { this.editorPanelExplorer = el; }}
@@ -387,46 +398,11 @@ class CourseAddOrEdit extends Component {
 						handleInputChange={this.handleInputChange}
 						handleOnSubmit={this.handleOnSubmit}
 						isEditorChanged={isEditorChanged}
+						offsetToolbar={offsetToolbar}
 						fromPage="wy"
 					/>
 
-					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
-						<div className={cx('toolbar', 'toolbar-settings', !isMenuPanelOpen ? 'add-margin' : '')}>
-							<Button.Group basic size="small" className={cx('button-group')}>
-								<Popup style={stylePopup} inverted trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Exit (you should save before)" />
-
-								<Popup trigger={<Button icon="file" />} flowing hoverable inverted on="click">
-									<div className={cx('buttons-add-note')}>
-										<Button style={stylePopup} inverted basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-										<Button style={stylePopup} inverted basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
-									</div>
-								</Popup>
-
-								{ !isEditorChanged ? <Popup style={stylePopup} inverted trigger={<Button disabled icon="save" onClick={this.handleOnSubmit} />} content="Save" /> : <Popup style={stylePopup} inverted trigger={<Button icon="save" onClick={this.handleOnSubmit} />} content="Save" /> }
-								{ !isEditing ? <Button disabled icon="arrow circle up" /> : <Popup style={stylePopup} inverted trigger={<Button icon="arrow circle up" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
-							</Button.Group>
-
-							<Form error={messagesError.length > 0} size="mini" onSubmit={this.handleOnSubmit} className={cx('form-properties')}>
-								<Form.Input size="tiny" required placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={this.handleInputChange} />
-								<Form.Select size="tiny" required placeholder="Category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
-
-								{
-									messagesError.length > 0 ? (
-										<Popup trigger={<Icon className={cx('error')} name="warning sign" size="big" color="red" />} flowing hoverable>
-											<Message error icon size="mini">
-												<Icon name="warning sign" size="small" />
-												<Message.Header>
-													{messagesError}
-												</Message.Header>
-											</Message>
-										</Popup>
-									) : null
-								}
-
-								<Form.Button size="tiny" basic fluid inverted disabled={!isPropertiesChanged && !isEditorChanged}>Save</Form.Button>
-							</Form>
-						</div>
-
+					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')} style={{ paddingTop: offsetToolbar }}>
 						<div className={cx('tiny-editor-container')}>
 							<TinyEditor
 								id={this.idEditor}

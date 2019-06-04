@@ -122,7 +122,8 @@ class EditorPanelExplorer extends Component {
 			handleInputChange,
 			fromPage,
 			categories,
-			course
+			course,
+			offsetToolbar
 		} = this.props;
 
 		const messagesError = this.dispayFieldsErrors();
@@ -135,23 +136,7 @@ class EditorPanelExplorer extends Component {
 		];
 
 		return (
-			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')}>
-				<div className={cx('nav-bar')}>
-					{/*
-					<Button.Group basic size="small" id="panel-explorer_button-group" floated="right">
-						<Popup inverted trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Go to dashboard" />
-
-						<Popup inverted trigger={<Button icon="file" />} flowing hoverable>
-							<Button basic inverted size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-							<Button basic inverted size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
-						</Popup>
-
-						{ !isEditorChanged ? <Popup inverted trigger={<Button disabled icon="save" onClick={handleOnSubmit} />} content="Save" /> : <Popup inverted trigger={<Button icon="save" onClick={handleOnSubmit} />} content="Save" /> }
-						{ !isEditing ? <Button disabled icon="eye" /> : <Popup inverted trigger={<Button icon="eye" as={Link} to={`/course/${course._id}`} />} content="See the note (you should save before)" /> }
-					</Button.Group>
-					*/}
-				</div>
-
+			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')} style={{ paddingTop: offsetToolbar }}>
 				<div className={cx('panel-explorer-tree-folder')}>
 					<List className={cx('panel-explorer-tree-folder-itemslist')} link>{ this.renderCoursesList()}</List>
 					<div style={{ textAlign: 'center' }}>
@@ -244,6 +229,8 @@ EditorPanelExplorer.propTypes = {
 	category: PropTypes.shape({
 		lastSelected: PropTypes.string
 	}),
+
+	offsetToolbar: PropTypes.number,
 
 	categories: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,

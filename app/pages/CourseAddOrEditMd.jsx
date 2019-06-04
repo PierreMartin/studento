@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 import marked from 'marked';
@@ -13,9 +12,10 @@ import SectionsGeneratorForScrolling from '../components/common/SectionsGenerato
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../actions/courses';
 import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
+import EditorToolbar from '../components/EditorToolbar/EditorToolbar';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { getOptionsFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
-import { Form, Button, Popup, Modal, Header, Message, Icon } from 'semantic-ui-react';
+import { Form, Button, Modal, Header, Popup } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -845,41 +845,11 @@ const myVar = 'content...';
 		this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
 	}
 
-	/**
-	 * Display a error if a field is wrong
-	 * addOrEditMissingField - object with true as key if a field is missing
-	 * addOrEditFailure - message from back-end
-	 * @return {string} the final message if error
-	 * */
-	dispayFieldsErrors() {
-		const { addOrEditMissingField, addOrEditFailure } = this.props;
-		let messagesNode = '';
-		const missingFieldArr = Object.keys(addOrEditMissingField);
-
-		if (missingFieldArr.length === 1) {
-			messagesNode = `The field ${missingFieldArr[0]} is required`;
-		} else if (missingFieldArr.length > 1) {
-			let fields = '';
-			let comma = ', ';
-			for (let i = 0; i < missingFieldArr.length; i++) {
-				if (i === missingFieldArr.length - 2) { comma = ' and '; }
-				if (i >= missingFieldArr.length - 1) { comma = ''; }
-				fields += `${missingFieldArr[i]}${comma}`;
-			}
-			messagesNode += `The fields ${fields} are required`;
-		}
-
-		if (addOrEditFailure && addOrEditFailure.length > 0) messagesNode += addOrEditFailure;
-
-		return messagesNode;
-	}
-
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
 		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isPreviewModeActive, isMobile, isMenuPanelOpen } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
-		const { codeLanguagesOptions, categoriesOptions } = getOptionsFormsSelect({ categories, course, category, isEditing });
-		const messagesError = this.dispayFieldsErrors();
+		const { codeLanguagesOptions } = getOptionsFormsSelect({ categories, course, category, isEditing });
 
 		const buttonsToolbar = [
 			{ icon: 'bold', content: 'Bold' },
@@ -901,19 +871,35 @@ const myVar = 'content...';
 		// Styles css:
 		const stylesEditor = {};
 		const stylesPreview = { height: heightEditor + 'px' };
-		const stylePopup = { fontWeight: '900' };
 
 		if (isPreviewModeActive) {
 			stylesEditor.display = 'none';
 			stylesPreview.display = 'block';
 		}
 
-		const isPropertiesChanged = fieldsTyping.title || fieldsTyping.category;
+		const offsetToolbar = 50;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-light')}>
 					<ButtonOpenMenuPanel handleOpenMenuPanel={this.handleOpenMenuPanel} isMenuPanelOpen={isMenuPanelOpen} />
+
+					<EditorToolbar
+						course={course}
+						categories={categories}
+						category={category}
+						isEditing={isEditing}
+						fields={fields}
+						fieldsTyping={fieldsTyping}
+						addOrEditMissingField={addOrEditMissingField}
+						addOrEditFailure={addOrEditFailure}
+						isPreviewModeActive={isPreviewModeActive}
+						handleClickToolbar={this.handleClickToolbar}
+						handleInputChange={this.handleInputChange}
+						handleOnSubmit={this.handleOnSubmit}
+						isEditorChanged={isEditorChanged}
+						fromPage="md"
+					/>
 
 					<EditorPanelExplorer
 						ref={(el) => { this.editorPanelExplorer = el; }}
@@ -933,66 +919,29 @@ const myVar = 'content...';
 						handleInputChange={this.handleInputChange}
 						handleOnSubmit={this.handleOnSubmit}
 						isEditorChanged={isEditorChanged}
+						offsetToolbar={offsetToolbar}
 						fromPage="md"
 					/>
 
-					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
-						<div>
-							<div className={cx('toolbar', 'toolbar-settings', !isMenuPanelOpen ? 'add-margin' : '')}>
+					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')} style={{ paddingTop: offsetToolbar }}>
+						<div className={cx('toolbar-editor-md')}>
+							{ !isPreviewModeActive ? (
 								<Button.Group basic size="small" className={cx('button-group')}>
-									<Popup style={stylePopup} inverted trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Exit (you should save before)" />
-
-									<Popup trigger={<Button icon="file" />} flowing hoverable inverted on="click">
-										<div className={cx('buttons-add-note')}>
-											<Button style={stylePopup} inverted basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-											<Button style={stylePopup} inverted basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
-										</div>
-									</Popup>
-
-									<Popup style={stylePopup} inverted trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={this.handleClickToolbar('toggle preview')} />} content="Preview mode" />
-									{ !isEditing ? <Button disabled icon="arrow circle up" /> : <Popup style={stylePopup} inverted trigger={<Button icon="arrow circle up" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
+									{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
 								</Button.Group>
+							) : '' }
 
-								<Form error={messagesError.length > 0} size="mini" onSubmit={this.handleOnSubmit} className={cx('form-properties')}>
-									<Form.Input size="tiny" required placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={this.handleInputChange} />
-									<Form.Select size="tiny" required placeholder="Category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={this.handleInputChange} />
+							{ !isPreviewModeActive ? (
+								<Button.Group basic size="small" className={cx('button-group')}>
+									{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
+								</Button.Group>
+							) : '' }
 
-									{
-										messagesError.length > 0 ? (
-											<Popup trigger={<Icon className={cx('error')} name="warning sign" size="big" color="red" />} flowing hoverable>
-												<Message error icon size="mini">
-													<Icon name="warning sign" size="small" />
-													<Message.Header>
-														{messagesError}
-													</Message.Header>
-												</Message>
-											</Popup>
-										) : null
-									}
-
-									<Form.Button size="tiny" basic fluid inverted disabled={!isPropertiesChanged && !isEditorChanged}>Save</Form.Button>
-								</Form>
-							</div>
-
-							<div className={cx('toolbar', 'toolbar-editor')}>
-								{ !isPreviewModeActive ? (
-									<Button.Group basic size="small" className={cx('button-group')}>
-										{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
-									</Button.Group>
-								) : '' }
-
-								{ !isPreviewModeActive ? (
-									<Button.Group basic size="small" className={cx('button-group')}>
-										{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
-									</Button.Group>
-								) : '' }
-
-								{ !isPreviewModeActive && !isMobile ? (
-									<Button.Group basic size="small" className={cx('button-group')}>
-										{/* <Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" /> */}
-									</Button.Group>
-								) : '' }
-							</div>
+							{ !isPreviewModeActive && !isMobile ? (
+								<Button.Group basic size="small" className={cx('button-group')}>
+									{/* <Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" /> */}
+								</Button.Group>
+							) : '' }
 						</div>
 
 						<div className={cx('md-editor-container')}>
