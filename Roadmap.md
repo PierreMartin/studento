@@ -101,7 +101,18 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- Bug hauteur editors
+- Redesign buttons de la toolbar comme tinyMce
+- FAIRE Page My notes =>
+      + Rename CourseAddOrEditMd.jsx en 'Editor.jsx' qui dispacth les 2 types d'éditeurs (Markdown et Tiny)
+      + Panel gauche  'EditorPanelExplorer' avec leur étoiles (rien d'autre) tout le temps ouvert - prévoir la possibilité de faire des groupes de notes.
+      + Panel droite  'EditorPanelSettings' un menu burger en haut affichant le form [title, cat, delete...]
+      + mode preview sera par default - avec un crayon (sans texte) pour passer en mode edition - ET une croix et save (sans texte) quand mode preview (popup de confirmation quand isDirty).
+  
+- FAIRE Page dashboard => My notes (actuel) deviens le dashboard avec [mes dernieres notes] + d'autre modules (stats) - Supprimer les champs 'Edit' et 'Delete', mettre un crayon et une poubelle
+
+- https://mynotes.com
+- Refonte design style Discord
+
 - pouvoir uploader images dans les cours
 - Auth facebook google...
 - Commentaires sur une zone de texte
@@ -165,3 +176,26 @@ Le site internet propose les services suivants :
 - La possibilité d'ajouter des commentaires associé à un cours.
 - La possibilité de pouvoir communiquer avec d'autre utilisateur par un chat en temps réel.
 - La possibilité de completer les informations de sont profil : nom, prénom, age, intérêts, profession...
+
+
+let content;
+if (this.props.canedit && this.state.editmode){
+    content = (
+        <div>
+            <Editor typeEditor={this.props.typeEditor} language="markdown" options={this.state.editorOptions} content={(this.state.pagecontent || "")} onChange={(text) => this.setState({ pagecontent : text})} onEditorInit={this.codeEditorInit} />
+            { this.props.typeEditor === 'markdown' && <Preview content={this.state.content} /> }
+        </div>
+    );
+   } else if (this.state.page) {
+        content = <Preview content={this.state.content} />
+    }
+}
+
+return (
+    <div className={"docpage" + (this.state.editmode ? " editmode" : " pagemode")}>
+        <NotePageHeader page={this.state.page} canedit={this.props.canedit} title={this.state.pagetitle} editmode={this.state.editmode} onEdit={this.editChanged} onSave={this.savePage} onTitleChanged={(title) => this.setState({ pagetitle : title })} />
+        <section>
+            {content}
+        </section>
+    </div>
+);
