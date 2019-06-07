@@ -122,8 +122,7 @@ class EditorPanelExplorer extends Component {
 			handleInputChange,
 			fromPage,
 			categories,
-			course,
-			offsetToolbar
+			course
 		} = this.props;
 
 		const messagesError = this.dispayFieldsErrors();
@@ -136,7 +135,7 @@ class EditorPanelExplorer extends Component {
 		];
 
 		return (
-			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')} style={{ paddingTop: offsetToolbar }}>
+			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')}>
 				<div className={cx('panel-explorer-tree-folder')}>
 					<List className={cx('panel-explorer-tree-folder-itemslist')} link>{ this.renderCoursesList()}</List>
 					<div style={{ textAlign: 'center' }}>
@@ -229,8 +228,6 @@ EditorPanelExplorer.propTypes = {
 	category: PropTypes.shape({
 		lastSelected: PropTypes.string
 	}),
-
-	offsetToolbar: PropTypes.number,
 
 	categories: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,

@@ -877,8 +877,6 @@ const myVar = 'content...';
 			stylesPreview.display = 'block';
 		}
 
-		const offsetToolbar = 50;
-
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-light')}>
@@ -919,11 +917,10 @@ const myVar = 'content...';
 						handleInputChange={this.handleInputChange}
 						handleOnSubmit={this.handleOnSubmit}
 						isEditorChanged={isEditorChanged}
-						offsetToolbar={offsetToolbar}
 						fromPage="md"
 					/>
 
-					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')} style={{ paddingTop: offsetToolbar }}>
+					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
 						<div className={cx('toolbar-editor-md')}>
 							{ !isPreviewModeActive ? (
 								<Button.Group basic size="small" className={cx('button-group')}>

@@ -357,7 +357,6 @@ class CourseAddOrEdit extends Component {
 		const { category, isEditing, fieldsTyping, isEditorChanged, isMenuPanelOpen } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const { heightEditor } = this.getHeigthElements();
-		const offsetToolbar = 50;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -398,11 +397,10 @@ class CourseAddOrEdit extends Component {
 						handleInputChange={this.handleInputChange}
 						handleOnSubmit={this.handleOnSubmit}
 						isEditorChanged={isEditorChanged}
-						offsetToolbar={offsetToolbar}
 						fromPage="wy"
 					/>
 
-					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')} style={{ paddingTop: offsetToolbar }}>
+					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
 						<div className={cx('tiny-editor-container')}>
 							<TinyEditor
 								id={this.idEditor}

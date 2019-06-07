@@ -2,6 +2,7 @@
 $colorFontDarkTheme: #999;
 
 .panel-explorer-container {
+  padding-top: 50px; /* Offset toolbar */
   position: absolute;
   min-height: 100%;
   top: 0;
@@ -92,5 +93,12 @@ $colorFontDarkTheme: #999;
         }
       }
     }
+  }
+}
+
+/* Offset toolbar */
+@media screen and (max-width: 410px) {
+  .panel-explorer-container {
+    padding-top: 80px !important;
   }
 }

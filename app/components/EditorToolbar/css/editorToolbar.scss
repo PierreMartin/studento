@@ -27,39 +27,43 @@
         vertical-align: 1px;
 
         /* Input text */
-        div[class~=input] {
-          width: 120px !important;
-          min-width: inherit !important;
-          input {
-            line-height: 18px;
-            background: #141414;
-            border: 1px solid #555;
-            color: #fff;
+        &.title {
+          div[class~=input] {
+            width: 120px !important;
+            min-width: inherit !important;
+            input {
+              line-height: 18px;
+              background: #141414;
+              border: 1px solid #555;
+              color: #fff;
+            }
           }
         }
 
         /* Input select */
-        div[class~=dropdown] {
-          width: 140px !important;
-          min-width: inherit !important;
-          padding: 11px;
-          background: #141414;
-          border: 1px solid #555;
-          color: #fff;
-
-          div[class~=text] {
-            color: #fff;
-            background: none;
-          }
-
-          div[class~=menu] {
+        &.category {
+          div[class~=dropdown] {
+            width: 140px !important;
+            min-width: inherit !important;
+            padding: 11px;
             background: #141414;
-            div[class~=item] {
-              font-size: 11px;
+            border: 1px solid #555;
+            color: #fff;
+
+            div[class~=text] {
               color: #fff;
-              border-top: 1px solid #555;
+              background: none;
             }
-            div[class~=item]:hover { background: #333; }
+
+            div[class~=menu] {
+              background: #141414;
+              div[class~=item] {
+                font-size: 11px;
+                color: #fff;
+                border-top: 1px solid #555;
+              }
+              div[class~=item]:hover { background: #333; }
+            }
           }
         }
 
@@ -86,4 +90,23 @@
   }
 
   .button-group { margin: 3px 5px 3px 0; }
+}
+
+/* Offset toolbar */
+@media screen and (max-width: 582px) {
+  .toolbar {
+    &.toolbar-settings {
+      .form-properties {
+        div[class~=field] {
+          &.title div[class~=input] {
+            width: 80px !important;
+          }
+
+          &.category {
+            display: none;
+          }
+        }
+      }
+    }
+  }
 }
