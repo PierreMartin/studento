@@ -1,3 +1,4 @@
+@import './../../css/common/colors.scss';
 $lines-color: #8F938F;
 
 @mixin init() {
@@ -5,7 +6,7 @@ $lines-color: #8F938F;
   margin: 20px 0 15px 0;
   min-height: 600px;
   padding: 20px;
-  border: 1px solid #e3e3e3;
+  border: 1px solid $colorBorder;
   border-radius: 5px;
   word-wrap: break-word;
   word-break: break-word;
@@ -45,10 +46,6 @@ $lines-color: #8F938F;
 .container-page-dark {
   @include init();
 
-  background-color: #2c2827;
-  color: $lines-color;
-
-  h1, h2, h3, h4, h5, h6 { color: #fff; }
   h1::before, h2::before, h3::before, h4::before, h5::before, h6::before { position: absolute; content: ''; width: 100%; margin-left: -4px }
 
   h1::before { height: 100%; background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent 100%); top: 0; }
@@ -77,12 +74,13 @@ $lines-color: #8F938F;
 .container-page-light {
   @include init();
 
-  h1, h2, h3, h4, h5, h6 { color: #000; }
+  p, h2, h3, h4, h5, h6 { color: $colorTextMain; }
+  h1 { color: $colorLogo; }
 
   pre {
-    border: 1px solid #e3e3e3;
+    border: 1px solid $colorBorder;
     border-radius: 5px;
-    background-color: #f5f2f0;
+    background-color: #23272A;
   }
 
   table {

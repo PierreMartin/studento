@@ -111,7 +111,12 @@ $ ./scripts/generate_menu.sh
 - FAIRE Page dashboard => My notes (actuel) deviens le dashboard avec [mes dernieres notes] + d'autre modules (stats) - Supprimer les champs 'Edit' et 'Delete', mettre un crayon et une poubelle
 
 - https://mynotes.com
-- Refonte design style Discord
+
+#36393f   BG tchat   #dcddde TEXT tchat
+#2a2d32   BG panels  #b9bbbe TEXT panels OKK
+
+#39b4dc bleue
+#dc3957 rose
 
 - pouvoir uploader images dans les cours
 - Auth facebook google...

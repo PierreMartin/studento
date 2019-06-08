@@ -8,6 +8,7 @@
 body {
   margin: 0;
   font-family: $fontMontserrat;
+  background-color: #2a2d32;
   /* background: url(/img/bgblanc.jpg) repeat; */
 }
 
@@ -28,9 +29,17 @@ body ::-webkit-scrollbar {
   margin: 0;
 }
 
-a:link, a:visited { text-decoration: none; color: #3f73c1;  transition:.4s; }
-a:hover, a:focus  { text-decoration: none; color: #000; }
-a:active          { text-decoration: none; color: #3f73c1; }
+a:link, a:visited { text-decoration: none; color: $colorLogo; transition:.4s; }
+a:hover, a:focus  { text-decoration: none; color: #fff; }
+a:active          { text-decoration: none; color: $colorLogo; }
+
+p, h2, h3, h4, h5, h6 {
+  color: $colorTextMain !important;
+}
+
+h1 {
+  color: $colorLogo;
+}
 
 .logo {
   margin-top: 30px;

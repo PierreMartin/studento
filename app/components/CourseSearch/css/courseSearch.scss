@@ -1,5 +1,19 @@
+@import '../../../css/common/colors.scss';
+
 .search {
   margin-top: 8px;
-  input { background-color: transparent; }
+  input {
+    background: transparent !important;
+    color: #fff !important;
+    border: 1px solid $colorBorder !important;
+  }
   input:focus, input:active { background-color: transparent; }
+
+  div[class~=dropdown] {
+    border: 1px solid $colorBorder !important;
+
+    div[class~=text] { color: $colorTextMain; }
+  }
+
+  i { color: white; }
 }

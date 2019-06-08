@@ -30,9 +30,9 @@ const metaAssets = () => {
 const linkAssets = () => {
   const links = [
 		// Favicon:
-		{ name: 'theme-color', content: '#39b4dc' },
+		{ name: 'theme-color', content: '#dc3957' },
 		{ name: 'msapplication-TileImage', content: ms144Favicon },
-		{ name: 'msapplication-TileColor', content: '#39b4dc' },
+		{ name: 'msapplication-TileColor', content: '#dc3957' },
 		{ rel: 'apple-touch-icon', sizes: '57x57', href: apple57Favicon },
 		{ rel: 'apple-touch-icon', sizes: '60x60', href: apple60Favicon },
 		{ rel: 'apple-touch-icon', sizes: '72x72', href: apple72Favicon },

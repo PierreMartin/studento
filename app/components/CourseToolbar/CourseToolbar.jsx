@@ -68,7 +68,7 @@ class CourseToolbar extends Component {
 
 				{ authentification.authenticated && author._id === userMe._id ? (
 					<Menu.Item name="setting" as={Link} to={pathCourseToEdit}>
-						<Icon name="setting" />
+						<Icon name="pencil" />
 						Edit
 					</Menu.Item>
 				) : '' }

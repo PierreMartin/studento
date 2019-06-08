@@ -1,3 +1,5 @@
+@import '../../../../css/common/colors.scss';
+
 /* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
 @media screen and (max-width: 700px) {
   .container {
@@ -25,7 +27,7 @@
     transition: background-color .3s;
 
     &:hover, &:focus, &:active {
-      background-color: #39b4dc !important;
+      background-color: $colorLogo !important;
       border-left: 4px solid white !important; font-weight: 900 !important;
     }
 

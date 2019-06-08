@@ -4,20 +4,20 @@
 .footer-container {
   padding: 2.5em 0 !important;
   margin-top: 2.5em !important;
-  border-top: 2px solid #e3e3e3 !important;
+  border-top: 2px solid $colorBorder !important;
 
   .footer-row {
     .header {
       font-size: 16px;
       text-transform: uppercase;
-      color: $colorLogoBlue !important;
+      color: $colorLogo !important;
     }
 
     a:link, a:visited { text-decoration: none; transition: color .3s !important; }
-    a:hover, a:focus  { text-decoration: none; color: $colorLogoBlue !important }
+    a:hover, a:focus  { text-decoration: none; color: white !important }
     a:active          { text-decoration: none; }
 
-    p, a { font-size: 13px; color: #000 !important; font-weight: 900; }
+    p, a { font-size: 13px; color: $colorTextMain !important; font-weight: 900; }
     a { margin-bottom: 8px; }
   }
 }

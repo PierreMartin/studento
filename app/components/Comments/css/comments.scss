@@ -1,0 +1,26 @@
+@import './../../../css/common/colors.scss';
+
+.comment-list {
+  div[class~=content] {
+
+    div { color: $colorTextMain !important; }
+    a:link, a:visited { color: $colorTextMain !important; }
+    a:hover, a:focus  { color: #fff !important; }
+    a:active          { color: $colorTextMain !important; }
+
+    .actions {
+      a { color: $colorLogo !important; }
+      a:link, a:visited { color: $colorLogo !important; transition:.4s !important;  }
+      a:hover, a:focus  { color: #fff !important; }
+      a:active          { color: $colorLogo !important; }
+    }
+  }
+}
+
+.comment-form {
+  textarea {
+    background: $colorBg2 !important;
+    color: $colorTextMain !important;
+    border: 1px solid $colorBorder !important;
+  }
+}

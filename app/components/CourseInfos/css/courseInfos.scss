@@ -1,10 +1,12 @@
+@import './../../../css/common/colors.scss';
+
 .header-container {
   text-align: center;
   margin: 10px;
   font-size: 12px;
-  color: rgba(0, 0, 0, .6);
+  color: $colorTextMain;
 
-  .header-title { font-size: 38px; }
+  .header-title { font-size: 38px; color: white !important; }
   .header-description {
     font-size: 18px;
     margin-bottom: 8px;

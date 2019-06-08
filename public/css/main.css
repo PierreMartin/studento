@@ -6,9 +6,45 @@ This file is used for overload the existant css
     max-width: none !important;
 }
 
+.ui.basic.button:hover, .ui.basic.buttons .button:hover {
+    background: rgba(0, 0, 0, .1) !important;
+}
+
+/***************************** PAGINATION ******************************/
+.ui.pagination.menu {
+    background: none;
+    border: 1px solid #404550;
+}
+
+.ui.pagination.menu a {
+    color: #b9bbbe;
+    border-right: 1px solid #404550;
+}
+
+.ui.pagination.menu a:last-of-type {
+    border-right: none;
+}
+
+.ui.pagination.menu .active.item,
+.ui.pagination.menu .active.item,
+.ui.menu .active.item:hover,
+.ui.menu a.item:hover {
+    background-color: #36393f;
+    color: #dc3957;
+}
+
+/***************************** BUTONS ******************************/
+.ui.primary.button, .ui.primary.buttons .button {
+    background-color: #dc3957;
+}
+
+.ui.primary.button:hover, .ui.primary.buttons .button:hover {
+    background-color: #b42e47;
+}
+
 /***************************** MAIN MENU & FOOTER ******************************/
 .ui.inverted.segment, .ui.primary.inverted.segment {
-    background-color: #39b4dc;
+    background-color: #dc3957;
 }
 
 

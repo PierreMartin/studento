@@ -5,6 +5,10 @@ import moment from 'moment';
 import { Form, Comment, Button, Header, Message } from 'semantic-ui-react';
 import defaultAvatar28 from '../../images/default-avatar-28.png';
 import { pathImage } from '../../../config/app';
+import classNames from 'classnames/bind';
+import styles from './css/comments.scss';
+
+const cx = classNames.bind(styles);
 
 const renderCommentReplyList = (commentsReply) => {
 	if (commentsReply.length <= 0) return false;
@@ -57,7 +61,7 @@ const renderCommentList = (
 
 			// Pass the Id of parent comment to handleInputCommentSubmit for bind the parent to reply
 			formReply = (
-				<Form reply error={addCommentMissingField.commentReply} onSubmit={handleInputCommentSubmit(comment._id)}>
+				<Form reply error={addCommentMissingField.commentReply} onSubmit={handleInputCommentSubmit(comment._id)} className={cx('comment-form')}>
 					<Form.TextArea placeholder="Your comment here..." name="commentReply" value={fieldsTypingComment.commentReply || ''} error={addCommentMissingField.commentReply} onChange={handleInputCommentChange} />
 					<Message error content={messagesError} />
 					<Button content="Add Reply" labelPosition="left" icon="edit" primary />
@@ -66,7 +70,7 @@ const renderCommentList = (
 		}
 
 		return (
-			<Comment key={key}>
+			<Comment key={key} className={cx('comment-list')}>
 				<Comment.Avatar src={src} />
 				<Comment.Content>
 					<Comment.Author as={Link} to={`/user/${author._id}`}>{ author.username }</Comment.Author>
@@ -74,7 +78,7 @@ const renderCommentList = (
 						<div>{ commentDate }</div>
 					</Comment.Metadata>
 					<Comment.Text>{ commentContent }</Comment.Text>
-					<Comment.Actions>
+					<Comment.Actions className={cx('actions')}>
 						{ authentification.authenticated ?
 							<Comment.Action onClick={handleReplyCommentClick(key)}>Reply</Comment.Action> : ''
 						}
@@ -92,7 +96,7 @@ const renderCommentForm = (handleInputCommentChange, handleInputCommentSubmit, f
 	const messagesError = addCommentMissingField.commentMain ? 'the field is required ' : '';
 
 	return (
-		<Form reply error={addCommentMissingField.commentMain} size="small" onSubmit={handleInputCommentSubmit()}>
+		<Form reply error={addCommentMissingField.commentMain} size="small" onSubmit={handleInputCommentSubmit()} className={cx('comment-form')}>
 			<Form.TextArea placeholder="Your comment here..." name="commentMain" value={fieldsTypingComment.commentMain || ''} error={addCommentMissingField.commentMain} onChange={handleInputCommentChange} />
 			<Message error content={messagesError} />
 			<Button content="Add Reply" labelPosition="left" icon="edit" primary />

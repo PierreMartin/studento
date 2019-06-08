@@ -1,3 +1,19 @@
-.toolbar-container {
+@import './../../../css/common/colors.scss';
 
+.toolbar-container {
+  background-color: transparent !important;
+  border: 1px solid $colorBorder !important;
+
+  a, div[class~=item] {
+    color: $colorTextMain !important;
+  }
+
+  a:hover {
+    color: white !important;
+    background-color: rgba(0,0,0,.1) !important;
+  }
+
+  div[class~=rating] {
+    i { color: $colorBg1 !important; }
+  }
 }
