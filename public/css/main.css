@@ -42,6 +42,18 @@ This file is used for overload the existant css
     background-color: #b42e47;
 }
 
+
+
+.ui.basic.button, .ui.basic.buttons .button {
+    color: #b9bbbe !important;
+}
+
+.ui.basic.button:hover, .ui.basic.buttons .button:hover,
+.ui.basic.active.button, .ui.basic.buttons .active.button {
+    color: #dc3957 !important;
+    background: #151515 !important;
+}
+
 /***************************** MAIN MENU & FOOTER ******************************/
 .ui.inverted.segment, .ui.primary.inverted.segment {
     background-color: #dc3957;

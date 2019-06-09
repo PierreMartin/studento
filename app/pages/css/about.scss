@@ -1,0 +1,20 @@
+@import '/../../css/common/colors.scss';
+
+.about-container {
+  h2 {
+    color: #fff !important;
+  }
+
+  .description {
+    color: $colorTextMain;
+  }
+
+  .accordion {
+    background: none !important;
+    border: 1px solid $colorBorder;
+
+    div[class~=title] {
+      color: white !important;
+    }
+  }
+}

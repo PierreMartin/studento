@@ -147,9 +147,10 @@ class CoursesListDashboard extends Component {
 						<div>{ numberOfVote }</div>
 					</Table.Cell>
 
-					<Table.Cell className={cx('cell-edit')}><Button color="grey" content="Edit" icon="settings" size="tiny" as={Link} to={pathCourseToEdit} /></Table.Cell>
-
-					<Table.Cell className={cx('cell-delete')}><Button inverted color="red" content="Delete" icon="remove" size="tiny" onClick={this.handleOpenModalForDeleteCourse({ courseId: course._id, courseTitle: course.title })} /></Table.Cell>
+					<Table.Cell className={cx('cell-edit')}>
+						<Button basic color="grey" title="Edit" icon="pencil" size="tiny" as={Link} to={pathCourseToEdit} />
+						<Button basic color="red" title="Delete" icon="remove" size="tiny" onClick={this.handleOpenModalForDeleteCourse({ courseId: course._id, courseTitle: course.title })} />
+					</Table.Cell>
 				</Table.Row>
 			);
 		});
@@ -193,8 +194,7 @@ class CoursesListDashboard extends Component {
 								<Table.HeaderCell>Author</Table.HeaderCell>
 								<Table.HeaderCell sorted={lastColumnClicked === 'created_at' ? direction : null} onClick={this.handleSort('created_at')}>Date</Table.HeaderCell>
 								<Table.HeaderCell>Stars</Table.HeaderCell>
-								<Table.HeaderCell>Edit</Table.HeaderCell>
-								<Table.HeaderCell>Delete</Table.HeaderCell>
+								<Table.HeaderCell>Edit / Delete</Table.HeaderCell>
 							</Table.Row>
 						</Table.Header>
 
@@ -204,10 +204,10 @@ class CoursesListDashboard extends Component {
 
 						<Table.Footer fullWidth>
 							<Table.Row>
-								<Table.HeaderCell colSpan="6">
-									<Popup trigger={<Button basic color="grey" icon="file" floated="right" content="New course" />} flowing hoverable>
-										<Button basic color="grey" size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-										<Button basic color="grey" size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
+								<Table.HeaderCell colSpan="5">
+									<Popup trigger={<Button basic inverted icon="file" floated="right" content="New course" className={cx('button', 'new-note')} />} flowing hoverable inverted>
+										<Button basic inverted size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
+										<Button basic inverted size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
 									</Popup>
 
 									{ coursesPagesCount > 1 && this.renderPagination(coursesPagesCount, paginationEditor) }

@@ -1,13 +1,71 @@
+@import '/../../../css/common/colors.scss';
+
 .courses-container {
   min-height: 300px;
   text-align: center;
+
+  table {
+    background: none !important;
+    border: 1px solid $colorBorder !important;
+
+    thead {
+      tr {
+        th {
+          background: none !important;
+          color: #fff !important;
+          border-bottom: 1px solid $colorBorder !important;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          color: $colorBorder;
+          a {
+            color: $colorTextMain;
+            &:link, &:visited { color: $colorTextMain; }
+            &:hover, &:focus  { color: #fff; }
+            &:active          { color: $colorTextMain; }
+          }
+
+          h4 {
+            div[class~=header] {
+              color: $colorTextMain !important;
+            }
+          }
+        }
+      }
+    }
+
+    tfoot {
+      tr {
+        th {
+          background: none !important;
+          border-top: 1px solid $colorBorder !important;
+        }
+      }
+    }
+  }
 
   .for-mobile { display: none; }
 
   .cell-stars {
     div { display: block; }
     font-size: 1rem;
-    color: rgba(0,0,0,.6);
+    color: $colorTextMain;
+
+    div[class~=rating] {
+      i {
+        color: $colorBg1 !important;
+      }
+    }
+  }
+
+  .button:hover {
+    &.new-note {
+      background: none !important;
+    }
   }
 
   .no-courses { margin-bottom: 10px; }
@@ -17,12 +75,14 @@
 /* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
 @media screen and (max-width: 770px) {
   .courses-container {
-    .for-mobile { display: inline-block; color: #000; margin-right: 3px; }
+    .for-mobile { display: inline-block; color: $colorTextMain; margin-right: 3px; }
 
     .thead { display: none !important; }
 
     .tbody {
       tr {
+        box-shadow: none;
+        border-bottom: 1px solid $colorBorder !important;
         td.cell-stars {  div { display: inline-block; }  }
         td.cell-edit, td.cell-delete { display: inline-block !important; }
         td.cell-edit { padding-right: 5px !important; }

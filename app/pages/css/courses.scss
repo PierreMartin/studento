@@ -1,6 +1,21 @@
+@import '/../../css/common/colors.scss';
+
 .header-container {
   padding: 30px 0 30px 0 !important;
+
+  a[class~=section] {
+    color: $colorLogo;
+
+    &:link, &:visited { color: $colorLogo; }
+    &:hover, &:focus  { color: #fff; }
+    &:active          { color: $colorLogo; }
+  }
+  div[class~=section] {
+    color: white;
+  }
+
   .title {
+    color: #fff !important;
     font-weight: 100;
     line-height: 38px;
   }
@@ -9,7 +24,23 @@
 .courses-container {
   margin-bottom: 40px;
 
+  div[class~=header] {
+    color: $colorTextMain;
+  }
+
+  div[class~=menu] {
+    border-bottom: 2px solid $colorBorder !important;
+    a[class~=active] {
+      color: #fff !important;
+      border-color: #fff !important;
+    }
+  }
+
   .sub-categories {
     a { margin: 2px !important; }
+  }
+
+  div[class~=menu] a {
+    color: $colorTextMain !important;
   }
 }

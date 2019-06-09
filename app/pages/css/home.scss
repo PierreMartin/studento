@@ -70,14 +70,6 @@
   .sub-categories {
     button {
       margin: 2px !important;
-
-      &[class~=button] {
-        color: $colorTextMain !important;
-        &:hover, &[class~=active], &[class~=active]:hover {
-          color: $colorLogo !important;
-          background: $colorBg1 !important;
-        }
-      }
     }
   }
 }

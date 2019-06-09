@@ -27,7 +27,7 @@ const UserSingle = ({ userFront, userMe, handleOpenChatBox }) => {
 	const emptyDescription = !userFront.position && !userFront.schoolName && !userFront.age && !userFront.firstName && !userFront.lastName;
 
 	return (
-		<div>
+		<div className={cx('user-container')}>
 			<div className={cx('user-main-container')}>
 				<h3 className={cx('user-main-username')}>{ userFront.username }</h3>
 				<div className={cx('avatar')}>{ src ? <Image circular src={src} size="small" /> : <Icon name={'universal access'} size="big" /> }</div>
@@ -37,7 +37,7 @@ const UserSingle = ({ userFront, userMe, handleOpenChatBox }) => {
 			<div className={cx('user-actions-container')}>
 				{/* !isMyProfile ? <Button size="small" basic><Icon name="add user" />Add</Button> : '' */}
 				{ !isMyProfile && userMe._id ? <Button size="small" basic onClick={handleOpenChatBox} ><Icon name="talk" />Message</Button> : '' }
-				{ isMyProfile ? <Button as={Link} to="/settings" size="small" basic><Icon name="settings" />Edit my profile</Button> : '' }
+				{ isMyProfile ? <Button as={Link} to="/settings" size="small" basic><Icon name="pencil" />Edit my profile</Button> : '' }
 			</div>
 
 			<hr />
@@ -86,7 +86,7 @@ const UserSingle = ({ userFront, userMe, handleOpenChatBox }) => {
 				) : '' }
 			</div>
 
-			{ emptyDescription && <div style={{ textAlign: 'center' }}>This user has not completed his profile yet</div> }
+			{ emptyDescription && <div style={{ textAlign: 'center' }} className={cx('user-about')}>This user has not completed his profile yet</div> }
 
 			{ (avatarsList.length > 0) ? <div className={cx('user-avatars-container')}>{ avatarsList }</div> : '' }
 		</div>

@@ -4,8 +4,9 @@ import { Container, Header, Segment, Accordion, Icon } from 'semantic-ui-react';
 import hubNoteLogo from '../images/logo_hubnote_200.png';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
+import stylesAbout from './css/about.scss';
 
-const cx = classNames.bind(stylesMain);
+const cx = classNames.bind({...stylesMain, ...stylesAbout});
 
 class About extends Component {
 	constructor(props) {
@@ -38,16 +39,16 @@ class About extends Component {
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<Segment textAlign="center" vertical>
-					<Container text>
+					<Container text className={cx('about-container')}>
 						<div className={cx('logo')}>
-							<img src={hubNoteLogo} alt="Logo HubNote" />
+							{/* <img src={hubNoteLogo} alt="Logo HubNote" /> TODO changer le logo */}
 						</div>
 
 						<Header as="h2" content="About HubNote" />
 						<p>Create, discover, save time, organize, share, browse the others, collaborate.</p>
 						<p>HubNote is a social network that allows to take and share yours notes in class, at works, for tips or all other domain.</p>
 
-						<div style={{ textAlign: 'left' }}>
+						<div style={{ textAlign: 'left' }} className={cx('description')}>
 							The app offers the following services:
 							<ul>
 								<li>The publication of notes that can contain: text, images, tips, ideas, source code, mathematical formulas, diagrams...</li>
@@ -57,7 +58,7 @@ class About extends Component {
 							</ul>
 						</div>
 
-						<Accordion fluid styled>
+						<Accordion fluid styled className={cx('accordion')}>
 
 							<Accordion.Title active={activeIndex === 0} index={0} onClick={this.handleClick}><Icon name="dropdown" />Is it only for student?</Accordion.Title>
 							<Accordion.Content active={activeIndex === 0}>

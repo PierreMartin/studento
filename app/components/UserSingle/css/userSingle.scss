@@ -1,49 +1,63 @@
-.user-main-container {
-  text-align: center;
-  margin: 10px;
-  font-size: 12px;
-  color: rgba(0, 0, 0, .6);
-  margin-bottom: 15px;
+@import '../../../css/common/colors.scss';
 
-  .user-main-username { font-size: 38px; }
-  .avatar {
-    font-size: 72px;
-    display: inline-block;
-    margin-bottom: 8px;
+.user-container {
+  .user-main-container {
+    text-align: center;
+    margin: 10px;
+    font-size: 12px;
+    color: $colorTextMain;
+    margin-bottom: 15px;
+
+    .user-main-username { font-size: 38px; color: white !important; }
+    .avatar {
+      font-size: 72px;
+      display: inline-block;
+      margin-bottom: 8px;
+      color: $colorLogo;
+    }
+    .user-main-description { font-size: 18px; }
   }
-  .user-main-description { font-size: 18px; }
-}
 
-.user-actions-container {
-  margin-bottom: 15px;
-}
+  .user-actions-container {
+    margin-bottom: 15px;
+  }
 
-.user-description-container {
-  margin-bottom: 15px;
+  hr {
+    border-color: $colorTextMain;
+  }
 
-  .user-description-item {
-    display: inline-block;
-    padding: 10px;
-    margin: 0 5px 5px 0;
-    border: 1px solid rgba(0, 0, 0, .1);
-    background-color: #fff;
-    strong {
-      border-bottom: 4px solid rgba(0, 0, 0, .1);
+  .user-description-container {
+    margin-bottom: 15px;
+
+    .user-description-item {
+      display: inline-block;
+      padding: 10px;
+      margin: 0 5px 5px 0;
+      border: 1px solid $colorBorder;
+      color: $colorTextMain;
+      strong {
+        border-bottom: 4px solid rgba(0, 0, 0, .1);
+      }
     }
   }
-}
 
-.user-avatars-container {
-  border: 1px solid rgba(0, 0, 0, .1);
-  padding: 8px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  flex-flow: row wrap;
-  align-content: flex-start;
-
-  .thumbnails img {
-    display: inline-block !important;
-    margin: 0 2px 0 2px;
+  .user-about {
+    color: $colorTextMain;
   }
+
+  .user-avatars-container {
+    border: 1px solid rgba(0, 0, 0, .1);
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-flow: row wrap;
+    align-content: flex-start;
+
+    .thumbnails img {
+      display: inline-block !important;
+      margin: 0 2px 0 2px;
+    }
+  }
+
 }

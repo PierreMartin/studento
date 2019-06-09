@@ -1,4 +1,5 @@
 @import '../../../css/common/transitions.scss';
+@import '../../../css/common/colors.scss';
 
 .users-container {
   display: flex;
@@ -16,18 +17,20 @@
     margin: 0 15px 15px 0;
     width: 216px;
     height: 290px;
-    background-color: #fff;
-    box-shadow: 0 0 1px 1px rgba(20,23,28,.1), 0 3px 1px 0 rgba(20,23,28,.1);
+    background-color: $colorBg1;
+    border: 1px solid $colorBorder;
+    /* box-shadow: 0 0 1px 1px rgba(20,23,28,.1), 0 3px 1px 0 rgba(20,23,28,.1); */
 
-    &:link, &:visited { text-decoration: none; color: rgba(0,0,0,.6); @include transition(all .2s); }
-    &:hover, &:focus  { text-decoration: none; color: rgba(92, 92, 92, 0.6); box-shadow: 0 2px 8px 2px rgba(20,23,28,.15);  }
-    &:active          { text-decoration: none; color: rgba(92, 92, 92, 0.6); }
+    &:link, &:visited { text-decoration: none; color: $colorTextMain; @include transition(all .2s); }
+    &:hover, &:focus  { text-decoration: none; /* box-shadow: 0 2px 8px 2px rgba(20,23,28,.15); */ border: 1px solid $colorLogo;  }
+    &:active          { text-decoration: none; }
 
     .user-header {
       height: 122px;
       text-align: center;
-      border-bottom: 1px solid rgba(0,0,0,.1);
+      border-bottom: 1px solid $colorBorder;
       padding: 15px 15px 15px 15px;
+      color: $colorLogo;
 
       .avatar {
         img { margin: auto; }
@@ -44,6 +47,7 @@
         margin-bottom: 8px;
         font-size: 18px;
         font-weight: bold;
+        color: white;
       }
 
       .about {

@@ -28,7 +28,7 @@ const renderUsersList = (users) => {
 				</div>
 				<div className={cx('user-footer')}>
 					<div className={cx('friends')}>
-						<Icon name="user" /> 22 Friends
+						<Icon name="user" /> 0 Friends
 					</div>
 				</div>
 			</Link>

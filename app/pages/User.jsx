@@ -9,6 +9,10 @@ import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import UserSingle from '../components/UserSingle/UserSingle';
 import CoursesList from '../components/CoursesList/CoursesList';
 import io from 'socket.io-client';
+import classNames from 'classnames/bind';
+import styles from './css/user.scss';
+
+const cx = classNames.bind(styles);
 
 class User extends Component {
 	constructor(props) {
@@ -73,7 +77,7 @@ class User extends Component {
 
 				<Segment vertical>
 					<Container text style={{ marginBottom: '40px' }}>
-						<Header as="h2" icon="student" content="His Notes" />
+						<Header as="h2" icon="student" content="His Notes" className={cx('header')} />
 						<CoursesList
 							courses={courses}
 							coursesPagesCount={coursesPagesCount}

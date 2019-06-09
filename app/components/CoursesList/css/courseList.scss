@@ -10,6 +10,7 @@
   flex-flow: row wrap;
   align-content: flex-end;
   margin: 0 0 40px 0;
+  color: $colorTextMain;
 
   .course-container-item {
     display: block;
@@ -20,7 +21,7 @@
     background-color: $colorBg1;
     border: 1px solid $colorBorder;
     border-radius: 5px;
-    // box-shadow: 0 0 1px 1px rgba(20,23,28,.1), 0 3px 1px 0 rgba(20,23,28,.1);
+    /* box-shadow: 0 0 1px 1px rgba(20,23,28,.1), 0 3px 1px 0 rgba(20,23,28,.1); */
 
     &:link, &:visited { text-decoration: none; color: $colorTextMain; @include transition(all .2s); }
     &:hover, &:focus  { text-decoration: none; /* box-shadow: 0 2px 8px 2px rgba(20,23,28,.15); */ border: 1px solid $colorLogo;  }
