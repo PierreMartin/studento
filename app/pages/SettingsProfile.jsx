@@ -113,7 +113,7 @@ class SettingsProfile extends Component {
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
-				<h4>Settings Profile</h4>
+				<h4 style={{ color: 'white' }}>Settings Profile</h4>
 
 				<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
 					<Form.Input required label="Username" placeholder="Username" name="username" value={fields.username || ''} error={updateMissingRequiredField.username && updateMissingRequiredField.username.length > 0} onChange={this.handleInputChange} />

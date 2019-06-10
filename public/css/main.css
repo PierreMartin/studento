@@ -10,6 +10,52 @@ This file is used for overload the existant css
     background: rgba(0, 0, 0, .1) !important;
 }
 
+/***************************** FORMS ******************************/
+.ui.form .field.field input:-webkit-autofill:focus { border-color: transparent !important; box-shadow: none !important; }
+.ui.form .field.field input:-webkit-autofill { border-color: transparent !important; box-shadow: none !important; }
+
+.ui.segment {
+    background: none;
+}
+
+.ui.form .field>label {
+    color: #b9bbbe;
+}
+.ui.form input[type=text], .ui.form input[type=text]:focus,
+.ui.selection.dropdown, .ui.selection.dropdown:focus,
+.ui.form textarea, .ui.form textarea:focus {
+    background: none;
+    border: 1px solid #404550;
+    color: #b9bbbe;
+}
+
+/* Input select */
+.ui.selection.dropdown:hover, .ui.selection.active.dropdown, .ui.selection.active.dropdown:hover {
+    border: 1px solid #b9bbbe;
+}
+
+.ui.selection.visible.dropdown>.text:not(.default) {
+    color: #b9bbbe;
+}
+
+.ui.dropdown .menu {
+    background: #2a2d32;
+    border: 1px solid #b9bbbe !important;
+}
+
+.ui.dropdown .menu>.item:hover, .ui.dropdown .menu .active.item {
+    background: #36393f;
+    color: #fff;
+}
+
+.ui.dropdown .menu .selected.item, .ui.dropdown.selected, .ui.dropdown .menu>.item {
+    color: #fff;
+}
+
+.ui.selection.dropdown .menu>.item {
+    border-top: 1px solid #404550;
+}
+
 /***************************** PAGINATION ******************************/
 .ui.pagination.menu {
     background: none;
@@ -34,6 +80,17 @@ This file is used for overload the existant css
 }
 
 /***************************** BUTONS ******************************/
+.ui.button {
+    background-color: #dc3957;
+    color: white;
+}
+.ui.button:hover {
+    background-color: #b42e47;
+    color: white;
+}
+
+
+
 .ui.primary.button, .ui.primary.buttons .button {
     background-color: #dc3957;
 }

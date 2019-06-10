@@ -1,3 +1,18 @@
+@import '../../../../css/common/colors.scss';
+
+.menu-container {
+	background: none !important;
+	border: 1px solid $colorBorder !important;
+
+	a {
+		color: $colorTextMain !important;
+		border-bottom: 1px solid $colorBorder;
+
+		&:hover, &[class~=active] { background: $colorBg2 !important; color: white !important; }
+		&:last-of-type { border-bottom: none; }
+	}
+}
+
 /* ---------------------- TABLETTES & SMARTPHONES ----------------------*/
 @media screen and (max-width: 768px) {
 	.menu-container {
@@ -9,8 +24,10 @@
 			display: inline-block !important;
 			margin: 2px;
 			padding: 8px 20px !important;
-			border: 1px solid #e3e3e3 !important;
+			border: 1px solid $colorLogo !important;
 			border-radius: 5px !important;
+
+			&:hover, &[class~=active] { border-color: white !important; color: white !important; }
 
 			&:before { content: none !important; }
 		}

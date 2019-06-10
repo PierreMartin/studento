@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Segment, Header, Form } from 'semantic-ui-react';
+import classNames from 'classnames/bind';
+import styles from './birthdateField.scss';
+
+const cx = classNames.bind(styles);
 
 const BirthdateField = ({ fields, updateMissingRequiredField, typingUpdateUserAction }) => {
 	const getOptionsFormsSelect = () => {
@@ -36,7 +40,7 @@ const BirthdateField = ({ fields, updateMissingRequiredField, typingUpdateUserAc
 	const options = getOptionsFormsSelect();
 
 	return (
-		<Segment>
+		<Segment className={cx('birthdate-container')}>
 			<Header as="h4" icon="birthday" content="Birthdate" />
 			<Form.Group widths="equal">
 				<Form.Select label="Day" options={options.day} placeholder="Day" width={8} name="birthDateDay" value={fields.birthDateDay || ''} error={updateMissingRequiredField.birthDateDay && updateMissingRequiredField.birthDateDay.length > 0} onChange={handleSelectDateChange()} />
