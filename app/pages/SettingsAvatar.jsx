@@ -7,7 +7,7 @@ import { Button, Modal, Header, Message, Label } from 'semantic-ui-react';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import { pathImage } from './../../config/app';
-import defaultAvatar150 from '../images/default-avatar-150.png';
+// import defaultAvatar150 from '../images/default-avatar-150.png';
 import classNames from 'classnames/bind';
 import styles from './css/settingsAvatar.scss';
 
@@ -164,7 +164,7 @@ class SettingsAvatar extends Component {
 
 		for (let i = 0; i <= this.numberItems; i++) {
 			const avatarObj = this.getAvatarById(i, avatarsSrc);
-			const src = avatarObj ? `${pathImage}/${avatarObj.avatar150}` : defaultAvatar150;
+			const src = avatarObj ? `${pathImage}/${avatarObj.avatar150}` : '';
 			const isSettableMainAvatar = avatarObj && i !== avatarMainSrc.avatarId;
 			const isMainAvatar = avatarObj && i === avatarMainSrc.avatarId;
 
@@ -172,8 +172,8 @@ class SettingsAvatar extends Component {
 				<div key={i} className={cx('column')} >
 					<div><strong>Avatar {i + 1}</strong><br /></div>
 					<Dropzone onDrop={this.dropHandler(i)} multiple={false} accept={'image/*'} className={cx('dropzone-input')} >
-						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar')} />
-						{(isMainAvatar) ? <div className={cx('mainAvatar')}><Label ribbon>Default</Label></div> : ''}
+						<img src={src} alt="avatar" ref={(avatar) => { this.avatarsRef[i] = avatar; }} className={cx('avatar')} style={{ opacity: avatarObj ? '1' : '0' }} />
+						{(isMainAvatar) ? <div className={cx('mainAvatar')}><Label className={cx('label')} ribbon>Default</Label></div> : ''}
 					</Dropzone>
 
 					<Button disabled={!isSettableMainAvatar} basic size="tiny" className={cx('button-set-main-avatar')} onClick={this.handleDefaultAvatar(i)}>Define as default</Button>
@@ -191,7 +191,7 @@ class SettingsAvatar extends Component {
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div>
-					<h2>Add a avatar</h2>
+					<h3 className={cx('settings-title')}>Add a avatar</h3>
 					<p>Drag and drop a image or click for select a image.</p>
 
 					<Modal open={this.state.openModal} onClose={this.handleCloseModal}>
@@ -221,7 +221,7 @@ class SettingsAvatar extends Component {
 						</div>
 					</div>
 
-					<Message header="Note" content="Don't forget to select a avatar as default." />
+					<Message content="Don't forget to select a avatar as default." />
 
 				</div>
 			</LayoutPage>

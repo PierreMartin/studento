@@ -1,4 +1,9 @@
 @import url(https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css);
+@import './../../css/common/colors.scss';
+
+.settings-title{
+  color: #fff !important;
+}
 
 .dropzone-container {
   .row {
@@ -12,8 +17,10 @@
     text-align: center;
 
     .column {
-      border: 1px solid #d4d4d5;
+      border: 1px solid $colorBorder;
       padding: 5px 15px 15px 15px;
+      margin: 2px;
+      color: #fff;
 
       strong { margin: 8px; }
 
@@ -25,15 +32,25 @@
       .dropzone-input {
         position: relative;
         display: inline-block;
+        width: 150px;
+        height: 150px;
         cursor: pointer;
         border: 2px dashed rgb(102, 102, 102);
 
-        img.avatar { max-width: 150px; }
+        img.avatar { max-width: 144px; }
 
         .mainAvatar {
           position: absolute;
-          top: 0;
+          top: 8px;
           right: 63px;
+
+          .label {
+            &[class~=ribbon] {
+              background-color: $colorLogo !important;
+              border-color: #AB2F49 !important;
+              color: #fff;
+            }
+          }
         }
       }
     }
@@ -46,22 +63,11 @@
     .row {
       .column {
         .dropzone-input {
+          width: 125px;
+          height: 125px;
           img.avatar { max-width: 120px !important; }
           .mainAvatar { right: 30px; }
         }
-      }
-    }
-  }
-}
-
-/* ---------------------- SMARTPHONES ----------------------*/
-@media screen and (max-width: 400px) {
-  .dropzone-container {
-    .row {
-      display: block;
-      .column {
-        border-bottom: none;
-        &:last-of-type { border: 1px solid #d4d4d5; }
       }
     }
   }

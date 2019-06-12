@@ -22,11 +22,18 @@ This file is used for overload the existant css
     color: #b9bbbe;
 }
 .ui.form input[type=text], .ui.form input[type=text]:focus,
+.ui.form input[type=password], .ui.form input[type=password]:focus,
 .ui.selection.dropdown, .ui.selection.dropdown:focus,
 .ui.form textarea, .ui.form textarea:focus {
     background: none;
     border: 1px solid #404550;
     color: #b9bbbe;
+}
+
+.ui.form .field.error input[type=text], .ui.form .field.error input[type=text]:focus,
+.ui.form .field.error input[type=password], .ui.form .field.error input[type=password]:focus,
+.ui.form .field.error textarea, .ui.form .field.error textarea:focus {
+    background: none;
 }
 
 /* Input select */
@@ -79,6 +86,13 @@ This file is used for overload the existant css
     color: #dc3957;
 }
 
+/***************************** MESSAGES ******************************/
+.ui.message { background-color: #151515; color: #fff; box-shadow: 0 0 0 1px #404550 inset, 0 0 0 0 transparent; }
+.ui.message .content p { color: #fff !important; opacity: 1; }
+
+.ui.error.message { background-color: rgba(219,40,40,0.35); color: #fff; box-shadow: 0 0 0 1px #404550 inset, 0 0 0 0 transparent; }
+.ui.error.message .content p { color: #fff !important; opacity: 1; }
+
 /***************************** BUTONS ******************************/
 .ui.button {
     background-color: #dc3957;
@@ -103,11 +117,12 @@ This file is used for overload the existant css
 
 .ui.basic.button, .ui.basic.buttons .button {
     color: #b9bbbe !important;
+    border: 1px solid #404550;
 }
 
 .ui.basic.button:hover, .ui.basic.buttons .button:hover,
 .ui.basic.active.button, .ui.basic.buttons .active.button {
-    color: #dc3957 !important;
+    color: white !important;
     background: #151515 !important;
 }
 

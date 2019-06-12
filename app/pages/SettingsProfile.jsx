@@ -6,9 +6,10 @@ import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Form, Message } from 'semantic-ui-react';
 import BirthdateField from '../components/common/BirthdateField/BirthdateField';
 import classNames from 'classnames/bind';
-import styles from '../css/main.scss';
+import stylesMain from '../css/main.scss';
+import stylesSettings from './css/settingsProfile.scss';
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind({...stylesMain, ...stylesSettings});
 
 class SettingsProfile extends Component {
 	constructor(props) {
@@ -113,7 +114,7 @@ class SettingsProfile extends Component {
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
-				<h4 style={{ color: 'white' }}>Settings Profile</h4>
+				<h3 className={cx('settings-title')}>Settings Profile</h3>
 
 				<Form error={messagesError.props.children.length > 0} size="small" onSubmit={this.handleOnSubmit}>
 					<Form.Input required label="Username" placeholder="Username" name="username" value={fields.username || ''} error={updateMissingRequiredField.username && updateMissingRequiredField.username.length > 0} onChange={this.handleInputChange} />

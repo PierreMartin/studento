@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { updateUserAction, emptyErrorsUserUpdateAction, deleteUserAccountAction } from '../actions/userMe';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import { Segment, Form, Message, Button, Modal, Header, Icon } from 'semantic-ui-react';
-// import classNames from 'classnames/bind';
-// import styles from '../css/main.scss';
+import classNames from 'classnames/bind';
+import styles from './css/settingsAccount.scss';
 
-// const cx = classNames.bind(styles);
+const cx = classNames.bind(styles);
 
 class SettingsAccount extends Component {
 	constructor(props) {
@@ -96,7 +96,7 @@ class SettingsAccount extends Component {
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div style={{ marginBottom: '30px' }}>
-					<h3>Change password</h3>
+					<h3 className={cx('settings-title')}>Change password</h3>
 					<Segment>
 						<Form error={(updateMissingRequiredField.passwordUpdate && updateMissingRequiredField.passwordUpdate.length > 0) || (updateMissingRequiredField.passwordUpdateChecking && updateMissingRequiredField.passwordUpdateChecking.length > 0)} size="small" onSubmit={this.handleOnSubmit}>
 							<Form.Input required label="Your actual Password" placeholder="Your actual Password" name="passwordUpdateChecking" value={fields.passwordUpdateChecking || ''} type="password" error={updateMissingRequiredField.passwordUpdateChecking && updateMissingRequiredField.passwordUpdateChecking.length > 0} onChange={this.handleInputChange} />
@@ -108,7 +108,7 @@ class SettingsAccount extends Component {
 				</div>
 
 				<div style={{ marginBottom: '30px' }}>
-					<h3>Change email</h3>
+					<h3 className={cx('settings-title')}>Change email</h3>
 					<Segment>
 						<Form error={updateMissingRequiredField.email && updateMissingRequiredField.email.length > 0} size="small" onSubmit={this.handleOnSubmit}>
 							<Form.Input required label="New E-mail" placeholder="New E-mail" name="email" value={fields.email || ''} type="text" error={updateMissingRequiredField.email && updateMissingRequiredField.email.length > 0} onChange={this.handleInputChange} />
@@ -121,7 +121,7 @@ class SettingsAccount extends Component {
 				{ updateMessageError && updateMessageError.length > 0 && <Message error content={updateMessageError} /> }
 
 				<div>
-					<h3>Delete account</h3>
+					<h3 className={cx('settings-title')}>Delete account</h3>
 					<Button color="red" icon="delete" content="Delete your account" onClick={this.handleOpenModalDeleteAccount} />
 				</div>
 
