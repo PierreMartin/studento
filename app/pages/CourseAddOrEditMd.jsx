@@ -952,7 +952,7 @@ const myVar = 'content...';
 								</Form>
 							</div>
 
-							<div className={cx('container-page-light', 'preview')} id="preview" style={stylesPreview} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refContentPreview = el; }} onScroll={this.handleScroll('preview')} />
+							<div className={cx('container-page-dark', 'preview')} id="preview" style={stylesPreview} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refContentPreview = el; }} onScroll={this.handleScroll('preview')} />
 						</div>
 					</div>
 				</div>

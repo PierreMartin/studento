@@ -2,6 +2,10 @@
 This file is used for overload the existant css
 */
 
+body {
+    color: #b9bbbe;
+}
+
 .ui.text.container {
     max-width: none !important;
 }
@@ -11,6 +15,7 @@ This file is used for overload the existant css
 }
 
 /***************************** FORMS ******************************/
+.ui.input { color: #fff; }
 .ui.form .field.field input:-webkit-autofill:focus { border-color: transparent !important; box-shadow: none !important; }
 .ui.form .field.field input:-webkit-autofill { border-color: transparent !important; box-shadow: none !important; }
 

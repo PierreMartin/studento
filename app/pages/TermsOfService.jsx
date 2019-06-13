@@ -26,7 +26,7 @@ class TermsOfService extends Component {
 					</div>
 
 					<Container text>
-						<div style={{ whiteSpace: 'pre-line', fontSize: '1rem', color: '#3a3a3a' }}>
+						<div style={{ whiteSpace: 'pre-line', fontSize: '1rem' }}>
 							{`
 ENGLISH - TERMS OF SERVICE
 
@@ -139,7 +139,7 @@ Any dispute in connection with the use of the HubNote website is subject to Fren
 					<hr />
 
 					<Container text>
-						<div style={{ whiteSpace: 'pre-line', fontSize: '1rem', color: '#3a3a3a' }}>
+						<div style={{ whiteSpace: 'pre-line', fontSize: '1rem' }}>
 							{`
 FRANCAIS - CONDITIONS GÉNÉRALES D'UTILISATION
 

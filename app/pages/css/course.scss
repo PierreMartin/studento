@@ -12,6 +12,8 @@ $lines-color: #8F938F;
   word-break: break-word;
   // box-shadow: 0 0 1px 1px rgba(20, 23, 28, .1), 0 3px 1px 0 rgba(20, 23, 28, .1);
 
+  h1 { color: $colorLogo !important; }
+
   h1, h2, h3, h4, h5, h6 { position: relative; padding: 0; word-wrap: break-word; word-break: break-word; }
 
   h1 { font-size: 35px; margin: 0 0 24px 0; font-weight: 800; }
@@ -46,27 +48,35 @@ $lines-color: #8F938F;
 .container-page-dark {
   @include init();
 
-  h1::before, h2::before, h3::before, h4::before, h5::before, h6::before { position: absolute; content: ''; width: 100%; margin-left: -4px }
+  p, h2, h3, h4, h5, h6 { color: $colorTextMain; }
+  h1 { color: $colorLogo; }
+
+  h1::before { position: absolute; content: ''; width: 100%; margin-left: -4px }
+  /* h2::before, h3::before, h4::before, h5::before, h6::before { position: absolute; content: ''; width: 100%; margin-left: -4px } */
 
   h1::before { height: 100%; background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent 100%); top: 0; }
+  /*
   h2::before { height: 4px; background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent 100%); bottom: -5px; }
   h3::before { height: 1px; background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent 100%); bottom: -5px; }
   h4::before { height: 1px; background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent 100%); bottom: -5px;}
+  */
 
   pre {
-    background-color: #000;
+    border: 1px solid $colorBorder;
+    border-radius: 5px;
+    background-color: $colorBg1;
   }
 
   table {
     tr {
-      border-top: 1px solid $lines-color;
+      border-top: 1px solid $colorBorder;
       th, td {
-        border: 1px solid $lines-color;
+        border: 1px solid $colorBorder;
       }
     }
 
     tr:nth-child(2n) {
-      background-color: #34302f;
+      background-color: $colorBg2;
     }
   }
 }
