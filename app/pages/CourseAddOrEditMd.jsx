@@ -644,7 +644,7 @@ const myVar = 'content...';
 				autoCloseBrackets: true,
 				autoCloseTags: true,
 				showTrailingSpace: true,
-				theme: 'pastel-on-dark',
+				theme: 'blackboard',
 				mode: 'javascript'
 			});
 		}

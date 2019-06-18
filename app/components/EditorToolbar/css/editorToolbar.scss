@@ -11,12 +11,23 @@
     width: 100%;
 
     .button-group {
-      border: 1px solid #555;
+      border: 1px solid $colorBorder;
       margin: 3px 5px 3px 0;
 
-      [role="button"]:first-child { border-left: none; }
-      [role="button"] { border-left: 1px solid #555; color: white !important; &:hover, &:focus, &:active { background-color: #555 !important; } }
-      button[disabled] { border-color: #555 !important; opacity: 1 !important; color: #555 !important; }
+      [role="button"] { border: none !important; }
+      [role="button"]:first-child { border-left: none !important; }
+
+      [role="button"] {
+        border-left: 1px solid $colorBorder !important;
+        color: white !important;
+        &:hover, &:focus, &:active { background-color: #555 !important; box-shadow: none; }
+      }
+
+      button[disabled] {
+        border-color: #555 !important;
+        opacity: 1 !important;
+        color: #555 !important;
+      }
     }
 
     .form-properties {

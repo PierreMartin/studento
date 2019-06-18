@@ -1,5 +1,5 @@
 .cm-s-blackboard.CodeMirror, .cm-s-blackboard .CodeMirror-gutters {
-    height: 800px;
+    /* height: 800px; */
     background: #2a2d32 !important;
 }
 

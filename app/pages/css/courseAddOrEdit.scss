@@ -11,13 +11,31 @@
     &.menu-open { left: 260px; }
 
     .toolbar-editor-md {
-      background-color: #fff;
+      background-color: $colorBgMain;
       border-bottom: 1px solid #8F938F;
       width: 100%;
       padding: 4px;
       border-bottom: 1px solid #ddd;
 
-      .button-group { margin: 3px 5px 3px 0; }
+      .button-group {
+        border: 1px solid $colorBorder;
+        margin: 3px 5px 3px 0;
+
+        [role="button"] { border: none !important; }
+        [role="button"]:first-child { border-left: none !important; }
+
+        [role="button"] {
+          border-left: 1px solid $colorBorder !important;
+          color: white !important;
+          &:hover, &:focus, &:active { background-color: #555 !important; box-shadow: none; }
+        }
+
+        button[disabled] {
+          border-color: #555 !important;
+          opacity: 1 !important;
+          color: #555 !important;
+        }
+      }
     }
 
     .tiny-editor-container {}
