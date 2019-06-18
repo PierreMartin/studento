@@ -1,5 +1,10 @@
-.cm-s-dracula.CodeMirror, .cm-s-dracula .CodeMirror-gutters {
+.cm-s-blackboard.CodeMirror, .cm-s-blackboard .CodeMirror-gutters {
     height: 800px;
+    background: #2a2d32 !important;
+}
+
+.cm-s-blackboard .cm-header {
+    color: #dc3957 !important;
 }
 
 .CodeMirror {

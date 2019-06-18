@@ -164,7 +164,9 @@ const myVar = 'content...';
 		require('codemirror/addon/fold/foldgutter.css');
 
 		// Theme CSS:
-		require('codemirror/theme/pastel-on-dark.css');
+		require('codemirror/theme/blackboard.css');
+		// require('codemirror/theme/mbo.css');
+		// require('codemirror/theme/monokai.css');
 
 		// keyMap:
 		require('codemirror/keymap/sublime.js');
@@ -216,7 +218,7 @@ const myVar = 'content...';
 			showTrailingSpace: true,
 			// highlightSelectionMatches : ( (!settings.matchWordHighlight) ? false : { showToken: (settings.matchWordHighlight === "onselected") ? false : /\w/ } )
 
-			theme: 'default',
+			theme: 'blackboard',
 			mode: 'gfm'
 		});
 
