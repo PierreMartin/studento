@@ -19,7 +19,7 @@ import stylesCourse from './css/course.scss';
 let tinymce;
 if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
 	tinymce = require('tinymce');
-	require('tinymce/themes/modern');
+	require('tinymce/themes/silver');
 	require('tinymce/plugins/wordcount');
 	require('tinymce/plugins/table');
 	require('tinymce/plugins/codesample');

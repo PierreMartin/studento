@@ -54,7 +54,7 @@ $lines-color: #8F938F;
   h1::before { position: absolute; content: ''; width: 100%; margin-left: -4px }
   /* h2::before, h3::before, h4::before, h5::before, h6::before { position: absolute; content: ''; width: 100%; margin-left: -4px } */
 
-  h1::before { height: 100%; background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent 100%); top: 0; }
+  h1::before { height: 100%; background: linear-gradient(to right, rgba(255, 255, 255, 0.1), transparent 100%); top: 0; }
   /*
   h2::before { height: 4px; background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent 100%); bottom: -5px; }
   h3::before { height: 1px; background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent 100%); bottom: -5px; }

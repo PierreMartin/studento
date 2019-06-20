@@ -13,13 +13,15 @@ class TinyEditor extends Component {
 	componentDidMount() {
 		this.props.tinymce.init({
 			min_height: this.props.heightDocument,
-			external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
+			// external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
 			language: 'en',
-			plugins: 'link image table codesample textcolor tiny_mce_wiris',
+			plugins: 'link image table codesample textcolor',
 			toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | formatselect | forecolor backcolor | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry',
 			selector: `#${this.props.id}`,
-			skin_url: '/skins/lightgray',
-			codesample_content_css: '/css/prism.css',
+			skin_url: '/skins/oxide-dark', // css skin menues
+			content_css: '/skins/default/content.css', // css skin background
+			codesample_content_css: '/css/prism.css', // css skin code
+			skin: 'oxide-dark',
 			setup: (editor) => {
 				this.setState({ editor });
 

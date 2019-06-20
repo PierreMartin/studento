@@ -102,6 +102,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- dotenv voir pourquoi deplacé dans devDependance
 - Redesign buttons de la toolbar comme tinyMce
 - FAIRE Page My notes =>
       + Rename CourseAddOrEditMd.jsx en 'Editor.jsx' qui dispacth les 2 types d'éditeurs (Markdown et Tiny)
