@@ -127,7 +127,7 @@ class CourseAddOrEdit extends Component {
 	getHeigthElements() {
 		const heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 550;
 		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
-		let heightEditor = heightDocument - 152;
+		let heightEditor = heightDocument - 51; // TODO get height toolbar in js
 		if (heightPanel > heightDocument) heightEditor = heightPanel;
 
 		return { heightEditor };
