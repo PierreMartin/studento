@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 
 
 class TinyEditor extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
+
 		this.state = {
 			editor: null
 		};

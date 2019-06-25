@@ -11,6 +11,14 @@ body {
     background-color: #2a2d32;
     color: #fff;
 }
+a { text-decoration: none; color: #dc3957; transition:.4s; font-weight: 600; }
+a:link, a:visited { color: #dc3957; transition:.2s; }
+a:hover, a:focus  { color: #fff;  }
+a:active          { color: #dc3957;  }
+.mce-content-body [data-mce-selected=inline-boundary] { background-color: #404550; }
+
+h1 { color: #dc3957; }
+
 table {
     border-collapse: collapse;
 }
