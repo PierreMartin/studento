@@ -11,11 +11,10 @@
     &.menu-open { left: 260px; }
 
     .toolbar-editor-md {
-      background-color: $colorBgMain;
-      border-bottom: 1px solid #8F938F;
+      background-color: $colorBg1;
+      border-bottom: 1px solid $colorBorder;
       width: 100%;
       padding: 4px;
-      border-bottom: 1px solid #ddd;
 
       .button-group {
         border: 1px solid $colorBorder;

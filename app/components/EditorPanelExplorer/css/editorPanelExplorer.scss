@@ -1,5 +1,4 @@
 @import '../../../css/common/colors.scss';
-$colorFontDarkTheme: #999;
 
 .panel-explorer-container {
   padding-top: 50px; /* Offset toolbar */
@@ -10,7 +9,7 @@ $colorFontDarkTheme: #999;
   display: flex;
   flex-direction: column;
   padding-bottom: 50px;
-  background-color: #333333;
+  background-color: $colorBg1;
   width: 260px;
   z-index: 5;
   transition: left 350ms cubic-bezier(0.75, 0, 0.175, 1);
@@ -20,46 +19,43 @@ $colorFontDarkTheme: #999;
   .panel-explorer-tree-folder-itemslist {
     overflow-x: scroll;
     height: 230px;
-    border-top: 1px solid #555;
-    border-bottom: 1px solid #555;
+    border-top: 1px solid $colorBorder;
+    border-bottom: 1px solid $colorBorder;
 
     .message-empty-note {
       position: relative;
       top: 50%;
       margin-top: -5px;
       text-align: center;
-      color: $colorFontDarkTheme;
+      color: $colorTextMain;
       font-weight: 900;
     }
 
     a {
       padding: 5px 20px 5px 20px  !important;
-      color: $colorFontDarkTheme !important;
+      color: $colorTextMain !important;
       font-weight: 900;
-      border-bottom: 1px solid #444;
-      transition: .25s !important;
+      border-bottom: 1px solid $colorBorder;
+      transition: .2s !important;
 
       &:first-child, &:last-child {
         padding: 5px 20px 5px 20px !important;
       }
 
-      &.active-course {
-        background-color: #555 !important;
+      &:hover, &.active-course {
+        background-color: $colorBgMain !important;
         color: #fff !important;
       }
-      &:hover {
-        background-color: #555;
-      }
 
-      i { color: $colorFontDarkTheme !important; }
+      i { color: $colorTextMain !important; }
     }
   }
 
   .panel-explorer-properties {
     padding: 0 20px 0 20px;
     margin-top: 18px;
-    label { opacity: 1 !important; color: $colorFontDarkTheme !important; &:after { color: white !important; } }
-    input, textarea, .select > div { color: #777 !important; font-weight: 900; }
+    label { opacity: 1 !important; color: $colorTextMain !important; &:after { color: #fff !important; } }
+    input, textarea, .select > div { color: $colorTextMain !important; font-weight: 900; }
 
     /* Form input checkbox */
     .checkbox {
@@ -80,14 +76,14 @@ $colorFontDarkTheme: #999;
     /* Form input select */
     .form-templates-container {
       background-color: transparent;
-      border: 1px solid #555;
-      .header { color: $colorFontDarkTheme; }
+      border: 1px solid $colorBorder;
+      .header { color: $colorTextMain; }
       .form-templates {
         label { display: inline-block; width: 35px; font-weight: 900 }
         .input-select {
           display: inline-block;
           font-size: 10px;
-          color: #777 !important; font-weight: 900;
+          color: $colorTextMain !important; font-weight: 900;
           margin-bottom: 4px;
           div { font-size: 12px; }
         }
