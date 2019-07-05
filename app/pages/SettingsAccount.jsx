@@ -102,7 +102,7 @@ class SettingsAccount extends Component {
 							<Form.Input required label="Your actual Password" placeholder="Your actual Password" name="passwordUpdateChecking" value={fields.passwordUpdateChecking || ''} type="password" error={updateMissingRequiredField.passwordUpdateChecking && updateMissingRequiredField.passwordUpdateChecking.length > 0} onChange={this.handleInputChange} />
 							<Form.Input required label="Set your new Password" placeholder="Set your new Password" name="password" value={fields.password || ''} type="password" error={updateMissingRequiredField.passwordUpdate && updateMissingRequiredField.passwordUpdate.length > 0} onChange={this.handleInputChange} />
 							<Message error content={updateMissingRequiredField.passwordUpdate || updateMissingRequiredField.passwordUpdateChecking} />
-							<Form.Button disabled={disabledPasswordButton}>Submit</Form.Button>
+							<Form.Button basic primary disabled={disabledPasswordButton}>Submit</Form.Button>
 						</Form>
 					</Segment>
 				</div>
@@ -113,7 +113,7 @@ class SettingsAccount extends Component {
 						<Form error={updateMissingRequiredField.email && updateMissingRequiredField.email.length > 0} size="small" onSubmit={this.handleOnSubmit}>
 							<Form.Input required label="New E-mail" placeholder="New E-mail" name="email" value={fields.email || ''} type="text" error={updateMissingRequiredField.email && updateMissingRequiredField.email.length > 0} onChange={this.handleInputChange} />
 							<Message error content={updateMissingRequiredField.email} />
-							<Form.Button disabled={disabledEmailButton}>Submit</Form.Button>
+							<Form.Button basic primary disabled={disabledEmailButton}>Submit</Form.Button>
 						</Form>
 					</Segment>
 				</div>
@@ -122,7 +122,7 @@ class SettingsAccount extends Component {
 
 				<div>
 					<h3 className={cx('settings-title')}>Delete account</h3>
-					<Button color="red" icon="delete" content="Delete your account" onClick={this.handleOpenModalDeleteAccount} />
+					<Button basic primary icon="delete" content="Delete your account" onClick={this.handleOpenModalDeleteAccount} />
 				</div>
 
 				<Modal open={isModalForDeleteAccountOpened} onClose={this.handleOpenModalDeleteAccount}>
@@ -141,7 +141,7 @@ class SettingsAccount extends Component {
 							<Form error={updateMissingRequiredField.passwordDelete && updateMissingRequiredField.passwordDelete.length > 0} size="small" onSubmit={this.handleSubmitDeleteAccount}>
 								<Form.Group>
 									<Form.Input width={4} required placeholder="Your Password" name="passwordDelete" value={fields.passwordDelete || ''} type="password" error={updateMissingRequiredField.passwordDelete && updateMissingRequiredField.passwordDelete.length > 0} onChange={this.handleInputChange} />
-									<Form.Button width={8} disabled={disabledPasswordDelButton} color="red" content="I confirm delete my account" />
+									<Form.Button primary width={8} disabled={disabledPasswordDelButton} content="I confirm delete my account" />
 								</Form.Group>
 								<Message error content={updateMissingRequiredField.passwordDelete} />
 							</Form>

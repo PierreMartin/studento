@@ -140,7 +140,7 @@ class SettingsProfile extends Component {
 					<Form.TextArea label="About" placeholder="Tell us more about you..." name="about" value={fields.about || ''} onChange={this.handleInputChange} />
 					<Message error content={messagesError} />
 
-					<Form.Button>Submit</Form.Button>
+					<Form.Button primary basic>Submit</Form.Button>
 				</Form>
 
 			</LayoutPage>

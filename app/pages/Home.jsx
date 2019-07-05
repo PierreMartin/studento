@@ -108,7 +108,7 @@ class Home extends Component {
 		const { subCategory } = this.state;
 
 		const buttonsSubCategoriesNode = categoryParam.subCategories.map((subCat, index) => {
-			return (<Button key={index} basic size="tiny" active={subCategory.lastClicked === subCat.key} onClick={this.handleSelectSubCategory(subCat.key)}>{subCat.name}</Button>);
+			return (<Button key={index} basic secondary size="tiny" active={subCategory.lastClicked === subCat.key} onClick={this.handleSelectSubCategory(subCat.key)}>{subCat.name}</Button>);
 		});
 
 		return (
@@ -144,7 +144,7 @@ class Home extends Component {
 					<Container text className={cx('courses-container')}>
 
 						<div className={cx('categories')}>
-							{categories.map((cat, index) => (<Button key={index} active={category.lastClicked === cat.key} onClick={this.handleSelectCategory(cat.key, index)}>{cat.name}</Button>))}
+							{categories.map((cat, index) => (<Button basic primary key={index} active={category.lastClicked === cat.key} onClick={this.handleSelectCategory(cat.key, index)}>{cat.name}</Button>))}
 						</div>
 
 						{ category.lastClicked && category.lastClicked.length > 0 ? this.renderSubCategories(categories[category.clickedIndex]) : ''}

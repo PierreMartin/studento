@@ -181,7 +181,7 @@ class EditorPanelExplorer extends Component {
 
 						<Message error content={messagesError} />
 
-						<Form.Button basic fluid inverted disabled={isDisableButtonSubmit}>Save properties</Form.Button>
+						<Form.Button basic primary fluid inverted disabled={isDisableButtonSubmit}>Save properties</Form.Button>
 					</Form>
 				</div>
 			</div>

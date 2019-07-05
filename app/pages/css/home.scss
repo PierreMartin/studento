@@ -54,18 +54,6 @@
   .categories {
     margin: 20px 0;
     text-align: center;
-    button {
-      margin: 2px !important;
-      background: none;
-      border: 1px solid $colorLogo;
-      color: $colorTextMain;
-
-      &:hover, &[class~=active], &[class~=active]:hover {
-        border: 1px solid #fff;
-        background: none;
-        color: #ffffff;
-      }
-    }
   }
 
   .sub-categories {

@@ -91,7 +91,7 @@ const EditorToolbar = (
 					) : null
 				}
 
-				<Form.Button size="tiny" basic fluid inverted disabled={!isPropertiesChanged && !isEditorChanged}>Save</Form.Button>
+				<Form.Button size="tiny" basic primary disabled={!isPropertiesChanged && !isEditorChanged}>Save</Form.Button>
 			</Form>
 		</div>
 	);
