@@ -108,7 +108,7 @@ class Login extends Component {
 								<Form.Input fluid icon="lock" iconPosition="left" label="Password" placeholder="Password" type="password" name="password" error={missingRequiredField.password} onChange={this.handleInputChange} />
 								<Message error content={messages} />
 
-								<Button fluid size="large">{ signup ? 'Signup' : 'Login' }</Button>
+								<Button basic primary fluid size="large">{ signup ? 'Signup' : 'Login' }</Button>
 							</Segment>
 						</Form>
 
