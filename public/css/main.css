@@ -196,6 +196,63 @@ body {
     background: #151515 !important;
 }
 
+/* Basic grey */
+.ui.basic.grey.button, .ui.basic.grey.buttons .button {  }
+
+.ui.basic.grey.button:hover, .ui.basic.grey.buttons .button:hover,
+.ui.basic.grey.button:focus, .ui.basic.grey.buttons .button:focus,
+.ui.basic.grey.button:active, .ui.basic.grey.buttons .button:active {
+    color: #fff !important;
+    border-color: #fff;
+}
+
+.ui.basic.grey.button, .ui.basic.grey.buttons .button,
+.ui.basic.grey.button:hover, .ui.basic.grey.buttons .button:hover,
+.ui.basic.grey.button:focus, .ui.basic.grey.buttons .button:focus,
+.ui.basic.grey.button:active, .ui.basic.grey.buttons .button:active {
+    box-shadow: none !important;
+}
+
+/* Basic red */
+.ui.basic.red.button, .ui.basic.red.buttons .button { border-color: red; }
+
+.ui.basic.red.button:hover, .ui.basic.red.buttons .button:hover,
+.ui.basic.red.button:focus, .ui.basic.red.buttons .button:focus,
+.ui.basic.red.button:active, .ui.basic.red.buttons .button:active {
+    color: #fff !important;
+    border-color: #fff;
+}
+
+.ui.basic.red.button, .ui.basic.red.buttons .button,
+.ui.basic.red.button:hover, .ui.basic.red.buttons .button:hover,
+.ui.basic.red.button:focus, .ui.basic.red.buttons .button:focus,
+.ui.basic.red.button:active, .ui.basic.red.buttons .button:active {
+    box-shadow: none !important;
+}
+
+/* Basic inverted */
+.ui.basic.inverted.button, .ui.basic.inverted.buttons .button,
+.ui.basic.inverted.button:hover, .ui.basic.inverted.buttons .button:hover,
+.ui.basic.inverted.button:focus, .ui.basic.inverted.buttons .button:focus,
+.ui.basic.inverted.button:active, .ui.basic.inverted.buttons .button:active {
+    box-shadow: none !important;
+}
+
+/***************************** MODALS ******************************/
+.ui.dimmer { background-color: transparent; }
+.ui.modal>.header, .ui.modal>.content, .ui.modal>.actions { background: #151515; color: #b9bbbe; }
+.ui.modal>.header { color: #fff !important; }
+.ui.modal .header { color: #b9bbbe; }
+.ui.modal>.content .menu { background: #151515; }
+.ui.modal>.content .CodeMirror { border: 1px solid #404550; }
+.ui.modal>.content .CodeMirror, .ui.modal>.content .CodeMirror-gutters { background: #151515 !important; }
+
+.ui.black.button, .ui.black.buttons .button { background-color: #2a2d32; }
+.ui.black.button:hover, .ui.black.buttons .button:hover, .ui.black.button:focus, .ui.black.buttons .button:focus, .ui.black.button:active, .ui.black.buttons .button:active { background-color: #1f2125; }
+
+.ui.red.button, .ui.red.buttons .button { background-color: #dc3957; }
+.ui.red.button:hover, .ui.red.buttons .button:hover, .ui.red.button:focus, .ui.red.buttons .button:focus, .ui.red.button:active, .ui.red.buttons .button:active { background-color: #b42e47; }
+
 /***************************** MAIN MENU & FOOTER ******************************/
 .ui.inverted.segment, .ui.primary.inverted.segment {
     background-color: #dc3957;
