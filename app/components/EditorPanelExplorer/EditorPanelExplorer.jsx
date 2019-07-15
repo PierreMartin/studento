@@ -149,7 +149,7 @@ class EditorPanelExplorer extends Component {
 						<Form.TextArea label="Description" placeholder="The description of your Note..." name="description" value={fields.description || ''} onChange={handleInputChange} />
 
 						<Form.Select className={cx('select')} required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} />
-						{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={handleInputChange} /> : '' }
+						{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select className={cx('select')} label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={handleInputChange} /> : '' }
 
 						<Form.Checkbox className={cx('checkbox')} toggle label="Private" name="isPrivate" checked={fields.isPrivate || false} onChange={handleInputChange} />
 						<Popup trigger={<Icon className={cx('info')} name="info circle" size="big" color="grey" />} flowing hoverable>

@@ -35,7 +35,7 @@
       padding: 5px 20px 5px 20px  !important;
       color: $colorTextMain !important;
       font-weight: 900;
-      border-bottom: 1px solid $colorBorder;
+      border-bottom: 1px solid #2a2d32;
       transition: .2s !important;
 
       &:first-child, &:last-child {
@@ -56,6 +56,10 @@
     margin-top: 18px;
     label { opacity: 1 !important; color: $colorTextMain !important; &:after { color: #fff !important; } }
     input, textarea, .select > div { color: $colorTextMain !important; font-weight: 900; }
+
+    .select [class~=dropdown] [class~=menu], .input-select [class~=menu] {
+      background: #151515;
+    }
 
     /* Form input checkbox */
     .checkbox {
