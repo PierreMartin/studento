@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { getOptionsFormsSelect } from './attributesForms';
 import { fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../../actions/courses';
 import { fetchCategoriesAction } from '../../actions/category';
-import { Segment, List, Form, Header, Message, Select, Icon, Pagination, Popup } from 'semantic-ui-react';
+import {Segment, List, Form, Header, Message, Select, Icon, Pagination, Popup, Button} from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/editorPanelExplorer.scss';
 

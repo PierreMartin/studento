@@ -47,7 +47,7 @@ const EditorToolbar = (
 		addOrEditMissingField,
 		addOrEditFailure,
 		isPreviewModeActive,
-		handleClickToolbar,
+		handleClickToolbarMain,
 		handleInputChange,
 		handleOnSubmit,
 		fromPage
@@ -69,7 +69,7 @@ const EditorToolbar = (
 					</div>
 				</Popup>
 
-				{ fromPage === 'md' && <Popup style={stylePopup} inverted trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={handleClickToolbar('toggle preview')} />} content="Preview mode" /> }
+				{ fromPage === 'md' && <Popup style={stylePopup} inverted trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={handleClickToolbarMain('toggle preview')} />} content="Preview mode" /> }
 
 				{ !isEditing ? <Button disabled icon="arrow circle up" /> : <Popup style={stylePopup} inverted trigger={<Button icon="arrow circle up" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
 			</Button.Group>
@@ -93,6 +93,10 @@ const EditorToolbar = (
 
 				<Form.Button size="tiny" basic primary disabled={!isPropertiesChanged && !isEditorChanged}>Save</Form.Button>
 			</Form>
+
+			<div className={cx('container-buttons-right')}>
+				<Button basic color="grey" title="Edit" icon="pencil" size="tiny" onClick={handleClickToolbarMain('toggle preview')} />
+			</div>
 		</div>
 	);
 };
@@ -129,7 +133,7 @@ EditorToolbar.propTypes = {
 		subCategories: PropTypes.array
 	})),
 
-	handleClickToolbar: PropTypes.func,
+	handleClickToolbarMain: PropTypes.func,
 	handleInputChange: PropTypes.func,
 	handleOnSubmit: PropTypes.func,
 };

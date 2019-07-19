@@ -18,8 +18,7 @@ import User from './pages/User';
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import Course from './pages/Course';
-import CourseAddOrEdit from './pages/CourseAddOrEdit';
-import CourseAddOrEditMd from './pages/CourseAddOrEditMd';
+import NotePage from './pages/NotePage';
 
 
 export default (store) => {
@@ -103,8 +102,8 @@ export default (store) => {
 			</Route>
 
 			<Route component={LayoutMainApp}>
-				<Route path="/course/:action/:id" component={CourseAddOrEdit} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
-				<Route path="/courseMd/:action/:id" component={CourseAddOrEditMd} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
+				<Route path="/course/:action/:id" component={NotePage} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
+				<Route path="/courseMd/:action/:id" component={NotePage} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
 			</Route>
 		</Route>
   );

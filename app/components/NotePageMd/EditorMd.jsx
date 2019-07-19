@@ -6,30 +6,29 @@ import marked from 'marked';
 import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
 import katex from 'katex';
-import { hljsLoadLanguages } from '../components/common/loadLanguages';
-import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
-import SectionsGeneratorForScrolling from '../components/common/SectionsGeneratorForScrolling';
-import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../actions/courses';
-import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
-import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
-import EditorToolbar from '../components/EditorToolbar/EditorToolbar';
-import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { getOptionsFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
+import { hljsLoadLanguages } from '../../components/common/loadLanguages';
+import { HighlightRendering, kaTexRendering } from '../../components/common/renderingCourse';
+import SectionsGeneratorForScrolling from '../../components/common/SectionsGeneratorForScrolling';
+import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../../actions/courses';
+import ButtonOpenMenuPanel from '../../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
+import EditorPanelExplorer from '../../components/EditorPanelExplorer/EditorPanelExplorer';
+import EditorToolbar from '../../components/EditorToolbar/EditorToolbar';
+import LayoutPage from '../../components/layouts/LayoutPage/LayoutPage';
+import { getOptionsFormsSelect } from '../../components/EditorPanelExplorer/attributesForms';
 import { Form, Button, Modal, Header, Popup } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
-import stylesMain from '../css/main.scss';
-import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
-import stylesCourse from './css/course.scss';
+import stylesMain from '../../css/main.scss';
+import stylesAddOrEditCourse from '../../pages/css/courseAddOrEdit.scss';
+import stylesCourse from '../../pages/css/course.scss';
 
 const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse, ...stylesCourse});
 
-class CourseAddOrEditMd extends Component {
+class EditorMd extends Component {
 	constructor(props) {
 		super(props);
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-		this.handleClickToolbar = this.handleClickToolbar.bind(this);
 		this.handleOpenMenuPanel = this.handleOpenMenuPanel.bind(this);
 
 		// modal:
@@ -366,8 +365,8 @@ const myVar = 'content...';
 			data.courseId = course._id;
 			updateCourseAction(data)
 				.then(() => {
-						this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isMenuPanelOpen: false });
-					})
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isMenuPanelOpen: false });
+				})
 				.catch(() => {
 					// this.setState({ isMenuPanelOpen: true });
 				});
@@ -695,63 +694,6 @@ const myVar = 'content...';
 		this.setState({ fieldsModalSetStyleTyping: { ...this.state.fieldsModalSetStyleTyping, ...{[field.name]: field.value } } });
 	}
 
-	handleClickToolbar = clickedButton => () => {
-		this.editorCm.focus();
-
-		switch (clickedButton) {
-			case 'bold':
-				this.setStyleSelectable({ type: 'bold', char: '*', numberChars: 2 });
-				break;
-			case 'italic':
-				this.setStyleSelectable({ type: 'italic', char: '*', numberChars: 1 });
-				break;
-			case 'header':
-				this.setStyleOnLine({ type: 'header', char: '# ' });
-				break;
-			case 'strikethrough':
-				this.setStyleSelectable({ type: 'strikethrough', char: '~', numberChars: 2 });
-				break;
-			case 'quote left':
-				this.setStyleOnLine({ type: 'quote left', char: '> ' });
-				break;
-			case 'unordered list':
-				this.setStyleOnLine({ type: 'unordered list', char: '- ' });
-				break;
-			case 'ordered list':
-				this.setStyleOnLine({ type: 'ordered list', char: '1. ' });
-				break;
-			case 'check square':
-				this.setStyleOnLine({ type: 'check square', char: '- [x] ' });
-				break;
-			case 'code':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'code', title: 'Editor', desc: 'Write some code in the editor' });
-				break;
-			case 'table':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'table', title: 'Table', desc: 'Create a table' });
-				break;
-			case 'linkify':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'linkify', title: 'Link', desc: 'Add a link' });
-				break;
-			case 'file image outline':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'file image outline', title: 'Image', desc: 'Add a image' });
-				break;
-			case 'auto scoll':
-				// this.setState({ isButtonAutoScrollActive: !this.state.isButtonAutoScrollActive });
-				// this.refContentPreview.scrollTo(0, this.editorCm.getScrollInfo().top);
-
-				/* TODO FAIRE ca, mais bug quand scroll trop vite
-				const scrollTopTarget = SectionsGeneratorForScrolling.getScrollPosition(this.editorCm.getScrollerElement().scrollTop, this.sections.editor, this.sections.preview);
-				this.refContentPreview.scrollTop = scrollTopTarget;
-				*/
-				break;
-			case 'toggle preview':
-				this.setState({ isPreviewModeActive: !this.state.isPreviewModeActive });
-				break;
-			default:
-				break;
-		}
-	};
-
 	handleOpenMenuPanel() {
 		this.setState({ isMenuPanelOpen: !this.state.isMenuPanelOpen });
 	}
@@ -848,162 +790,28 @@ const myVar = 'content...';
 	}
 
 	render() {
-		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { contentMarkedSanitized, category, isEditing, fieldsTyping, fieldsModalSetStyleTyping, heightEditor, openModalSetStyle, codeLanguageSelected, isEditorChanged, isPreviewModeActive, isMobile, isMenuPanelOpen } = this.state;
-		const fields = this.getFieldsVal(fieldsTyping, course);
-		const { codeLanguagesOptions } = getOptionsFormsSelect({ categories, course, category, isEditing });
-
-		const buttonsToolbar = [
-			{ icon: 'bold', content: 'Bold' },
-			{ icon: 'italic', content: 'Italic' },
-			{ icon: 'header', content: 'Header' },
-			{ icon: 'strikethrough', content: 'Strikethrough' },
-			{ icon: 'unordered list', content: 'Unordered list' },
-			{ icon: 'ordered list', content: 'Ordered list' },
-			{ icon: 'check square', content: 'Check list' },
-			{ icon: 'quote left', content: 'Quote left' }
-		];
-		const buttonsForPopupToolbar = [
-			{ icon: 'code', content: 'Add a code' },
-			{ icon: 'table', content: 'Add a table' },
-			{ icon: 'linkify', content: 'Add a link' },
-			{ icon: 'file image outline', content: 'Add image' }
-		];
+		const { addOrEditMissingField, isEditMode, heightEditor } = this.props;
 
 		// Styles css:
 		const stylesEditor = {};
 		const stylesPreview = { height: heightEditor + 'px' };
 
-		if (isPreviewModeActive) {
+		if (!isEditMode) {
 			stylesEditor.display = 'none';
 			stylesPreview.display = 'block';
 		}
 
 		return (
-			<LayoutPage {...this.getMetaData()}>
-				<div className={cx('course-add-or-edit-container-dark')}>
-					<ButtonOpenMenuPanel handleOpenMenuPanel={this.handleOpenMenuPanel} isMenuPanelOpen={isMenuPanelOpen} />
-
-					<EditorToolbar
-						course={course}
-						categories={categories}
-						category={category}
-						isEditing={isEditing}
-						fields={fields}
-						fieldsTyping={fieldsTyping}
-						addOrEditMissingField={addOrEditMissingField}
-						addOrEditFailure={addOrEditFailure}
-						isPreviewModeActive={isPreviewModeActive}
-						handleClickToolbar={this.handleClickToolbar}
-						handleInputChange={this.handleInputChange}
-						handleOnSubmit={this.handleOnSubmit}
-						isEditorChanged={isEditorChanged}
-						fromPage="md"
-					/>
-
-					<EditorPanelExplorer
-						ref={(el) => { this.editorPanelExplorer = el; }}
-						isOpen={isMenuPanelOpen}
-						userMe={userMe}
-						course={course}
-						courses={courses}
-						isEditing={isEditing}
-						fieldsTyping={fieldsTyping}
-						fields={fields}
-						addOrEditMissingField={addOrEditMissingField}
-						addOrEditFailure={addOrEditFailure}
-						coursesPagesCount={coursesPagesCount}
-						paginationEditor={paginationEditor}
-						category={category}
-						categories={categories}
-						handleInputChange={this.handleInputChange}
-						handleOnSubmit={this.handleOnSubmit}
-						isEditorChanged={isEditorChanged}
-						fromPage="md"
-					/>
-
-					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
-						<div className={cx('toolbar-editor-md')}>
-							{ !isPreviewModeActive ? (
-								<Button.Group basic size="small" className={cx('button-group')}>
-									{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />} content={button.content} key={key} />)) }
-								</Button.Group>
-							) : '' }
-
-							{ !isPreviewModeActive ? (
-								<Button.Group basic size="small" className={cx('button-group')}>
-									{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={this.handleClickToolbar(button.icon)} />) }
-								</Button.Group>
-							) : '' }
-
-							{ !isPreviewModeActive && !isMobile ? (
-								<Button.Group basic size="small" className={cx('button-group')}>
-									{/* <Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={this.handleClickToolbar('auto scoll')} />} content="toggle scroll sync" /> */}
-								</Button.Group>
-							) : '' }
-						</div>
-
-						<div className={cx('md-editor-container')}>
-							<div className={cx('editor-edition')} style={stylesEditor} onScroll={this.handleScroll('editor')}>
-								<Form error={addOrEditMissingField.content} size="small">
-									<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
-									{/*
-									<Form.TextArea placeholder="The content of your course..." name="content" value={fields.content || ''} error={addOrEditMissingField.content} onChange={this.handleInputChange} style={{ height: (heightEditor) + 'px' }} />
-									<Message error content="the content is required" className={cx('editor-edition-error-message')} />
-									*/}
-								</Form>
-							</div>
-
-							<div className={cx('container-page-dark', 'preview')} id="preview" style={stylesPreview} dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }} ref={(el) => { this.refContentPreview = el; }} onScroll={this.handleScroll('preview')} />
-						</div>
-					</div>
-				</div>
-
-				<Modal open={openModalSetStyle.isOpened} onClose={this.handleCloseModalSetStyle}>
-					<Modal.Header>{openModalSetStyle.title}</Modal.Header>
-					<Modal.Content image>
-						<Modal.Description>
-							<Header>{openModalSetStyle.desc}</Header>
-
-							{ openModalSetStyle.type === 'code' ? (
-								<Form size="small">
-									<Form.Select label="Language" options={codeLanguagesOptions} placeholder="Choose a language" width={4} name="language" value={codeLanguageSelected || ''} onChange={this.handleLanguageChange} />
-									<textarea ref={this.editorInModalDidMount} name="editorCmMini" defaultValue="Write you code here" />
-								</Form>
-							) : '' }
-
-							{ openModalSetStyle.type === 'table' ? (
-								<div>coming soon</div>
-							) : '' }
-
-							{ openModalSetStyle.type === 'linkify' ? (
-								<Form size="small">
-									<Form.Group widths="equal">
-										<Form.Input label="Link text" placeholder="My site" name="linkifyText" value={fieldsModalSetStyleTyping.linkifyText || ''} onChange={this.handleInputModalSetStyleChange} />
-										<Form.Input label="URL" placeholder="www.mywebsite.com" name="linkifyUrl" value={fieldsModalSetStyleTyping.linkifyUrl || ''} onChange={this.handleInputModalSetStyleChange} />
-									</Form.Group>
-								</Form>
-							) : '' }
-
-							{ openModalSetStyle.type === 'file image outline' ? (
-								<Form size="small">
-									<Form.Input label="Add a image" placeholder="https://mywebsite/images/1.jpg" name="file" value={fieldsModalSetStyleTyping.file || ''} onChange={this.handleInputModalSetStyleChange} />
-								</Form>
-							) : '' }
-
-						</Modal.Description>
-					</Modal.Content>
-					<Modal.Actions>
-						<Button color="black" onClick={this.handleCloseModalSetStyle}>Cancel</Button>
-						<Button icon="checkmark" color="red" labelPosition="right" content="Ok" onClick={this.handleSubmitModalSetStyle(openModalSetStyle)} />
-					</Modal.Actions>
-				</Modal>
-			</LayoutPage>
+			<div className={cx('editor-edition')} style={stylesEditor} onScroll={this.handleScroll('editor')}>
+				<Form error={addOrEditMissingField.content} size="small">
+					<textarea ref={(el) => { this.refEditor = el; }} name="editorCm" />
+				</Form>
+			</div>
 		);
 	}
 }
 
-CourseAddOrEditMd.propTypes = {
+EditorMd.propTypes = {
 	createCourseAction: PropTypes.func,
 	updateCourseAction: PropTypes.func,
 	fetchCoursesByFieldAction: PropTypes.func,
@@ -1059,4 +867,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction })(CourseAddOrEditMd);
+export default connect(mapStateToProps, { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction })(EditorMd);
