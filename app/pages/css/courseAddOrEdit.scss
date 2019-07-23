@@ -53,7 +53,6 @@
       // EDITOR
       .editor-edition {
         flex: 1 0 53%;
-        // .editor-edition-error-message { position: absolute; bottom: 0; }
 
         form div { margin: 0; word-wrap: break-word; word-break: break-word; }
       }
@@ -61,7 +60,7 @@
       // PREVIEW
       .preview {
         position: relative;
-        flex: 1 0 47%;
+        flex: 1 0 100%;
         overflow: scroll;
         margin: 0;
         min-height: inherit;

@@ -18,11 +18,10 @@ class ContainerMd extends Component {
 			isMenuPanelOpen,
 			isPreviewModeActive,
 			isMobile,
-			contentTyping,
+			fieldsTyping,
 			handleClickToolbarMarkDown
 		} = this.props;
 
-		const content = contentTyping || (course && course.content) || '';
 		const buttonsToolbar = [
 			{ icon: 'bold', content: 'Bold' },
 			{ icon: 'italic', content: 'Italic' },
@@ -39,18 +38,6 @@ class ContainerMd extends Component {
 			{ icon: 'linkify', content: 'Add a link' },
 			{ icon: 'file image outline', content: 'Add image' }
 		];
-
-		let editorNode;
-		if (isCanEdit && isEditMode) {
-			editorNode = (
-				<div>
-					<EditorMd {...this.props} />
-					<PreviewMd content={content} />
-				</div>
-			);
-		} else {
-			editorNode = (<PreviewMd content={content} />);
-		}
 
 		return (
 			<div>
@@ -79,7 +66,8 @@ class ContainerMd extends Component {
 				}
 
 				<div className={cx('md-editor-container')}>
-					{editorNode}
+					{ isCanEdit && isEditMode && <EditorMd {...this.props} />}
+					<PreviewMd {...this.props} />
 				</div>
 			</div>
 		);

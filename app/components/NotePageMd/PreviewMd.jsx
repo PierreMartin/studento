@@ -25,14 +25,19 @@ class PreviewMd extends Component {
 		}
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.content !== this.props.content && this.props.content.length > 0) {
+			this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.content || 'test'))});
+		}
+	}
+
 	render() {
-		const { isEditMode, setRefPreview } = this.props;
+		const { isEditMode, heightEditor } = this.props;
 		const { contentMarkedSanitized } = this.state;
 
-		let stylesPreview = {};
-		if (!isEditMode) {
-			// full width
-			stylesPreview.display = 'block';
+		const stylesPreview = { height: heightEditor + 'px' };
+		if (isEditMode) {
+			stylesPreview.flex = '1 0 47%';
 		}
 
 		return (
@@ -41,8 +46,7 @@ class PreviewMd extends Component {
 				id="preview"
 				style={stylesPreview}
 				dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }}
-				ref={setRefPreview}
-				// onScroll={this.handleScroll('preview')}
+				// onScroll={handleScroll('preview')}
 			/>
 		);
 	}
