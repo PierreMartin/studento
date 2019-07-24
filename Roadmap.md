@@ -103,6 +103,8 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - big refacto => tout mettre dans NotePage (cela veuw dire charger les 2 editor en meme temps)
+- isDirty
+- alterner icon edit/croix
 
 - dotenv voir pourquoi deplacé dans devDependance
 - Redesign buttons de la toolbar comme tinyMce

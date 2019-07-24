@@ -101,6 +101,7 @@ const myVar = 'content...';
 
 		this.rendererMarked = null;
 		this.refEditorMd = null;
+		this.refPreviewMd = null;
 		this.pageMode = this.props.route.path === '/courseMd/:action/:id' ? 'markDown' : 'tiny';
 
 		// Init for generate headings wrap:
@@ -119,7 +120,6 @@ const myVar = 'content...';
 			openModalSetStyle: {},
 			codeLanguageSelected: '',
 			isEditorChanged: false,
-			isPreviewModeActive: true, // remove
 			isMobile: false,
 			isMenuPanelOpen: true,
 			isEditMode: false
@@ -159,21 +159,18 @@ const myVar = 'content...';
 		}
 
 		// Change pages:
-		if (prevProps.course !== this.props.course && this.state.isEditMode) {
+		if (prevProps.course !== this.props.course) {
 			if (this.pageMode === 'markDown') {
 				this.isComponentDidUpdated = true;
 
 				// Init for generate headings wrap:
 				this.indexHeader = 0;
 				this.headersList = [];
-				let content = '';
-
 				const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
-				if (numberCoursesMd === 0) {
-					content = (this.props.course && this.props.course.content) || this.defaultMessageEditor;
-					this.editorCm.setValue(content);
-				} else {
-					content = (this.props.course && this.props.course.content) || '';
+				const defaultMessageEditor = (numberCoursesMd === 0) ? this.defaultMessageEditor : '';
+				const content = (this.props.course && this.props.course.content) || defaultMessageEditor;
+
+				if (this.state.isEditMode) {
 					this.editorCm.setValue(content);
 				}
 
@@ -181,14 +178,14 @@ const myVar = 'content...';
 					isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 					fieldsTyping: {content, template: {}},
 					isEditorChanged: false,
-					isMenuPanelOpen: false
+					isEditMode: false
 				});
 			} else if (this.pageMode === 'tiny') {
 				this.setState({
 					isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
 					fieldsTyping: {content: '', template: {}},
 					isEditorChanged: false,
-					isMenuPanelOpen: false
+					isEditMode: false
 				});
 			}
 
@@ -397,10 +394,7 @@ const myVar = 'content...';
 			data.courseId = course._id;
 			updateCourseAction(data)
 				.then(() => {
-					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isMenuPanelOpen: false });
-				})
-				.catch(() => {
-					// this.setState({ isMenuPanelOpen: true });
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 				});
 		} else {
 			data.fields = fieldsTyping;
@@ -409,7 +403,7 @@ const myVar = 'content...';
 			data.fields.type = 'md';
 			createCourseAction(data, coursesPagesCount, indexPagination)
 				.then(() => {
-					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isMenuPanelOpen: false });
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
 
 					// Goto next page if last item:
 					if ((courses.length + 1) % 13 === 0) {
@@ -418,9 +412,6 @@ const myVar = 'content...';
 						setPaginationCoursesEditorAction(activePage);
 						fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
 					}
-				})
-				.catch(() => {
-					// this.setState({ isMenuPanelOpen: true });
 				});
 		}
 	}
@@ -731,7 +722,7 @@ const myVar = 'content...';
 	}
 
 	initScrolling() {
-		if (this.state.isMobile || this.state.isPreviewModeActive || !this.editorCm) return;
+		if (this.state.isMobile || !this.state.isEditMode || !this.editorCm) return;
 
 		// Init scroll sync - use when re-rendering in CM editor:
 		this.numberViewportChanged = 0;
@@ -739,12 +730,12 @@ const myVar = 'content...';
 		this.prevArrTitlesinEditor = [];
 
 		this.editorCm.refresh();
-		this.refContentPreview.scrollTop = 0;
+		this.refPreviewMd.scrollTop = 0;
 		this.editorCm.getScrollerElement().scrollTop = 0;
 
 		this._sectionsForScrolling = {
 			editor: SectionsGeneratorForScrolling.getOffsetTopTitles(this.editorCm.getScrollerElement()),
-			preview: SectionsGeneratorForScrolling.getOffsetTopTitles(this.refContentPreview)
+			preview: SectionsGeneratorForScrolling.getOffsetTopTitles(this.refPreviewMd)
 		};
 	}
 
@@ -776,7 +767,7 @@ const myVar = 'content...';
 
 			this._sectionsForScrolling = {
 				editor: titlesInEditor,
-				preview: SectionsGeneratorForScrolling.getOffsetTopTitles(this.refContentPreview)
+				preview: SectionsGeneratorForScrolling.getOffsetTopTitles(this.refPreviewMd)
 			};
 
 			this.prevNumberViewportChanged = this.numberViewportChanged;
@@ -790,7 +781,7 @@ const myVar = 'content...';
 		return (e) => {
 			return; // TODO disable sync scroll for the moment
 
-			if (e.target.scrollTop === 0 || this.state.isMobile || this.state.isPreviewModeActive) return; // (e.target.scrollTop === 0) ==>  When typing, we pass in onScroll :(
+			if (e.target.scrollTop === 0 || this.state.isMobile || !this.state.isEditMode) return; // (e.target.scrollTop === 0) ==>  When typing, we pass in onScroll :(
 
 			this.resetTargetScrolling(); // For re enable the other container to scroll
 
@@ -808,7 +799,7 @@ const myVar = 'content...';
 			if (/* !this.state.isButtonAutoScrollActive || */this.scrollingTarget !== source) return;
 
 			if (source === 'editor') {
-				this.refContentPreview.scrollTop = scrollTopTarget;
+				this.refPreviewMd.scrollTop = scrollTopTarget;
 			} else if (source === 'preview') {
 				this.editorCm.getScrollerElement().scrollTop = scrollTopTarget;
 			}
@@ -819,22 +810,6 @@ const myVar = 'content...';
 	resetTargetScrolling() {
 		clearInterval(this.timerHandleScroll);
 		this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('resize', this.updateWindowDimensions);
-	}
-
-	getMetaData() {
-		return {
-			title: 'Add a Note',
-			meta: [{ name: 'description', content: 'Add a Markdown Note...' }],
-			link: []
-		};
-	}
-
-	handleOpenMenuPanel() {
-		this.setState({ isMenuPanelOpen: !this.state.isMenuPanelOpen });
 	}
 
 	handleClickToolbarMain = clickedButton => () => {
@@ -889,11 +864,11 @@ const myVar = 'content...';
 				break;
 			case 'auto scoll':
 				// this.setState({ isButtonAutoScrollActive: !this.state.isButtonAutoScrollActive });
-				// this.refContentPreview.scrollTo(0, this.editorCm.getScrollInfo().top);
+				// this.refPreviewMd.scrollTo(0, this.editorCm.getScrollInfo().top);
 
 				/* TODO FAIRE ca, mais bug quand scroll trop vite
 				const scrollTopTarget = SectionsGeneratorForScrolling.getScrollPosition(this.editorCm.getScrollerElement().scrollTop, this.sections.editor, this.sections.preview);
-				this.refContentPreview.scrollTop = scrollTopTarget;
+				this.refPreviewMd.scrollTop = scrollTopTarget;
 				*/
 				break;
 			default:
@@ -903,7 +878,7 @@ const myVar = 'content...';
 
 	render() {
 		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { category, isEditing, fieldsTyping, isEditorChanged, isPreviewModeActive, isMobile, isMenuPanelOpen, isEditMode } = this.state;
+		const { category, isEditing, fieldsTyping, isEditorChanged, isMobile, isMenuPanelOpen, isEditMode } = this.state;
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const content = fields.content || '';
 
@@ -921,7 +896,6 @@ const myVar = 'content...';
 						fieldsTyping={fieldsTyping}
 						addOrEditMissingField={addOrEditMissingField}
 						addOrEditFailure={addOrEditFailure}
-						isPreviewModeActive={isPreviewModeActive}
 						handleClickToolbarMain={this.handleClickToolbarMain}
 						handleInputChange={this.handleInputChange}
 						handleOnSubmit={this.handleOnSubmit}
@@ -958,6 +932,7 @@ const myVar = 'content...';
 								handleClickToolbarMarkDown={this.handleClickToolbarMarkDown}
 								handleScroll={this.handleScroll}
 								refEditorMd={(el) => this.refEditorMd = el}
+								refPreviewMd={(el) => this.refPreviewMd = el}
 								content={content}
 								{...this.props}
 								{...this.state}

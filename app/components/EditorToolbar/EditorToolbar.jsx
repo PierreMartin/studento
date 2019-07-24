@@ -46,7 +46,6 @@ const EditorToolbar = (
 		fieldsTyping,
 		addOrEditMissingField,
 		addOrEditFailure,
-		isPreviewModeActive,
 		handleClickToolbarMain,
 		handleInputChange,
 		handleOnSubmit,
@@ -68,8 +67,6 @@ const EditorToolbar = (
 						<Button style={stylePopup} inverted basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
 					</div>
 				</Popup>
-
-				{ fromPage === 'md' && <Popup style={stylePopup} inverted trigger={<Button toggle icon="eye" basic className={cx('button')} active={isPreviewModeActive} onClick={handleClickToolbarMain('toggle preview')} />} content="Preview mode" /> }
 
 				{ !isEditing ? <Button disabled icon="arrow circle up" /> : <Popup style={stylePopup} inverted trigger={<Button icon="arrow circle up" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
 			</Button.Group>
@@ -123,7 +120,6 @@ EditorToolbar.propTypes = {
 	fields: PropTypes.object,
 	fieldsTyping: PropTypes.object,
 	addOrEditFailure: PropTypes.string,
-	isPreviewModeActive: PropTypes.bool,
 	fromPage: PropTypes.string,
 
 	categories: PropTypes.arrayOf(PropTypes.shape({

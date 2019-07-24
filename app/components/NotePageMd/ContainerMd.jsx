@@ -12,13 +12,9 @@ const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse});
 class ContainerMd extends Component {
 	render() {
 		const {
-			course,
-			isEditMode,
 			isCanEdit,
-			isMenuPanelOpen,
-			isPreviewModeActive,
+			isEditMode,
 			isMobile,
-			fieldsTyping,
 			handleClickToolbarMarkDown
 		} = this.props;
 
@@ -44,19 +40,15 @@ class ContainerMd extends Component {
 				{
 					(isCanEdit && isEditMode) && (
 						<div className={cx('toolbar-editor-md')}>
-							{ !isPreviewModeActive ? (
-								<Button.Group basic size="small" className={cx('button-group')}>
-									{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={handleClickToolbarMarkDown(button.icon)} />} content={button.content} key={key} />)) }
-								</Button.Group>
-							) : '' }
+							<Button.Group basic size="small" className={cx('button-group')}>
+								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={handleClickToolbarMarkDown(button.icon)} />} content={button.content} key={key} />)) }
+							</Button.Group>
 
-							{ !isPreviewModeActive ? (
-								<Button.Group basic size="small" className={cx('button-group')}>
-									{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={handleClickToolbarMarkDown(button.icon)} />) }
-								</Button.Group>
-							) : '' }
+							<Button.Group basic size="small" className={cx('button-group')}>
+								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={handleClickToolbarMarkDown(button.icon)} />) }
+							</Button.Group>
 
-							{ !isPreviewModeActive && !isMobile ? (
+							{ !isMobile ? (
 								<Button.Group basic size="small" className={cx('button-group')}>
 									{/* <Popup trigger={<Button toggle icon="lock" basic className={cx('button')} active={isButtonAutoScrollActive} onClick={handleClickToolbarMarkDown('auto scoll')} />} content="toggle scroll sync" /> */}
 								</Button.Group>

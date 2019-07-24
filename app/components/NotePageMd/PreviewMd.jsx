@@ -32,7 +32,7 @@ class PreviewMd extends Component {
 	}
 
 	render() {
-		const { isEditMode, heightEditor } = this.props;
+		const { isEditMode, heightEditor, refPreviewMd } = this.props;
 		const { contentMarkedSanitized } = this.state;
 
 		const stylesPreview = { height: heightEditor + 'px' };
@@ -44,6 +44,7 @@ class PreviewMd extends Component {
 			<div
 				className={cx('container-page-dark', 'preview')}
 				id="preview"
+				ref={refPreviewMd}
 				style={stylesPreview}
 				dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }}
 				// onScroll={handleScroll('preview')}
