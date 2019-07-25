@@ -41,6 +41,7 @@ const EditorToolbar = (
 		categories,
 		category,
 		isEditing,
+		isEditMode,
 		isEditorChanged,
 		fields,
 		fieldsTyping,
@@ -92,7 +93,8 @@ const EditorToolbar = (
 			</Form>
 
 			<div className={cx('container-buttons-right')}>
-				<Button basic color="grey" title="Edit" icon="pencil" size="tiny" onClick={handleClickToolbarMain('toggle preview')} />
+				{ !isEditMode && <button title="Edit" className={cx('button-edit')} onClick={handleClickToolbarMain('toggle preview')}><Icon name="pencil" /></button>}
+				{ isEditMode && <button title="Close" className={cx('button-close')} onClick={handleClickToolbarMain('toggle preview')}><Icon name="x" /></button>}
 			</div>
 		</div>
 	);
@@ -116,6 +118,7 @@ EditorToolbar.propTypes = {
 	}),
 
 	isEditing: PropTypes.bool,
+	isEditMode: PropTypes.bool,
 	isEditorChanged: PropTypes.bool,
 	fields: PropTypes.object,
 	fieldsTyping: PropTypes.object,

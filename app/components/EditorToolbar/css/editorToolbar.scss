@@ -103,6 +103,28 @@
       right: 0;
       top: 0;
       margin: 8px;
+
+      .button-edit, .button-close {
+        display: inline-block;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        outline: 0;
+        padding: 8px;
+        text-decoration: none;
+        color: $colorTextMain;
+        font-size: 20px;
+        margin-top: -3px;
+
+        &.button-close {
+          font-size: 24px;
+          margin-top: -6px;
+        }
+
+        &:hover {
+          color: #fff;
+        }
+      }
     }
   }
 

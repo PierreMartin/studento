@@ -892,6 +892,7 @@ const myVar = 'content...';
 						categories={categories}
 						category={category}
 						isEditing={isEditing}
+						isEditMode={isEditMode}
 						fields={fields}
 						fieldsTyping={fieldsTyping}
 						addOrEditMissingField={addOrEditMissingField}
@@ -943,7 +944,6 @@ const myVar = 'content...';
 							<ContainerTiny
 								isCanEdit={true}
 								isEditMode={isEditMode}
-								handleClickToolbarMarkDown={this.handleClickToolbarMarkDown}
 								content={content}
 								{...this.props}
 								{...this.state}
