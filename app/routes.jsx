@@ -102,8 +102,8 @@ export default (store) => {
 			</Route>
 
 			<Route component={LayoutMainApp}>
-				<Route path="/course/:action/:id" component={NotePage} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
-				<Route path="/courseMd/:action/:id" component={NotePage} fetchData={fetchCourseRequest} onEnter={requireAuthEditor} />
+				<Route path="/course/:action/:id" component={NotePage} onEnter={requireAuthEditor} />
+				<Route path="/courseMd/:action/:id" component={NotePage} onEnter={requireAuthEditor} />
 			</Route>
 		</Route>
   );

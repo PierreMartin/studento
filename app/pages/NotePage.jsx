@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
-import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../actions/courses';
+import { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../actions/courses';
 import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import EditorToolbar from '../components/EditorToolbar/EditorToolbar';
@@ -60,7 +60,7 @@ class NotePage extends Component {
 		this.editorCmMini = null;
 		this.timerRenderPreview = null;
 		this.CodeMirror = null;
-		this.defaultMessageEditor = `For start to take notes, **remove** this sample content or **modify** this one
+		this.defaultMessageEditorMd = `For start to take notes, **remove** this sample content or **modify** this one
 
 [Example link](http://hubnote.app)
 
@@ -111,6 +111,7 @@ const myVar = 'content...';
 		this.state = {
 			contentMarkedSanitized: '',
 			fieldsTyping: {
+				content: '',
 				template: {}
 			},
 			fieldsModalSetStyleTyping: {},
@@ -127,6 +128,17 @@ const myVar = 'content...';
 	}
 
 	componentDidMount() {
+		const { params } = this.props;
+		// TODO finir ca
+		// this.props.fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action });
+		// this.props.fetchCoursesByFieldAction(); // deja fait dans component EditorPanelExplorer
+
+		// if (this.pageMode === 'markDown') { ... }
+		// const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
+		// const defaultMessageEditorMd = (numberCoursesMd === 0) ? this.defaultMessageEditorMd : '';
+		// const content = (this.props.course && this.props.course.content) || defaultMessageEditorMd;
+		// this.setState({ fieldsTyping: { content } });
+
 		// Resize element child to 100% height:
 		this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
 		this.updateWindowDimensions();
@@ -167,8 +179,8 @@ const myVar = 'content...';
 				this.indexHeader = 0;
 				this.headersList = [];
 				const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
-				const defaultMessageEditor = (numberCoursesMd === 0) ? this.defaultMessageEditor : '';
-				const content = (this.props.course && this.props.course.content) || defaultMessageEditor;
+				const defaultMessageEditorMd = (numberCoursesMd === 0) ? this.defaultMessageEditorMd : '';
+				const content = (this.props.course && this.props.course.content) || defaultMessageEditorMd;
 
 				if (this.state.isEditMode) {
 					this.editorCm.setValue(content);
@@ -195,10 +207,10 @@ const myVar = 'content...';
 			if ((Object.keys(addOrEditMissingField).length > 0) || addOrEditFailure.length > 0) emptyErrorsAction();
 		}
 
-		if (this.props.courses && prevProps.courses !== this.props.courses) {
+		if (this.pageMode === 'markDown' && this.props.courses && prevProps.courses !== this.props.courses) {
 			const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
-			if (numberCoursesMd === 0) {
-				this.editorCm.setValue((this.props.course && this.props.course.content) || this.defaultMessageEditor);
+			if (numberCoursesMd === 0 && this.state.isEditMode) {
+				this.editorCm.setValue((this.props.course && this.props.course.content) || this.defaultMessageEditorMd);
 			}
 		}
 	}

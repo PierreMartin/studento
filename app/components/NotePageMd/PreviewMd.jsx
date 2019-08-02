@@ -21,13 +21,13 @@ class PreviewMd extends Component {
 
 	componentDidMount() {
 		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined' && DOMPurify && typeof DOMPurify.sanitize === 'function') {
-			this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.content || 'test'))});
+			this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.content))});
 		}
 	}
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.content !== this.props.content && this.props.content.length > 0) {
-			this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.content || 'test'))});
+			this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.content))});
 		}
 	}
 
