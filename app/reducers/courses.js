@@ -77,6 +77,26 @@ const one = (state = {}, action) => {
 	}
 };
 
+const isCourseOneLoading = (state = true, action) => {
+	switch (action.type) {
+		case types.GET_COURSES_SUCCESS:
+		case types.GET_COURSES_FAILURE:
+			return false;
+		default:
+			return state;
+	}
+};
+
+const isCourseAllLoading = (state = true, action) => {
+	switch (action.type) {
+		case types.GET_COURSE_SUCCESS:
+		case types.GET_COURSE_FAILURE:
+			return false;
+		default:
+			return state;
+	}
+};
+
 const addOrEditMissingField = (state = {}, action) => {
 	switch (action.type) {
 		case types.CREATE_OR_EDIT_COURSE_MISSING_FIELDS:
@@ -172,7 +192,9 @@ const coursesReducer = combineReducers({
 	coursesCount, // for requests
 	pagesCount, // for requests
 	paginationEditor,
-	addCommentMissingField
+	addCommentMissingField,
+	isCourseOneLoading,
+	isCourseAllLoading
 });
 
 export default coursesReducer;

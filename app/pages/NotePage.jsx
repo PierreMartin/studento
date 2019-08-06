@@ -99,6 +99,8 @@ const myVar = 'content...';
 
 		`;
 
+		this.defaultMessageEditorTiny = 'default for Tiny';
+
 		this.rendererMarked = null;
 		this.refEditorMd = null;
 		this.refPreviewMd = null;
@@ -129,15 +131,9 @@ const myVar = 'content...';
 
 	componentDidMount() {
 		const { params } = this.props;
-		// TODO finir ca
-		// this.props.fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action });
-		// this.props.fetchCoursesByFieldAction(); // deja fait dans component EditorPanelExplorer
 
-		// if (this.pageMode === 'markDown') { ... }
-		// const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
-		// const defaultMessageEditorMd = (numberCoursesMd === 0) ? this.defaultMessageEditorMd : '';
-		// const content = (this.props.course && this.props.course.content) || defaultMessageEditorMd;
-		// this.setState({ fieldsTyping: { content } });
+		this.props.fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action });
+		// this.props.fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true }); // TODO Ici ou dans EditorPanelExplorer ???
 
 		// Resize element child to 100% height:
 		this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
@@ -889,10 +885,43 @@ const myVar = 'content...';
 	};
 
 	render() {
-		const { course, courses, coursesPagesCount, addOrEditMissingField, addOrEditFailure, categories, userMe, paginationEditor } = this.props;
-		const { category, isEditing, fieldsTyping, isEditorChanged, isMobile, isMenuPanelOpen, isEditMode } = this.state;
+		const {
+			course,
+			courses,
+			coursesPagesCount,
+			addOrEditMissingField,
+			addOrEditFailure,
+			categories,
+			userMe,
+			paginationEditor,
+			isCourseOneLoading,
+			isCourseAllLoading
+		} = this.props;
+
+		const { category,
+			isEditing,
+			fieldsTyping,
+			isEditorChanged,
+			// isMobile,
+			isMenuPanelOpen,
+			isEditMode
+		} = this.state;
+
 		const fields = this.getFieldsVal(fieldsTyping, course);
-		const content = fields.content || '';
+		let content = fields.content;
+		let defaultMessageEditor = '';
+
+		if (this.pageMode === 'markDown') {
+			const numberCoursesMd = courses && courses.filter(course => course.type === 'md').length;
+			defaultMessageEditor = (numberCoursesMd === 0) ? this.defaultMessageEditorMd : '';
+		}
+
+		if (this.pageMode === 'tinyMce') {
+			const numberCoursesTiny = courses && courses.filter(course => course.type === 'wy').length;
+			defaultMessageEditor = (numberCoursesTiny === 0) ? this.defaultMessageEditorTiny : '';
+		}
+
+		content = (content.length > 0) ? content : defaultMessageEditor;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -937,7 +966,7 @@ const myVar = 'content...';
 						fromPage="md"
 					/>
 
-					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')}>
+					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')} style={isCourseOneLoading || isCourseAllLoading ? {display: 'none'} : {}}>
 						{ this.pageMode === 'markDown' && (
 							<ContainerMd
 								isCanEdit={true}
@@ -995,6 +1024,9 @@ NotePage.propTypes = {
 		type: PropTypes.string
 	})),
 
+	isCourseOneLoading: PropTypes.bool,
+	isCourseAllLoading: PropTypes.bool,
+
 	userMe: PropTypes.shape({
 		_id: PropTypes.string
 	}),
@@ -1015,6 +1047,8 @@ const mapStateToProps = (state) => {
 	return {
 		course: state.courses.one,
 		courses: state.courses.all,
+		isCourseOneLoading: state.courses.isCourseOneLoading,
+		isCourseAllLoading: state.courses.isCourseAllLoading,
 		coursesPagesCount: state.courses.pagesCount,
 		userMe: state.userMe.data,
 		categories: state.categories.all,
@@ -1024,4 +1058,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction })(NotePage);
+export default connect(mapStateToProps, { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction })(NotePage);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import { fetchCourseRequest, checkIfUserOwnerCourseRequest } from './api';
+import { checkIfUserOwnerCourseRequest } from './api';
 import App from './pages/App';
 import LayoutMainWeb from './components/layouts/LayoutMainWeb/LayoutMainWeb';
 import LayoutMainApp from './components/layouts/LayoutMainApp/LayoutMainApp';
@@ -19,6 +19,7 @@ import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import Course from './pages/Course';
 import NotePage from './pages/NotePage';
+import Test from './pages/Test';
 
 
 export default (store) => {
@@ -102,6 +103,7 @@ export default (store) => {
 			</Route>
 
 			<Route component={LayoutMainApp}>
+				<Route path="/testDev" component={Test} onEnter={requireAuth} />
 				<Route path="/course/:action/:id" component={NotePage} onEnter={requireAuthEditor} />
 				<Route path="/courseMd/:action/:id" component={NotePage} onEnter={requireAuthEditor} />
 			</Route>
