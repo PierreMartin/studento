@@ -163,11 +163,11 @@ const myVar = 'content...';
 	componentDidUpdate(prevProps, prevstate) {
 		if (prevstate.isEditMode !== this.state.isEditMode && this.state.isEditMode && this.pageMode === 'markDown') {
 			this.CodeMirror = this.loadCodeMirrorAssets();
-			this.codeMirror();
+			this.codeMirrorInit();
 		}
 
 		// Change pages:
-		if (prevProps.course !== this.props.course) {
+		if (prevProps.params.id !== this.props.params.id) {
 			if (this.pageMode === 'markDown') {
 				this.isComponentDidUpdated = true;
 
@@ -176,7 +176,8 @@ const myVar = 'content...';
 				this.headersList = [];
 				const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
 				const defaultMessageEditorMd = (numberCoursesMd === 0) ? this.defaultMessageEditorMd : '';
-				const content = (this.props.course && this.props.course.content) || defaultMessageEditorMd;
+				const content = (this.props.course && this.props.course.content) || defaultMessageEditorMd; // TODO
+				// TODO revoir completement le state de content car on a deja la function getFieldsVal()
 
 				if (this.state.isEditMode) {
 					this.editorCm.setValue(content);
@@ -184,14 +185,12 @@ const myVar = 'content...';
 
 				this.setState({
 					isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
-					fieldsTyping: {content, template: {}},
 					isEditorChanged: false,
 					isEditMode: false
 				});
 			} else if (this.pageMode === 'tiny') {
 				this.setState({
 					isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
-					fieldsTyping: {content: '', template: {}},
 					isEditorChanged: false,
 					isEditMode: false
 				});
@@ -206,7 +205,8 @@ const myVar = 'content...';
 		if (this.pageMode === 'markDown' && this.props.courses && prevProps.courses !== this.props.courses) {
 			const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
 			if (numberCoursesMd === 0 && this.state.isEditMode) {
-				this.editorCm.setValue((this.props.course && this.props.course.content) || this.defaultMessageEditorMd);
+				const content = (this.props.course && this.props.course.content && this.props.course.content.length > 0) ? this.props.course.content : this.defaultMessageEditorMd; // TODO
+				this.editorCm.setValue(content);
 			}
 		}
 	}
@@ -266,8 +266,8 @@ const myVar = 'content...';
 		return codeMirror;
 	}
 
-	codeMirror() {
-		const content = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
+	codeMirrorInit() {
+		const content = ((this.state.fieldsTyping.content.length > 0) ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || ''; // TODO
 
 		this.editorCm = this.CodeMirror.fromTextArea(this.refEditorMd, {
 			// value: fields.content, // already set by the textarea
@@ -366,7 +366,7 @@ const myVar = 'content...';
 		fields.category = ((typeof fieldsTyping.category !== 'undefined') ? fieldsTyping.category : course && course.category) || '';
 		fields.subCategories = ((typeof fieldsTyping.subCategories !== 'undefined') ? fieldsTyping.subCategories : course && course.subCategories) || [];
 		fields.isPrivate = ((typeof fieldsTyping.isPrivate !== 'undefined') ? fieldsTyping.isPrivate : course && course.isPrivate) || false;
-		fields.content = ((typeof fieldsTyping.content !== 'undefined') ? fieldsTyping.content : course && course.content) || '';
+		fields.content = ((fieldsTyping.content.length > 0) ? fieldsTyping.content : course && course.content) || '';
 		fields.description = ((typeof fieldsTyping.description !== 'undefined') ? fieldsTyping.description : course && course.description) || '';
 		fields.template = (fieldsTyping.template && Object.keys(fieldsTyping.template).length > 0 ? {...course.template, ...fieldsTyping.template} : course && course.template) || {};
 
@@ -445,7 +445,7 @@ const myVar = 'content...';
 			return this.setState({
 				fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} }
 			}, () => {
-				const content = ((typeof this.state.fieldsTyping.content !== 'undefined') ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || '';
+				const content = ((this.state.fieldsTyping.content.length > 0) ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || ''; // TODO
 				return this.setStateContentMarkedSanitized({ valueEditor: content });
 			});
 		}
@@ -748,7 +748,7 @@ const myVar = 'content...';
 	}
 
 	setStateContentMarkedSanitized(params = {}) {
-		const content = ((typeof params.valueEditor !== 'undefined') ? params.valueEditor : this.props.course && this.props.course.content) || '';
+		const content = ((typeof params.valueEditor.length > 0) ? params.valueEditor : this.props.course && this.props.course.content) || ''; // TODO
 		const oldStateTyping = this.state.fieldsTyping;
 		const contentMarkedSanitized = DOMPurify.sanitize(marked(content || ''));
 
