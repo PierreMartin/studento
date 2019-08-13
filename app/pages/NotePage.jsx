@@ -100,7 +100,6 @@ const myVar = 'content...';
 		`;
 
 		this.defaultMessageEditorTiny = 'default for Tiny';
-
 		this.rendererMarked = null;
 		this.refEditorMd = null;
 		this.refPreviewMd = null;
@@ -117,7 +116,7 @@ const myVar = 'content...';
 				template: {}
 			},
 			fieldsModalSetStyleTyping: {},
-			isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
+			isEditing: false,
 			category: { lastSelected: null },
 			heightEditor: 0,
 			openModalSetStyle: {},
@@ -130,90 +129,90 @@ const myVar = 'content...';
 	}
 
 	componentDidMount() {
-		const { params } = this.props;
+		this.loadDatas().then(({course}) => {
+			// Resize element child to 100% height:
+			this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
+			this.updateWindowDimensions();
+			window.addEventListener('resize', this.updateWindowDimensions);
 
-		this.props.fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action });
-		// this.props.fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true }); // TODO Ici ou dans EditorPanelExplorer ???
+			// Load highlight.js Languages:
+			if (this.pageMode === 'markDown') {
+				hljsLoadLanguages(hljs);
+			}
 
-		// Resize element child to 100% height:
-		this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
-		this.updateWindowDimensions();
-		window.addEventListener('resize', this.updateWindowDimensions);
-
-		// Load highlight.js Languages:
-		if (this.pageMode === 'markDown') {
-			hljsLoadLanguages(hljs);
-		}
-
-		// ##################################### Marked #####################################
-		this.rendererMarked = new marked.Renderer();
-		marked.setOptions({
-			renderer: this.rendererMarked,
-			pedantic: false,
-			gfm: true,
-			tables: true,
-			breaks: true,
-			sanitize: true,
-			smartLists: true,
-			smartypants: false,
-			xhtml: false
+			// ##################################### Marked #####################################
+			this.rendererMarked = new marked.Renderer();
+			marked.setOptions({
+				renderer: this.rendererMarked,
+				pedantic: false,
+				gfm: true,
+				tables: true,
+				breaks: true,
+				sanitize: true,
+				smartLists: true,
+				smartypants: false,
+				xhtml: false
+			});
+			this.setState({ isEditing: course && typeof course._id !== 'undefined' });
 		});
 	}
 
 	componentDidUpdate(prevProps, prevstate) {
+		// Edit mode actived:
 		if (prevstate.isEditMode !== this.state.isEditMode && this.state.isEditMode && this.pageMode === 'markDown') {
-			this.CodeMirror = this.loadCodeMirrorAssets();
+			this.CodeMirror = this.loadCodeMirrorAssets(); // TODO faire singleton
 			this.codeMirrorInit();
 		}
 
 		// Change pages:
 		if (prevProps.params.id !== this.props.params.id) {
-			if (this.pageMode === 'markDown') {
+			this.loadDatas().then(({course}) => {
 				this.isComponentDidUpdated = true;
 
-				// Init for generate headings wrap:
-				this.indexHeader = 0;
-				this.headersList = [];
-				const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
-				const defaultMessageEditorMd = (numberCoursesMd === 0) ? this.defaultMessageEditorMd : '';
-				const content = (this.props.course && this.props.course.content) || defaultMessageEditorMd; // TODO
-				// TODO revoir completement le state de content car on a deja la function getFieldsVal()
+				if (this.pageMode === 'markDown') {
+					// Init for generate headings wrap:
+					this.indexHeader = 0;
+					this.headersList = [];
+					const content = this.getContentVal({}, course);
 
-				if (this.state.isEditMode) {
-					this.editorCm.setValue(content);
+					if (this.state.isEditMode) {
+						this.editorCm.setValue(content); // TODO faire ca dans value dans <textarea /> du render
+					}
+				} else if (this.pageMode === 'tiny') {
+					//
 				}
 
 				this.setState({
-					isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
+					isEditing: course && typeof course._id !== 'undefined',
 					isEditorChanged: false,
 					isEditMode: false
 				});
-			} else if (this.pageMode === 'tiny') {
-				this.setState({
-					isEditing: this.props.course && typeof this.props.course._id !== 'undefined',
-					isEditorChanged: false,
-					isEditMode: false
-				});
-			}
 
-			const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
+				const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
 
-			// Empty the errors when change course or create a new:
-			if ((Object.keys(addOrEditMissingField).length > 0) || addOrEditFailure.length > 0) emptyErrorsAction();
+				// Empty the errors when change course or create a new:
+				if ((Object.keys(addOrEditMissingField).length > 0) || addOrEditFailure.length > 0) emptyErrorsAction();
+			});
 		}
 
+		/*
 		if (this.pageMode === 'markDown' && this.props.courses && prevProps.courses !== this.props.courses) {
-			const numberCoursesMd = this.props.courses && this.props.courses.filter(course => course.type === 'md').length;
-			if (numberCoursesMd === 0 && this.state.isEditMode) {
-				const content = (this.props.course && this.props.course.content && this.props.course.content.length > 0) ? this.props.course.content : this.defaultMessageEditorMd; // TODO
+			if (this.state.isEditMode) {
+				const content = this.getContentVal({}, this.props.course);
 				this.editorCm.setValue(content);
 			}
 		}
+		*/
 	}
 
 	componentWillUnmount() {
 		this.updateWindowDimensions();
 		window.removeEventListener('resize', this.updateWindowDimensions);
+	}
+
+	loadDatas() {
+		const { params, fetchCourseByFieldAction } = this.props;
+		return fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action });
 	}
 
 	loadCodeMirrorAssets() {
@@ -267,7 +266,7 @@ const myVar = 'content...';
 	}
 
 	codeMirrorInit() {
-		const content = ((this.state.fieldsTyping.content.length > 0) ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || ''; // TODO
+		const content = this.getContentVal(this.state.fieldsTyping, this.props.course);
 
 		this.editorCm = this.CodeMirror.fromTextArea(this.refEditorMd, {
 			// value: fields.content, // already set by the textarea
@@ -360,13 +359,40 @@ const myVar = 'content...';
 		};
 	}
 
+	getContentVal(stateCourse, propsCourse) {
+		const { courses } = this.props;
+
+		let defaultMessageEditor = '';
+
+		if (this.pageMode === 'markDown') {
+			const numberCoursesMd = courses && courses.filter(course => course.type === 'md').length;
+			defaultMessageEditor = (numberCoursesMd === 0) ? this.defaultMessageEditorMd : '';
+		}
+
+		if (this.pageMode === 'tinyMce') {
+			const numberCoursesTiny = courses && courses.filter(course => course.type === 'wy').length;
+			defaultMessageEditor = (numberCoursesTiny === 0) ? this.defaultMessageEditorTiny : '';
+		}
+
+		let content = defaultMessageEditor;
+
+		// If already typing:
+		if (stateCourse.content && stateCourse.content.length > 0) {
+			content = stateCourse.content;
+		} else if (propsCourse.content && propsCourse.content.length > 0) {
+			// If never typing but have content from request:
+			content = propsCourse.content;
+		}
+
+		return content;
+	}
+
 	getFieldsVal(fieldsTyping, course) {
 		const fields = {};
 		fields.title = ((typeof fieldsTyping.title !== 'undefined') ? fieldsTyping.title : course && course.title) || '';
 		fields.category = ((typeof fieldsTyping.category !== 'undefined') ? fieldsTyping.category : course && course.category) || '';
 		fields.subCategories = ((typeof fieldsTyping.subCategories !== 'undefined') ? fieldsTyping.subCategories : course && course.subCategories) || [];
 		fields.isPrivate = ((typeof fieldsTyping.isPrivate !== 'undefined') ? fieldsTyping.isPrivate : course && course.isPrivate) || false;
-		fields.content = ((fieldsTyping.content.length > 0) ? fieldsTyping.content : course && course.content) || '';
 		fields.description = ((typeof fieldsTyping.description !== 'undefined') ? fieldsTyping.description : course && course.description) || '';
 		fields.template = (fieldsTyping.template && Object.keys(fieldsTyping.template).length > 0 ? {...course.template, ...fieldsTyping.template} : course && course.template) || {};
 
@@ -445,7 +471,7 @@ const myVar = 'content...';
 			return this.setState({
 				fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} }
 			}, () => {
-				const content = ((this.state.fieldsTyping.content.length > 0) ? this.state.fieldsTyping.content : this.props.course && this.props.course.content) || ''; // TODO
+				const content = this.getContentVal(this.state.fieldsTyping, this.props.course);
 				return this.setStateContentMarkedSanitized({ valueEditor: content });
 			});
 		}
@@ -747,10 +773,11 @@ const myVar = 'content...';
 		};
 	}
 
+	// TODO remove it !!! deja dans la preview
 	setStateContentMarkedSanitized(params = {}) {
-		const content = ((typeof params.valueEditor.length > 0) ? params.valueEditor : this.props.course && this.props.course.content) || ''; // TODO
+		const content = this.getContentVal({content: params.valueEditor}, this.props.course);
 		const oldStateTyping = this.state.fieldsTyping;
-		const contentMarkedSanitized = DOMPurify.sanitize(marked(content || ''));
+		const contentMarkedSanitized = DOMPurify.sanitize(marked(content));
 
 		this.setState({
 			contentMarkedSanitized,
@@ -908,20 +935,7 @@ const myVar = 'content...';
 		} = this.state;
 
 		const fields = this.getFieldsVal(fieldsTyping, course);
-		let content = fields.content;
-		let defaultMessageEditor = '';
-
-		if (this.pageMode === 'markDown') {
-			const numberCoursesMd = courses && courses.filter(course => course.type === 'md').length;
-			defaultMessageEditor = (numberCoursesMd === 0) ? this.defaultMessageEditorMd : '';
-		}
-
-		if (this.pageMode === 'tinyMce') {
-			const numberCoursesTiny = courses && courses.filter(course => course.type === 'wy').length;
-			defaultMessageEditor = (numberCoursesTiny === 0) ? this.defaultMessageEditorTiny : '';
-		}
-
-		content = (content.length > 0) ? content : defaultMessageEditor;
+		const content = this.getContentVal(fieldsTyping, course);
 
 		return (
 			<LayoutPage {...this.getMetaData()}>

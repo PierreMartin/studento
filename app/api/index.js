@@ -30,7 +30,7 @@ export const fetchCoursesBySearchRequest = (typing, query, activePage) => {
 // One by id or by field - FROM ACTIONS
 export const fetchCourseByFieldRequest = (params) => {
 	// create:
-	if (params && params.action === 'create') return Promise.resolve({});
+	if (params && params.action === 'create') return Promise.resolve({status: 200, data: {course: {content: ''} }});
 
 	// edit or view:
 	if (params && (params.action === 'edit' || typeof params.action === 'undefined')) {

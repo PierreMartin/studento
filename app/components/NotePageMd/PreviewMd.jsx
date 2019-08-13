@@ -26,7 +26,7 @@ class PreviewMd extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.content !== this.props.content && this.props.content.length > 0) {
+		if (prevProps.content !== this.props.content) {
 			this.setState({ contentMarkedSanitized: DOMPurify.sanitize(marked(this.props.content))});
 		}
 	}
