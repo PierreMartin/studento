@@ -177,11 +177,6 @@ const myVar = 'content...';
 					// Init for generate headings wrap:
 					this.indexHeader = 0;
 					this.headersList = [];
-					const content = this.getContentVal({}, course);
-
-					if (this.state.isEditMode) {
-						this.editorCm.setValue(content); // TODO faire ca dans value dans <textarea /> du render
-					}
 				} else if (this.pageMode === 'tiny') {
 					//
 				}
@@ -305,8 +300,6 @@ const myVar = 'content...';
 			theme: 'blackboard',
 			mode: 'gfm'
 		});
-
-		this.editorCm.setValue(content);
 
 		// Highlight and Katex rendering init:
 		require('katex/dist/katex.css');
