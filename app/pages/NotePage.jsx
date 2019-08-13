@@ -104,6 +104,7 @@ const myVar = 'content...';
 		this.refEditorMd = null;
 		this.refPreviewMd = null;
 		this.pageMode = this.props.route.path === '/courseMd/:action/:id' ? 'markDown' : 'tiny';
+		this.assetsCodeMirrorLoaded = false;
 
 		// Init for generate headings wrap:
 		this.indexHeader = 0;
@@ -160,7 +161,10 @@ const myVar = 'content...';
 	componentDidUpdate(prevProps, prevstate) {
 		// Edit mode actived:
 		if (prevstate.isEditMode !== this.state.isEditMode && this.state.isEditMode && this.pageMode === 'markDown') {
-			this.CodeMirror = this.loadCodeMirrorAssets(); // TODO faire singleton
+			if (!this.assetsCodeMirrorLoaded) {
+				this.CodeMirror = this.loadCodeMirrorAssets();
+				this.assetsCodeMirrorLoaded = true;
+			}
 			this.codeMirrorInit();
 		}
 
@@ -184,6 +188,7 @@ const myVar = 'content...';
 
 				this.setState({
 					isEditing: course && typeof course._id !== 'undefined',
+					fieldsTyping: { content: '', template: {} },
 					isEditorChanged: false,
 					isEditMode: false
 				});
