@@ -1,4 +1,4 @@
-function hljsLoadLanguages(hljs) {
+function loadHighlightAssets(hljs) {
 	// ['css', 'less', 'scss', 'javascript', 'java', 'php', 'cpp', 'ruby', 'scala', 'haml', 'xml', 'bash', 'sql', 'go', 'htmlbars', 'json', 'mathematica', 'python', 'coffeescript'];
 	hljs.registerLanguage('scss', require('highlight.js/lib/languages/scss'));
 	hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'));
@@ -24,4 +24,4 @@ function hljsLoadLanguages(hljs) {
 	require('highlight.js/styles/paraiso-dark.css');
 }
 
-export { hljsLoadLanguages };
+export { loadHighlightAssets };

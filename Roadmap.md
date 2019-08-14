@@ -102,6 +102,9 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- remove required field sur content
+- fix Set columns
+
 - big refacto => tout mettre dans NotePage (cela veuw dire charger les 2 editor en meme temps)
 - isDirty
 

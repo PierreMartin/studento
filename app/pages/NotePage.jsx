@@ -9,12 +9,10 @@ import EditorToolbar from '../components/EditorToolbar/EditorToolbar';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import ContainerMd from '../components/NotePageMd/ContainerMd';
 import ContainerTiny from '../components/NotePageTiny/ContainerTiny';
-import { Button } from 'semantic-ui-react';
-import {hljsLoadLanguages} from '../components/common/loadLanguages';
+import { loadHighlightAssets } from '../components/common/loadLanguages';
 import hljs from 'highlight.js/lib/highlight';
 import marked from 'marked';
 import SectionsGeneratorForScrolling from '../components/common/SectionsGeneratorForScrolling';
-import DOMPurify from 'dompurify';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
 import katex from 'katex';
 import classNames from 'classnames/bind';
@@ -54,7 +52,6 @@ class NotePage extends Component {
 		this.prevNumberViewportChanged = 0;
 		this.prevArrTitlesinEditor = [];
 
-		this.isComponentDidUpdated = false;
 		this.rendererMarked = null;
 		this.editorCm = null;
 		this.editorCmMini = null;
@@ -136,25 +133,31 @@ const myVar = 'content...';
 			this.updateWindowDimensions();
 			window.addEventListener('resize', this.updateWindowDimensions);
 
-			// Load highlight.js Languages:
 			if (this.pageMode === 'markDown') {
-				hljsLoadLanguages(hljs);
+				// Highlight:
+				loadHighlightAssets(hljs);
+
+				// Marked:
+				this.rendererMarked = new marked.Renderer();
+				marked.setOptions({
+					renderer: this.rendererMarked,
+					pedantic: false,
+					gfm: true,
+					tables: true,
+					breaks: true,
+					sanitize: true,
+					smartLists: true,
+					smartypants: false,
+					xhtml: false
+				});
 			}
 
-			// ##################################### Marked #####################################
-			this.rendererMarked = new marked.Renderer();
-			marked.setOptions({
-				renderer: this.rendererMarked,
-				pedantic: false,
-				gfm: true,
-				tables: true,
-				breaks: true,
-				sanitize: true,
-				smartLists: true,
-				smartypants: false,
-				xhtml: false
+			this.setState({ isEditing: course && typeof course._id !== 'undefined' }, () => {
+				if (this.pageMode === 'markDown') {
+					HighlightRendering(hljs);
+					kaTexRendering(katex, course.content);
+				}
 			});
-			this.setState({ isEditing: course && typeof course._id !== 'undefined' });
 		});
 	}
 
@@ -171,8 +174,6 @@ const myVar = 'content...';
 		// Change pages:
 		if (prevProps.params.id !== this.props.params.id) {
 			this.loadDatas().then(({course}) => {
-				this.isComponentDidUpdated = true;
-
 				if (this.pageMode === 'markDown') {
 					// Init for generate headings wrap:
 					this.indexHeader = 0;
@@ -186,6 +187,11 @@ const myVar = 'content...';
 					fieldsTyping: { content: '', template: {} },
 					isEditorChanged: false,
 					isEditMode: false
+				}, () => {
+					setTimeout(() => {
+						this.refPreviewMd && this.refPreviewMd.scrollTo(0, 0);
+						// this.refPreviewTiny && this.refPreviewTiny.scrollTo(0, 0);
+					}, 100);
 				});
 
 				const { addOrEditMissingField, addOrEditFailure, emptyErrorsAction } = this.props;
@@ -266,8 +272,6 @@ const myVar = 'content...';
 	}
 
 	codeMirrorInit() {
-		const content = this.getContentVal(this.state.fieldsTyping, this.props.course);
-
 		this.editorCm = this.CodeMirror.fromTextArea(this.refEditorMd, {
 			// value: fields.content, // already set by the textarea
 			lineNumbers: true,
@@ -305,11 +309,11 @@ const myVar = 'content...';
 		require('katex/dist/katex.css');
 		this.templateRendering();
 
-		this.setStateContentMarkedSanitized({ valueEditor: content }); // TODO replace valueEditor par content
 		// setTimeout(() => hljs.initHighlighting(), 1000);
 
 		// handleEditorChange:
 		this.editorCm.on('change', () => {
+			const oldStateTyping = this.state.fieldsTyping;
 			const valueEditor = this.editorCm.getValue();
 			const isBigFile = valueEditor.length >= 3000;
 
@@ -321,13 +325,25 @@ const myVar = 'content...';
 			clearTimeout(this.timerRenderPreview);
 			this.timerRenderPreview = setTimeout(() => {
 				if (isBigFile) {
-					this.setStateContentMarkedSanitized({ editorCmChanged: true, valueEditor });
+					this.setState({
+						fieldsTyping: {...oldStateTyping, content: valueEditor },
+						isEditorChanged: true
+					}, () => {
+						HighlightRendering(hljs);
+						kaTexRendering(katex, valueEditor);
+					});
 				}
 			}, 100);
 
 			// ------- Small course -------
 			if (!isBigFile) {
-				this.setStateContentMarkedSanitized({ editorCmChanged: true, valueEditor });
+				this.setState({
+					fieldsTyping: {...oldStateTyping, content: valueEditor },
+					isEditorChanged: true
+				}, () => {
+					HighlightRendering(hljs);
+					kaTexRendering(katex, valueEditor);
+				});
 			}
 		});
 
@@ -337,7 +353,7 @@ const myVar = 'content...';
 		const { heightEditor } = this.getSizeEditor();
 		this.editorCm.setSize(null, heightEditor);
 
-		setTimeout(() => this.initScrolling(), 20); // For Firefox because it keep the scroll position after reload
+		setTimeout(() => this.initScrollingMd(), 20); // For Firefox because it keep the scroll position after reload
 	}
 
 	getSizeEditor() {
@@ -407,7 +423,7 @@ const myVar = 'content...';
 
 		// For the cases when we are in the middle of the editor (so we can don't have the first elements in DOM), the elements upper can have the offset changed.
 		// Therefore we need to go to the top for re calculate the offsets
-		this.initScrolling();
+		this.initScrollingMd();
 	}
 
 	handleOnSubmit(event) {
@@ -465,12 +481,14 @@ const myVar = 'content...';
 		}
 
 		// Set columns:
+		// TODO fixer ca:
 		if (/^column/g.test(field.name)) {
 			return this.setState({
 				fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} }
 			}, () => {
 				const content = this.getContentVal(this.state.fieldsTyping, this.props.course);
-				return this.setStateContentMarkedSanitized({ valueEditor: content });
+				HighlightRendering(hljs);
+				kaTexRendering(katex, content);
 			});
 		}
 
@@ -753,7 +771,7 @@ const myVar = 'content...';
 		this.setState({ isMenuPanelOpen: !this.state.isMenuPanelOpen });
 	}
 
-	initScrolling() {
+	initScrollingMd() {
 		if (this.state.isMobile || !this.state.isEditMode || !this.editorCm) return;
 
 		// Init scroll sync - use when re-rendering in CM editor:
@@ -769,26 +787,6 @@ const myVar = 'content...';
 			editor: SectionsGeneratorForScrolling.getOffsetTopTitles(this.editorCm.getScrollerElement()),
 			preview: SectionsGeneratorForScrolling.getOffsetTopTitles(this.refPreviewMd)
 		};
-	}
-
-	// TODO remove it !!! deja dans la preview
-	setStateContentMarkedSanitized(params = {}) {
-		const content = this.getContentVal({content: params.valueEditor}, this.props.course);
-		const oldStateTyping = this.state.fieldsTyping;
-		const contentMarkedSanitized = DOMPurify.sanitize(marked(content));
-
-		this.setState({
-			contentMarkedSanitized,
-			fieldsTyping: {...oldStateTyping, ...{ content: params.valueEditor }},
-			isEditorChanged: params.editorCmChanged
-		}, () => {
-			if (this.isComponentDidUpdated) {
-				this.initScrolling();
-				this.isComponentDidUpdated = false;
-			}
-			HighlightRendering(hljs);
-			kaTexRendering(katex, params.valueEditor);
-		});
 	}
 
 	get sections() {
@@ -824,7 +822,7 @@ const myVar = 'content...';
 			// If error (scrolled to fast)
 			if (scrollTopTarget === false) {
 				console.error('Error, scroll too fast');
-				setTimeout(() => this.initScrolling(), 20);
+				setTimeout(() => this.initScrollingMd(), 20);
 				return;
 			}
 
