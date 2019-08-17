@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import DOMPurify from 'dompurify';
 import marked from 'marked';
 import classNames from 'classnames/bind';
@@ -64,7 +63,6 @@ class PreviewMd extends Component {
 
 	templateRendering() {
 		this.rendererMarked.heading = (text, currenLevel) => {
-			// TODO call function here for externaliser avec Course.jsx   rendererMarkedHeading(this.indexHeader, this.headersList);
 			let template = {};
 			if (this.props.fieldsTyping.template && Object.keys(this.props.fieldsTyping.template).length > 0) {
 				template = {...this.props.course.template, ...this.props.fieldsTyping.template};
@@ -119,7 +117,7 @@ class PreviewMd extends Component {
 	}
 
 	render() {
-		const { isEditMode, heightEditor, refPreviewMd } = this.props;
+		const { content, isEditMode, heightEditor, refPreviewMd } = this.props;
 		const { contentMarkedSanitized } = this.state;
 
 		const stylesPreview = { height: heightEditor + 'px' };
@@ -131,7 +129,7 @@ class PreviewMd extends Component {
 			clearTimeout(this.timerRenderHighlight);
 			this.timerRenderHighlight = setTimeout(() => {
 				HighlightRendering(hljs); // Rendering highlight
-				kaTexRendering(katex, this.state.contentMarkedSanitized);
+				kaTexRendering(katex, content); // Rendering Katex
 			}, 200);
 		}
 
@@ -149,13 +147,14 @@ class PreviewMd extends Component {
 }
 
 PreviewMd.propTypes = {
-	//
+	content: PropTypes.string,
+	fieldsTyping: PropTypes.shape({
+		content: PropTypes.string,
+		template: PropTypes.object
+	}),
+	isEditMode: PropTypes.bool,
+	heightEditor: PropTypes.number,
+	refPreviewMd: PropTypes.any
 };
 
-const mapStateToProps = (state) => {
-	return {
-		//
-	};
-};
-
-export default connect(null, null)(PreviewMd);
+export default PreviewMd;

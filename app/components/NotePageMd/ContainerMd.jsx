@@ -67,7 +67,10 @@ class ContainerMd extends Component {
 }
 
 ContainerMd.propTypes = {
-	//
+	isCanEdit: PropTypes.bool,
+	isEditMode: PropTypes.bool,
+	isMobile: PropTypes.bool,
+	handleClickToolbarMarkDown: PropTypes.func
 };
 
 export default ContainerMd;

@@ -10,11 +10,11 @@ const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse, ...stylesCo
 
 class EditorMd extends Component {
 	render() {
-		const { content, addOrEditMissingField, refEditorMd, handleScroll } = this.props;
+		const { content, refEditorMd, handleScroll } = this.props;
 
 		return (
 			<div className={cx('editor-edition')} onScroll={handleScroll('editor')}>
-				<Form error={addOrEditMissingField.content} size="small">
+				<Form size="small">
 					<textarea ref={refEditorMd} name="editorCm" id="editorMd" value={content} onChange={() => {}} />
 				</Form>
 			</div>
@@ -23,8 +23,9 @@ class EditorMd extends Component {
 }
 
 EditorMd.propTypes = {
-	addOrEditMissingField: PropTypes.object,
-	content: PropTypes.string
+	content: PropTypes.string,
+	refEditorMd: PropTypes.any,
+	handleScroll: PropTypes.func
 };
 
 export default EditorMd;
