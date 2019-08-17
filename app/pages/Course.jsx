@@ -5,7 +5,7 @@ import marked from 'marked';
 import DOMPurify from 'dompurify';
 import hljs from 'highlight.js/lib/highlight.js';
 import katex from 'katex';
-import { hljsLoadLanguages } from '../components/common/loadLanguages';
+import { loadHighlightAssets } from '../components/common/loadLanguages';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
 import { Container, Segment } from 'semantic-ui-react';
 import { fetchCourseByFieldAction, addCommentAction, emptyErrorsCommentAction } from '../actions/courses';
@@ -46,7 +46,7 @@ class Course extends Component {
 			const isTypeMarkDown = this.props.course.type !== 'wy';
 
 			// Load highlight.js Languages:
-			hljsLoadLanguages(hljs);
+			loadHighlightAssets(hljs);
 
 			// ##################################### Marked #####################################
 			this.rendererMarked = new marked.Renderer();

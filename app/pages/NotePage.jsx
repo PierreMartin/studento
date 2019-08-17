@@ -9,12 +9,7 @@ import EditorToolbar from '../components/EditorToolbar/EditorToolbar';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import ContainerMd from '../components/NotePageMd/ContainerMd';
 import ContainerTiny from '../components/NotePageTiny/ContainerTiny';
-import { loadHighlightAssets } from '../components/common/loadLanguages';
-import hljs from 'highlight.js/lib/highlight';
-import marked from 'marked';
 import SectionsGeneratorForScrolling from '../components/common/SectionsGeneratorForScrolling';
-import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
-import katex from 'katex';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -30,7 +25,6 @@ class NotePage extends Component {
 
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
-		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleOpenMenuPanel = this.handleOpenMenuPanel.bind(this);
 
 		// modal:
@@ -103,10 +97,6 @@ const myVar = 'content...';
 		this.pageMode = this.props.route.path === '/courseMd/:action/:id' ? 'markDown' : 'tiny';
 		this.assetsCodeMirrorLoaded = false;
 
-		// Init for generate headings wrap:
-		this.indexHeader = 0;
-		this.headersList = [];
-
 		this.state = {
 			contentMarkedSanitized: '',
 			fieldsTyping: {
@@ -128,36 +118,14 @@ const myVar = 'content...';
 
 	componentDidMount() {
 		this.loadDatas().then(({course}) => {
-			// Resize element child to 100% height:
-			this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
-			this.updateWindowDimensions();
-			window.addEventListener('resize', this.updateWindowDimensions);
-
 			if (this.pageMode === 'markDown') {
-				// Highlight:
-				loadHighlightAssets(hljs);
-
-				// Marked:
-				this.rendererMarked = new marked.Renderer();
-				marked.setOptions({
-					renderer: this.rendererMarked,
-					pedantic: false,
-					gfm: true,
-					tables: true,
-					breaks: true,
-					sanitize: true,
-					smartLists: true,
-					smartypants: false,
-					xhtml: false
-				});
+				// Resize element child to 100% height:
+				this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
+				this.updateWindowDimensionsMd();
+				window.addEventListener('resize', this.updateWindowDimensionsMd);
 			}
 
-			this.setState({ isEditing: course && typeof course._id !== 'undefined' }, () => {
-				if (this.pageMode === 'markDown') {
-					HighlightRendering(hljs);
-					kaTexRendering(katex, course.content);
-				}
-			});
+			this.setState({ isEditing: course && typeof course._id !== 'undefined' });
 		});
 	}
 
@@ -174,14 +142,6 @@ const myVar = 'content...';
 		// Change pages:
 		if (prevProps.params.id !== this.props.params.id) {
 			this.loadDatas().then(({course}) => {
-				if (this.pageMode === 'markDown') {
-					// Init for generate headings wrap:
-					this.indexHeader = 0;
-					this.headersList = [];
-				} else if (this.pageMode === 'tiny') {
-					//
-				}
-
 				this.setState({
 					isEditing: course && typeof course._id !== 'undefined',
 					fieldsTyping: { content: '', template: {} },
@@ -212,8 +172,16 @@ const myVar = 'content...';
 	}
 
 	componentWillUnmount() {
-		this.updateWindowDimensions();
-		window.removeEventListener('resize', this.updateWindowDimensions);
+		this.updateWindowDimensionsMd();
+		window.removeEventListener('resize', this.updateWindowDimensionsMd);
+	}
+
+	getMetaData() {
+		return {
+			title: 'Add a Note',
+			meta: [{ name: 'description', content: 'Add a Note...' }],
+			link: []
+		};
 	}
 
 	loadDatas() {
@@ -305,21 +273,11 @@ const myVar = 'content...';
 			mode: 'gfm'
 		});
 
-		// Highlight and Katex rendering init:
-		require('katex/dist/katex.css');
-		this.templateRendering();
-
-		// setTimeout(() => hljs.initHighlighting(), 1000);
-
 		// handleEditorChange:
 		this.editorCm.on('change', () => {
 			const oldStateTyping = this.state.fieldsTyping;
 			const valueEditor = this.editorCm.getValue();
 			const isBigFile = valueEditor.length >= 3000;
-
-			// Init for generate headings wrap:
-			this.indexHeader = 0;
-			this.headersList = [];
 
 			// ------- Big course -------
 			clearTimeout(this.timerRenderPreview);
@@ -328,9 +286,6 @@ const myVar = 'content...';
 					this.setState({
 						fieldsTyping: {...oldStateTyping, content: valueEditor },
 						isEditorChanged: true
-					}, () => {
-						HighlightRendering(hljs);
-						kaTexRendering(katex, valueEditor);
 					});
 				}
 			}, 100);
@@ -340,9 +295,6 @@ const myVar = 'content...';
 				this.setState({
 					fieldsTyping: {...oldStateTyping, content: valueEditor },
 					isEditorChanged: true
-				}, () => {
-					HighlightRendering(hljs);
-					kaTexRendering(katex, valueEditor);
 				});
 			}
 		});
@@ -350,27 +302,19 @@ const myVar = 'content...';
 		// Scroll sync - when re-rendering in CM editor:
 		this.editorCm.on('viewportChange', () => { this.numberViewportChanged++; });
 
-		const { heightEditor } = this.getSizeEditor();
+		const { heightEditor } = this.getSizeEditorMd();
 		this.editorCm.setSize(null, heightEditor);
 
 		setTimeout(() => this.initScrollingMd(), 20); // For Firefox because it keep the scroll position after reload
 	}
 
-	getSizeEditor() {
+	getSizeEditorMd() {
 		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
 		let heightEditor = heightDocument;
 		if (this.heightPanel > heightDocument) heightEditor = this.heightPanel;
 		heightEditor -= 105;
 
 		return { heightEditor };
-	}
-
-	getMetaData() {
-		return {
-			title: 'Add a Markdown Note',
-			meta: [{ name: 'description', content: 'Add a Markdown Note...' }],
-			link: []
-		};
 	}
 
 	getContentVal(stateCourse, propsCourse) {
@@ -413,8 +357,8 @@ const myVar = 'content...';
 		return fields;
 	}
 
-	updateWindowDimensions() {
-		const { heightEditor } = this.getSizeEditor();
+	updateWindowDimensionsMd() {
+		const { heightEditor } = this.getSizeEditorMd();
 
 		if (this.editorCm) this.editorCm.setSize(null, heightEditor);
 
@@ -481,14 +425,12 @@ const myVar = 'content...';
 		}
 
 		// Set columns:
-		// TODO fixer ca:
 		if (/^column/g.test(field.name)) {
+			const content = this.getContentVal(this.state.fieldsTyping, this.props.course);
+
 			return this.setState({
-				fieldsTyping: {...oldStateTyping, template: {...oldStateTyping.template, ...{[field.name]: field.value}} }
-			}, () => {
-				const content = this.getContentVal(this.state.fieldsTyping, this.props.course);
-				HighlightRendering(hljs);
-				kaTexRendering(katex, content);
+				fieldsTyping: {...this.state.fieldsTyping, template: {...this.state.fieldsTyping.template, ...{[field.name]: field.value}}, content: content + ' ' }, // Hack for re-generate Marked headings
+				isEditorChanged: true
 			});
 		}
 
@@ -635,55 +577,6 @@ const myVar = 'content...';
 				}
 			}
 		}
-	}
-
-	templateRendering() {
-		this.rendererMarked.heading = (text, currenLevel) => {
-			const template = (this.state.fieldsTyping.template && Object.keys(this.state.fieldsTyping.template).length > 0 ? {...this.props.course.template, ...this.state.fieldsTyping.template} : this.props.course && this.props.course.template) || {};
-			const numberColumns = typeof template['columnH' + currenLevel] !== 'undefined' ? template['columnH' + currenLevel] : 1;
-			let closeDivNode = '';
-
-			// 1st header:
-			if (this.indexHeader === 0) {
-				this.headersList.push({ levelHeader: currenLevel });
-				this.indexHeader++;
-
-				return `
-					${closeDivNode}
-					<div class="md-column-${numberColumns}">
-						<h${currenLevel}>${text}</h${currenLevel}>
-				`;
-			}
-
-			const lastLevelHeader = this.headersList[this.headersList.length - 1].levelHeader;
-			const diffLevelWithLastHeader = Math.abs(lastLevelHeader - currenLevel);
-
-			for (let i = this.headersList.length - 1; i >= 0; i--) {
-				const alreadyHaveLevelHeader = this.headersList[i].levelHeader === currenLevel;
-
-				// Close when same header in same level imbrication:
-				if (alreadyHaveLevelHeader && diffLevelWithLastHeader === 0) {
-					closeDivNode = '</div>';
-				}
-
-				// Close when different header:
-				if (lastLevelHeader > currenLevel && currenLevel === this.headersList[i].levelHeader) {
-					for (let j = 0; j < diffLevelWithLastHeader; j++) closeDivNode += '</div>';
-					break;
-				} else if (lastLevelHeader > currenLevel) {
-					closeDivNode = '</div>';
-				}
-			}
-
-			this.headersList.push({ levelHeader: currenLevel });
-			this.indexHeader++;
-
-			return `
-				${closeDivNode}
-				<div class="md-column-${numberColumns}">
-					<h${currenLevel}>${text}</h${currenLevel}>
-			`;
-		};
 	}
 
 	handleOpenModalSetStyle(params) { this.setState({ openModalSetStyle: params }); }
