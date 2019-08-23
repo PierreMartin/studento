@@ -1,4 +1,4 @@
-export const getOptionsFormsSelect = ({categories, course, category, isEditing}) => {
+export const getCategoriesFormsSelect = ({categories, course, category, isEditing}) => {
 	let lastCategorySelected = category.lastSelected;
 
 	// If update and no yet select some Inputs:
@@ -41,14 +41,20 @@ export const getOptionsFormsSelect = ({categories, course, category, isEditing})
 		}
 	}
 
-	const columnsOptions = [
+	return { categoriesOptions, subCategoriesOptions };
+};
+
+export const getColumnsFormsSelect = () => {
+	return [
 		{ key: 1, text: '1 column', value: 1 },
 		{ key: 2, text: '2 columns', value: 2 },
 		{ key: 3, text: '3 columns', value: 3 },
 		{ key: 4, text: '4 columns', value: 4 }
 	];
+};
 
-	const codeLanguagesOptions = [
+export const getCodeLanguagesFormsSelect = () => {
+	return [
 		{ key: 'markdown', text: 'markdown', value: 'markdown' },
 		{ key: 'javascript', text: 'Javascript', value: 'javascript' },
 		{ key: 'php', text: 'Php', value: 'php' },
@@ -66,6 +72,4 @@ export const getOptionsFormsSelect = ({categories, course, category, isEditing})
 		{ key: 'mathematica', text: 'Mathematica', value: 'mathematica' },
 		{ key: 'katex', text: 'Katex', value: 'katex' }
 	];
-
-	return { categoriesOptions, subCategoriesOptions, columnsOptions, codeLanguagesOptions };
-};
+}

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { getOptionsFormsSelect } from './attributesForms';
+import { getColumnsFormsSelect, getCategoriesFormsSelect } from './attributesForms';
 import { fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../../actions/courses';
 import { fetchCategoriesAction } from '../../actions/category';
-import {Segment, List, Form, Header, Message, Select, Icon, Pagination, Popup, Button} from 'semantic-ui-react';
+import { Segment, List, Form, Header, Message, Select, Icon, Pagination, Popup } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/editorPanelExplorer.scss';
 
@@ -126,7 +126,8 @@ class EditorPanelExplorer extends Component {
 		} = this.props;
 
 		const messagesError = this.dispayFieldsErrors();
-		const { categoriesOptions, subCategoriesOptions, columnsOptions } = getOptionsFormsSelect({ categories, course, category, isEditing });
+		const { categoriesOptions, subCategoriesOptions } = getCategoriesFormsSelect({ categories, course, category, isEditing });
+		const columnsOptions = getColumnsFormsSelect();
 		const isDisableButtonSubmit = !fieldsTyping.title && !fieldsTyping.category && !fieldsTyping.subCategories && !fieldsTyping.description && typeof fieldsTyping.isPrivate === 'undefined' && (!fieldsTyping.template || (fieldsTyping.template && Object.keys(fieldsTyping.template).length === 0));
 		const selectTemplatesHeaders = [
 			{ label: 'h1', name: 'columnH1' },

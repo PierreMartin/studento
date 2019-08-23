@@ -10,6 +10,9 @@ import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import ContainerMd from '../components/NotePageMd/ContainerMd';
 import ContainerTiny from '../components/NotePageTiny/ContainerTiny';
 import SectionsGeneratorForScrolling from '../components/common/SectionsGeneratorForScrolling';
+import { Form } from 'semantic-ui-react';
+import BasicModal from '../components/Modals/BasicModal';
+import { getCodeLanguagesFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
@@ -28,12 +31,13 @@ class NotePage extends Component {
 		this.handleOpenMenuPanel = this.handleOpenMenuPanel.bind(this);
 
 		// modal:
+		this.handleModalSetContent_MiniEditor = this.handleModalSetContent_MiniEditor.bind(this);
+		this.handleModalOpen_MiniEditor = this.handleModalOpen_MiniEditor.bind(this);
+		this.handleModalClose_MiniEditor = this.handleModalClose_MiniEditor.bind(this);
+		this.handleModalOnChange_MiniEditor = this.handleModalOnChange_MiniEditor.bind(this);
+		this.handleModalSubmit_MiniEditor = this.handleModalSubmit_MiniEditor.bind(this);
 		this.editorInModalDidMount = this.editorInModalDidMount.bind(this);
-		this.handleOpenModalSetStyle = this.handleOpenModalSetStyle.bind(this);
-		this.handleCloseModalSetStyle = this.handleCloseModalSetStyle.bind(this);
-		this.handleSubmitModalSetStyle = this.handleSubmitModalSetStyle.bind(this);
 		this.handleLanguageChange = this.handleLanguageChange.bind(this);
-		this.handleInputModalSetStyleChange = this.handleInputModalSetStyleChange.bind(this);
 
 		// Scroll:
 		this.handleScroll = this.handleScroll.bind(this);
@@ -103,11 +107,11 @@ const myVar = 'content...';
 				content: '',
 				template: {}
 			},
-			fieldsModalSetStyleTyping: {},
 			isEditing: false,
 			category: { lastSelected: null },
 			heightEditor: 0,
-			openModalSetStyle: {},
+			modalMiniEditor: {},
+			fieldsModalMiniEditorTyping: {},
 			codeLanguageSelected: '',
 			isEditorChanged: false,
 			isMobile: false,
@@ -579,8 +583,8 @@ const myVar = 'content...';
 		}
 	}
 
-	handleOpenModalSetStyle(params) { this.setState({ openModalSetStyle: params }); }
-	handleCloseModalSetStyle() { this.setState({ openModalSetStyle: {}, codeLanguageSelected: '', fieldsModalSetStyleTyping: {} }); }
+	handleModalOpen_MiniEditor(params) { this.setState({ modalMiniEditor: params }); }
+	handleModalClose_MiniEditor() { this.setState({ modalMiniEditor: {}, codeLanguageSelected: '', fieldsModalMiniEditorTyping: {} }); }
 
 	editorInModalDidMount = (refEditorInModal) => {
 		if (refEditorInModal !== null) {
@@ -615,8 +619,8 @@ const myVar = 'content...';
 		}
 	};
 
-	handleSubmitModalSetStyle = (params) => {
-		const { codeLanguageSelected, fieldsModalSetStyleTyping } = this.state;
+	handleModalSubmit_MiniEditor = (params) => {
+		const { codeLanguageSelected, fieldsModalMiniEditorTyping } = this.state;
 		let selPosStart = {};
 
 		return () => {
@@ -631,23 +635,21 @@ const myVar = 'content...';
 					break;
 				case 'linkify':
 					selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
-					const urlLink = fieldsModalSetStyleTyping.linkifyUrl.indexOf('http') === -1 ? 'http://' + fieldsModalSetStyleTyping.linkifyUrl : fieldsModalSetStyleTyping.linkifyUrl;
-					const urlLinkFull = `[${fieldsModalSetStyleTyping.linkifyText}](${urlLink})`;
+					const urlLink = fieldsModalMiniEditorTyping.linkifyUrl.indexOf('http') === -1 ? 'http://' + fieldsModalMiniEditorTyping.linkifyUrl : fieldsModalMiniEditorTyping.linkifyUrl;
+					const urlLinkFull = `[${fieldsModalMiniEditorTyping.linkifyText}](${urlLink})`;
 					this.editorCm.replaceRange('\n' + urlLinkFull + '\n', selPosStart);
-					this.setState({ fieldsModalSetStyleTyping: {} });
 					break;
 				case 'file image outline':
 					selPosStart = Object.assign({}, this.editorCm.doc.sel.ranges[0].anchor);
-					const urlImage = fieldsModalSetStyleTyping.file.indexOf('http') === -1 ? 'http://' + fieldsModalSetStyleTyping.file : fieldsModalSetStyleTyping.file;
+					const urlImage = fieldsModalMiniEditorTyping.file.indexOf('http') === -1 ? 'http://' + fieldsModalMiniEditorTyping.file : fieldsModalMiniEditorTyping.file;
 					const urlImageFull = `![](${urlImage})`;
 					this.editorCm.replaceRange('\n' + urlImageFull + '\n', selPosStart);
-					this.setState({ fieldsModalSetStyleTyping: {} });
 					break;
 				default:
 					break;
 			}
 
-			this.handleCloseModalSetStyle();
+			this.handleModalClose_MiniEditor();
 		};
 	};
 
@@ -656,8 +658,8 @@ const myVar = 'content...';
 		if (field.value !== 'katex') this.editorCmMini.setOption('mode', field.value);
 	}
 
-	handleInputModalSetStyleChange(event, field) {
-		this.setState({ fieldsModalSetStyleTyping: { ...this.state.fieldsModalSetStyleTyping, ...{[field.name]: field.value } } });
+	handleModalOnChange_MiniEditor(event, field) {
+		this.setState({ fieldsModalMiniEditorTyping: { ...this.state.fieldsModalMiniEditorTyping, ...{[field.name]: field.value } } });
 	}
 
 	handleOpenMenuPanel() {
@@ -775,16 +777,16 @@ const myVar = 'content...';
 				this.setStyleOnLine({ type: 'check square', char: '- [x] ' });
 				break;
 			case 'code':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'code', title: 'Editor', desc: 'Write some code in the editor' });
+				this.handleModalOpen_MiniEditor({ isOpened: true, type: 'code', title: 'Editor', desc: 'Write some code in the editor' });
 				break;
 			case 'table':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'table', title: 'Table', desc: 'Create a table' });
+				this.handleModalOpen_MiniEditor({ isOpened: true, type: 'table', title: 'Table', desc: 'Create a table' });
 				break;
 			case 'linkify':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'linkify', title: 'Link', desc: 'Add a link' });
+				this.handleModalOpen_MiniEditor({ isOpened: true, type: 'linkify', title: 'Link', desc: 'Add a link' });
 				break;
 			case 'file image outline':
-				this.handleOpenModalSetStyle({ isOpened: true, type: 'file image outline', title: 'Image', desc: 'Add a image' });
+				this.handleModalOpen_MiniEditor({ isOpened: true, type: 'file image outline', title: 'Image', desc: 'Add a image' });
 				break;
 			case 'auto scoll':
 				// this.setState({ isButtonAutoScrollActive: !this.state.isButtonAutoScrollActive });
@@ -799,6 +801,40 @@ const myVar = 'content...';
 				break;
 		}
 	};
+
+	handleModalSetContent_MiniEditor() {
+		const { modalMiniEditor, fieldsModalMiniEditorTyping, codeLanguageSelected } = this.state;
+
+		return (
+			<div>
+				{ modalMiniEditor.type === 'code' ? (
+					<Form size="small">
+						<Form.Select label="Language" options={getCodeLanguagesFormsSelect()} placeholder="Choose a language" width={4} name="language" value={codeLanguageSelected || ''} onChange={this.handleLanguageChange} />
+						<textarea ref={this.editorInModalDidMount} name="editorCmMini" defaultValue="Write you code here" />
+					</Form>
+				) : '' }
+
+				{ modalMiniEditor.type === 'table' ? (
+					<div>coming soon</div>
+				) : '' }
+
+				{ modalMiniEditor.type === 'linkify' ? (
+					<Form size="small">
+						<Form.Group widths="equal">
+							<Form.Input label="Link text" placeholder="My site" name="linkifyText" value={fieldsModalMiniEditorTyping.linkifyText || ''} onChange={this.handleModalOnChange_MiniEditor} />
+							<Form.Input label="URL" placeholder="www.mywebsite.com" name="linkifyUrl" value={fieldsModalMiniEditorTyping.linkifyUrl || ''} onChange={this.handleModalOnChange_MiniEditor} />
+						</Form.Group>
+					</Form>
+				) : '' }
+
+				{ modalMiniEditor.type === 'file image outline' ? (
+					<Form size="small">
+						<Form.Input label="Add a image" placeholder="https://mywebsite/images/1.jpg" name="file" value={fieldsModalMiniEditorTyping.file || ''} onChange={this.handleModalOnChange_MiniEditor} />
+					</Form>
+				) : '' }
+			</div>
+		);
+	}
 
 	render() {
 		const {
@@ -818,7 +854,7 @@ const myVar = 'content...';
 			isEditing,
 			fieldsTyping,
 			isEditorChanged,
-			// isMobile,
+			modalMiniEditor,
 			isMenuPanelOpen,
 			isEditMode
 		} = this.state;
@@ -895,6 +931,18 @@ const myVar = 'content...';
 						)}
 					</div>
 				</div>
+
+				<BasicModal
+					isOpen={modalMiniEditor.isOpened}
+					handleModalSetContent={this.handleModalSetContent_MiniEditor}
+					handleModalClose={this.handleModalClose_MiniEditor}
+					handleModalSubmit={this.handleModalSubmit_MiniEditor}
+					title={modalMiniEditor.title}
+					description={modalMiniEditor.desc}
+					cancelAction="Cancel"
+					submitAction="Ok"
+					datas={modalMiniEditor}
+				/>
 			</LayoutPage>
 		);
 	}

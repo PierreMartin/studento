@@ -24,6 +24,7 @@
       "functions": "ignore"
     }],
     "linebreak-style": 0,
+    "camelcase": 0,
     "indent": 0,
     "no-tabs": 0,
     "react/prop-types": 0,

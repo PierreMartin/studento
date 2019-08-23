@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Icon, Button, Popup, Form, Message } from 'semantic-ui-react';
-import { getOptionsFormsSelect } from '../../components/EditorPanelExplorer/attributesForms';
+import { getCategoriesFormsSelect } from '../../components/EditorPanelExplorer/attributesForms';
 import classNames from 'classnames/bind';
 import styles from './css/editorToolbar.scss';
 
@@ -53,7 +53,7 @@ const EditorToolbar = (
 		fromPage
 	}) => {
 	const messagesError = dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
-	const { categoriesOptions } = getOptionsFormsSelect({ categories, course, category, isEditing });
+	const { categoriesOptions } = getCategoriesFormsSelect({ categories, course, category, isEditing });
 	const isPropertiesChanged = fieldsTyping.title || fieldsTyping.category;
 	const stylePopup = { fontWeight: '900' };
 
