@@ -13,7 +13,7 @@ import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMen
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
-import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
+import stylesNotePage from './css/notePage.scss';
 import stylesCourse from './css/course.scss';
 
 let tinymce;
@@ -28,7 +28,7 @@ if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
 	require('tinymce/plugins/textcolor');
 }
 
-const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse, ...stylesCourse});
+const cx = classNames.bind({...stylesMain, ...stylesNotePage, ...stylesCourse});
 
 class CourseAddOrEdit extends Component {
 	constructor(props) {

@@ -15,9 +15,9 @@ import BasicModal from '../components/Modals/BasicModal';
 import { getCodeLanguagesFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
-import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
+import stylesNotePage from './css/notePage.scss';
 
-const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse});
+const cx = classNames.bind({...stylesMain, ...stylesNotePage});
 
 class NotePage extends Component {
 	constructor(props) {
@@ -29,6 +29,7 @@ class NotePage extends Component {
 		this.handleOnSubmit = this.handleOnSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleOpenMenuPanel = this.handleOpenMenuPanel.bind(this);
+		this.updateWindowDimensionsMd = this.updateWindowDimensionsMd.bind(this);
 
 		// modal:
 		this.handleModalSetContent_MiniEditor = this.handleModalSetContent_MiniEditor.bind(this);

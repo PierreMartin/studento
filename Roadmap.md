@@ -102,6 +102,8 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- toolbar md css fixed
+- css width editor
 - loader quand typing
 - isDirty
 

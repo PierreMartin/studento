@@ -4,14 +4,14 @@ import DOMPurify from 'dompurify';
 import marked from 'marked';
 import classNames from 'classnames/bind';
 import stylesMain from '../../css/main.scss';
-import stylesAddOrEditCourse from '../../pages/css/courseAddOrEdit.scss';
+import stylesNotePage from '../../pages/css/notePage.scss';
 import stylesCourse from '../../pages/css/course.scss';
 import katex from 'katex';
 import hljs from 'highlight.js/lib/highlight';
 import { HighlightRendering, kaTexRendering } from '../common/renderingCourse';
 import { loadHighlightAssets } from '../common/loadLanguages';
 
-const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse, ...stylesCourse});
+const cx = classNames.bind({...stylesMain, ...stylesNotePage, ...stylesCourse});
 
 class PreviewMd extends Component {
 	constructor(props) {
@@ -136,7 +136,7 @@ class PreviewMd extends Component {
 		return (
 			<div
 				className={cx('container-page-dark', 'preview')}
-				id="preview"
+				id="container-page-view"
 				ref={refPreviewMd}
 				style={stylesPreview}
 				dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }}

@@ -5,9 +5,9 @@ import PreviewMd from '../NotePageMd/PreviewMd';
 import { Button, Popup } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../../css/main.scss';
-import stylesAddOrEditCourse from '../../pages/css/courseAddOrEdit.scss';
+import stylesNotePage from '../../pages/css/notePage.scss';
 
-const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse});
+const cx = classNames.bind({...stylesMain, ...stylesNotePage});
 
 class ContainerMd extends Component {
 	render() {

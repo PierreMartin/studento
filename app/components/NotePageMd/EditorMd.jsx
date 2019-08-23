@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../../css/main.scss';
-import stylesAddOrEditCourse from '../../pages/css/courseAddOrEdit.scss';
+import stylesNotePage from '../../pages/css/notePage.scss';
 import stylesCourse from '../../pages/css/course.scss';
 
-const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse, ...stylesCourse});
+const cx = classNames.bind({...stylesMain, ...stylesNotePage, ...stylesCourse});
 
 class EditorMd extends Component {
 	render() {

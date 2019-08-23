@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { fetchCourseByFieldAction, fetchCoursesByFieldAction } from '../actions/courses';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
-import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
+import stylesNotePage from './css/notePage.scss';
 
-const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse});
+const cx = classNames.bind({...stylesMain, ...stylesNotePage});
 
 class Test extends Component {
 	constructor(props) {

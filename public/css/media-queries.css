@@ -5,28 +5,10 @@
 
 /* ---------------------- TABLETTES + SMARTPHONES ----------------------*/
 @media screen and (max-width: 768px) {
-    /************************** Editor *********************/
-    #preview { display: none; }
-
     /*********************** Markdown render *****************/
-    #container-page-view .md-column-1 {
-        display: block;
-        width: 100%;
-        padding: 4px;
-    }
-
-    #container-page-view .md-column-2 {
-        display: block;
-        width: 100%;
-        padding: 4px;
-    }
-
-    #container-page-view .md-column-3 {
-        display: block;
-        width: 100%;
-        padding: 4px;
-    }
-
+    #container-page-view .md-column-1,
+    #container-page-view .md-column-2,
+    #container-page-view .md-column-3,
     #container-page-view .md-column-4 {
         display: block;
         width: 100%;

@@ -18,10 +18,10 @@ import { getOptionsFormsSelect } from '../components/EditorPanelExplorer/attribu
 import { Form, Button, Modal, Header, Popup } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
-import stylesAddOrEditCourse from './css/courseAddOrEdit.scss';
+import stylesNotePage from './css/notePage.scss';
 import stylesCourse from './css/course.scss';
 
-const cx = classNames.bind({...stylesMain, ...stylesAddOrEditCourse, ...stylesCourse});
+const cx = classNames.bind({...stylesMain, ...stylesNotePage, ...stylesCourse});
 
 class CourseAddOrEditMd extends Component {
 	constructor(props) {
