@@ -102,9 +102,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- css width editor
 - responsive sur editor/preview
-- loader quand typing
 - isDirty
 
 - dotenv voir pourquoi deplacé dans devDependance
