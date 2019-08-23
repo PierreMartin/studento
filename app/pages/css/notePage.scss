@@ -59,15 +59,12 @@
 
       // PREVIEW
       .preview {
-        position: relative;
         flex: 1 0 100%;
-        overflow: scroll;
         margin: 0;
-        min-height: inherit;
-        box-shadow: none;
-        border-radius: 0;
-
-        img { max-width: 100%; }
+        &.edit-mode {
+          flex: 1 0 47%;
+          overflow: scroll;
+        }
       }
     }
   }

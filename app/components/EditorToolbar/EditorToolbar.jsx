@@ -49,8 +49,7 @@ const EditorToolbar = (
 		addOrEditFailure,
 		handleClickToolbarMain,
 		handleInputChange,
-		handleOnSubmit,
-		fromPage
+		handleOnSubmit
 	}) => {
 	const messagesError = dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 	const { categoriesOptions } = getCategoriesFormsSelect({ categories, course, category, isEditing });

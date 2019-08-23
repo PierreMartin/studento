@@ -120,9 +120,10 @@ class PreviewMd extends Component {
 		const { content, isEditMode, heightEditor, refPreviewMd } = this.props;
 		const { contentMarkedSanitized } = this.state;
 
+		let classEditMode = '';
 		const stylesPreview = { height: heightEditor + 'px' };
 		if (isEditMode) {
-			stylesPreview.flex = '1 0 47%';
+			classEditMode = 'edit-mode';
 		}
 
 		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
@@ -135,7 +136,7 @@ class PreviewMd extends Component {
 
 		return (
 			<div
-				className={cx('container-page-dark', 'preview')}
+				className={cx('container-page-dark', 'preview', classEditMode)}
 				id="container-page-view"
 				ref={refPreviewMd}
 				style={stylesPreview}
