@@ -117,13 +117,19 @@ class PreviewMd extends Component {
 	}
 
 	render() {
-		const { content, isEditMode, heightEditor, refPreviewMd } = this.props;
+		const { content, isEditMode, heightEditor, refPreviewMd, isMobile } = this.props;
 		const { contentMarkedSanitized } = this.state;
 
 		let classEditMode = '';
+		let classMobileMode = '';
 		const stylesPreview = { height: heightEditor + 'px' };
+
 		if (isEditMode) {
 			classEditMode = 'edit-mode';
+		}
+
+		if (isMobile) {
+			classMobileMode = 'mobile-mode';
 		}
 
 		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
@@ -136,7 +142,7 @@ class PreviewMd extends Component {
 
 		return (
 			<div
-				className={cx('container-page-dark', 'preview', classEditMode)}
+				className={cx('container-page-dark', 'preview', classEditMode, classMobileMode)}
 				id="container-page-view"
 				ref={refPreviewMd}
 				style={stylesPreview}
@@ -154,6 +160,7 @@ PreviewMd.propTypes = {
 		template: PropTypes.object
 	}),
 	isEditMode: PropTypes.bool,
+	isMobile: PropTypes.bool,
 	heightEditor: PropTypes.number,
 	refPreviewMd: PropTypes.any
 };

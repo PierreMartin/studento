@@ -64,6 +64,9 @@
         &.edit-mode {
           flex: 1 0 47%;
           overflow: scroll;
+          &.mobile-mode {
+            display: none;
+          }
         }
       }
     }

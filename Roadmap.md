@@ -102,7 +102,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- responsive sur editor/preview
 - isDirty
 
 - dotenv voir pourquoi deplacé dans devDependance

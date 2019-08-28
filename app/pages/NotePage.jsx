@@ -123,35 +123,47 @@ const myVar = 'content...';
 
 	componentDidMount() {
 		this.loadDatas().then(({course}) => {
+			const isEditing = course && typeof course._id !== 'undefined';
+			const isEditMode = !isEditing;
+
 			if (this.pageMode === 'markDown') {
 				// Resize element child to 100% height:
 				this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
 				this.updateWindowDimensionsMd();
 				window.addEventListener('resize', this.updateWindowDimensionsMd);
+
+				if (isEditMode) {
+					this.CodeMirror = this.loadCodeMirrorAssets();
+					setTimeout(() => this.codeMirrorInit(), 800);
+				}
 			}
 
-			this.setState({ isEditing: course && typeof course._id !== 'undefined' });
+			this.setState({ isEditing, isEditMode });
 		});
 	}
 
 	componentDidUpdate(prevProps, prevstate) {
 		// Edit mode actived:
 		if (prevstate.isEditMode !== this.state.isEditMode && this.state.isEditMode && this.pageMode === 'markDown') {
-			if (!this.assetsCodeMirrorLoaded) {
-				this.CodeMirror = this.loadCodeMirrorAssets();
-				this.assetsCodeMirrorLoaded = true;
-			}
+			this.CodeMirror = this.loadCodeMirrorAssets();
 			this.codeMirrorInit();
 		}
 
 		// Change pages:
 		if (prevProps.params.id !== this.props.params.id) {
 			this.loadDatas().then(({course}) => {
+				const isEditing = course && typeof course._id !== 'undefined';
+				const isEditMode = !isEditing;
+
+				if (this.pageMode === 'markDown' && isEditMode) {
+					this.editorCm.setValue('');
+				}
+
 				this.setState({
-					isEditing: course && typeof course._id !== 'undefined',
+					isEditing,
+					isEditMode,
 					fieldsTyping: { content: '', template: {} },
-					isEditorChanged: false,
-					isEditMode: false
+					isEditorChanged: false
 				}, () => {
 					setTimeout(() => {
 						this.refPreviewMd && this.refPreviewMd.scrollTo(0, 0);
@@ -195,6 +207,8 @@ const myVar = 'content...';
 	}
 
 	loadCodeMirrorAssets() {
+		if (this.assetsCodeMirrorLoaded) { return this.CodeMirror; }
+
 		const codeMirror = require('codemirror/lib/codemirror');
 		require('codemirror/lib/codemirror.css');
 
@@ -241,6 +255,7 @@ const myVar = 'content...';
 		require('codemirror/mode/htmlmixed/htmlmixed');
 		require('codemirror/mode/mathematica/mathematica');
 
+		this.assetsCodeMirrorLoaded = true;
 		return codeMirror;
 	}
 
