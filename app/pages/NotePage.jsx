@@ -9,7 +9,7 @@ import EditorToolbar from '../components/EditorToolbar/EditorToolbar';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import ContainerMd from '../components/NotePageMd/ContainerMd';
 import ContainerTiny from '../components/NotePageTiny/ContainerTiny';
-import SectionsGeneratorForScrolling from '../components/common/SectionsGeneratorForScrolling';
+// import SectionsGeneratorForScrolling from '../components/common/SectionsGeneratorForScrolling';
 import { Form } from 'semantic-ui-react';
 import BasicModal from '../components/Modals/BasicModal';
 import { getCodeLanguagesFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
@@ -41,15 +41,15 @@ class NotePage extends Component {
 		this.handleLanguageChange = this.handleLanguageChange.bind(this);
 
 		// Scroll:
-		this.handleScroll = this.handleScroll.bind(this);
-		this.timerHandleScroll = null;
-		this.scrollingTarget = null;
-		this._sectionsForScrolling = null;
+		// this.handleScroll = this.handleScroll.bind(this);
+		// this.timerHandleScroll = null;
+		// this.scrollingTarget = null;
+		// this._sectionsForScrolling = null;
 
 		// Scroll sync - when re-rendering in CM editor:
-		this.numberViewportChanged = 0;
-		this.prevNumberViewportChanged = 0;
-		this.prevArrTitlesinEditor = [];
+		// this.numberViewportChanged = 0;
+		// this.prevNumberViewportChanged = 0;
+		// this.prevArrTitlesinEditor = [];
 
 		this.rendererMarked = null;
 		this.editorCm = null;
@@ -320,7 +320,7 @@ const myVar = 'content...';
 		});
 
 		// Scroll sync - when re-rendering in CM editor:
-		this.editorCm.on('viewportChange', () => { this.numberViewportChanged++; });
+		// this.editorCm.on('viewportChange', () => { this.numberViewportChanged++; });
 
 		const { heightEditor } = this.getSizeEditorMd();
 		this.editorCm.setSize(null, heightEditor);
@@ -686,20 +686,23 @@ const myVar = 'content...';
 		if (this.state.isMobile || !this.state.isEditMode || !this.editorCm) return;
 
 		// Init scroll sync - use when re-rendering in CM editor:
-		this.numberViewportChanged = 0;
-		this.prevNumberViewportChanged = 0;
-		this.prevArrTitlesinEditor = [];
+		// this.numberViewportChanged = 0;
+		// this.prevNumberViewportChanged = 0;
+		// this.prevArrTitlesinEditor = [];
 
 		this.editorCm.refresh();
 		this.refPreviewMd.scrollTop = 0;
 		this.editorCm.getScrollerElement().scrollTop = 0;
 
+		/*
 		this._sectionsForScrolling = {
 			editor: SectionsGeneratorForScrolling.getOffsetTopTitles(this.editorCm.getScrollerElement()),
 			preview: SectionsGeneratorForScrolling.getOffsetTopTitles(this.refPreviewMd)
 		};
+		*/
 	}
 
+	/*
 	get sections() {
 		const isFirstTimeScrolled = this._sectionsForScrolling === null;
 		const haveNewViewportInEditor = this.numberViewportChanged > this.prevNumberViewportChanged;
@@ -721,8 +724,6 @@ const myVar = 'content...';
 
 	handleScroll(source) {
 		return (e) => {
-			return; // TODO disable sync scroll for the moment
-
 			if (e.target.scrollTop === 0 || this.state.isMobile || !this.state.isEditMode) return; // (e.target.scrollTop === 0) ==>  When typing, we pass in onScroll :(
 
 			this.resetTargetScrolling(); // For re enable the other container to scroll
@@ -738,7 +739,7 @@ const myVar = 'content...';
 			}
 
 			if (this.scrollingTarget === null) this.scrollingTarget = source;
-			if (/* !this.state.isButtonAutoScrollActive || */this.scrollingTarget !== source) return;
+			if (!this.state.isButtonAutoScrollActive || this.scrollingTarget !== source) return;
 
 			if (source === 'editor') {
 				this.refPreviewMd.scrollTop = scrollTopTarget;
@@ -753,6 +754,7 @@ const myVar = 'content...';
 		clearInterval(this.timerHandleScroll);
 		this.timerHandleScroll = setTimeout(() => { this.scrollingTarget = null; }, 200);
 	}
+	*/
 
 	handleClickToolbarMain = clickedButton => () => {
 		switch (clickedButton) {
@@ -927,7 +929,6 @@ const myVar = 'content...';
 								isCanEdit={true}
 								isEditMode={isEditMode}
 								handleClickToolbarMarkDown={this.handleClickToolbarMarkDown}
-								handleScroll={this.handleScroll}
 								refEditorMd={(el) => this.refEditorMd = el}
 								refPreviewMd={(el) => this.refPreviewMd = el}
 								content={content}

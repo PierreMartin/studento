@@ -10,10 +10,13 @@ const cx = classNames.bind({...stylesMain, ...stylesNotePage, ...stylesCourse});
 
 class EditorMd extends Component {
 	render() {
-		const { content, refEditorMd, handleScroll } = this.props;
+		const { content, refEditorMd } = this.props;
 
 		return (
-			<div className={cx('editor-edition')} onScroll={handleScroll('editor')}>
+			<div
+				className={cx('editor-edition')}
+				// onScroll={handleScroll('editor')}
+			>
 				<Form size="small">
 					<textarea ref={refEditorMd} name="editorCm" id="editorMd" value={content} onChange={() => {}} />
 				</Form>
@@ -24,8 +27,7 @@ class EditorMd extends Component {
 
 EditorMd.propTypes = {
 	content: PropTypes.string,
-	refEditorMd: PropTypes.any,
-	handleScroll: PropTypes.func
+	refEditorMd: PropTypes.any
 };
 
 export default EditorMd;

@@ -102,6 +102,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- check sur updateWindowDimensionsMd() + initScrollingMd()
 - isDirty
 
 - dotenv voir pourquoi deplacé dans devDependance
@@ -113,14 +114,6 @@ $ ./scripts/generate_menu.sh
       + mode preview sera par default - avec un crayon (sans texte) pour passer en mode edition - ET une croix et save (sans texte) quand mode preview (popup de confirmation quand isDirty).
   
 - FAIRE Page dashboard => My notes (actuel) deviens le dashboard avec [mes dernieres notes] + d'autre modules (stats)
-
-- https://mynotes.com
-
-#36393f   BG tchat   #dcddde TEXT tchat
-#2a2d32   BG panels  #b9bbbe TEXT panels OKK
-
-#39b4dc bleue
-#dc3957 rose
 
 - pouvoir uploader images dans les cours
 - Auth facebook google...
