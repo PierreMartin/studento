@@ -101,6 +101,7 @@ const myVar = 'content...';
 		this.refPreviewMd = null;
 		this.pageMode = this.props.route.path === '/courseMd/:action/:id' ? 'markDown' : 'tiny';
 		this.assetsCodeMirrorLoaded = false;
+		this.isComponentDidUpdated = false;
 
 		this.state = {
 			contentMarkedSanitized: '',
@@ -131,11 +132,6 @@ const myVar = 'content...';
 				this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
 				this.updateWindowDimensionsMd();
 				window.addEventListener('resize', this.updateWindowDimensionsMd);
-
-				if (isEditMode) {
-					this.CodeMirror = this.loadCodeMirrorAssets();
-					setTimeout(() => this.codeMirrorInit(), 800);
-				}
 			}
 
 			this.setState({ isEditing, isEditMode });
@@ -145,8 +141,13 @@ const myVar = 'content...';
 	componentDidUpdate(prevProps, prevstate) {
 		// Edit mode actived:
 		if (prevstate.isEditMode !== this.state.isEditMode && this.state.isEditMode && this.pageMode === 'markDown') {
+			const timeOffset = this.isComponentDidUpdated ? 0 : 800;
+
 			this.CodeMirror = this.loadCodeMirrorAssets();
-			this.codeMirrorInit();
+			setTimeout(() => {
+				this.codeMirrorInit();
+				this.isComponentDidUpdated = true;
+			}, timeOffset);
 		}
 
 		// Change pages:
