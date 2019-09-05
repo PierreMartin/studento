@@ -21,7 +21,7 @@ const BasicModal = ({
 				<Modal.Description>
 					<Header>{description}</Header>
 
-					{ handleModalSetContent() }
+					{ handleModalSetContent && handleModalSetContent() }
 
 				</Modal.Description>
 			</Modal.Content>

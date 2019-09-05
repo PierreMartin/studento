@@ -71,7 +71,7 @@ class EditorPanelExplorer extends Component {
 	}
 
 	renderCoursesList() {
-		const { courses, course } = this.props;
+		const { courses, course, isDirty, handleModalOpen_CanClose } = this.props;
 
 		if (courses.length === 0) return <div className={cx('message-empty-note')}>No yet note</div>;
 
@@ -81,9 +81,16 @@ class EditorPanelExplorer extends Component {
 			const pathCourseToEdit = { pathname, state: { isMenuPanelOpen: false } };
 			const icon = isTypeMarkDown ? 'file' : 'file text';
 			const isActive = course._id === c._id;
+			let link = Link;
+			let onClick = () => {};
+
+			if (isDirty) {
+				link = 'a';
+				onClick = () => { handleModalOpen_CanClose(pathCourseToEdit); };
+			}
 
 			return (
-				<List.Item key={c._id} as={Link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={pathCourseToEdit} icon={icon} content={c.title} />
+				<List.Item key={c._id} as={link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={pathCourseToEdit} onClick={onClick} icon={icon} content={c.title} />
 			);
 		});
 	}
@@ -114,15 +121,15 @@ class EditorPanelExplorer extends Component {
 			isOpen,
 			coursesPagesCount,
 			addOrEditMissingField,
-			handleOnSubmit,
+			handleSave,
 			fieldsTyping,
 			fields,
 			category,
 			isEditing,
 			handleInputChange,
-			fromPage,
 			categories,
-			course
+			course,
+			pageMode
 		} = this.props;
 
 		const messagesError = this.dispayFieldsErrors();
@@ -145,7 +152,7 @@ class EditorPanelExplorer extends Component {
 				</div>
 
 				<div className={cx('panel-explorer-properties')}>
-					<Form error={messagesError.props.children.length > 0} size="mini" onSubmit={handleOnSubmit}>
+					<Form error={messagesError.props.children.length > 0} size="mini" onSubmit={handleSave}>
 						<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} />
 						<Form.TextArea label="Description" placeholder="The description of your Note..." name="description" value={fields.description || ''} onChange={handleInputChange} />
 
@@ -164,7 +171,7 @@ class EditorPanelExplorer extends Component {
 							</Message>
 						</Popup>
 
-						{ fromPage !== 'wy' ? (
+						{ pageMode !== 'wy' ? (
 							<Segment className={cx('form-templates-container')}>
 								<Header as="h4" icon="edit" content="Templates" className={cx('header')} />
 								<Form.Field inline className={cx('form-templates')}>
@@ -192,8 +199,9 @@ class EditorPanelExplorer extends Component {
 
 EditorPanelExplorer.propTypes = {
 	isOpen: PropTypes.bool,
-	fromPage: PropTypes.string,
-	// isEditorChanged: PropTypes.bool,
+	isDirty: PropTypes.bool,
+	pageMode: PropTypes.string,
+	handleModalOpen_CanClose: PropTypes.func,
 
 	course: PropTypes.shape({
 		_id: PropTypes.string,
@@ -238,7 +246,7 @@ EditorPanelExplorer.propTypes = {
 	})),
 
 	handleInputChange: PropTypes.func,
-	handleOnSubmit: PropTypes.func,
+	handleSave: PropTypes.func,
 	fetchCoursesByFieldAction: PropTypes.func,
 	fetchCategoriesAction: PropTypes.func,
 	setPaginationCoursesEditorAction: PropTypes.func

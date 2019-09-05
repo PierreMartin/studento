@@ -42,14 +42,14 @@ const EditorToolbar = (
 		category,
 		isEditing,
 		isEditMode,
-		isEditorChanged,
+		isDirty,
 		fields,
 		fieldsTyping,
 		addOrEditMissingField,
 		addOrEditFailure,
 		handleClickToolbarMain,
 		handleInputChange,
-		handleOnSubmit
+		handleSave
 	}) => {
 	const messagesError = dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 	const { categoriesOptions } = getCategoriesFormsSelect({ categories, course, category, isEditing });
@@ -71,7 +71,7 @@ const EditorToolbar = (
 				{ !isEditing ? <Button disabled icon="arrow circle up" /> : <Popup style={stylePopup} inverted trigger={<Button icon="arrow circle up" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
 			</Button.Group>
 
-			<Form error={messagesError.length > 0} size="mini" onSubmit={handleOnSubmit} className={cx('form-properties')}>
+			<Form error={messagesError.length > 0} size="mini" onSubmit={handleSave} className={cx('form-properties')}>
 				<Form.Input size="tiny" required placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} className={cx('title')} />
 				<Form.Select size="tiny" required placeholder="Category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} className={cx('category')} />
 
@@ -88,7 +88,7 @@ const EditorToolbar = (
 					) : null
 				}
 
-				<Form.Button size="tiny" basic primary disabled={!isPropertiesChanged && !isEditorChanged}>Save</Form.Button>
+				<Form.Button size="tiny" basic primary disabled={!isPropertiesChanged && !isDirty}>Save</Form.Button>
 			</Form>
 
 			<div className={cx('container-buttons-right')}>
@@ -118,11 +118,10 @@ EditorToolbar.propTypes = {
 
 	isEditing: PropTypes.bool,
 	isEditMode: PropTypes.bool,
-	isEditorChanged: PropTypes.bool,
+	isDirty: PropTypes.bool,
 	fields: PropTypes.object,
 	fieldsTyping: PropTypes.object,
 	addOrEditFailure: PropTypes.string,
-	fromPage: PropTypes.string,
 
 	categories: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
@@ -133,7 +132,7 @@ EditorToolbar.propTypes = {
 
 	handleClickToolbarMain: PropTypes.func,
 	handleInputChange: PropTypes.func,
-	handleOnSubmit: PropTypes.func,
+	handleSave: PropTypes.func
 };
 
 export default EditorToolbar;

@@ -13,6 +13,7 @@ import ContainerTiny from '../components/NotePageTiny/ContainerTiny';
 import { Form } from 'semantic-ui-react';
 import BasicModal from '../components/Modals/BasicModal';
 import { getCodeLanguagesFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
+import { browserHistory } from 'react-router';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesNotePage from './css/notePage.scss';
@@ -26,12 +27,17 @@ class NotePage extends Component {
 		this.handleClickToolbarMain = this.handleClickToolbarMain.bind(this);
 		this.handleClickToolbarMarkDown = this.handleClickToolbarMarkDown.bind(this);
 
-		this.handleOnSubmit = this.handleOnSubmit.bind(this);
+		this.handleSave = this.handleSave.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleOpenMenuPanel = this.handleOpenMenuPanel.bind(this);
 		this.updateWindowDimensionsMd = this.updateWindowDimensionsMd.bind(this);
 
-		// modal:
+		// isDirty modal:
+		this.handleModalOpen_CanClose = this.handleModalOpen_CanClose.bind(this);
+		this.handleModalOnSave_CanClose = this.handleModalOnSave_CanClose.bind(this);
+		this.handleModalOnChangePage_CanClose = this.handleModalOnChangePage_CanClose.bind(this);
+
+		// Mini editor modal:
 		this.handleModalSetContent_MiniEditor = this.handleModalSetContent_MiniEditor.bind(this);
 		this.handleModalOpen_MiniEditor = this.handleModalOpen_MiniEditor.bind(this);
 		this.handleModalClose_MiniEditor = this.handleModalClose_MiniEditor.bind(this);
@@ -101,7 +107,7 @@ const myVar = 'content...';
 		this.refPreviewMd = null;
 		this.pageMode = this.props.route.path === '/courseMd/:action/:id' ? 'markDown' : 'tiny';
 		this.assetsCodeMirrorLoaded = false;
-		this.isComponentDidUpdated = false;
+		this.isComponentDidMounted = false;
 
 		this.state = {
 			contentMarkedSanitized: '',
@@ -115,10 +121,14 @@ const myVar = 'content...';
 			modalMiniEditor: {},
 			fieldsModalMiniEditorTyping: {},
 			codeLanguageSelected: '',
-			isEditorChanged: false,
+			isDirty: false,
 			isMobile: false,
 			isMenuPanelOpen: true,
-			isEditMode: false
+			isEditMode: false,
+			canCloseModal: {
+				isOpen: false,
+				path: ''
+			}
 		};
 	}
 
@@ -141,12 +151,12 @@ const myVar = 'content...';
 	componentDidUpdate(prevProps, prevstate) {
 		// Edit mode actived:
 		if (prevstate.isEditMode !== this.state.isEditMode && this.state.isEditMode && this.pageMode === 'markDown') {
-			const timeOffset = this.isComponentDidUpdated ? 0 : 800;
+			const timeOffset = !this.state.isEditing && !this.isComponentDidMounted ? 800 : 0;
 
 			this.CodeMirror = this.loadCodeMirrorAssets();
 			setTimeout(() => {
 				this.codeMirrorInit();
-				this.isComponentDidUpdated = true;
+				this.isComponentDidMounted = true;
 			}, timeOffset);
 		}
 
@@ -164,7 +174,7 @@ const myVar = 'content...';
 					isEditing,
 					isEditMode,
 					fieldsTyping: { content: '', template: {} },
-					isEditorChanged: false
+					isDirty: false
 				}, () => {
 					setTimeout(() => {
 						this.refPreviewMd && this.refPreviewMd.scrollTo(0, 0);
@@ -306,7 +316,7 @@ const myVar = 'content...';
 				if (isBigFile) {
 					this.setState({
 						fieldsTyping: {...oldStateTyping, content: valueEditor },
-						isEditorChanged: true
+						isDirty: true
 					});
 				}
 			}, 100);
@@ -315,7 +325,7 @@ const myVar = 'content...';
 			if (!isBigFile) {
 				this.setState({
 					fieldsTyping: {...oldStateTyping, content: valueEditor },
-					isEditorChanged: true
+					isDirty: true
 				});
 			}
 		});
@@ -391,8 +401,8 @@ const myVar = 'content...';
 		this.initScrollingMd();
 	}
 
-	handleOnSubmit(event) {
-		event.preventDefault();
+	handleSave(event) {
+		if (event && event.preventDefault) { event.preventDefault(); }
 
 		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction, paginationEditor, setPaginationCoursesEditorAction } = this.props;
 		const { fieldsTyping } = this.state;
@@ -407,7 +417,7 @@ const myVar = 'content...';
 			data.courseId = course._id;
 			updateCourseAction(data)
 				.then(() => {
-					this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isDirty: false });
 				});
 		} else {
 			data.fields = fieldsTyping;
@@ -416,7 +426,7 @@ const myVar = 'content...';
 			data.fields.type = 'md';
 			createCourseAction(data, coursesPagesCount, indexPagination)
 				.then(() => {
-					this.setState({ category: { lastSelected: null }, fieldsTyping: {} });
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isDirty: false });
 
 					// Goto next page if last item:
 					if ((courses.length + 1) % 13 === 0) {
@@ -451,7 +461,7 @@ const myVar = 'content...';
 
 			return this.setState({
 				fieldsTyping: {...this.state.fieldsTyping, template: {...this.state.fieldsTyping.template, ...{[field.name]: field.value}}, content: content + ' ' }, // Hack for re-generate Marked headings
-				isEditorChanged: true
+				isDirty: true
 			});
 		}
 
@@ -855,6 +865,25 @@ const myVar = 'content...';
 		);
 	}
 
+	handleModalOpen_CanClose(path) {
+		this.setState({ canCloseModal: { isOpen: true, path } });
+	}
+
+	handleModalOnSave_CanClose() {
+		return () => {
+			this.handleSave();
+			this.setState({ canCloseModal: { isOpen: false } });
+		};
+	}
+
+	handleModalOnChangePage_CanClose() {
+		if (this.state.canCloseModal.path) {
+			browserHistory.push(this.state.canCloseModal.path);
+		}
+
+		this.setState({ canCloseModal: { isOpen: false } });
+	}
+
 	render() {
 		const {
 			course,
@@ -872,10 +901,11 @@ const myVar = 'content...';
 		const { category,
 			isEditing,
 			fieldsTyping,
-			isEditorChanged,
+			isDirty,
 			modalMiniEditor,
 			isMenuPanelOpen,
-			isEditMode
+			isEditMode,
+			canCloseModal
 		} = this.state;
 
 		const fields = this.getFieldsVal(fieldsTyping, course);
@@ -898,9 +928,8 @@ const myVar = 'content...';
 						addOrEditFailure={addOrEditFailure}
 						handleClickToolbarMain={this.handleClickToolbarMain}
 						handleInputChange={this.handleInputChange}
-						handleOnSubmit={this.handleOnSubmit}
-						isEditorChanged={isEditorChanged}
-						fromPage="md"
+						handleSave={this.handleSave}
+						isDirty={isDirty}
 					/>
 
 					<EditorPanelExplorer
@@ -919,19 +948,20 @@ const myVar = 'content...';
 						category={category}
 						categories={categories}
 						handleInputChange={this.handleInputChange}
-						handleOnSubmit={this.handleOnSubmit}
-						isEditorChanged={isEditorChanged}
-						fromPage="md"
+						handleSave={this.handleSave}
+						isDirty={isDirty}
+						pageMode={this.pageMode}
+						handleModalOpen_CanClose={this.handleModalOpen_CanClose}
 					/>
 
 					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')} style={isCourseOneLoading || isCourseAllLoading ? {display: 'none'} : {}}>
 						{ this.pageMode === 'markDown' && (
 							<ContainerMd
-								isCanEdit={true}
+								isCanEdit
 								isEditMode={isEditMode}
 								handleClickToolbarMarkDown={this.handleClickToolbarMarkDown}
-								refEditorMd={(el) => this.refEditorMd = el}
-								refPreviewMd={(el) => this.refPreviewMd = el}
+								refEditorMd={(el) => { this.refEditorMd = el; }}
+								refPreviewMd={(el) => { this.refPreviewMd = el; }}
 								content={content}
 								{...this.props}
 								{...this.state}
@@ -940,7 +970,7 @@ const myVar = 'content...';
 
 						{ this.pageMode === 'tiny' && (
 							<ContainerTiny
-								isCanEdit={true}
+								isCanEdit
 								isEditMode={isEditMode}
 								content={content}
 								{...this.props}
@@ -960,6 +990,16 @@ const myVar = 'content...';
 					cancelAction="Cancel"
 					submitAction="Ok"
 					datas={modalMiniEditor}
+				/>
+
+				<BasicModal
+					isOpen={canCloseModal.isOpen}
+					handleModalClose={this.handleModalOnChangePage_CanClose}
+					handleModalSubmit={this.handleModalOnSave_CanClose}
+					title="Attention"
+					description="Changes have not been saved. Do you want to save the note before closing the edition?"
+					cancelAction="Close without save"
+					submitAction="Save"
 				/>
 			</LayoutPage>
 		);

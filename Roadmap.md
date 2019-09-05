@@ -108,7 +108,6 @@ $ ./scripts/generate_menu.sh
 - dotenv voir pourquoi deplacé dans devDependance
 - Redesign buttons de la toolbar comme tinyMce
 - FAIRE Page My notes =>
-      + Rename CourseAddOrEditMd.jsx en 'Editor.jsx' qui dispacth les 2 types d'éditeurs (Markdown et Tiny)
       + Panel gauche  'EditorPanelExplorer' avec leur étoiles (rien d'autre) tout le temps ouvert - prévoir la possibilité de faire des groupes de notes.
       + Panel droite  'EditorPanelSettings' un menu burger en haut affichant le form [title, cat, delete...]
       + mode preview sera par default - avec un crayon (sans texte) pour passer en mode edition - ET une croix et save (sans texte) quand mode preview (popup de confirmation quand isDirty).
