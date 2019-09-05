@@ -81,16 +81,9 @@ class EditorPanelExplorer extends Component {
 			const pathCourseToEdit = { pathname, state: { isMenuPanelOpen: false } };
 			const icon = isTypeMarkDown ? 'file' : 'file text';
 			const isActive = course._id === c._id;
-			let link = Link;
-			let onClick = () => {};
-
-			if (isDirty) {
-				link = 'a';
-				onClick = () => { handleModalOpen_CanClose(pathCourseToEdit); };
-			}
 
 			return (
-				<List.Item key={c._id} as={link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={pathCourseToEdit} onClick={onClick} icon={icon} content={c.title} />
+				<List.Item key={c._id} as={isDirty ? 'a' : Link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={pathCourseToEdit} onClick={isDirty ? handleModalOpen_CanClose(pathCourseToEdit) : null} icon={icon} content={c.title} />
 			);
 		});
 	}

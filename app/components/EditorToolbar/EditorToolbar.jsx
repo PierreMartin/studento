@@ -43,6 +43,7 @@ const EditorToolbar = (
 		isEditing,
 		isEditMode,
 		isDirty,
+		handleModalOpen_CanClose,
 		fields,
 		fieldsTyping,
 		addOrEditMissingField,
@@ -59,16 +60,14 @@ const EditorToolbar = (
 	return (
 		<div className={cx('toolbar', 'toolbar-settings')}>
 			<Button.Group basic size="small" className={cx('button-group')}>
-				<Popup style={stylePopup} inverted trigger={<Button icon="arrow left" as={Link} to="/dashboard" />} content="Exit (you should save before)" />
+				<Button icon="arrow left" title="Exit" as={isDirty ? 'button' : Link} to="/dashboard" onClick={isDirty ? handleModalOpen_CanClose('/dashboard') : null} />
 
-				<Popup trigger={<Button icon="file" />} flowing hoverable inverted on="click">
-					<div className={cx('buttons-add-note')}>
-						<Button style={stylePopup} inverted basic size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-						<Button style={stylePopup} inverted basic size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
-					</div>
-				</Popup>
+				<div className={cx('buttons-add-note')}>
+					<Button style={stylePopup} inverted basic size="small" icon="file text" as={isDirty ? 'button' : Link} to="/course/create/new" onClick={isDirty ? handleModalOpen_CanClose('/course/create/new') : null} title="New Note" />
+					<Button style={stylePopup} inverted basic size="small" icon="file" as={isDirty ? 'button' : Link} to="/courseMd/create/new" onClick={isDirty ? handleModalOpen_CanClose('/courseMd/create/new') : null} title="New Markdown Note" />
+				</div>
 
-				{ !isEditing ? <Button disabled icon="arrow circle up" /> : <Popup style={stylePopup} inverted trigger={<Button icon="arrow circle up" as={Link} to={`/course/${course._id}`} />} content="Got to page (you should save before)" /> }
+				<Button disabled={!isEditing} icon="arrow circle up" title="Got to page" as={isDirty ? 'button' : Link} to={`/course/${course._id}`} onClick={isDirty ? handleModalOpen_CanClose(`/course/${course._id}`) : null} />
 			</Button.Group>
 
 			<Form error={messagesError.length > 0} size="mini" onSubmit={handleSave} className={cx('form-properties')}>
@@ -132,7 +131,8 @@ EditorToolbar.propTypes = {
 
 	handleClickToolbarMain: PropTypes.func,
 	handleInputChange: PropTypes.func,
-	handleSave: PropTypes.func
+	handleSave: PropTypes.func,
+	handleModalOpen_CanClose: PropTypes.func
 };
 
 export default EditorToolbar;

@@ -866,7 +866,10 @@ const myVar = 'content...';
 	}
 
 	handleModalOpen_CanClose(path) {
-		this.setState({ canCloseModal: { isOpen: true, path } });
+		return (e) => {
+			if (e) { e.preventDefault(); e.stopPropagation(); }
+			this.setState({ canCloseModal: { isOpen: true, path } });
+		};
 	}
 
 	handleModalOnSave_CanClose() {
@@ -930,6 +933,7 @@ const myVar = 'content...';
 						handleInputChange={this.handleInputChange}
 						handleSave={this.handleSave}
 						isDirty={isDirty}
+						handleModalOpen_CanClose={this.handleModalOpen_CanClose}
 					/>
 
 					<EditorPanelExplorer
