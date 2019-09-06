@@ -103,7 +103,6 @@ $ ./scripts/generate_menu.sh
 
 ### TODO :
 - check sur updateWindowDimensionsMd() + initScrollingMd()
-- isDirty
 
 - dotenv voir pourquoi deplacé dans devDependance
 - Redesign buttons de la toolbar comme tinyMce
