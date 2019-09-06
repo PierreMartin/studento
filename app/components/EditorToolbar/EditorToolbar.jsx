@@ -63,7 +63,7 @@ const EditorToolbar = (
 				<Button icon="arrow left" title="Exit" as={isDirty ? 'button' : Link} to="/dashboard" onClick={isDirty ? handleModalOpen_CanClose('/dashboard') : null} />
 				<Button style={stylePopup} size="small" icon="file text" as={isDirty ? 'button' : Link} to="/course/create/new" onClick={isDirty ? handleModalOpen_CanClose('/course/create/new') : null} title="New Note" />
 				<Button style={stylePopup} size="small" icon="file" as={isDirty ? 'button' : Link} to="/courseMd/create/new" onClick={isDirty ? handleModalOpen_CanClose('/courseMd/create/new') : null} title="New Markdown Note" />
-				<Button disabled={!isEditing} icon="arrow circle up" title="Got to page" as={isDirty ? 'button' : Link} to={`/course/${course._id}`} onClick={isDirty ? handleModalOpen_CanClose(`/course/${course._id}`) : null} />
+				<Button disabled={!isEditing} icon="eye" title="Got to page" as={isDirty ? 'button' : Link} to={`/course/${course._id}`} onClick={isDirty ? handleModalOpen_CanClose(`/course/${course._id}`) : null} />
 			</Button.Group>
 
 			<Form error={messagesError.length > 0} size="mini" onSubmit={handleSave} className={cx('form-properties')}>

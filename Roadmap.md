@@ -102,6 +102,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- <EditorPanelSettings />
 - check sur updateWindowDimensionsMd() + initScrollingMd()
 
 - dotenv voir pourquoi deplacé dans devDependance
