@@ -102,15 +102,14 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- <EditorPanelSettings />
-- check sur updateWindowDimensionsMd() + initScrollingMd()
+- isDirty dans <EditorPanelSettings /> + button delete
+- Toolbar - cacher les buttons save / title quand mode preview + button save sans texte ?
+- check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
 
 - dotenv voir pourquoi deplacé dans devDependance
 - Redesign buttons de la toolbar comme tinyMce
 - FAIRE Page My notes =>
       + Panel gauche  'EditorPanelExplorer' avec leur étoiles (rien d'autre) tout le temps ouvert - prévoir la possibilité de faire des groupes de notes.
-      + Panel droite  'EditorPanelSettings' un menu burger en haut affichant le form [title, cat, delete...]
-      + mode preview sera par default - avec un crayon (sans texte) pour passer en mode edition - ET une croix et save (sans texte) quand mode preview (popup de confirmation quand isDirty).
   
 - FAIRE Page dashboard => My notes (actuel) deviens le dashboard avec [mes dernieres notes] + d'autre modules (stats)
 

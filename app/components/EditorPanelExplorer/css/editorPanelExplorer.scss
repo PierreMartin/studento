@@ -50,55 +50,11 @@
       i { color: $colorTextMain !important; }
     }
   }
-
-  .panel-explorer-properties {
-    padding: 0 20px 0 20px;
-    margin-top: 18px;
-    label { opacity: 1 !important; color: $colorTextMain !important; &:after { color: #fff !important; } }
-    input, textarea, .select > div { color: $colorTextMain !important; font-weight: 900; }
-
-    .select [class~=dropdown] [class~=menu], .input-select [class~=menu] {
-      background: #151515;
-    }
-
-    /* Form input checkbox */
-    .checkbox {
-      display: inline-block;
-      margin-right: 8px;
-      div[class~=checked] {
-        input:focus:checked~label, input:checked~label {
-          color: #fff !important;
-        }
-      }
-    }
-
-    .info {
-      display: inline-block;
-      vertical-align: top;
-    }
-
-    /* Form input select */
-    .form-templates-container {
-      background-color: transparent;
-      border: 1px solid $colorBorder;
-      .header { color: $colorTextMain; }
-      .form-templates {
-        label { display: inline-block; width: 35px; font-weight: 900 }
-        .input-select {
-          display: inline-block;
-          font-size: 10px;
-          color: $colorTextMain !important; font-weight: 900;
-          margin-bottom: 4px;
-          div { font-size: 12px; }
-        }
-      }
-    }
-  }
 }
 
 /* Offset toolbar */
 @media screen and (max-width: 410px) {
   .panel-explorer-container {
-    padding-top: 80px !important;
+    padding-top: 89px !important;
   }
 }

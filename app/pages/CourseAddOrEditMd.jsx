@@ -10,11 +10,11 @@ import { hljsLoadLanguages } from '../components/common/loadLanguages';
 import { HighlightRendering, kaTexRendering } from '../components/common/renderingCourse';
 import SectionsGeneratorForScrolling from '../components/common/SectionsGeneratorForScrolling';
 import { createCourseAction, updateCourseAction, fetchCoursesByFieldAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../actions/courses';
-import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
+import ButtonOpenPanelExplorer from '../components/ButtonOpenPanelExplorer/ButtonOpenPanelExplorer';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import EditorToolbar from '../components/EditorToolbar/EditorToolbar';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { getOptionsFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
+import { getOptionsFormsSelect } from '../components/EditorPanelSettings/attributesForms';
 import { Form, Button, Modal, Header, Popup } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
@@ -882,7 +882,7 @@ const myVar = 'content...';
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-dark')}>
-					<ButtonOpenMenuPanel handleOpenMenuPanel={this.handleOpenMenuPanel} isMenuPanelOpen={isMenuPanelOpen} />
+					<ButtonOpenPanelExplorer handleOpenMenuPanel={this.handleOpenMenuPanel} isMenuPanelOpen={isMenuPanelOpen} />
 
 					<EditorToolbar
 						course={course}

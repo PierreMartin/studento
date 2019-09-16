@@ -9,7 +9,7 @@ import { kaTexRendering } from '../components/common/renderingCourse';
 import { createCourseAction, updateCourseAction, emptyErrorsAction, fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../actions/courses';
 import EditorToolbar from '../components/EditorToolbar/EditorToolbar';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
+import ButtonOpenPanelExplorer from '../components/ButtonOpenPanelExplorer/ButtonOpenPanelExplorer';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
@@ -361,7 +361,7 @@ class CourseAddOrEdit extends Component {
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-light')}>
-					<ButtonOpenMenuPanel handleOpenMenuPanel={this.handleOpenMenuPanel} isMenuPanelOpen={isMenuPanelOpen} />
+					<ButtonOpenPanelExplorer handleOpenMenuPanel={this.handleOpenMenuPanel} isMenuPanelOpen={isMenuPanelOpen} />
 
 					<EditorToolbar
 						course={course}

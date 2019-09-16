@@ -1,0 +1,66 @@
+@import '../../../css/common/colors.scss';
+
+.menu-button {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  outline: none;
+  z-index: 99;
+  background-color: $colorBg1;
+
+  span {
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    margin: auto;
+    display: block;
+    border-radius: 100%;
+    width: 5px; height: 5px;
+    background-color: #999;
+
+    &.opening-animation::before   { animation: morphToCross 250ms ease forwards; }
+    &.opening-animation::after    { animation: morphToCross2 250ms ease forwards; }
+
+    &.closing-animation::before   { animation: morphToKebab 250ms ease forwards; animation-direction: reverse; }
+    &.closing-animation::after    { animation: morphToKebab2 250ms ease forwards; animation-direction: reverse; }
+
+    &::before, &::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      margin: auto;
+      display: block;
+      border-radius: 100%;
+      width: 5px; height: 5px;
+      background-color: #999;
+    }
+  }
+}
+
+@keyframes morphToCross {
+  0% { transform:translateY(-8px); }
+  50% { transform:translateY(0); border-radius:100%; width:5px; height:5px; }
+  100% { transform:rotate(45deg) translateY(0); border-radius:99em; width:3px; height:16px; }
+}
+
+@keyframes morphToCross2 {
+  0% { transform:translateY(8px); }
+  50% { transform:translateY(0); border-radius:100%; width:5px; height:5px; }
+  100% { transform:rotate(-45deg) translateY(0); border-radius:99em; width:3px; height:16px; }
+}
+
+@keyframes morphToKebab {
+  0% { transform:translateY(-8px); }
+  50% { transform:translateY(0); border-radius:100%; width:5px; height:5px; }
+  100% { transform:rotate(45deg) translateY(0); border-radius:99em; width:3px; height:16px; }
+}
+
+@keyframes morphToKebab2 {
+  0% { transform:translateY(8px); }
+  50% { transform:translateY(0); border-radius:100%; width:5px; height:5px; }
+  100% { transform:rotate(-45deg) translateY(0); border-radius:99em; width:3px; height:16px;}
+}

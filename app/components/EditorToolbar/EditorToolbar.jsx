@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Icon, Button, Popup, Form, Message } from 'semantic-ui-react';
-import { getCategoriesFormsSelect } from '../../components/EditorPanelExplorer/attributesForms';
+import { getCategoriesFormsSelect } from '../../components/EditorPanelSettings/attributesForms';
 import classNames from 'classnames/bind';
 import styles from './css/editorToolbar.scss';
 

@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 import { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../actions/courses';
-import ButtonOpenMenuPanel from '../components/ButtonOpenMenuPanel/ButtonOpenMenuPanel';
+import { fetchCategoriesAction } from '../actions/category';
+import ButtonOpenPanelExplorer from '../components/ButtonOpenPanelExplorer/ButtonOpenPanelExplorer';
+import ButtonOpenPanelSettings from '../components/ButtonOpenPanelSettings/ButtonOpenPanelSettings';
 import EditorPanelExplorer from '../components/EditorPanelExplorer/EditorPanelExplorer';
+import EditorPanelSettings from '../components/EditorPanelSettings/EditorPanelSettings';
 import EditorToolbar from '../components/EditorToolbar/EditorToolbar';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import ContainerMd from '../components/NotePageMd/ContainerMd';
@@ -12,7 +15,7 @@ import ContainerTiny from '../components/NotePageTiny/ContainerTiny';
 // import SectionsGeneratorForScrolling from '../components/common/SectionsGeneratorForScrolling';
 import { Form } from 'semantic-ui-react';
 import BasicModal from '../components/Modals/BasicModal';
-import { getCodeLanguagesFormsSelect } from '../components/EditorPanelExplorer/attributesForms';
+import { getCodeLanguagesFormsSelect } from '../components/EditorPanelSettings/attributesForms';
 import { browserHistory } from 'react-router';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
@@ -29,7 +32,8 @@ class NotePage extends Component {
 
 		this.handleSave = this.handleSave.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
-		this.handleOpenMenuPanel = this.handleOpenMenuPanel.bind(this);
+		this.handleOpenPanelExplorer = this.handleOpenPanelExplorer.bind(this);
+		this.handleOpenPanelSettings = this.handleOpenPanelSettings.bind(this);
 		this.updateWindowDimensionsMd = this.updateWindowDimensionsMd.bind(this);
 
 		// isDirty modal:
@@ -123,7 +127,8 @@ const myVar = 'content...';
 			codeLanguageSelected: '',
 			isDirty: false,
 			isMobile: false,
-			isMenuPanelOpen: true,
+			isPanelExplorerOpen: true,
+			isPanelSettingsOpen: false,
 			isEditMode: false,
 			canCloseModal: {
 				isOpen: false,
@@ -213,7 +218,8 @@ const myVar = 'content...';
 	}
 
 	loadDatas() {
-		const { params, fetchCourseByFieldAction } = this.props;
+		const { params, fetchCourseByFieldAction, fetchCategoriesAction } = this.props;
+		fetchCategoriesAction();
 		return fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action });
 	}
 
@@ -417,8 +423,10 @@ const myVar = 'content...';
 			data.courseId = course._id;
 			updateCourseAction(data)
 				.then(() => {
-					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isDirty: false });
-				});
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isDirty: false, isPanelSettingsOpen: false });
+				}).catch(() => {
+					// this.setState({ isPanelSettingsOpen: true });
+			});
 		} else {
 			data.fields = fieldsTyping;
 			data.userMeId = userMe._id;
@@ -426,7 +434,7 @@ const myVar = 'content...';
 			data.fields.type = 'md';
 			createCourseAction(data, coursesPagesCount, indexPagination)
 				.then(() => {
-					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isDirty: false });
+					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isDirty: false, isPanelSettingsOpen: false });
 
 					// Goto next page if last item:
 					if ((courses.length + 1) % 13 === 0) {
@@ -435,7 +443,9 @@ const myVar = 'content...';
 						setPaginationCoursesEditorAction(activePage);
 						fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
 					}
-				});
+				}).catch(() => {
+					// this.setState({ isPanelSettingsOpen: true });
+			});
 		}
 	}
 
@@ -689,8 +699,12 @@ const myVar = 'content...';
 		this.setState({ fieldsModalMiniEditorTyping: { ...this.state.fieldsModalMiniEditorTyping, ...{[field.name]: field.value } } });
 	}
 
-	handleOpenMenuPanel() {
-		this.setState({ isMenuPanelOpen: !this.state.isMenuPanelOpen });
+	handleOpenPanelExplorer() {
+		this.setState({ isPanelExplorerOpen: !this.state.isPanelExplorerOpen });
+	}
+
+	handleOpenPanelSettings() {
+		this.setState({ isPanelSettingsOpen: !this.state.isPanelSettingsOpen });
 	}
 
 	initScrollingMd() {
@@ -901,12 +915,14 @@ const myVar = 'content...';
 			isCourseAllLoading
 		} = this.props;
 
-		const { category,
+		const {
+			category,
 			isEditing,
 			fieldsTyping,
 			isDirty,
 			modalMiniEditor,
-			isMenuPanelOpen,
+			isPanelExplorerOpen,
+			isPanelSettingsOpen,
 			isEditMode,
 			canCloseModal
 		} = this.state;
@@ -917,7 +933,8 @@ const myVar = 'content...';
 		return (
 			<LayoutPage {...this.getMetaData()}>
 				<div className={cx('course-add-or-edit-container-dark')}>
-					<ButtonOpenMenuPanel handleOpenMenuPanel={this.handleOpenMenuPanel} isMenuPanelOpen={isMenuPanelOpen} />
+					<ButtonOpenPanelExplorer handleOpenPanel={this.handleOpenPanelExplorer} isPanelOpen={isPanelExplorerOpen} />
+					<ButtonOpenPanelSettings handleOpenPanel={this.handleOpenPanelSettings} isPanelOpen={isPanelSettingsOpen} />
 
 					<EditorToolbar
 						course={course}
@@ -938,27 +955,17 @@ const myVar = 'content...';
 
 					<EditorPanelExplorer
 						ref={(el) => { this.editorPanelExplorer = el; }}
-						isOpen={isMenuPanelOpen}
+						isOpen={isPanelExplorerOpen}
 						userMe={userMe}
 						course={course}
 						courses={courses}
-						isEditing={isEditing}
-						fieldsTyping={fieldsTyping}
-						fields={fields}
-						addOrEditMissingField={addOrEditMissingField}
-						addOrEditFailure={addOrEditFailure}
 						coursesPagesCount={coursesPagesCount}
 						paginationEditor={paginationEditor}
-						category={category}
-						categories={categories}
-						handleInputChange={this.handleInputChange}
-						handleSave={this.handleSave}
 						isDirty={isDirty}
-						pageMode={this.pageMode}
 						handleModalOpen_CanClose={this.handleModalOpen_CanClose}
 					/>
 
-					<div className={cx('editor-container-full', isMenuPanelOpen ? 'menu-open' : '')} style={isCourseOneLoading || isCourseAllLoading ? {display: 'none'} : {}}>
+					<div className={cx('editor-container-full', isPanelExplorerOpen ? 'panel-explorer-open' : '')} style={isCourseOneLoading || isCourseAllLoading ? {display: 'none'} : {}}>
 						{ this.pageMode === 'markDown' && (
 							<ContainerMd
 								isCanEdit
@@ -982,6 +989,22 @@ const myVar = 'content...';
 							/>
 						)}
 					</div>
+
+					<EditorPanelSettings
+						isOpen={isPanelSettingsOpen}
+						course={course}
+						isEditing={isEditing}
+						fieldsTyping={fieldsTyping}
+						fields={fields}
+						addOrEditMissingField={addOrEditMissingField}
+						addOrEditFailure={addOrEditFailure}
+						category={category}
+						categories={categories}
+						handleInputChange={this.handleInputChange}
+						handleSave={this.handleSave}
+						isDirty={isDirty}
+						pageMode={this.pageMode}
+					/>
 				</div>
 
 				<BasicModal
@@ -1016,6 +1039,7 @@ NotePage.propTypes = {
 	fetchCoursesByFieldAction: PropTypes.func,
 	emptyErrorsAction: PropTypes.func,
 	setPaginationCoursesEditorAction: PropTypes.func,
+	fetchCategoriesAction: PropTypes.func,
 	addOrEditMissingField: PropTypes.object,
 	addOrEditFailure: PropTypes.string,
 
@@ -1071,4 +1095,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction })(NotePage);
+export default connect(mapStateToProps, { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction, fetchCategoriesAction })(NotePage);
