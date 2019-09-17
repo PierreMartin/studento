@@ -179,7 +179,8 @@ const myVar = 'content...';
 					isEditing,
 					isEditMode,
 					fieldsTyping: { content: '', template: {} },
-					isDirty: false
+					isDirty: false,
+					isPanelSettingsOpen: false
 				}, () => {
 					setTimeout(() => {
 						this.refPreviewMd && this.refPreviewMd.scrollTo(0, 0);
@@ -476,7 +477,7 @@ const myVar = 'content...';
 		}
 
 		// Set all forms fields except content:
-		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}});
+		this.setState({fieldsTyping: {...oldStateTyping, ...{[field.name]: field.value}}, isDirty: true});
 	}
 
 	setStyleSelectable(param) {

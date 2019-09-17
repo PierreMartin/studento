@@ -102,7 +102,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- isDirty dans <EditorPanelSettings /> + button delete
+- button delete dans <EditorPanelSettings />
 - Toolbar - cacher les buttons save / title quand mode preview + button save sans texte ?
 - check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
 

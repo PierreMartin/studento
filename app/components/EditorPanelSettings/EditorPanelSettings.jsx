@@ -108,7 +108,6 @@ class EditorSettingsExplorer extends Component {
 
 EditorSettingsExplorer.propTypes = {
 	isOpen: PropTypes.bool,
-	isDirty: PropTypes.bool, // TODO finir ca  setIsDirty(true);
 	pageMode: PropTypes.string,
 
 	course: PropTypes.shape({
