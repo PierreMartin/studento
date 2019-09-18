@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
-import { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction } from '../actions/courses';
+import { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction, deleteCourseAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import ButtonOpenPanelExplorer from '../components/ButtonOpenPanelExplorer/ButtonOpenPanelExplorer';
 import ButtonOpenPanelSettings from '../components/ButtonOpenPanelSettings/ButtonOpenPanelSettings';
@@ -35,6 +35,11 @@ class NotePage extends Component {
 		this.handleOpenPanelExplorer = this.handleOpenPanelExplorer.bind(this);
 		this.handleOpenPanelSettings = this.handleOpenPanelSettings.bind(this);
 		this.updateWindowDimensionsMd = this.updateWindowDimensionsMd.bind(this);
+
+		// Delete modal:
+		this.handleModalOpen_DeleteNote = this.handleModalOpen_DeleteNote.bind(this);
+		this.handleModalClose_DeleteNote = this.handleModalClose_DeleteNote.bind(this);
+		this.handleModalSubmit_DeleteNote = this.handleModalSubmit_DeleteNote.bind(this);
 
 		// isDirty modal:
 		this.handleModalOpen_CanClose = this.handleModalOpen_CanClose.bind(this);
@@ -133,6 +138,10 @@ const myVar = 'content...';
 			canCloseModal: {
 				isOpen: false,
 				path: ''
+			},
+			modalDeleteNote: {
+				isOpen: false,
+				courseToDelete: {}
 			}
 		};
 	}
@@ -902,6 +911,39 @@ const myVar = 'content...';
 		this.setState({ canCloseModal: { isOpen: false } });
 	}
 
+	handleModalOpen_DeleteNote(courseToDelete) {
+		return () => {
+			this.setState({ modalDeleteNote: { isOpen: true, courseToDelete } });
+		};
+	}
+
+	handleModalClose_DeleteNote() { this.setState({ modalDeleteNote: { isOpen: false, courseToDelete: {} } }); }
+
+	handleModalSubmit_DeleteNote() {
+		return () => {
+			const { deleteCourseAction, courses, paginationEditor, userMe, fetchCoursesByFieldAction, setPaginationCoursesEditorAction } = this.props;
+			const { modalDeleteNote } = this.state;
+			const params = {
+				courseId: modalDeleteNote.courseToDelete && modalDeleteNote.courseToDelete._id,
+				courseTitle: modalDeleteNote.courseToDelete && modalDeleteNote.courseToDelete.title,
+				userMeId: userMe._id
+			};
+
+			if (params.courseId && params.userMeId) {
+				deleteCourseAction(params).then(() => {
+					// If no more course on (page > 1) : goto 1st page
+					if ((courses.length === 1 || !courses) && paginationEditor.lastActivePage > 1) {
+						setPaginationCoursesEditorAction(1);
+						fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true });
+					}
+
+					this.setState({ modalDeleteNote: { isOpen: false, courseToDelete: {} } });
+					browserHistory.push('/courseMd/create/new');
+				});
+			}
+		};
+	}
+
 	render() {
 		const {
 			course,
@@ -925,7 +967,8 @@ const myVar = 'content...';
 			isPanelExplorerOpen,
 			isPanelSettingsOpen,
 			isEditMode,
-			canCloseModal
+			canCloseModal,
+			modalDeleteNote
 		} = this.state;
 
 		const fields = this.getFieldsVal(fieldsTyping, course);
@@ -1005,6 +1048,7 @@ const myVar = 'content...';
 						handleSave={this.handleSave}
 						isDirty={isDirty}
 						pageMode={this.pageMode}
+						handleModalOpen_DeleteNote={this.handleModalOpen_DeleteNote}
 					/>
 				</div>
 
@@ -1029,6 +1073,16 @@ const myVar = 'content...';
 					cancelAction="Close without save"
 					submitAction="Save"
 				/>
+
+				<BasicModal
+					isOpen={modalDeleteNote.isOpen}
+					handleModalClose={this.handleModalClose_DeleteNote}
+					handleModalSubmit={this.handleModalSubmit_DeleteNote}
+					title="Attention"
+					description={`This action will be delete the note "${modalDeleteNote.courseToDelete && modalDeleteNote.courseToDelete.title}"`}
+					cancelAction="Cancel"
+					submitAction="Delete"
+				/>
 			</LayoutPage>
 		);
 	}
@@ -1041,6 +1095,7 @@ NotePage.propTypes = {
 	emptyErrorsAction: PropTypes.func,
 	setPaginationCoursesEditorAction: PropTypes.func,
 	fetchCategoriesAction: PropTypes.func,
+	deleteCourseAction: PropTypes.func,
 	addOrEditMissingField: PropTypes.object,
 	addOrEditFailure: PropTypes.string,
 
@@ -1096,4 +1151,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction, fetchCategoriesAction })(NotePage);
+export default connect(mapStateToProps, { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction, fetchCategoriesAction, deleteCourseAction })(NotePage);

@@ -39,9 +39,11 @@
 
         /* Input text */
         &.title {
+          opacity: 1;
           div[class~=input] {
             width: 120px !important;
             min-width: inherit !important;
+            opacity: 1;
             input {
               line-height: 18px;
               background: #141414;
@@ -53,6 +55,7 @@
 
         /* Input select */
         &.category {
+          opacity: 1;
           div[class~=dropdown] {
             width: 140px !important;
             min-width: inherit !important;
@@ -60,6 +63,7 @@
             background: #141414;
             border: 1px solid #555;
             color: #fff;
+            opacity: 1;
 
             div[class~=text] {
               color: #fff;
@@ -81,6 +85,14 @@
         /* Button */
         button[class~=button] {
           line-height: 14px;
+        }
+
+        &[class~=disabled] {
+          &.category {
+            div[class~=dropdown] {
+              i { display: none; }
+            }
+          }
         }
       }
 

@@ -67,11 +67,11 @@ const EditorToolbar = (
 			</Button.Group>
 
 			<Form error={messagesError.length > 0} size="mini" onSubmit={handleSave} className={cx('form-properties')}>
-				<Form.Input size="tiny" required placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} className={cx('title')} />
-				<Form.Select size="tiny" required placeholder="Category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} className={cx('category')} />
+				<Form.Input disabled={!isEditMode} size="tiny" required placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} className={cx('title')} />
+				<Form.Select disabled={!isEditMode} size="tiny" required placeholder="Category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} className={cx('category')} />
 
 				{
-					messagesError.length > 0 ? (
+					(isEditMode && messagesError.length > 0) ? (
 						<Popup trigger={<Icon className={cx('error')} name="warning sign" size="big" color="red" />} flowing hoverable>
 							<Message error icon size="mini">
 								<Icon name="warning sign" size="small" />
@@ -83,7 +83,7 @@ const EditorToolbar = (
 					) : null
 				}
 
-				<Form.Button size="tiny" basic primary disabled={!isPropertiesChanged && !isDirty}>Save</Form.Button>
+				{ isEditMode && <Form.Button size="tiny" basic primary disabled={!isPropertiesChanged && !isDirty}>Save</Form.Button> }
 			</Form>
 
 			<div className={cx('container-buttons-right')}>

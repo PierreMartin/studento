@@ -102,8 +102,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- button delete dans <EditorPanelSettings />
-- Toolbar - cacher les buttons save / title quand mode preview + button save sans texte ?
+- button save sans texte ?
 - check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
 
 - dotenv voir pourquoi deplacé dans devDependance

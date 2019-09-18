@@ -45,7 +45,8 @@ class EditorSettingsExplorer extends Component {
 			handleInputChange,
 			categories,
 			course,
-			pageMode
+			pageMode,
+			handleModalOpen_DeleteNote
 		} = this.props;
 
 		const messagesError = this.dispayFieldsErrors();
@@ -100,6 +101,16 @@ class EditorSettingsExplorer extends Component {
 
 						<Form.Button basic primary fluid inverted disabled={isDisableButtonSubmit}>Save properties</Form.Button>
 					</Form>
+
+					<Form size="mini" onSubmit={handleModalOpen_DeleteNote(course)} style={{ marginTop: '20px' }}>
+						{
+							isEditing && (
+								<div>
+									<Form.Button size="mini" basic primary fluid inverted content="Delete the note" />
+								</div>
+							)
+						}
+					</Form>
 				</div>
 			</div>
 		);
@@ -138,7 +149,8 @@ EditorSettingsExplorer.propTypes = {
 	})),
 
 	handleInputChange: PropTypes.func,
-	handleSave: PropTypes.func
+	handleSave: PropTypes.func,
+	handleModalOpen_DeleteNote: PropTypes.func
 };
 
 export default EditorSettingsExplorer;
