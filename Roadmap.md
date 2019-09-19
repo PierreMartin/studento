@@ -102,8 +102,9 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- button save sans texte ?
+- pagination => mettre la limite coté front
 - check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
+- verifier pagination + delete
 
 - dotenv voir pourquoi deplacé dans devDependance
 - Redesign buttons de la toolbar comme tinyMce

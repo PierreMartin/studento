@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../../actions/courses';
-import { List, Icon, Pagination } from 'semantic-ui-react';
+import { List, Icon, Pagination, Rating } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/editorPanelExplorer.scss';
 
@@ -49,9 +49,23 @@ class EditorPanelExplorer extends Component {
 			const pathCourseToEdit = { pathname, state: { isMenuPanelOpen: false } };
 			const icon = isTypeMarkDown ? 'file' : 'file text';
 			const isActive = course._id === c._id;
+			const stars = course.stars || {};
+			const average = stars.average || 0;
+			const numberOfVote = stars.numberOfTimeVoted || 'No vote';
 
 			return (
-				<List.Item key={c._id} as={isDirty ? 'a' : Link} active={isActive} className={cx(isActive ? 'active-course' : '')} to={pathCourseToEdit} onClick={isDirty ? handleModalOpen_CanClose(pathCourseToEdit) : null} icon={icon} content={c.title} />
+				<List.Item
+					key={c._id}
+					as={isDirty ? 'a' : Link}
+					active={isActive}
+					className={cx(isActive ? 'active-course' : '')}
+					to={pathCourseToEdit}
+					onClick={isDirty ? handleModalOpen_CanClose(pathCourseToEdit) : null}
+					icon={icon}
+				>
+					<div className={cx('title')}>{c.title}</div>
+					<div className={cx('rating')}><Rating disabled rating={average} maxRating={5} size="mini" /> { numberOfVote }</div>
+				</List.Item>
 			);
 		});
 	}
@@ -78,16 +92,17 @@ class EditorPanelExplorer extends Component {
 	}
 
 	render() {
-		const { isOpen, coursesPagesCount } = this.props;
+		const { isOpen } = this.props;
 
 		return (
 			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')}>
-				<div className={cx('panel-explorer-tree-folder')}>
-					<List className={cx('panel-explorer-tree-folder-itemslist')} link>{ this.renderCoursesList()}</List>
-					<div style={{ textAlign: 'center' }}>
-						{ coursesPagesCount > 1 && this.renderPaginationCoursesList() }
-					</div>
-				</div>
+				<List className={cx('panel-explorer-tree-folder-itemslist')} link>
+					{ this.renderCoursesList()}
+				</List>
+
+				{/*
+				{ coursesPagesCount > this.state.prevPage && <button title="Load more notes" onClick={renderPaginationCoursesList}><Icon name="pencil" /></button>}
+				*/}
 			</div>
 		);
 	}
