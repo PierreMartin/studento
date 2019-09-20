@@ -1,15 +1,15 @@
 import Course from '../models/courses';
 import User from '../models/user';
 
-const numberItemPerPage = 12;
+// const numberItemPerPage = 12;
 
 // Pagination by skip - no the best for perfs but works with sort by
-const requestGetCoursesWithPagination = (res, query, activePage, sortByField = 'created_at', typeReq) => {
+const requestGetCoursesWithPagination = (res, query, activePage, sortByField = 'created_at', typeReq, paginationNumber = 12) => {
 	// 1st page:
 	if (typeof activePage === 'undefined' || activePage === 1) {
 		Course.find(query)
 			.sort({ [sortByField]: -1 })
-			.limit(numberItemPerPage)
+			.limit(paginationNumber)
 			.populate('uId', '_id username avatarMainSrc.avatar28')
 			.populate('category_info', 'name description picto')
 			.exec((err, courses) => {
@@ -24,15 +24,15 @@ const requestGetCoursesWithPagination = (res, query, activePage, sortByField = '
 						return res.status(500).json({ message: `A error happen at the fetching courses count by ${typeReq}`, err });
 					}
 
-					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
+					const pagesCount = Math.ceil(coursesCount / paginationNumber);
 					return res.status(200).json({ message: `courses by ${typeReq} fetched`, courses, coursesCount, pagesCount });
 				});
 			});
 	} else if (activePage > 1) {
 		Course.find(query)
 			.sort({ [sortByField]: -1 })
-			.skip((activePage - 1) * numberItemPerPage)
-			.limit(numberItemPerPage)
+			.skip((activePage - 1) * paginationNumber)
+			.limit(paginationNumber)
 			.populate('uId', '_id username avatarMainSrc.avatar28')
 			.populate('category_info', 'name description picto')
 			.exec((err, courses) => {
@@ -47,7 +47,7 @@ const requestGetCoursesWithPagination = (res, query, activePage, sortByField = '
 						return res.status(500).json({ message: `A error happen at the fetching courses count by ${typeReq}`, err });
 					}
 
-					const pagesCount = Math.ceil(coursesCount / numberItemPerPage);
+					const pagesCount = Math.ceil(coursesCount / paginationNumber);
 					return res.status(200).json({ message: `courses by ${typeReq} fetched ><`, courses, coursesCount, pagesCount });
 				});
 			});
@@ -58,14 +58,14 @@ const requestGetCoursesWithPagination = (res, query, activePage, sortByField = '
  * POST /api/getcourses
  */
 export function allByField(req, res) {
-	const { keyReq, valueReq, activePage, sortByField, showPrivate } = req.body;
+	const { keyReq, valueReq, activePage, sortByField, showPrivate, paginationNumber } = req.body;
 
 	let query = {};
 	if (keyReq !== 'all' && valueReq !== 'all') query = { [keyReq]: valueReq };
 	query.isPrivate = false;
 	if (showPrivate) delete query.isPrivate;
 
-	requestGetCoursesWithPagination(res, query, activePage, sortByField, 'field');
+	requestGetCoursesWithPagination(res, query, activePage, sortByField, 'field', paginationNumber);
 }
 
 /**

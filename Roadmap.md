@@ -102,7 +102,6 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
-- pagination => mettre la limite coté front
 - check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
 - verifier pagination + delete
 

@@ -20,11 +20,11 @@ class EditorPanelExplorer extends Component {
 
 		// If lastActivePage === 1st page:
 		if (paginationEditor.lastActivePage === 1) {
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true });
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true, paginationNumber: 80 });
 		} else if (paginationEditor.lastActivePage > 1) {
 			// If lastActivePage > 1st page:
 			const activePage = paginationEditor.lastActivePage;
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
+			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true, paginationNumber: 80 });
 		}
 	}
 
@@ -35,7 +35,7 @@ class EditorPanelExplorer extends Component {
 		if (activePage === lastActivePage) return;
 
 		setPaginationCoursesEditorAction(activePage);
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true, paginationNumber: 80 });
 	};
 
 	renderCoursesList() {
@@ -61,9 +61,11 @@ class EditorPanelExplorer extends Component {
 					className={cx(isActive ? 'active-course' : '')}
 					to={pathCourseToEdit}
 					onClick={isDirty ? handleModalOpen_CanClose(pathCourseToEdit) : null}
-					icon={icon}
 				>
-					<div className={cx('title')}>{c.title}</div>
+					<div className={cx('title-container')}>
+						<Icon name={icon} />
+						<div className={cx('title')}>{c.title}</div>
+					</div>
 					<div className={cx('rating')}><Rating disabled rating={average} maxRating={5} size="mini" /> { numberOfVote }</div>
 				</List.Item>
 			);

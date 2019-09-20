@@ -43,14 +43,18 @@
         color: #fff !important;
       }
 
-      .title {}
+      .title-container {
+        display: flex;
+        flex-direction: row;
+        .title {}
+        i { color: $colorTextMain !important; }
+      }
       .rating {
         font-size: 10px;
         font-weight: normal;
         opacity: 0.5;
-        i { font-size: 7px; }
+        i { font-size: 7px; color: $colorTextMain !important; }
       }
-      i { color: $colorTextMain !important; }
     }
   }
 }
