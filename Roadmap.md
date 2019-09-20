@@ -102,6 +102,7 @@ $ sudo chmod +x scripts/generate_menu.sh
 $ ./scripts/generate_menu.sh
 
 ### TODO :
+- editor - pagination au scroll avec btn
 - check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
 - verifier pagination + delete
 
