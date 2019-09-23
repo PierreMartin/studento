@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../../actions/courses';
-import { List, Icon, Pagination, Rating } from 'semantic-ui-react';
+import { List, Icon, Rating, Button } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/editorPanelExplorer.scss';
 
@@ -12,31 +12,21 @@ const cx = classNames.bind(styles);
 class EditorPanelExplorer extends Component {
 	constructor(props) {
 		super(props);
-		this.handlePaginationChange = this.handlePaginationChange.bind(this);
+		this.handleOnClickLoadMore = this.handleOnClickLoadMore.bind(this);
 	}
 
 	componentDidMount() {
 		const { fetchCoursesByFieldAction, userMe, paginationEditor } = this.props;
 
-		// If lastActivePage === 1st page:
-		if (paginationEditor.lastActivePage === 1) {
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true, paginationNumber: 80 });
-		} else if (paginationEditor.lastActivePage > 1) {
-			// If lastActivePage > 1st page:
-			const activePage = paginationEditor.lastActivePage;
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true, paginationNumber: 80 });
-		}
+		const activePage = paginationEditor.lastActivePage || 1;
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true, paginationNumber: 8 });
 	}
 
-	handlePaginationChange = (e, { activePage }) => {
-		const { userMe, fetchCoursesByFieldAction, paginationEditor, setPaginationCoursesEditorAction } = this.props;
-		const lastActivePage = paginationEditor.lastActivePage;
+	componentWillUnmount() {
+		const { fetchCoursesByFieldAction, userMe } = this.props;
 
-		if (activePage === lastActivePage) return;
-
-		setPaginationCoursesEditorAction(activePage);
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true, paginationNumber: 80 });
-	};
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage: 1, showPrivate: true, paginationNumber: 8 });
+	}
 
 	renderCoursesList() {
 		const { courses, course, isDirty, handleModalOpen_CanClose } = this.props;
@@ -72,29 +62,17 @@ class EditorPanelExplorer extends Component {
 		});
 	}
 
-	renderPaginationCoursesList() {
-		const { paginationEditor, coursesPagesCount } = this.props;
+	handleOnClickLoadMore() {
+		const { fetchCoursesByFieldAction, userMe, paginationEditor, setPaginationCoursesEditorAction } = this.props;
+		const activePage = paginationEditor.lastActivePage;
+		setPaginationCoursesEditorAction(activePage + 1);
 
-		return (
-			<Pagination
-				inverted
-				activePage={paginationEditor.lastActivePage}
-				boundaryRange={1}
-				siblingRange={1}
-				onPageChange={this.handlePaginationChange}
-				size="mini"
-				totalPages={coursesPagesCount}
-				ellipsisItem={{ content: <Icon name="ellipsis horizontal" />, icon: true }}
-				prevItem={{ content: <Icon name="angle left" />, icon: true }}
-				nextItem={{ content: <Icon name="angle right" />, icon: true }}
-				firstItem={null}
-				lastItem={null}
-			/>
-		);
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage: activePage + 1, showPrivate: true, paginationNumber: 8, paginationMethod: 'push' });
 	}
 
 	render() {
-		const { isOpen } = this.props;
+		const { isOpen, coursesPagesCount, paginationEditor } = this.props;
+		const activePage = paginationEditor.lastActivePage;
 
 		return (
 			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')}>
@@ -102,9 +80,7 @@ class EditorPanelExplorer extends Component {
 					{ this.renderCoursesList()}
 				</List>
 
-				{/*
-				{ coursesPagesCount > this.state.prevPage && <button title="Load more notes" onClick={renderPaginationCoursesList}><Icon name="pencil" /></button>}
-				*/}
+				{ (coursesPagesCount > 1 && activePage < coursesPagesCount) && <Button basic inverted size="small" title="Load more notes" onClick={this.handleOnClickLoadMore} content="Load more notes" />}
 			</div>
 		);
 	}
