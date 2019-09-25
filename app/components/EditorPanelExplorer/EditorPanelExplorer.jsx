@@ -16,16 +16,15 @@ class EditorPanelExplorer extends Component {
 	}
 
 	componentDidMount() {
-		const { fetchCoursesByFieldAction, userMe, paginationEditor } = this.props;
+		const { fetchCoursesByFieldAction, userMe } = this.props;
 
-		const activePage = paginationEditor.lastActivePage || 1;
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true, paginationNumber: 8 });
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage: 1, showPrivate: true, paginationNumber: 8 }); // TODO remetre 80
 	}
 
 	componentWillUnmount() {
 		const { setPaginationCoursesEditorAction } = this.props;
 
-		setPaginationCoursesEditorAction(1);
+		setPaginationCoursesEditorAction(1); // TODO faire cette merde dans change location ??
 	}
 
 	renderCoursesList() {

@@ -28,16 +28,22 @@ class CoursesListDashboard extends Component {
 		};
 	}
 
-	componentDidMount() {
+	fetchNotes() {
 		const { userMe, fetchCoursesByFieldAction, paginationEditor } = this.props;
 
-		// If lastActivePage === 1st page:
-		if (paginationEditor.lastActivePage === 1) {
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true });
-		} else if (paginationEditor.lastActivePage > 1) {
-			// If lastActivePage > 1st page:
-			const activePage = paginationEditor.lastActivePage;
-			fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
+		const activePage = paginationEditor.lastActivePage;
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
+	}
+
+	componentDidMount() {
+		this.fetchNotes();
+	}
+
+	componentDidUpdate(prevProps) {
+		const { paginationEditor } = this.props;
+
+		if (prevProps.paginationEditor.lastActivePage !== paginationEditor.lastActivePage) {
+			this.fetchNotes();
 		}
 	}
 
@@ -269,4 +275,10 @@ CoursesListDashboard.propTypes = {
 	})).isRequired
 };
 
-export default connect(null, { fetchCoursesByFieldAction, deleteCourseAction, doSortCoursesAction, setPaginationCoursesEditorAction })(CoursesListDashboard);
+const mapStateToProps = (state) => {
+	return {
+		paginationEditor: state.courses.paginationEditor
+	};
+};
+
+export default connect(mapStateToProps, { fetchCoursesByFieldAction, deleteCourseAction, doSortCoursesAction, setPaginationCoursesEditorAction })(CoursesListDashboard);

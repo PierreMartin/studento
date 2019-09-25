@@ -30,7 +30,6 @@ class Dashboard extends Component {
 							courses={courses}
 							userMe={userMe}
 							coursesPagesCount={coursesPagesCount}
-							paginationEditor={paginationEditor}
 						/>
 					</Container>
 				</Segment>
@@ -64,7 +63,6 @@ const mapStateToProps = (state) => {
 	return {
 		courses: state.courses.all,
 		coursesPagesCount: state.courses.pagesCount,
-		paginationEditor: state.courses.paginationEditor,
 		userMe: state.userMe.data
 	};
 };
