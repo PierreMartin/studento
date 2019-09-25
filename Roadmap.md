@@ -104,7 +104,6 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- editor - pagination au scroll avec btn
 - check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
 - verifier pagination + delete
 

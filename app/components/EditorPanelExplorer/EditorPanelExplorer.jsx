@@ -23,9 +23,9 @@ class EditorPanelExplorer extends Component {
 	}
 
 	componentWillUnmount() {
-		const { fetchCoursesByFieldAction, userMe } = this.props;
+		const { setPaginationCoursesEditorAction } = this.props;
 
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage: 1, showPrivate: true, paginationNumber: 8 });
+		setPaginationCoursesEditorAction(1);
 	}
 
 	renderCoursesList() {

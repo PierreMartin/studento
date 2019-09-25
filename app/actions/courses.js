@@ -16,13 +16,14 @@ export function setPaginationCoursesEditorAction(lastActivePage) {
 }
 
 /************************ Get courses by id or a field ***********************/
-export function fetchCoursesByIdSuccess(res) {
+export function fetchCoursesByIdSuccess(res, paginationMethod = 'skip') {
 	return {
 		type: types.GET_COURSES_SUCCESS,
 		messageSuccess: res.message,
 		courses: res.courses,
 		coursesCount: res.coursesCount,
-		pagesCount: res.pagesCount
+		pagesCount: res.pagesCount,
+		paginationMethod
 	};
 }
 
@@ -39,7 +40,7 @@ export function fetchCoursesByFieldAction(param) {
 	return (dispatch) => {
 		fetchCoursesByFieldRequest(param)
 			.then((res) => {
-				if (res.status === 200) return dispatch(fetchCoursesByIdSuccess(res.data));
+				if (res.status === 200) return dispatch(fetchCoursesByIdSuccess(res.data, param.paginationMethod));
 			})
 			.catch((err) => {
 				dispatch(fetchCoursesByIdFailure(getMessage(err)));

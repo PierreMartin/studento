@@ -6,8 +6,8 @@ import * as types from './../types';
 const all = (state = [], action) => {
 	switch (action.type) {
 		case types.GET_COURSES_SUCCESS:
-			// if (action.courses) return action.courses;
-			if (action.courses) return [...state, ...action.courses]; // TODO if paginationMethod === 'push'
+			if (action.paginationMethod === 'push') return [...state, ...action.courses];
+			if (action.courses) return action.courses;
 			return state;
 		case types.DELETE_COURSE_SUCCESS:
 			if (action.courseId) return state.filter(s => s._id !== action.courseId);
