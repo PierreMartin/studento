@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { fetchCoursesByFieldAction, setPaginationCoursesEditorAction } from '../../actions/courses';
+import { fetchCoursesByFieldAction } from '../../actions/courses';
 import { List, Icon, Rating, Button } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/editorPanelExplorer.scss';
@@ -18,13 +18,7 @@ class EditorPanelExplorer extends Component {
 	componentDidMount() {
 		const { fetchCoursesByFieldAction, userMe } = this.props;
 
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage: 1, showPrivate: true, paginationNumber: 8 }); // TODO remetre 80
-	}
-
-	componentWillUnmount() {
-		const { setPaginationCoursesEditorAction } = this.props;
-
-		setPaginationCoursesEditorAction(1); // TODO faire cette merde dans change location ??
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage: 1, showPrivate: true, paginationNumber: 80 });
 	}
 
 	renderCoursesList() {
@@ -62,16 +56,14 @@ class EditorPanelExplorer extends Component {
 	}
 
 	handleOnClickLoadMore() {
-		const { fetchCoursesByFieldAction, userMe, paginationEditor, setPaginationCoursesEditorAction } = this.props;
-		const activePage = paginationEditor.lastActivePage;
-		setPaginationCoursesEditorAction(activePage + 1);
+		const { fetchCoursesByFieldAction, userMe, activePage, handleActivePageChange } = this.props;
 
-		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage: activePage + 1, showPrivate: true, paginationNumber: 8, paginationMethod: 'push' });
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage: activePage + 1, showPrivate: true, paginationNumber: 80, paginationMethod: 'push' });
+		handleActivePageChange(activePage + 1);
 	}
 
 	render() {
-		const { isOpen, coursesPagesCount, paginationEditor } = this.props;
-		const activePage = paginationEditor.lastActivePage;
+		const { isOpen, coursesPagesCount, activePage } = this.props;
 
 		return (
 			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')}>
@@ -106,18 +98,14 @@ EditorPanelExplorer.propTypes = {
 		type: PropTypes.string
 	})),
 
+	activePage: PropTypes.number,
+
 	userMe: PropTypes.shape({
 		_id: PropTypes.string
 	}),
 
-	paginationEditor: PropTypes.shape({
-		lastActivePage: PropTypes.number
-	}),
-
 	coursesPagesCount: PropTypes.number,
-
-	fetchCoursesByFieldAction: PropTypes.func,
-	setPaginationCoursesEditorAction: PropTypes.func
+	fetchCoursesByFieldAction: PropTypes.func
 };
 
-export default connect(null, { fetchCoursesByFieldAction, setPaginationCoursesEditorAction })(EditorPanelExplorer);
+export default connect(null, { fetchCoursesByFieldAction })(EditorPanelExplorer);

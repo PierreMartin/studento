@@ -105,7 +105,6 @@ paginationMethod => 'push' | 'skip'
 
 ### TODO :
 - check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
-- verifier pagination + delete
 
 - dotenv voir pourquoi deplacé dans devDependance
 - Redesign buttons de la toolbar comme tinyMce

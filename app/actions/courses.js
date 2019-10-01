@@ -8,12 +8,14 @@ const getFieldsMissing = res => res.response && res.response.data && res.respons
 
 
 /************************ Set last pagination values ***********************/
+/*
 export function setPaginationCoursesEditorAction(lastActivePage) {
 	return {
 		type: types.SET_PAGINATION_COURSES_EDITOR,
 		paginationEditor: { lastActivePage }
 	};
 }
+*/
 
 /************************ Get courses by id or a field ***********************/
 export function fetchCoursesByIdSuccess(res, paginationMethod = 'skip') {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import CoursesListDashboard from '../components/CoursesListDashboard/CoursesListDashboard';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
-import { Segment, Container, Header } from 'semantic-ui-react';
+import { Segment, Container } from 'semantic-ui-react';
 // import classNames from 'classnames/bind';
 // import styles from '../css/main.scss';
 
@@ -19,7 +19,7 @@ class Dashboard extends Component {
 	}
 
 	render() {
-		const { courses, userMe, coursesPagesCount, paginationEditor } = this.props;
+		const { courses, userMe, coursesPagesCount } = this.props;
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -40,10 +40,6 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
 	coursesPagesCount: PropTypes.number,
-
-	paginationEditor: PropTypes.shape({
-		lastActivePage: PropTypes.number
-	}),
 
 	courses: PropTypes.arrayOf(PropTypes.shape({
 		_id: PropTypes.string,

@@ -31,9 +31,9 @@ const all = (state = [], action) => {
 						return newStateForAllCourses;
 					}
 				}
-			} else if (action.course && ((action.coursesPagesCount === 0 || action.coursesPagesCount === 1) || action.coursesPagesCount === action.indexPagination) /*&& state.length < 12*/) {  // 12 => numberItemPerPage setted in controller
+			} else if (action.course) {
 				// If new course:
-				return [action.course, ...state]; // add the data only if we here on the last page for handle the pagination
+				return [action.course, ...state];
 			}
 
 			return state;
@@ -161,6 +161,7 @@ const numberCourses = (state = {}, action) => {
 	}
 };
 
+/*
 const paginationEditor = (state = { lastActivePage: 1 }, action) => {
 	switch (action.type) {
 		case types.SET_PAGINATION_COURSES_EDITOR:
@@ -170,6 +171,7 @@ const paginationEditor = (state = { lastActivePage: 1 }, action) => {
 			return state;
 	}
 };
+*/
 
 const addCommentMissingField = (state = {}, action) => {
 	switch (action.type) {
@@ -192,7 +194,7 @@ const coursesReducer = combineReducers({
 	numberCourses, // for gauge
 	coursesCount, // for requests
 	pagesCount, // for requests
-	paginationEditor,
+	// paginationEditor,
 	addCommentMissingField,
 	isCourseOneLoading,
 	isCourseAllLoading

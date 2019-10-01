@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
-import { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction, deleteCourseAction } from '../actions/courses';
+import { fetchCourseByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, deleteCourseAction } from '../actions/courses';
 import { fetchCategoriesAction } from '../actions/category';
 import ButtonOpenPanelExplorer from '../components/ButtonOpenPanelExplorer/ButtonOpenPanelExplorer';
 import ButtonOpenPanelSettings from '../components/ButtonOpenPanelSettings/ButtonOpenPanelSettings';
@@ -142,7 +142,8 @@ const myVar = 'content...';
 			modalDeleteNote: {
 				isOpen: false,
 				courseToDelete: {}
-			}
+			},
+			activePage: 1
 		};
 	}
 
@@ -203,15 +204,6 @@ const myVar = 'content...';
 				if ((Object.keys(addOrEditMissingField).length > 0) || addOrEditFailure.length > 0) emptyErrorsAction();
 			});
 		}
-
-		/*
-		if (this.pageMode === 'markDown' && this.props.courses && prevProps.courses !== this.props.courses) {
-			if (this.state.isEditMode) {
-				const content = this.getContentVal({}, this.props.course);
-				this.editorCm.setValue(content);
-			}
-		}
-		*/
 	}
 
 	componentWillUnmount() {
@@ -420,9 +412,8 @@ const myVar = 'content...';
 	handleSave(event) {
 		if (event && event.preventDefault) { event.preventDefault(); }
 
-		const { course, courses, userMe, createCourseAction, updateCourseAction, coursesPagesCount, fetchCoursesByFieldAction, paginationEditor, setPaginationCoursesEditorAction } = this.props;
-		const { fieldsTyping } = this.state;
-		const indexPagination = paginationEditor.lastActivePage;
+		const { course, userMe, createCourseAction, updateCourseAction, coursesPagesCount } = this.props;
+		const { fieldsTyping, activePage } = this.state;
 		const template = (fieldsTyping.template && Object.keys(fieldsTyping.template).length > 0 ? {...course.template, ...fieldsTyping.template} : course && course.template) || {};
 		const data = {};
 
@@ -442,17 +433,9 @@ const myVar = 'content...';
 			data.userMeId = userMe._id;
 			data.createdAt = new Date().toISOString();
 			data.fields.type = 'md';
-			createCourseAction(data, coursesPagesCount, indexPagination)
+			createCourseAction(data, coursesPagesCount, activePage)
 				.then(() => {
 					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isDirty: false, isPanelSettingsOpen: false });
-
-					// Goto next page if last item:
-					if ((courses.length + 1) % 13 === 0) {
-						const activePage = indexPagination + 1;
-
-						setPaginationCoursesEditorAction(activePage);
-						fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage, showPrivate: true });
-					}
 				}).catch(() => {
 					// this.setState({ isPanelSettingsOpen: true });
 			});
@@ -921,7 +904,7 @@ const myVar = 'content...';
 
 	handleModalSubmit_DeleteNote() {
 		return () => {
-			const { deleteCourseAction, courses, paginationEditor, userMe, fetchCoursesByFieldAction, setPaginationCoursesEditorAction } = this.props;
+			const { deleteCourseAction, userMe } = this.props;
 			const { modalDeleteNote } = this.state;
 			const params = {
 				courseId: modalDeleteNote.courseToDelete && modalDeleteNote.courseToDelete._id,
@@ -932,10 +915,11 @@ const myVar = 'content...';
 			if (params.courseId && params.userMeId) {
 				deleteCourseAction(params).then(() => {
 					// If no more course on (page > 1) : goto 1st page
-					if ((courses.length === 1 || !courses) && paginationEditor.lastActivePage > 1) {
-						setPaginationCoursesEditorAction(1);
+					/*
+					if ((courses.length === 1 || !courses) && activePage > 1) {
 						fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, showPrivate: true });
 					}
+					*/
 
 					this.setState({ modalDeleteNote: { isOpen: false, courseToDelete: {} } });
 					browserHistory.push('/courseMd/create/new');
@@ -953,7 +937,6 @@ const myVar = 'content...';
 			addOrEditFailure,
 			categories,
 			userMe,
-			paginationEditor,
 			isCourseOneLoading,
 			isCourseAllLoading
 		} = this.props;
@@ -968,7 +951,8 @@ const myVar = 'content...';
 			isPanelSettingsOpen,
 			isEditMode,
 			canCloseModal,
-			modalDeleteNote
+			modalDeleteNote,
+			activePage
 		} = this.state;
 
 		const fields = this.getFieldsVal(fieldsTyping, course);
@@ -1004,9 +988,10 @@ const myVar = 'content...';
 						course={course}
 						courses={courses}
 						coursesPagesCount={coursesPagesCount}
-						paginationEditor={paginationEditor}
 						isDirty={isDirty}
 						handleModalOpen_CanClose={this.handleModalOpen_CanClose}
+						activePage={activePage}
+						handleActivePageChange={(page) => { this.setState({ activePage: page }); }}
 					/>
 
 					<div className={cx('editor-container-full', isPanelExplorerOpen ? 'panel-explorer-open' : '')} style={isCourseOneLoading || isCourseAllLoading ? {display: 'none'} : {}}>
@@ -1091,9 +1076,7 @@ const myVar = 'content...';
 NotePage.propTypes = {
 	createCourseAction: PropTypes.func,
 	updateCourseAction: PropTypes.func,
-	fetchCoursesByFieldAction: PropTypes.func,
 	emptyErrorsAction: PropTypes.func,
-	setPaginationCoursesEditorAction: PropTypes.func,
 	fetchCategoriesAction: PropTypes.func,
 	deleteCourseAction: PropTypes.func,
 	addOrEditMissingField: PropTypes.object,
@@ -1124,10 +1107,6 @@ NotePage.propTypes = {
 		_id: PropTypes.string
 	}),
 
-	paginationEditor: PropTypes.shape({
-		lastActivePage: PropTypes.number
-	}),
-
 	categories: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
 		name: PropTypes.string,
@@ -1146,9 +1125,8 @@ const mapStateToProps = (state) => {
 		userMe: state.userMe.data,
 		categories: state.categories.all,
 		addOrEditMissingField: state.courses.addOrEditMissingField,
-		addOrEditFailure: state.courses.addOrEditFailure,
-		paginationEditor: state.courses.paginationEditor
+		addOrEditFailure: state.courses.addOrEditFailure
 	};
 };
 
-export default connect(mapStateToProps, { fetchCourseByFieldAction, fetchCoursesByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, setPaginationCoursesEditorAction, fetchCategoriesAction, deleteCourseAction })(NotePage);
+export default connect(mapStateToProps, { fetchCourseByFieldAction, createCourseAction, updateCourseAction, emptyErrorsAction, fetchCategoriesAction, deleteCourseAction })(NotePage);
