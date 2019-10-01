@@ -71,7 +71,7 @@ class EditorPanelExplorer extends Component {
 					{ this.renderCoursesList()}
 				</List>
 
-				{ (coursesPagesCount > 1 && activePage < coursesPagesCount) && <Button basic inverted size="small" title="Load more notes" onClick={this.handleOnClickLoadMore} content="Load more notes" />}
+				{ (coursesPagesCount > 1 && activePage < coursesPagesCount) && <Button basic inverted size="small" title="Load more notes" onClick={this.handleOnClickLoadMore} content="Load more notes" style={{ minHeight: 34 }} />}
 			</div>
 		);
 	}
