@@ -110,7 +110,7 @@ const myVar = 'content...';
 
 		`;
 
-		this.pageMode = null;
+		this.pageMode = 'tiny';
 		if (this.props.location && this.props.location.state) {
 			if (this.props.location.state.typeNote === 'md') {
 				this.pageMode = 'markDown';
