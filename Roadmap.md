@@ -104,7 +104,10 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
+- finir editor pour tinyMce
+- bug sur height editor (mettre overflow y)
+- clean code + check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
+- redesign comme Tcloud
 
 - dotenv voir pourquoi deplacé dans devDependance
 - Redesign buttons de la toolbar comme tinyMce
