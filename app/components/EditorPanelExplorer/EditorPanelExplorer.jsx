@@ -28,8 +28,7 @@ class EditorPanelExplorer extends Component {
 
 		return courses.map((c) => {
 			const isTypeMarkDown = c.type !== 'wy';
-			const pathname = isTypeMarkDown ? `/courseMd/edit/${c._id}` : `/course/edit/${c._id}`;
-			const pathCourseToEdit = { pathname, state: { isMenuPanelOpen: false } };
+			const pathname = { pathname: `/course/edit/${c._id}`, state: { typeNote: c.type } };
 			const icon = isTypeMarkDown ? 'file' : 'file text';
 			const isActive = course._id === c._id;
 			const stars = course.stars || {};
@@ -42,8 +41,8 @@ class EditorPanelExplorer extends Component {
 					as={isDirty ? 'a' : Link}
 					active={isActive}
 					className={cx(isActive ? 'active-course' : '')}
-					to={pathCourseToEdit}
-					onClick={isDirty ? handleModalOpen_CanClose(pathCourseToEdit) : null}
+					to={pathname}
+					onClick={isDirty ? handleModalOpen_CanClose(pathname) : null}
 				>
 					<div className={cx('title-container')}>
 						<Icon name={icon} />

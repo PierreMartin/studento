@@ -39,7 +39,7 @@ class CourseToolbar extends Component {
 
 	render() {
 		const { course, authentification, userMe } = this.props;
-		const pathCourseToEdit = course.type !== 'wy' ? `/courseMd/edit/${course._id}` : `/course/edit/${course._id}`;
+		const pathCourseToEdit = { pathname: `/course/edit/${course._id}`, state: { typeNote: course.type } };
 		const author = course.uId || {};
 		const disableRating = !authentification.authenticated || author._id === userMe._id;
 		const stars = course.stars || {};

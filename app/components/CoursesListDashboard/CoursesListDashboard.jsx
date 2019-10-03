@@ -102,7 +102,7 @@ class CoursesListDashboard extends Component {
 
 		return courses.map((course, key) => {
 			const courseDate = moment(course.created_at).format('L, h:mm:ss a');
-			const pathCourseToEdit = course.type !== 'wy' ? `/courseMd/edit/${course._id}` : `/course/edit/${course._id}`;
+			const pathCourseToEdit = { pathname: `/course/edit/${course._id}`, state: { typeNote: course.type } };
 			const stars = course.stars || {};
 			const average = stars.average || 0;
 			let numberOfVote = 'No vote';
@@ -175,8 +175,8 @@ class CoursesListDashboard extends Component {
 				{ (courses.length <= 0) ?
 					<div>
 						<div className={cx('no-courses')}>You don't have some notes yet</div>
-						<Button basic color="grey" content="Add new Note" icon="add" as={Link} to="/course/create/new" style={{ margin: '5px' }} />
-						<Button basic color="grey" content="Add new Markdown Note (for developer)" icon="add" as={Link} to="/courseMd/create/new" style={{ margin: '5px' }} />
+						<Button basic color="grey" content="Add new Note" icon="add" as={Link} to={{ pathname: '/course/create/new', state: { typeNote: 'wy' } }} style={{ margin: '5px' }} />
+						<Button basic color="grey" content="Add new Markdown Note (for developer)" icon="add" as={Link} to={{ pathname: '/course/create/new', state: { typeNote: 'md' } }} style={{ margin: '5px' }} />
 					</div>
 					:
 					<Table celled compact="very" sortable fixed>
@@ -198,8 +198,8 @@ class CoursesListDashboard extends Component {
 							<Table.Row>
 								<Table.HeaderCell colSpan="5">
 									<Popup trigger={<Button basic inverted icon="file" floated="right" content="New course" className={cx('button', 'new-note')} />} flowing hoverable inverted>
-										<Button basic inverted size="small" icon="file text" as={Link} to="/course/create/new" content="New Note" />
-										<Button basic inverted size="small" icon="file" as={Link} to="/courseMd/create/new" content="New Markdown Note" />
+										<Button basic inverted size="small" icon="file text" as={Link} to={{ pathname: '/course/create/new', state: { typeNote: 'wy' } }} content="New Note" />
+										<Button basic inverted size="small" icon="file" as={Link} to={{ pathname: '/course/create/new', state: { typeNote: 'md' } }} content="New Markdown Note" />
 									</Popup>
 
 									{ coursesPagesCount > 1 && this.renderPagination(coursesPagesCount, activePage) }

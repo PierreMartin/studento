@@ -110,11 +110,19 @@ const myVar = 'content...';
 
 		`;
 
+		this.pageMode = null;
+		if (this.props.location && this.props.location.state) {
+			if (this.props.location.state.typeNote === 'md') {
+				this.pageMode = 'markDown';
+			} else if (this.props.location.state.typeNote === 'wy') {
+				this.pageMode = 'tiny';
+			}
+		}
+
 		this.defaultMessageEditorTiny = 'default for Tiny';
 		this.rendererMarked = null;
 		this.refEditorMd = null;
 		this.refPreviewMd = null;
-		this.pageMode = this.props.route.path === '/courseMd/:action/:id' ? 'markDown' : 'tiny';
 		this.assetsCodeMirrorLoaded = false;
 		this.isComponentDidMounted = false;
 
@@ -922,7 +930,7 @@ const myVar = 'content...';
 					*/
 
 					this.setState({ modalDeleteNote: { isOpen: false, courseToDelete: {} } });
-					browserHistory.push('/courseMd/create/new');
+					browserHistory.push({ pathname: '/course/create/new', state: { typeNote: 'md' } });
 				});
 			}
 		};

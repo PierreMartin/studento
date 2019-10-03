@@ -105,7 +105,6 @@ export default (store) => {
 			<Route component={LayoutMainApp}>
 				<Route path="/testDev" component={Test} onEnter={requireAuth} />
 				<Route path="/course/:action/:id" component={NotePage} onEnter={requireAuthEditor} />
-				<Route path="/courseMd/:action/:id" component={NotePage} onEnter={requireAuthEditor} />
 			</Route>
 		</Route>
   );

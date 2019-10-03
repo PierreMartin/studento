@@ -47,7 +47,11 @@
       .title-container {
         display: flex;
         flex-direction: row;
-        .title {}
+        .title {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
         i { color: $colorTextMain !important; }
       }
       .rating {

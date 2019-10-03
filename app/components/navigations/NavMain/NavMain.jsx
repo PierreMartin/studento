@@ -220,8 +220,8 @@ class NavigationMain extends Component {
 			return (
 				<Dropdown item icon="add" title="Add a Note" className={cx('show', 'menu-add-note')}>
 					<Dropdown.Menu className={cx('dropdown-menu')}>
-						<Dropdown.Item icon="add" text="Add a Note" as={Link} to="/course/create/new" />
-						<Dropdown.Item icon="add" text="Add a Markdown Note" as={Link} to="/courseMd/create/new" />
+						<Dropdown.Item icon="add" text="Add a Note" as={Link} to={{ pathname: '/course/create/new', state: { typeNote: 'wy' } }} />
+						<Dropdown.Item icon="add" text="Add a Markdown Note" as={Link} to={{ pathname: '/course/create/new', state: { typeNote: 'md' } }} />
 					</Dropdown.Menu>
 				</Dropdown>
 			);

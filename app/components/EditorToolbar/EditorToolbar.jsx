@@ -61,8 +61,8 @@ const EditorToolbar = (
 		<div className={cx('toolbar', 'toolbar-settings')}>
 			<Button.Group basic size="small" className={cx('button-group')}>
 				<Button icon="arrow left" title="Exit" as={isDirty ? 'button' : Link} to="/dashboard" onClick={isDirty ? handleModalOpen_CanClose('/dashboard') : null} />
-				<Button style={stylePopup} size="small" icon="file text" as={isDirty ? 'button' : Link} to="/course/create/new" onClick={isDirty ? handleModalOpen_CanClose('/course/create/new') : null} title="New Note" />
-				<Button style={stylePopup} size="small" icon="file" as={isDirty ? 'button' : Link} to="/courseMd/create/new" onClick={isDirty ? handleModalOpen_CanClose('/courseMd/create/new') : null} title="New Markdown Note" />
+				<Button style={stylePopup} size="small" icon="file text" as={isDirty ? 'button' : Link} to={{ pathname: '/course/create/new', state: { typeNote: 'wy' } }} onClick={isDirty ? handleModalOpen_CanClose({ pathname: '/course/create/new', state: { typeNote: 'wy' } }) : null} title="New Note" />
+				<Button style={stylePopup} size="small" icon="file" as={isDirty ? 'button' : Link} to={{ pathname: '/course/create/new', state: { typeNote: 'md' } }} onClick={isDirty ? handleModalOpen_CanClose({ pathname: '/course/create/new', state: { typeNote: 'md' } }) : null} title="New Markdown Note" />
 				<Button disabled={!isEditing} icon="eye" title="Got to page" as={isDirty ? 'button' : Link} to={`/course/${course._id}`} onClick={isDirty ? handleModalOpen_CanClose(`/course/${course._id}`) : null} />
 			</Button.Group>
 

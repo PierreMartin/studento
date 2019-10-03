@@ -122,8 +122,8 @@ class NavMainMobile extends Component {
 						</ul>
 					</header>
 					<ul>
-						<li><Link to="/course/create/new" >Add a Note</Link></li>
-						<li><Link to="/courseMd/create/new">Add a Markdown Note</Link></li>
+						<li><Link to={{ pathname: '/course/create/new', state: { typeNote: 'wy' } }} >Add a Note</Link></li>
+						<li><Link to={{ pathname: '/course/create/new', state: { typeNote: 'md' } }}>Add a Markdown Note</Link></li>
 					</ul>
 				</div>
 			</nav>
