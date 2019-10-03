@@ -189,8 +189,8 @@ const myVar = 'content...';
 				const isEditing = course && typeof course._id !== 'undefined';
 				const isEditMode = !isEditing;
 
-				if (this.pageMode === 'markDown' && isEditMode) {
-					this.editorCm && this.editorCm.setValue('');
+				if (this.pageMode === 'markDown' && isEditMode && this.editorCm) {
+					this.editorCm.setValue('');
 				}
 
 				this.setState({
