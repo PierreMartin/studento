@@ -190,7 +190,7 @@ const myVar = 'content...';
 				const isEditMode = !isEditing;
 
 				if (this.pageMode === 'markDown' && isEditMode) {
-					this.editorCm.setValue('');
+					this.editorCm && this.editorCm.setValue('');
 				}
 
 				this.setState({
