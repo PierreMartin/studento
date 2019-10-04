@@ -22,6 +22,7 @@ import stylesMain from '../css/main.scss';
 import stylesNotePage from './css/notePage.scss';
 
 const cx = classNames.bind({...stylesMain, ...stylesNotePage});
+let tinymce;
 
 class NotePage extends Component {
 	constructor(props) {
@@ -110,6 +111,39 @@ const myVar = 'content...';
 
 		`;
 
+		this.defaultMessageEditorTiny = `<h2 style="text-align: center;"><span style="color: #ff6600;"><img height="150" width="150" alt="Logo Hubnote" src="https://s3.eu-west-3.amazonaws.com/studento/150_36858799_1546961527198.jpg" style="color: #000000; font-size: 14px;"></span></h2>
+<h2 style="text-align: center;"><span style="color: #ff6600;">Title here</span></h2>
+<p>&nbsp;</p>
+<p>For <span style="background-color: #ffff00;">start to take notes</span>, <strong>remove</strong> this <span style="color: #999999;">sample content</span> or <strong>modify</strong> this one.</p>
+<p><a rel="noopener" href="https://hubnote.app" title="Example link">https://hubnote.ap</a></p>
+<h2>Table example:</h2>
+<table border="1" style="border-collapse: collapse; width: 100%;">
+<tbody>
+<tr>
+<td style="width: 33.3333%; text-align: center;"><strong>Table</strong></td>
+<td style="width: 33.3333%; text-align: center;"><strong>Are&nbsp;</strong></td>
+<td style="width: 33.3333%; text-align: center;"><strong>Cool</strong></td>
+</tr>
+<tr>
+<td style="width: 33.3333%; text-align: left;">Col 1</td>
+<td style="width: 33.3333%; text-align: center;">left-aligned</td>
+<td style="width: 33.3333%; text-align: right;">$33</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<h1>Titles Level 1</h1>
+<h2>Titles Level 2</h2>
+<h3>Titles Level 3</h3>
+<h4>Titles Level 4</h4>
+<h5>Titles Level 5</h5>
+<h6>Titles Level 5</h6>
+<p>&nbsp;</p>
+<h2>Code sample example:</h2>
+<pre class="language-javascript"><code>const myvar = 'content...';</code></pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>`;
+
 		this.pageMode = 'tiny';
 		if (this.props.location && this.props.location.state) {
 			if (this.props.location.state.typeNote === 'md') {
@@ -119,11 +153,11 @@ const myVar = 'content...';
 			}
 		}
 
-		this.defaultMessageEditorTiny = 'default for Tiny';
 		this.rendererMarked = null;
 		this.refEditorMd = null;
 		this.refPreviewMd = null;
 		this.assetsCodeMirrorLoaded = false;
+		this.assetsTinyMceLoaded = false;
 		this.isComponentDidMounted = false;
 
 		this.state = {
@@ -172,14 +206,25 @@ const myVar = 'content...';
 	}
 
 	componentDidUpdate(prevProps, prevstate) {
-		// Edit mode actived:
+		// Markdown edit mode actived:
 		if (prevstate.isEditMode !== this.state.isEditMode && this.state.isEditMode && this.pageMode === 'markDown') {
 			const timeOffset = !this.state.isEditing && !this.isComponentDidMounted ? 800 : 0;
 
-			this.CodeMirror = this.loadCodeMirrorAssets();
+			this.loadCodeMirrorAssets();
 			setTimeout(() => {
 				this.codeMirrorInit();
 				this.isComponentDidMounted = true;
+			}, timeOffset);
+		}
+
+		// TinyMce edit mode actived:
+		if (prevstate.isEditMode !== this.state.isEditMode && this.state.isEditMode && this.pageMode === 'tiny') {
+			const timeOffset = !this.state.isEditing && !this.isComponentDidMounted ? 800 : 0;
+
+			this.loadTinyMceAssets();
+			setTimeout(() => {
+				// this.codeMirrorInit();
+				// this.isComponentDidMounted = true;
 			}, timeOffset);
 		}
 
@@ -234,7 +279,7 @@ const myVar = 'content...';
 	}
 
 	loadCodeMirrorAssets() {
-		if (this.assetsCodeMirrorLoaded) { return this.CodeMirror; }
+		if (this.assetsCodeMirrorLoaded) { return; }
 
 		const codeMirror = require('codemirror/lib/codemirror');
 		require('codemirror/lib/codemirror.css');
@@ -283,7 +328,22 @@ const myVar = 'content...';
 		require('codemirror/mode/mathematica/mathematica');
 
 		this.assetsCodeMirrorLoaded = true;
-		return codeMirror;
+		this.CodeMirror = codeMirror;
+	}
+
+	loadTinyMceAssets() {
+		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined' && !this.assetsTinyMceLoaded) {
+			tinymce = require('tinymce');
+			require('tinymce/themes/silver');
+			require('tinymce/plugins/wordcount');
+			require('tinymce/plugins/table');
+			require('tinymce/plugins/codesample');
+			require('tinymce/plugins/link');
+			require('tinymce/plugins/image');
+			require('tinymce/plugins/textcolor');
+
+			this.assetsTinyMceLoaded = true;
+		}
 	}
 
 	codeMirrorInit() {
@@ -1021,6 +1081,7 @@ const myVar = 'content...';
 								isCanEdit
 								isEditMode={isEditMode}
 								content={content}
+								tinymce={tinymce}
 								{...this.props}
 								{...this.state}
 							/>
