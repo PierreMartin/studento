@@ -24,6 +24,7 @@ class EditorTiny extends Component {
 			require('tinymce/plugins/textcolor');
 
 			this.props.handleSetAssetsTinyMceLoaded();
+			// TODO faire un setState({ tinymce });
 		}
 	}
 
