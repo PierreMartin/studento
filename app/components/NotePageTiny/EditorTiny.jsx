@@ -28,7 +28,7 @@ class EditorTiny extends Component {
 	}
 
 	render() {
-		const { content, handleEditorChange, heightEditor } = this.props;
+		const { content, handleEditorTinyChange, heightEditor } = this.props;
 
 		return (
 			<div className={cx('editor-edition')}>
@@ -36,7 +36,7 @@ class EditorTiny extends Component {
 					tinymce && (
 						<TinyEditor
 							id="tinyEditor"
-							onEditorChange={handleEditorChange}
+							onEditorChange={handleEditorTinyChange}
 							content={content}
 							tinymce={tinymce}
 							heightDocument={heightEditor}
@@ -49,7 +49,7 @@ class EditorTiny extends Component {
 }
 
 EditorTiny.propTypes = {
-	handleEditorChange: PropTypes.func,
+	handleEditorTinyChange: PropTypes.func,
 	heightEditor: PropTypes.number,
 	content: PropTypes.string,
 	assetsTinyMceLoaded: PropTypes.bool,

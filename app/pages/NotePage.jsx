@@ -36,6 +36,7 @@ class NotePage extends Component {
 		this.handleOpenPanelSettings = this.handleOpenPanelSettings.bind(this);
 		this.updateWindowDimensionsMd = this.updateWindowDimensionsMd.bind(this);
 		this.handleSetAssetsTinyMceLoaded = this.handleSetAssetsTinyMceLoaded.bind(this);
+		this.handleEditorTinyChange = this.handleEditorTinyChange.bind(this);
 
 		// Delete modal:
 		this.handleModalOpen_DeleteNote = this.handleModalOpen_DeleteNote.bind(this);
@@ -418,6 +419,16 @@ const myVar = 'content...';
 		this.editorCm.setSize(null, heightEditor);
 
 		setTimeout(() => this.initScrollingMd(), 20); // For Firefox because it keep the scroll position after reload
+	}
+
+	handleEditorTinyChange(content) {
+		// handleEditorChange
+		const oldStateTyping = this.state.fieldsTyping;
+
+		this.setState({
+			fieldsTyping: {...oldStateTyping, content },
+			isDirty: true
+		});
 	}
 
 	getSizeEditorMd() {
@@ -1087,7 +1098,7 @@ const myVar = 'content...';
 								isCanEdit
 								isEditMode={isEditMode}
 								content={content}
-								handleEditorChange={() => {}}
+								handleEditorTinyChange={this.handleEditorTinyChange}
 								assetsTinyMceLoaded={this.assetsTinyMceLoaded}
 								handleSetAssetsTinyMceLoaded={this.handleSetAssetsTinyMceLoaded}
 								{...this.props}
