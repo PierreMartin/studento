@@ -22,7 +22,6 @@ import stylesMain from '../css/main.scss';
 import stylesNotePage from './css/notePage.scss';
 
 const cx = classNames.bind({...stylesMain, ...stylesNotePage});
-let tinymce;
 
 class NotePage extends Component {
 	constructor(props) {
@@ -36,6 +35,7 @@ class NotePage extends Component {
 		this.handleOpenPanelExplorer = this.handleOpenPanelExplorer.bind(this);
 		this.handleOpenPanelSettings = this.handleOpenPanelSettings.bind(this);
 		this.updateWindowDimensionsMd = this.updateWindowDimensionsMd.bind(this);
+		this.handleSetAssetsTinyMceLoaded = this.handleSetAssetsTinyMceLoaded.bind(this);
 
 		// Delete modal:
 		this.handleModalOpen_DeleteNote = this.handleModalOpen_DeleteNote.bind(this);
@@ -144,15 +144,6 @@ const myVar = 'content...';
 <p>&nbsp;</p>
 <p>&nbsp;</p>`;
 
-		this.pageMode = 'tiny';
-		if (this.props.location && this.props.location.state) {
-			if (this.props.location.state.typeNote === 'md') {
-				this.pageMode = 'markDown';
-			} else if (this.props.location.state.typeNote === 'wy') {
-				this.pageMode = 'tiny';
-			}
-		}
-
 		this.rendererMarked = null;
 		this.refEditorMd = null;
 		this.refPreviewMd = null;
@@ -161,6 +152,7 @@ const myVar = 'content...';
 		this.isComponentDidMounted = false;
 
 		this.state = {
+			pageMode: 'tiny',
 			contentMarkedSanitized: '',
 			fieldsTyping: {
 				content: '',
@@ -194,47 +186,51 @@ const myVar = 'content...';
 			const isEditing = course && typeof course._id !== 'undefined';
 			const isEditMode = !isEditing;
 
-			if (this.pageMode === 'markDown') {
+			const pageMode = this.getPageMode(course);
+
+			if (pageMode === 'markDown') {
 				// Resize element child to 100% height:
 				this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
 				this.updateWindowDimensionsMd();
 				window.addEventListener('resize', this.updateWindowDimensionsMd);
 			}
 
-			this.setState({ isEditing, isEditMode });
+			this.setState({ isEditing, isEditMode, pageMode });
 		});
 	}
 
 	componentDidUpdate(prevProps, prevstate) {
+		const editModeChanged = prevstate.isEditMode !== this.state.isEditMode;
+		const prevTypeNote = prevProps.location && prevProps.location.state && prevProps.location.state.typeNote;
+		const currTypeNote = this.props.location && this.props.location.state && this.props.location.state.typeNote;
+		const linkClicked = prevTypeNote && currTypeNote && prevTypeNote !== currTypeNote;
+		const isCreate = this.props.routeParams && this.props.routeParams.action === 'create';
+		let pageMode = 'tiny';
+		if (this.props.location && this.props.location.state && this.props.location.state.typeNote === 'md') {
+			pageMode = 'markDown';
+		} else if (this.props.location && this.props.location.state && this.props.location.state.typeNote === 'wy') {
+			pageMode = 'tiny';
+		}
+
 		// Markdown edit mode actived:
-		if (prevstate.isEditMode !== this.state.isEditMode && this.state.isEditMode && this.pageMode === 'markDown') {
+		if ((editModeChanged || (linkClicked && isCreate)) && this.state.isEditMode && pageMode === 'markDown') {
 			const timeOffset = !this.state.isEditing && !this.isComponentDidMounted ? 800 : 0;
 
-			this.loadCodeMirrorAssets();
+			this.loadCodeMirrorAssets(); // TODO mettre ca dans componentDidMount de EditorMd ??
 			setTimeout(() => {
 				this.codeMirrorInit();
 				this.isComponentDidMounted = true;
 			}, timeOffset);
 		}
 
-		// TinyMce edit mode actived:
-		if (prevstate.isEditMode !== this.state.isEditMode && this.state.isEditMode && this.pageMode === 'tiny') {
-			const timeOffset = !this.state.isEditing && !this.isComponentDidMounted ? 800 : 0;
-
-			this.loadTinyMceAssets();
-			setTimeout(() => {
-				// this.codeMirrorInit();
-				// this.isComponentDidMounted = true;
-			}, timeOffset);
-		}
-
 		// Change pages:
-		if (prevProps.params.id !== this.props.params.id) {
+		const pageChanged = prevProps.params.id !== this.props.params.id;
+		if (pageChanged || linkClicked) {
 			this.loadDatas().then(({course}) => {
 				const isEditing = course && typeof course._id !== 'undefined';
 				const isEditMode = !isEditing;
 
-				if (this.pageMode === 'markDown' && isEditMode && this.editorCm) {
+				if (pageMode === 'markDown' && isEditMode && this.editorCm) {
 					this.editorCm.setValue('');
 				}
 
@@ -243,7 +239,8 @@ const myVar = 'content...';
 					isEditMode,
 					fieldsTyping: { content: '', template: {} },
 					isDirty: false,
-					isPanelSettingsOpen: false
+					isPanelSettingsOpen: false,
+					pageMode
 				}, () => {
 					setTimeout(() => {
 						this.refPreviewMd && this.refPreviewMd.scrollTo(0, 0);
@@ -270,6 +267,25 @@ const myVar = 'content...';
 			meta: [{ name: 'description', content: 'Add a Note...' }],
 			link: []
 		};
+	}
+
+	getPageMode(course = null) {
+		let pageMode = 'tiny';
+		if (this.props.location && this.props.location.state) {
+			if (this.props.location.state.typeNote === 'md') {
+				pageMode = 'markDown';
+			} else if (this.props.location.state.typeNote === 'wy') {
+				pageMode = 'tiny';
+			}
+		}
+
+		if (course && course.type === 'md') {
+			pageMode = 'markDown';
+		} else if (course && course.type === 'wy') {
+			pageMode = 'tiny';
+		}
+
+		return pageMode;
 	}
 
 	loadDatas() {
@@ -331,19 +347,8 @@ const myVar = 'content...';
 		this.CodeMirror = codeMirror;
 	}
 
-	loadTinyMceAssets() {
-		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined' && !this.assetsTinyMceLoaded) {
-			tinymce = require('tinymce');
-			require('tinymce/themes/silver');
-			require('tinymce/plugins/wordcount');
-			require('tinymce/plugins/table');
-			require('tinymce/plugins/codesample');
-			require('tinymce/plugins/link');
-			require('tinymce/plugins/image');
-			require('tinymce/plugins/textcolor');
-
-			this.assetsTinyMceLoaded = true;
-		}
+	handleSetAssetsTinyMceLoaded() {
+		this.assetsTinyMceLoaded = true;
 	}
 
 	codeMirrorInit() {
@@ -429,12 +434,12 @@ const myVar = 'content...';
 
 		let defaultMessageEditor = '';
 
-		if (this.pageMode === 'markDown') {
+		if (this.state.pageMode === 'markDown') {
 			const numberCoursesMd = courses && courses.filter(course => course.type === 'md').length;
 			defaultMessageEditor = (numberCoursesMd === 0) ? this.defaultMessageEditorMd : '';
 		}
 
-		if (this.pageMode === 'tinyMce') {
+		if (this.state.pageMode === 'tinyMce') {
 			const numberCoursesTiny = courses && courses.filter(course => course.type === 'wy').length;
 			defaultMessageEditor = (numberCoursesTiny === 0) ? this.defaultMessageEditorTiny : '';
 		}
@@ -1020,7 +1025,8 @@ const myVar = 'content...';
 			isEditMode,
 			canCloseModal,
 			modalDeleteNote,
-			activePage
+			activePage,
+			pageMode
 		} = this.state;
 
 		const fields = this.getFieldsVal(fieldsTyping, course);
@@ -1063,7 +1069,7 @@ const myVar = 'content...';
 					/>
 
 					<div className={cx('editor-container-full', isPanelExplorerOpen ? 'panel-explorer-open' : '')} style={isCourseOneLoading || isCourseAllLoading ? {display: 'none'} : {}}>
-						{ this.pageMode === 'markDown' && (
+						{ pageMode === 'markDown' && (
 							<ContainerMd
 								isCanEdit
 								isEditMode={isEditMode}
@@ -1076,12 +1082,14 @@ const myVar = 'content...';
 							/>
 						)}
 
-						{ this.pageMode === 'tiny' && (
+						{ pageMode === 'tiny' && (
 							<ContainerTiny
 								isCanEdit
 								isEditMode={isEditMode}
 								content={content}
-								tinymce={tinymce}
+								handleEditorChange={() => {}}
+								assetsTinyMceLoaded={this.assetsTinyMceLoaded}
+								handleSetAssetsTinyMceLoaded={this.handleSetAssetsTinyMceLoaded}
 								{...this.props}
 								{...this.state}
 							/>
@@ -1101,7 +1109,7 @@ const myVar = 'content...';
 						handleInputChange={this.handleInputChange}
 						handleSave={this.handleSave}
 						isDirty={isDirty}
-						pageMode={this.pageMode}
+						pageMode={pageMode}
 						handleModalOpen_DeleteNote={this.handleModalOpen_DeleteNote}
 					/>
 				</div>

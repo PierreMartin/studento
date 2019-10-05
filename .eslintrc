@@ -35,6 +35,8 @@
     "react/jsx-max-props-per-line": "off",
     "react/forbid-prop-types": "off",
     "react/sort-comp": "off",
+    "react/no-did-mount-set-state": "off",
+    "react/no-did-update-set-state": "off",
     "import/no-extraneous-dependencies": "off",
     "import/prefer-default-export": "off",
     "class-methods-use-this": "off",
