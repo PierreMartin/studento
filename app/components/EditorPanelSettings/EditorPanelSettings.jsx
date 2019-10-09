@@ -81,7 +81,7 @@ class EditorSettingsExplorer extends Component {
 							</Message>
 						</Popup>
 
-						{ pageMode !== 'tiny' ? (
+						{ pageMode !== 'wy' ? (
 							<Segment className={cx('form-templates-container')}>
 								<Header as="h4" icon="edit" content="Templates" className={cx('header')} />
 								<Form.Field inline className={cx('form-templates')}>

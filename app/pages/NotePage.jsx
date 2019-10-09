@@ -153,7 +153,7 @@ const myVar = 'content...';
 		this.isComponentDidMounted = false;
 
 		this.state = {
-			pageMode: 'tiny',
+			pageMode: 'wy',
 			contentMarkedSanitized: '',
 			fieldsTyping: {
 				content: '',
@@ -189,7 +189,7 @@ const myVar = 'content...';
 
 			const pageMode = this.getPageMode(course);
 
-			if (pageMode === 'markDown') {
+			if (pageMode === 'md') {
 				// Resize element child to 100% height:
 				this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
 				this.updateWindowDimensionsMd();
@@ -206,15 +206,14 @@ const myVar = 'content...';
 		const currTypeNote = this.props.location && this.props.location.state && this.props.location.state.typeNote;
 		const linkClicked = prevTypeNote && currTypeNote && prevTypeNote !== currTypeNote;
 		const isCreate = this.props.routeParams && this.props.routeParams.action === 'create';
-		let pageMode = 'tiny';
-		if (this.props.location && this.props.location.state && this.props.location.state.typeNote === 'md') {
-			pageMode = 'markDown';
-		} else if (this.props.location && this.props.location.state && this.props.location.state.typeNote === 'wy') {
-			pageMode = 'tiny';
+		let pageMode = 'wy';
+
+		if (this.props.location && this.props.location.state && Object.keys(this.props.location.state).length) {
+			pageMode = this.props.location.state.typeNote;
 		}
 
 		// Markdown edit mode actived:
-		if ((editModeChanged || (linkClicked && isCreate)) && this.state.isEditMode && pageMode === 'markDown') {
+		if ((editModeChanged || (linkClicked && isCreate)) && this.state.isEditMode && pageMode === 'md') {
 			const timeOffset = !this.state.isEditing && !this.isComponentDidMounted ? 800 : 0;
 
 			this.loadCodeMirrorAssets(); // TODO mettre ca dans componentDidMount de EditorMd ??
@@ -231,7 +230,7 @@ const myVar = 'content...';
 				const isEditing = course && typeof course._id !== 'undefined';
 				const isEditMode = !isEditing;
 
-				if (pageMode === 'markDown' && isEditMode && this.editorCm) {
+				if (pageMode === 'md' && isEditMode && this.editorCm) {
 					this.editorCm.setValue('');
 				}
 
@@ -271,19 +270,15 @@ const myVar = 'content...';
 	}
 
 	getPageMode(course = null) {
-		let pageMode = 'tiny';
-		if (this.props.location && this.props.location.state) {
-			if (this.props.location.state.typeNote === 'md') {
-				pageMode = 'markDown';
-			} else if (this.props.location.state.typeNote === 'wy') {
-				pageMode = 'tiny';
-			}
+		let pageMode = 'wy';
+		if (this.props.location && this.props.location.state && Object.keys(this.props.location.state).length) {
+			pageMode = this.props.location.state.typeNote;
 		}
 
 		if (course && course.type === 'md') {
-			pageMode = 'markDown';
+			pageMode = 'md';
 		} else if (course && course.type === 'wy') {
-			pageMode = 'tiny';
+			pageMode = 'wy';
 		}
 
 		return pageMode;
@@ -445,12 +440,12 @@ const myVar = 'content...';
 
 		let defaultMessageEditor = '';
 
-		if (this.state.pageMode === 'markDown') {
+		if (this.state.pageMode === 'md') {
 			const numberCoursesMd = courses && courses.filter(course => course.type === 'md').length;
 			defaultMessageEditor = (numberCoursesMd === 0) ? this.defaultMessageEditorMd : '';
 		}
 
-		if (this.state.pageMode === 'tinyMce') {
+		if (this.state.pageMode === 'wy') {
 			const numberCoursesTiny = courses && courses.filter(course => course.type === 'wy').length;
 			defaultMessageEditor = (numberCoursesTiny === 0) ? this.defaultMessageEditorTiny : '';
 		}
@@ -516,7 +511,7 @@ const myVar = 'content...';
 			data.fields = fieldsTyping;
 			data.userMeId = userMe._id;
 			data.createdAt = new Date().toISOString();
-			data.fields.type = 'md';
+			data.fields.type = this.state.pageMode;
 			createCourseAction(data, coursesPagesCount, activePage)
 				.then(() => {
 					this.setState({ category: { lastSelected: null }, fieldsTyping: {}, isDirty: false, isPanelSettingsOpen: false });
@@ -1080,7 +1075,7 @@ const myVar = 'content...';
 					/>
 
 					<div className={cx('editor-container-full', isPanelExplorerOpen ? 'panel-explorer-open' : '')} style={isCourseOneLoading || isCourseAllLoading ? {display: 'none'} : {}}>
-						{ pageMode === 'markDown' && (
+						{ pageMode === 'md' && (
 							<ContainerMd
 								isCanEdit
 								isEditMode={isEditMode}
@@ -1093,7 +1088,7 @@ const myVar = 'content...';
 							/>
 						)}
 
-						{ pageMode === 'tiny' && (
+						{ pageMode === 'wy' && (
 							<ContainerTiny
 								isCanEdit
 								isEditMode={isEditMode}

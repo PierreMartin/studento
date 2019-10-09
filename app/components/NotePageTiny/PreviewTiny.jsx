@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
+import { loadHighlightAssets } from '../common/loadLanguages';
+import hljs from 'highlight.js/lib/highlight';
 import classNames from 'classnames/bind';
 import stylesMain from '../../css/main.scss';
 import stylesNotePage from '../../pages/css/notePage.scss';
@@ -20,6 +22,7 @@ class PreviewTiny extends Component {
 	componentDidMount() {
 		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined' && DOMPurify && typeof DOMPurify.sanitize === 'function') {
 			this.setState({ contentMarkedSanitized: DOMPurify.sanitize(this.props.content)});
+			loadHighlightAssets(hljs); // Load highlight
 		}
 	}
 
