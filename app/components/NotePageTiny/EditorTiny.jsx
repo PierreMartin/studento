@@ -7,14 +7,13 @@ import stylesNotePage from '../../pages/css/notePage.scss';
 import stylesCourse from '../../pages/css/course.scss';
 
 const cx = classNames.bind({...stylesMain, ...stylesNotePage, ...stylesCourse});
-let tinymce;
 
 class EditorTiny extends Component {
 	componentDidMount() {
-		if (this.props.assetsTinyMceLoaded) { return; }
+		if (this.props.tinymce) { return; }
 
 		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
-			tinymce = require('tinymce');
+			const tinymce = require('tinymce');
 			require('tinymce/themes/silver');
 			require('tinymce/plugins/wordcount');
 			require('tinymce/plugins/table');
@@ -23,13 +22,12 @@ class EditorTiny extends Component {
 			require('tinymce/plugins/image');
 			require('tinymce/plugins/textcolor');
 
-			this.props.handleSetAssetsTinyMceLoaded();
-			// TODO faire un setState({ tinymce });
+			this.props.handleSetTinymce(tinymce);
 		}
 	}
 
 	render() {
-		const { content, handleEditorTinyChange, heightEditor } = this.props;
+		const { content, handleEditorTinyChange, heightEditor, tinymce } = this.props;
 
 		return (
 			<div className={cx('editor-edition')}>
@@ -50,11 +48,11 @@ class EditorTiny extends Component {
 }
 
 EditorTiny.propTypes = {
-	handleEditorTinyChange: PropTypes.func,
-	heightEditor: PropTypes.number,
+	tinymce: PropTypes.any,
+	handleSetTinymce: PropTypes.func,
 	content: PropTypes.string,
-	assetsTinyMceLoaded: PropTypes.bool,
-	handleSetAssetsTinyMceLoaded: PropTypes.func
+	handleEditorTinyChange: PropTypes.func,
+	heightEditor: PropTypes.number
 };
 
 export default EditorTiny;

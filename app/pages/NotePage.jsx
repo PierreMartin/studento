@@ -35,7 +35,7 @@ class NotePage extends Component {
 		this.handleOpenPanelExplorer = this.handleOpenPanelExplorer.bind(this);
 		this.handleOpenPanelSettings = this.handleOpenPanelSettings.bind(this);
 		this.updateWindowDimensionsMd = this.updateWindowDimensionsMd.bind(this);
-		this.handleSetAssetsTinyMceLoaded = this.handleSetAssetsTinyMceLoaded.bind(this);
+		this.handleSetTinymce = this.handleSetTinymce.bind(this);
 		this.handleEditorTinyChange = this.handleEditorTinyChange.bind(this);
 
 		// Delete modal:
@@ -149,10 +149,10 @@ const myVar = 'content...';
 		this.refEditorMd = null;
 		this.refPreviewMd = null;
 		this.assetsCodeMirrorLoaded = false;
-		this.assetsTinyMceLoaded = false;
 		this.isComponentDidMounted = false;
 
 		this.state = {
+			tinymce: null,
 			pageMode: 'wy',
 			contentMarkedSanitized: '',
 			fieldsTyping: {
@@ -343,8 +343,8 @@ const myVar = 'content...';
 		this.CodeMirror = codeMirror;
 	}
 
-	handleSetAssetsTinyMceLoaded() {
-		this.assetsTinyMceLoaded = true;
+	handleSetTinymce(tinymce) {
+		this.setState({ tinymce });
 	}
 
 	codeMirrorInit() {
@@ -1094,8 +1094,7 @@ const myVar = 'content...';
 								isEditMode={isEditMode}
 								content={content}
 								handleEditorTinyChange={this.handleEditorTinyChange}
-								assetsTinyMceLoaded={this.assetsTinyMceLoaded}
-								handleSetAssetsTinyMceLoaded={this.handleSetAssetsTinyMceLoaded}
+								handleSetTinymce={this.handleSetTinymce}
 								{...this.props}
 								{...this.state}
 							/>
