@@ -33,11 +33,13 @@ class PreviewTiny extends Component {
 	}
 
 	render() {
+		const { heightEditor } = this.props;
 		const { contentMarkedSanitized } = this.state;
 
 		return (
 			<div
 				className={cx('container-page-dark', 'preview')}
+				style={{ height: heightEditor + 'px' }}
 				id="container-page-view"
 				dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }}
 			/>

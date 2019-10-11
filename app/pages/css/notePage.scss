@@ -44,7 +44,16 @@
       }
     }
 
-    .tiny-editor-container {}
+    .tiny-editor-container {
+      // EDITOR
+      .editor-edition {}
+
+      // PREVIEW
+      .preview {
+        margin: 0;
+        overflow-x: scroll;
+      }
+    }
 
     .md-editor-container {
       display: flex;
@@ -61,6 +70,7 @@
       .preview {
         flex: 1 0 100%;
         margin: 0;
+        overflow-x: scroll;
         &.edit-mode {
           flex: 1 0 47%;
           overflow: scroll;

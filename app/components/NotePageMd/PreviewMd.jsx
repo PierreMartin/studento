@@ -122,7 +122,6 @@ class PreviewMd extends Component {
 
 		let classEditMode = '';
 		let classMobileMode = '';
-		const stylesPreview = { height: heightEditor + 'px' };
 
 		if (isEditMode) {
 			classEditMode = 'edit-mode';
@@ -145,7 +144,7 @@ class PreviewMd extends Component {
 				className={cx('container-page-dark', 'preview', classEditMode, classMobileMode)}
 				id="container-page-view"
 				ref={refPreviewMd}
-				style={stylesPreview}
+				style={{ height: heightEditor + 'px' }}
 				dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }}
 				// onScroll={handleScroll('preview')}
 			/>
