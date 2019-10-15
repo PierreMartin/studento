@@ -50,7 +50,8 @@ const EditorToolbar = (
 		addOrEditFailure,
 		handleClickToolbarMain,
 		handleInputChange,
-		handleSave
+		handleSave,
+		editorToolbarRef
 	}) => {
 	const messagesError = dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
 	const { categoriesOptions } = getCategoriesFormsSelect({ categories, course, category, isEditing });
@@ -58,7 +59,7 @@ const EditorToolbar = (
 	const stylePopup = { fontWeight: '900' };
 
 	return (
-		<div className={cx('toolbar', 'toolbar-settings')}>
+		<div className={cx('toolbar', 'toolbar-settings')} ref={editorToolbarRef}>
 			<Button.Group basic size="small" className={cx('button-group')}>
 				<Button icon="arrow left" title="Exit" as={isDirty ? 'button' : Link} to="/dashboard" onClick={isDirty ? handleModalOpen_CanClose('/dashboard') : null} />
 				<Button style={stylePopup} size="small" icon="file text" as={isDirty ? 'button' : Link} to={{ pathname: '/course/create/new', state: { typeNote: 'wy' } }} onClick={isDirty ? handleModalOpen_CanClose({ pathname: '/course/create/new', state: { typeNote: 'wy' } }) : null} title="New Note" />
@@ -128,7 +129,8 @@ EditorToolbar.propTypes = {
 	handleClickToolbarMain: PropTypes.func,
 	handleInputChange: PropTypes.func,
 	handleSave: PropTypes.func,
-	handleModalOpen_CanClose: PropTypes.func
+	handleModalOpen_CanClose: PropTypes.func,
+	editorToolbarRef: PropTypes.func
 };
 
 export default EditorToolbar;

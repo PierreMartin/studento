@@ -34,7 +34,7 @@ class NotePage extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleOpenPanelExplorer = this.handleOpenPanelExplorer.bind(this);
 		this.handleOpenPanelSettings = this.handleOpenPanelSettings.bind(this);
-		this.updateWindowDimensionsMd = this.updateWindowDimensionsMd.bind(this);
+		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 		this.handleSetTinymce = this.handleSetTinymce.bind(this);
 		this.handleEditorTinyChange = this.handleEditorTinyChange.bind(this);
 
@@ -68,6 +68,8 @@ class NotePage extends Component {
 		// this.prevNumberViewportChanged = 0;
 		// this.prevArrTitlesinEditor = [];
 
+		this.editorPanelExplorerRef = null;
+		this.editorToolbarRef = null;
 		this.rendererMarked = null;
 		this.editorCm = null;
 		this.editorCmMini = null;
@@ -189,12 +191,9 @@ const myVar = 'content...';
 
 			const pageMode = this.getPageMode(course);
 
-			if (pageMode === 'md') {
-				// Resize element child to 100% height:
-				this.heightPanel = (this.editorPanelExplorer && ReactDOM.findDOMNode(this.editorPanelExplorer).clientHeight) || 820;
-				this.updateWindowDimensionsMd();
-				window.addEventListener('resize', this.updateWindowDimensionsMd);
-			}
+			// Resize element child to 100% height:
+			this.updateWindowDimensions();
+			window.addEventListener('resize', this.updateWindowDimensions);
 
 			this.setState({ isEditing, isEditMode, pageMode });
 		});
@@ -257,8 +256,8 @@ const myVar = 'content...';
 	}
 
 	componentWillUnmount() {
-		this.updateWindowDimensionsMd();
-		window.removeEventListener('resize', this.updateWindowDimensionsMd);
+		this.updateWindowDimensions();
+		window.removeEventListener('resize', this.updateWindowDimensions);
 	}
 
 	getMetaData() {
@@ -410,7 +409,7 @@ const myVar = 'content...';
 		// Scroll sync - when re-rendering in CM editor:
 		// this.editorCm.on('viewportChange', () => { this.numberViewportChanged++; });
 
-		const { heightEditor } = this.getSizeEditorMd();
+		const { heightEditor } = this.getSizeEditor();
 		this.editorCm.setSize(null, heightEditor);
 
 		setTimeout(() => this.initScrollingMd(), 20); // For Firefox because it keep the scroll position after reload
@@ -426,12 +425,17 @@ const myVar = 'content...';
 		});
 	}
 
-	getSizeEditorMd() {
+	getSizeEditor() {
 		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
+		const heightEditorPanelExplorer = this.editorPanelExplorerRef ? ReactDOM.findDOMNode(this.editorPanelExplorerRef).clientHeight : 820;
+		const heightEditorToolbar = this.editorToolbarRef ? ReactDOM.findDOMNode(this.editorToolbarRef).clientHeight : 0;
 		let heightEditor = heightDocument;
-		if (this.heightPanel > heightDocument) heightEditor = this.heightPanel;
-		heightEditor -= 105;
 
+		if (heightEditorPanelExplorer > heightDocument) {
+			heightEditor = heightEditorPanelExplorer;
+		}
+
+		heightEditor -= heightEditorToolbar; // TODO finir ca
 		return { heightEditor };
 	}
 
@@ -475,12 +479,15 @@ const myVar = 'content...';
 		return fields;
 	}
 
-	updateWindowDimensionsMd() {
-		const { heightEditor } = this.getSizeEditorMd();
+	updateWindowDimensions() {
+		const { heightEditor } = this.getSizeEditor();
 
 		if (this.editorCm) this.editorCm.setSize(null, heightEditor);
 
-		if (window.matchMedia('(max-width: 768px)').matches) return this.setState({ heightEditor, isMobile: true });
+		if (window.matchMedia('(max-width: 768px)').matches) {
+			return this.setState({ heightEditor, isMobile: true });
+		}
+
 		this.setState({ heightEditor, isMobile: false });
 
 		// For the cases when we are in the middle of the editor (so we can don't have the first elements in DOM), the elements upper can have the offset changed.
@@ -1045,6 +1052,7 @@ const myVar = 'content...';
 					<ButtonOpenPanelSettings handleOpenPanel={this.handleOpenPanelSettings} isPanelOpen={isPanelSettingsOpen} />
 
 					<EditorToolbar
+						editorToolbarRef={(el) => { this.editorToolbarRef = el; }}
 						course={course}
 						categories={categories}
 						category={category}
@@ -1062,7 +1070,7 @@ const myVar = 'content...';
 					/>
 
 					<EditorPanelExplorer
-						ref={(el) => { this.editorPanelExplorer = el; }}
+						ref={(el) => { this.editorPanelExplorerRef = el; }}
 						isOpen={isPanelExplorerOpen}
 						userMe={userMe}
 						course={course}
