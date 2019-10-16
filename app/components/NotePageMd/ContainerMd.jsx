@@ -15,7 +15,8 @@ class ContainerMd extends Component {
 			isCanEdit,
 			isEditMode,
 			isMobile,
-			handleClickToolbarMarkDown
+			handleClickToolbarMarkDown,
+			editorToolbarMdRef
 		} = this.props;
 
 		const buttonsToolbar = [
@@ -39,7 +40,7 @@ class ContainerMd extends Component {
 			<div>
 				{
 					(isCanEdit && isEditMode) && (
-						<div className={cx('toolbar-editor-md')}>
+						<div className={cx('toolbar-editor-md')} ref={editorToolbarMdRef}>
 							<Button.Group basic size="small" className={cx('button-group')}>
 								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={handleClickToolbarMarkDown(button.icon)} />} content={button.content} key={key} />)) }
 							</Button.Group>
@@ -70,7 +71,8 @@ ContainerMd.propTypes = {
 	isCanEdit: PropTypes.bool,
 	isEditMode: PropTypes.bool,
 	isMobile: PropTypes.bool,
-	handleClickToolbarMarkDown: PropTypes.func
+	handleClickToolbarMarkDown: PropTypes.func,
+	editorToolbarMdRef: PropTypes.func
 };
 
 export default ContainerMd;

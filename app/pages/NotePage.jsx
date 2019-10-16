@@ -34,7 +34,7 @@ class NotePage extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleOpenPanelExplorer = this.handleOpenPanelExplorer.bind(this);
 		this.handleOpenPanelSettings = this.handleOpenPanelSettings.bind(this);
-		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+		this.resizeWindow = this.resizeWindow.bind(this);
 		this.handleSetTinymce = this.handleSetTinymce.bind(this);
 		this.handleEditorTinyChange = this.handleEditorTinyChange.bind(this);
 
@@ -70,6 +70,8 @@ class NotePage extends Component {
 
 		this.editorPanelExplorerRef = null;
 		this.editorToolbarRef = null;
+		this.editorToolbarMdRef = null;
+
 		this.rendererMarked = null;
 		this.editorCm = null;
 		this.editorCmMini = null;
@@ -192,8 +194,8 @@ const myVar = 'content...';
 			const pageMode = this.getPageMode(course);
 
 			// Resize element child to 100% height:
-			this.updateWindowDimensions();
-			window.addEventListener('resize', this.updateWindowDimensions);
+			this.resizeWindow();
+			window.addEventListener('resize', this.resizeWindow);
 
 			this.setState({ isEditing, isEditMode, pageMode });
 		});
@@ -220,6 +222,16 @@ const myVar = 'content...';
 				this.codeMirrorInit();
 				this.isComponentDidMounted = true;
 			}, timeOffset);
+		}
+
+		// Markdown edit mode desactived:
+		if (editModeChanged && !this.state.isEditMode && pageMode === 'md') {
+			this.resizeEditors(); // TODO mettre ca dans componentDidUnmount de EditorMd ??
+		}
+
+		// TinyMce edit mode actived:
+		if ((editModeChanged || (linkClicked && isCreate)) && this.state.isEditMode && pageMode === 'wy') {
+			this.resizeEditors(); // TODO mettre ca dans componentDidMount de EditorTiny ??
 		}
 
 		// Change pages:
@@ -256,8 +268,8 @@ const myVar = 'content...';
 	}
 
 	componentWillUnmount() {
-		this.updateWindowDimensions();
-		window.removeEventListener('resize', this.updateWindowDimensions);
+		this.resizeWindow();
+		window.removeEventListener('resize', this.resizeWindow);
 	}
 
 	getMetaData() {
@@ -409,9 +421,7 @@ const myVar = 'content...';
 		// Scroll sync - when re-rendering in CM editor:
 		// this.editorCm.on('viewportChange', () => { this.numberViewportChanged++; });
 
-		const { heightEditor } = this.getSizeEditor();
-		this.editorCm.setSize(null, heightEditor);
-
+		this.resizeEditors();
 		setTimeout(() => this.initScrollingMd(), 20); // For Firefox because it keep the scroll position after reload
 	}
 
@@ -425,18 +435,25 @@ const myVar = 'content...';
 		});
 	}
 
-	getSizeEditor() {
+	resizeEditors() {
 		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
 		const heightEditorPanelExplorer = this.editorPanelExplorerRef ? ReactDOM.findDOMNode(this.editorPanelExplorerRef).clientHeight : 820;
 		const heightEditorToolbar = this.editorToolbarRef ? ReactDOM.findDOMNode(this.editorToolbarRef).clientHeight : 0;
+		const heightEditorMdToolbar = this.editorToolbarMdRef ? ReactDOM.findDOMNode(this.editorToolbarMdRef).clientHeight : 0;
 		let heightEditor = heightDocument;
 
 		if (heightEditorPanelExplorer > heightDocument) {
 			heightEditor = heightEditorPanelExplorer;
 		}
 
-		heightEditor -= heightEditorToolbar; // TODO finir ca
-		return { heightEditor };
+		heightEditor = heightEditor - heightEditorToolbar - heightEditorMdToolbar - 5;
+
+		if (this.editorCm) this.editorCm.setSize(null, heightEditor);
+
+		const nextState = { heightEditor, isMobile: false };
+		if (window.matchMedia('(max-width: 768px)').matches) { nextState.isMobile = true; }
+
+		this.setState(nextState); // TODO faire ca dans un setTimeout()
 	}
 
 	getContentVal(stateCourse, propsCourse) {
@@ -479,16 +496,8 @@ const myVar = 'content...';
 		return fields;
 	}
 
-	updateWindowDimensions() {
-		const { heightEditor } = this.getSizeEditor();
-
-		if (this.editorCm) this.editorCm.setSize(null, heightEditor);
-
-		if (window.matchMedia('(max-width: 768px)').matches) {
-			return this.setState({ heightEditor, isMobile: true });
-		}
-
-		this.setState({ heightEditor, isMobile: false });
+	resizeWindow() {
+		this.resizeEditors();
 
 		// For the cases when we are in the middle of the editor (so we can don't have the first elements in DOM), the elements upper can have the offset changed.
 		// Therefore we need to go to the top for re calculate the offsets
@@ -1085,6 +1094,7 @@ const myVar = 'content...';
 					<div className={cx('editor-container-full', isPanelExplorerOpen ? 'panel-explorer-open' : '')} style={isCourseOneLoading || isCourseAllLoading ? {display: 'none'} : {}}>
 						{ pageMode === 'md' && (
 							<ContainerMd
+								editorToolbarMdRef={(el) => { this.editorToolbarMdRef = el; }}
 								isCanEdit
 								isEditMode={isEditMode}
 								handleClickToolbarMarkDown={this.handleClickToolbarMarkDown}

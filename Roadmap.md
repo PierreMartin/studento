@@ -104,7 +104,8 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- bug sur height editor 'heightEditor'
+- line 220
+- bug 'scrollTop'
 - clean code + check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
 - redesign comme Tcloud
 
