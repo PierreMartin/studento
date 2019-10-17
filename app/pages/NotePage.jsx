@@ -36,6 +36,7 @@ class NotePage extends Component {
 		this.handleOpenPanelSettings = this.handleOpenPanelSettings.bind(this);
 		this.resizeWindow = this.resizeWindow.bind(this);
 		this.handleSetTinymce = this.handleSetTinymce.bind(this);
+		this.handleSetCodeMirror = this.handleSetCodeMirror.bind(this);
 		this.handleEditorTinyChange = this.handleEditorTinyChange.bind(this);
 
 		// Delete modal:
@@ -76,7 +77,6 @@ class NotePage extends Component {
 		this.editorCm = null;
 		this.editorCmMini = null;
 		this.timerRenderPreview = null;
-		this.CodeMirror = null;
 		this.defaultMessageEditorMd = `For start to take notes, **remove** this sample content or **modify** this one
 
 [Example link](http://hubnote.app)
@@ -152,11 +152,11 @@ const myVar = 'content...';
 		this.rendererMarked = null;
 		this.refEditorMd = null;
 		this.refPreviewMd = null;
-		this.assetsCodeMirrorLoaded = false;
-		this.isComponentDidMounted = false;
+		this.isFirstCodeMirrorInit = true;
 
 		this.state = {
 			tinymce: null,
+			codeMirror: null,
 			pageMode: 'wy',
 			contentMarkedSanitized: '',
 			fieldsTyping: {
@@ -215,23 +215,15 @@ const myVar = 'content...';
 
 		// Markdown edit mode actived:
 		if ((editModeChanged || (linkClicked && isCreate)) && this.state.isEditMode && pageMode === 'md') {
-			const timeOffset = !this.state.isEditing && !this.isComponentDidMounted ? 800 : 0;
-
-			this.loadCodeMirrorAssets(); // TODO mettre ca dans componentDidMount de EditorMd ??
+			const timeOffset = this.isFirstCodeMirrorInit ? 800 : 0;
 			setTimeout(() => {
 				this.codeMirrorInit();
-				this.isComponentDidMounted = true;
+				this.isFirstCodeMirrorInit = false;
 			}, timeOffset);
 		}
 
-		// Markdown edit mode desactived:
-		if (editModeChanged && !this.state.isEditMode && pageMode === 'md') {
-			this.resizeEditors(); // TODO mettre ca dans componentDidUnmount de EditorMd ??
-		}
-
-		// TinyMce edit mode actived:
-		if ((editModeChanged || (linkClicked && isCreate)) && this.state.isEditMode && pageMode === 'wy') {
-			this.resizeEditors(); // TODO mettre ca dans componentDidMount de EditorTiny ??
+		if (editModeChanged || (linkClicked && isCreate)) {
+			this.resizeEditors();
 		}
 
 		// Change pages:
@@ -301,65 +293,16 @@ const myVar = 'content...';
 		return fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action });
 	}
 
-	loadCodeMirrorAssets() {
-		if (this.assetsCodeMirrorLoaded) { return; }
-
-		const codeMirror = require('codemirror/lib/codemirror');
-		require('codemirror/lib/codemirror.css');
-
-		// Addon JS:
-		require('codemirror/addon/dialog/dialog.js');
-		require('codemirror/addon/search/matchesonscrollbar.js');
-		require('codemirror/addon/fold/foldgutter.js');
-		require('codemirror/addon/fold/foldcode.js');
-		require('codemirror/addon/fold/brace-fold.js');
-		require('codemirror/addon/fold/comment-fold.js');
-		require('codemirror/addon/fold/indent-fold.js');
-		require('codemirror/addon/fold/markdown-fold.js');
-		require('codemirror/addon/fold/xml-fold.js');
-		require('codemirror/addon/edit/closebrackets.js');
-
-		// Addon CSS:
-		require('codemirror/addon/dialog/dialog.css');
-		require('codemirror/addon/search/matchesonscrollbar.css');
-		require('codemirror/addon/fold/foldgutter.css');
-
-		// Theme CSS:
-		require('codemirror/theme/blackboard.css');
-		// require('codemirror/theme/mbo.css');
-		// require('codemirror/theme/monokai.css');
-
-		// keyMap:
-		require('codemirror/keymap/sublime.js');
-
-		// modes:
-		require('codemirror/mode/markdown/markdown');
-		require('codemirror/mode/javascript/javascript');
-		require('codemirror/mode/php/php');
-		require('codemirror/mode/gfm/gfm');
-		require('codemirror/mode/python/python');
-		require('codemirror/mode/ruby/ruby');
-		require('codemirror/mode/sass/sass');
-		require('codemirror/mode/shell/shell');
-		require('codemirror/mode/sql/sql');
-		require('codemirror/mode/stylus/stylus');
-		require('codemirror/mode/xml/xml');
-		require('codemirror/mode/coffeescript/coffeescript');
-		require('codemirror/mode/css/css');
-		require('codemirror/mode/cmake/cmake');
-		require('codemirror/mode/htmlmixed/htmlmixed');
-		require('codemirror/mode/mathematica/mathematica');
-
-		this.assetsCodeMirrorLoaded = true;
-		this.CodeMirror = codeMirror;
-	}
-
 	handleSetTinymce(tinymce) {
 		this.setState({ tinymce });
 	}
 
+	handleSetCodeMirror(codeMirror) {
+		this.setState({ codeMirror });
+	}
+
 	codeMirrorInit() {
-		this.editorCm = this.CodeMirror.fromTextArea(this.refEditorMd, {
+		this.editorCm = this.state.codeMirror.fromTextArea(this.refEditorMd, {
 			// value: fields.content, // already set by the textarea
 			lineNumbers: true,
 			codeFold: true,
@@ -713,7 +656,7 @@ const myVar = 'content...';
 
 	editorInModalDidMount = (refEditorInModal) => {
 		if (refEditorInModal !== null) {
-			this.editorCmMini = this.CodeMirror.fromTextArea(refEditorInModal, {
+			this.editorCmMini = this.state.codeMirror.fromTextArea(refEditorInModal, {
 				lineNumbers: true,
 				codeFold: true,
 				placeholder: 'Write you code here',
@@ -1101,6 +1044,7 @@ const myVar = 'content...';
 								refEditorMd={(el) => { this.refEditorMd = el; }}
 								refPreviewMd={(el) => { this.refPreviewMd = el; }}
 								content={content}
+								handleSetCodeMirror={this.handleSetCodeMirror}
 								{...this.props}
 								{...this.state}
 							/>
