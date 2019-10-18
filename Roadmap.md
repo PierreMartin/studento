@@ -104,7 +104,7 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- line 220
+- remove content TinyMce when create new
 - bug 'scrollTop'
 - clean code + check sur updateWindowDimensionsMd() + initScrollingMd() + editorPanelExplorer
 - redesign comme Tcloud

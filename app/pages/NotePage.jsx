@@ -213,16 +213,18 @@ const myVar = 'content...';
 			pageMode = this.props.location.state.typeNote;
 		}
 
-		// Markdown edit mode actived:
-		if ((editModeChanged || (linkClicked && isCreate)) && this.state.isEditMode && pageMode === 'md') {
+		// Edit mode actived:
+		if ((editModeChanged || (linkClicked && isCreate)) && this.state.isEditMode) {
 			const timeOffset = this.isFirstCodeMirrorInit ? 800 : 0;
 			setTimeout(() => {
-				this.codeMirrorInit();
+				if (pageMode === 'md') { this.codeMirrorInit(); }
+				this.resizeEditors();
 				this.isFirstCodeMirrorInit = false;
 			}, timeOffset);
 		}
 
-		if (editModeChanged || (linkClicked && isCreate)) {
+		// Edit mode deactived:
+		if ((editModeChanged || (linkClicked && isCreate)) && !this.state.isEditMode) {
 			this.resizeEditors();
 		}
 
@@ -236,6 +238,8 @@ const myVar = 'content...';
 				if (pageMode === 'md' && isEditMode && this.editorCm) {
 					this.editorCm.setValue('');
 				}
+
+				// TODO faire pareil pour TinyMCe   tinymce.activeEditor.setContent('');  OU  tinymce.EditorManager.remove();
 
 				this.setState({
 					isEditing,
@@ -364,7 +368,6 @@ const myVar = 'content...';
 		// Scroll sync - when re-rendering in CM editor:
 		// this.editorCm.on('viewportChange', () => { this.numberViewportChanged++; });
 
-		this.resizeEditors();
 		setTimeout(() => this.initScrollingMd(), 20); // For Firefox because it keep the scroll position after reload
 	}
 
