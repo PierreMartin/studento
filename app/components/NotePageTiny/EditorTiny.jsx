@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import TinyEditor from '../../components/TinyEditor/TinyEditor';
 import classNames from 'classnames/bind';
 import stylesMain from '../../css/main.scss';
 import stylesNotePage from '../../pages/css/notePage.scss';
@@ -9,37 +8,76 @@ import stylesCourse from '../../pages/css/course.scss';
 const cx = classNames.bind({...stylesMain, ...stylesNotePage, ...stylesCourse});
 
 class EditorTiny extends Component {
+	constructor(props) {
+		super(props);
+
+		this.idEditor = 'tinyEditor';
+
+		this.state = {
+			editor: null
+		};
+	}
+
+	tinyMceInit() {
+		const { handleEditorTinyChange, heightEditor, tinyMceLib } = this.props;
+
+		tinyMceLib.init({
+			min_height: heightEditor,
+			external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
+			language: 'en',
+			plugins: 'link image table codesample textcolor tiny_mce_wiris',
+			toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | formatselect | forecolor backcolor | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry',
+			selector: `#${this.idEditor}`,
+			skin_url: '/skins/oxide-dark', // css base
+			content_css: '/skins/default/content.css', // css content
+			codesample_content_css: '/css/prism.css', // css code
+			skin: 'oxide-dark',
+			setup: (editor) => {
+				this.setState({ editor });
+
+				editor.on('keyup change', () => {
+					handleEditorTinyChange(editor.getContent());
+				});
+			}
+		});
+	}
+
 	componentDidMount() {
-		if (this.props.tinyMceLib) { return; }
-		debugger;
-
 		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
-			const tinyMceLib = require('tinymce');
-			require('tinymce/themes/silver');
-			require('tinymce/plugins/wordcount');
-			require('tinymce/plugins/table');
-			require('tinymce/plugins/codesample');
-			require('tinymce/plugins/link');
-			require('tinymce/plugins/image');
-			require('tinymce/plugins/textcolor');
+			if (!this.props.tinyMceLib) {
+				const tinyMceLib = require('tinymce');
+				require('tinymce/themes/silver');
+				require('tinymce/plugins/wordcount');
+				require('tinymce/plugins/table');
+				require('tinymce/plugins/codesample');
+				require('tinymce/plugins/link');
+				require('tinymce/plugins/image');
+				require('tinymce/plugins/textcolor');
 
-			this.props.handleSetTinymce(tinyMceLib);
+				this.props.handleSetTinymce(tinyMceLib, () => {
+					this.tinyMceInit();
+				});
+			} else {
+				this.tinyMceInit();
+			}
 		}
 	}
 
+	componentWillUnmount() {
+		if (this.props.tinyMceLib) { this.props.tinyMceLib.remove(this.state.editor); }
+	}
+
 	render() {
-		const { content, handleEditorTinyChange, heightEditor, tinyMceLib } = this.props;
+		const { tinyMceLib } = this.props;
 
 		return (
 			<div className={cx('editor-edition')}>
 				{
 					tinyMceLib && (
-						<TinyEditor
-							id="tinyEditor"
-							onEditorChange={handleEditorTinyChange}
-							content={content}
-							tinyMceLib={tinyMceLib}
-							heightDocument={heightEditor}
+						<textarea
+							id={this.idEditor}
+							value={this.props.content}
+							onChange={() => console.log('Editor chanded')}
 						/>
 					)
 				}
@@ -51,7 +89,6 @@ class EditorTiny extends Component {
 EditorTiny.propTypes = {
 	tinyMceLib: PropTypes.any,
 	handleSetTinymce: PropTypes.func,
-	handleUnsetTinymce: PropTypes.func,
 	content: PropTypes.string,
 	handleEditorTinyChange: PropTypes.func,
 	heightEditor: PropTypes.number

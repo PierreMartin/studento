@@ -299,8 +299,8 @@ const myVar = 'content...';
 		return fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action });
 	}
 
-	handleSetTinymce(tinyMceLib) {
-		this.setState({ tinyMceLib });
+	handleSetTinymce(tinyMceLib, callback) {
+		this.setState({ tinyMceLib }, callback);
 	}
 
 	handleSetCodeMirror(codeMirrorLib) {
