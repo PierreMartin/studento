@@ -34,8 +34,16 @@ class TinyEditor extends Component {
 		});
 	}
 
+	/*
+	componentDidUpdate(prevProps) {
+		if (prevProps.params.id !== this.props.params.id) {
+			// this.props.tinymce.init(...):
+		}
+	}
+	*/
+
 	componentWillUnmount() {
-		this.props.tinymce.remove(this.state.editor);
+		if (this.props.tinymce) { this.props.tinymce.remove(this.state.editor); }
 	}
 
 	render() {

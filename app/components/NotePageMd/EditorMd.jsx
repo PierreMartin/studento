@@ -12,7 +12,7 @@ class EditorMd extends Component {
 	componentDidMount() {
 		if (this.props.codeMirror) { return; }
 
-		const codeMirror = require('codemirror/lib/codemirror');
+		const codeMirror = require('codemirror/lib/codemirror'); // codeMirrorLib
 		require('codemirror/lib/codemirror.css');
 
 		// Addon JS:

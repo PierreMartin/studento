@@ -36,6 +36,7 @@ class NotePage extends Component {
 		this.handleOpenPanelSettings = this.handleOpenPanelSettings.bind(this);
 		this.resizeWindow = this.resizeWindow.bind(this);
 		this.handleSetTinymce = this.handleSetTinymce.bind(this);
+		this.handleUnsetTinymce = this.handleUnsetTinymce.bind(this);
 		this.handleSetCodeMirror = this.handleSetCodeMirror.bind(this);
 		this.handleEditorTinyChange = this.handleEditorTinyChange.bind(this);
 
@@ -239,7 +240,9 @@ const myVar = 'content...';
 					this.editorCm.setValue('');
 				}
 
-				// TODO faire pareil pour TinyMCe   tinymce.activeEditor.setContent('');  OU  tinymce.EditorManager.remove();
+				if (pageMode === 'wy' && isEditMode && this.state.tinymce) {
+					this.state.tinymce.activeEditor.setContent('');
+				}
 
 				this.setState({
 					isEditing,
@@ -299,6 +302,10 @@ const myVar = 'content...';
 
 	handleSetTinymce(tinymce) {
 		this.setState({ tinymce });
+	}
+
+	handleUnsetTinymce() {
+		this.setState({ tinymce: null });
 	}
 
 	handleSetCodeMirror(codeMirror) {
@@ -1060,6 +1067,7 @@ const myVar = 'content...';
 								content={content}
 								handleEditorTinyChange={this.handleEditorTinyChange}
 								handleSetTinymce={this.handleSetTinymce}
+								handleUnsetTinymce={this.handleUnsetTinymce}
 								{...this.props}
 								{...this.state}
 							/>

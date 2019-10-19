@@ -13,7 +13,7 @@ class EditorTiny extends Component {
 		if (this.props.tinymce) { return; }
 
 		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
-			const tinymce = require('tinymce');
+			const tinymce = require('tinymce'); // tinyMceLib
 			require('tinymce/themes/silver');
 			require('tinymce/plugins/wordcount');
 			require('tinymce/plugins/table');
@@ -24,6 +24,10 @@ class EditorTiny extends Component {
 
 			this.props.handleSetTinymce(tinymce);
 		}
+	}
+
+	componentWillUnmount() {
+		this.props.handleUnsetTinymce(); // this.props.tinymce = null;
 	}
 
 	render() {
@@ -50,6 +54,7 @@ class EditorTiny extends Component {
 EditorTiny.propTypes = {
 	tinymce: PropTypes.any,
 	handleSetTinymce: PropTypes.func,
+	handleUnsetTinymce: PropTypes.func,
 	content: PropTypes.string,
 	handleEditorTinyChange: PropTypes.func,
 	heightEditor: PropTypes.number
