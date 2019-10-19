@@ -36,7 +36,6 @@ class NotePage extends Component {
 		this.handleOpenPanelSettings = this.handleOpenPanelSettings.bind(this);
 		this.resizeWindow = this.resizeWindow.bind(this);
 		this.handleSetTinymce = this.handleSetTinymce.bind(this);
-		this.handleUnsetTinymce = this.handleUnsetTinymce.bind(this);
 		this.handleSetCodeMirror = this.handleSetCodeMirror.bind(this);
 		this.handleEditorTinyChange = this.handleEditorTinyChange.bind(this);
 
@@ -156,8 +155,8 @@ const myVar = 'content...';
 		this.isFirstCodeMirrorInit = true;
 
 		this.state = {
-			tinymce: null,
-			codeMirror: null,
+			tinyMceLib: null,
+			codeMirrorLib: null,
 			pageMode: 'wy',
 			contentMarkedSanitized: '',
 			fieldsTyping: {
@@ -240,8 +239,8 @@ const myVar = 'content...';
 					this.editorCm.setValue('');
 				}
 
-				if (pageMode === 'wy' && isEditMode && this.state.tinymce) {
-					this.state.tinymce.activeEditor.setContent('');
+				if (pageMode === 'wy' && isEditMode && this.state.tinyMceLib && this.state.tinyMceLib.activeEditor) {
+					this.state.tinyMceLib.activeEditor.setContent('');
 				}
 
 				this.setState({
@@ -300,20 +299,16 @@ const myVar = 'content...';
 		return fetchCourseByFieldAction({ keyReq: '_id', valueReq: params.id, action: params.action });
 	}
 
-	handleSetTinymce(tinymce) {
-		this.setState({ tinymce });
+	handleSetTinymce(tinyMceLib) {
+		this.setState({ tinyMceLib });
 	}
 
-	handleUnsetTinymce() {
-		this.setState({ tinymce: null });
-	}
-
-	handleSetCodeMirror(codeMirror) {
-		this.setState({ codeMirror });
+	handleSetCodeMirror(codeMirrorLib) {
+		this.setState({ codeMirrorLib });
 	}
 
 	codeMirrorInit() {
-		this.editorCm = this.state.codeMirror.fromTextArea(this.refEditorMd, {
+		this.editorCm = this.state.codeMirrorLib.fromTextArea(this.refEditorMd, {
 			// value: fields.content, // already set by the textarea
 			lineNumbers: true,
 			codeFold: true,
@@ -666,7 +661,7 @@ const myVar = 'content...';
 
 	editorInModalDidMount = (refEditorInModal) => {
 		if (refEditorInModal !== null) {
-			this.editorCmMini = this.state.codeMirror.fromTextArea(refEditorInModal, {
+			this.editorCmMini = this.state.codeMirrorLib.fromTextArea(refEditorInModal, {
 				lineNumbers: true,
 				codeFold: true,
 				placeholder: 'Write you code here',
@@ -1067,7 +1062,6 @@ const myVar = 'content...';
 								content={content}
 								handleEditorTinyChange={this.handleEditorTinyChange}
 								handleSetTinymce={this.handleSetTinymce}
-								handleUnsetTinymce={this.handleUnsetTinymce}
 								{...this.props}
 								{...this.state}
 							/>

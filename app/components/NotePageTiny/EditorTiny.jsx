@@ -10,10 +10,11 @@ const cx = classNames.bind({...stylesMain, ...stylesNotePage, ...stylesCourse});
 
 class EditorTiny extends Component {
 	componentDidMount() {
-		if (this.props.tinymce) { return; }
+		if (this.props.tinyMceLib) { return; }
+		debugger;
 
 		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
-			const tinymce = require('tinymce'); // tinyMceLib
+			const tinyMceLib = require('tinymce');
 			require('tinymce/themes/silver');
 			require('tinymce/plugins/wordcount');
 			require('tinymce/plugins/table');
@@ -22,26 +23,22 @@ class EditorTiny extends Component {
 			require('tinymce/plugins/image');
 			require('tinymce/plugins/textcolor');
 
-			this.props.handleSetTinymce(tinymce);
+			this.props.handleSetTinymce(tinyMceLib);
 		}
 	}
 
-	componentWillUnmount() {
-		this.props.handleUnsetTinymce(); // this.props.tinymce = null;
-	}
-
 	render() {
-		const { content, handleEditorTinyChange, heightEditor, tinymce } = this.props;
+		const { content, handleEditorTinyChange, heightEditor, tinyMceLib } = this.props;
 
 		return (
 			<div className={cx('editor-edition')}>
 				{
-					tinymce && (
+					tinyMceLib && (
 						<TinyEditor
 							id="tinyEditor"
 							onEditorChange={handleEditorTinyChange}
 							content={content}
-							tinymce={tinymce}
+							tinyMceLib={tinyMceLib}
 							heightDocument={heightEditor}
 						/>
 					)
@@ -52,7 +49,7 @@ class EditorTiny extends Component {
 }
 
 EditorTiny.propTypes = {
-	tinymce: PropTypes.any,
+	tinyMceLib: PropTypes.any,
 	handleSetTinymce: PropTypes.func,
 	handleUnsetTinymce: PropTypes.func,
 	content: PropTypes.string,

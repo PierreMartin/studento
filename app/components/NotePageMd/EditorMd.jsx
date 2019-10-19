@@ -10,9 +10,9 @@ const cx = classNames.bind({...stylesMain, ...stylesNotePage, ...stylesCourse});
 
 class EditorMd extends Component {
 	componentDidMount() {
-		if (this.props.codeMirror) { return; }
+		if (this.props.codeMirrorLib) { return; }
 
-		const codeMirror = require('codemirror/lib/codemirror'); // codeMirrorLib
+		const codeMirrorLib = require('codemirror/lib/codemirror');
 		require('codemirror/lib/codemirror.css');
 
 		// Addon JS:
@@ -58,7 +58,7 @@ class EditorMd extends Component {
 		require('codemirror/mode/htmlmixed/htmlmixed');
 		require('codemirror/mode/mathematica/mathematica');
 
-		this.props.handleSetCodeMirror(codeMirror);
+		this.props.handleSetCodeMirror(codeMirrorLib);
 	}
 
 	render() {
@@ -78,7 +78,7 @@ class EditorMd extends Component {
 }
 
 EditorMd.propTypes = {
-	codeMirror: PropTypes.any,
+	codeMirrorLib: PropTypes.any,
 	handleSetCodeMirror: PropTypes.func,
 	content: PropTypes.string,
 	refEditorMd: PropTypes.any

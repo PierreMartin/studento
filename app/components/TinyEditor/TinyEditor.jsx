@@ -12,7 +12,7 @@ class TinyEditor extends Component {
 	}
 
 	componentDidMount() {
-		this.props.tinymce.init({
+		this.props.tinyMceLib.init({
 			min_height: this.props.heightDocument,
 			external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
 			language: 'en',
@@ -34,16 +34,8 @@ class TinyEditor extends Component {
 		});
 	}
 
-	/*
-	componentDidUpdate(prevProps) {
-		if (prevProps.params.id !== this.props.params.id) {
-			// this.props.tinymce.init(...):
-		}
-	}
-	*/
-
 	componentWillUnmount() {
-		if (this.props.tinymce) { this.props.tinymce.remove(this.state.editor); }
+		if (this.props.tinyMceLib) { this.props.tinyMceLib.remove(this.state.editor); }
 	}
 
 	render() {
@@ -58,7 +50,7 @@ class TinyEditor extends Component {
 }
 
 TinyEditor.propTypes = {
-	tinymce: PropTypes.object,
+	tinyMceLib: PropTypes.object,
 	id: PropTypes.string,
 	content: PropTypes.string,
 	heightDocument: PropTypes.number,
