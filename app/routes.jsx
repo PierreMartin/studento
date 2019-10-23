@@ -19,7 +19,7 @@ import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import Course from './pages/Course';
 import NotePage from './pages/NotePage';
-import Test from './pages/Test';
+// import Test from './pages/Test';
 
 
 export default (store) => {
@@ -103,7 +103,7 @@ export default (store) => {
 			</Route>
 
 			<Route component={LayoutMainApp}>
-				<Route path="/testDev" component={Test} onEnter={requireAuth} />
+				{/*<Route path="/testDev" component={Test} onEnter={requireAuth} />*/}
 				<Route path="/course/:action/:id" component={NotePage} onEnter={requireAuthEditor} />
 			</Route>
 		</Route>

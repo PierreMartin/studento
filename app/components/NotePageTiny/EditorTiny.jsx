@@ -63,6 +63,16 @@ class EditorTiny extends Component {
 		}
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.heightEditor !== this.props.heightEditor && this.props.tinyMceLib && this.props.tinyMceLib.activeEditor) {
+			this.props.tinyMceLib.activeEditor.settings.min_height = this.props.heightEditor;
+
+			if (document.querySelector('.tox-tinymce')) {
+				document.querySelector('.tox-tinymce').style.height = `${this.props.heightEditor}px`;
+			}
+		}
+	}
+
 	componentWillUnmount() {
 		if (this.props.tinyMceLib) { this.props.tinyMceLib.remove(this.state.editor); }
 	}

@@ -73,10 +73,12 @@ class NotePage extends Component {
 		this.editorToolbarRef = null;
 		this.editorToolbarMdRef = null;
 
+		this.timerRenderPreview = null;
+		this.timerResizeWindow = null;
+
 		this.rendererMarked = null;
 		this.editorCm = null;
 		this.editorCmMini = null;
-		this.timerRenderPreview = null;
 		this.defaultMessageEditorMd = `For start to take notes, **remove** this sample content or **modify** this one
 
 [Example link](http://hubnote.app)
@@ -385,14 +387,16 @@ const myVar = 'content...';
 
 	resizeEditors() {
 		const heightDocument = (typeof window !== 'undefined' && window.innerHeight) || 500;
-		const heightEditorPanelExplorer = this.editorPanelExplorerRef ? ReactDOM.findDOMNode(this.editorPanelExplorerRef).clientHeight : 820;
+		// const heightEditorPanelExplorer = this.editorPanelExplorerRef ? ReactDOM.findDOMNode(this.editorPanelExplorerRef).clientHeight : 820;
 		const heightEditorToolbar = this.editorToolbarRef ? ReactDOM.findDOMNode(this.editorToolbarRef).clientHeight : 0;
 		const heightEditorMdToolbar = this.editorToolbarMdRef ? ReactDOM.findDOMNode(this.editorToolbarMdRef).clientHeight : 0;
 		let heightEditor = heightDocument;
 
+		/*
 		if (heightEditorPanelExplorer > heightDocument) {
 			heightEditor = heightEditorPanelExplorer;
 		}
+		*/
 
 		heightEditor = heightEditor - heightEditorToolbar - heightEditorMdToolbar - 5;
 
@@ -400,8 +404,7 @@ const myVar = 'content...';
 
 		const nextState = { heightEditor, isMobile: false };
 		if (window.matchMedia('(max-width: 768px)').matches) { nextState.isMobile = true; }
-
-		this.setState(nextState); // TODO faire ca dans un setTimeout()
+		this.setState(nextState);
 	}
 
 	getContentVal(stateCourse, propsCourse) {
@@ -445,11 +448,14 @@ const myVar = 'content...';
 	}
 
 	resizeWindow() {
-		this.resizeEditors();
+		clearTimeout(this.timerResizeWindow);
+		this.timerResizeWindow = setTimeout(() => {
+			this.resizeEditors();
 
-		// For the cases when we are in the middle of the editor (so we can don't have the first elements in DOM), the elements upper can have the offset changed.
-		// Therefore we need to go to the top for re calculate the offsets
-		this.initScrollingMd();
+			// For the cases when we are in the middle of the editor (so we can don't have the first elements in DOM), the elements upper can have the offset changed.
+			// Therefore we need to go to the top for re calculate the offsets
+			this.initScrollingMd();
+		}, 80);
 	}
 
 	handleSave(event) {
@@ -519,7 +525,6 @@ const myVar = 'content...';
 		// init:
 		const chunk = {};
 		chunk.selection = this.editorCm.getSelection();
-		if (chunk.selection === '') return;
 
 		const selPosStart = this.editorCm.doc.sel.ranges[0].anchor;
 		const selPosEnd = this.editorCm.doc.sel.ranges[0].head;
@@ -744,7 +749,7 @@ const myVar = 'content...';
 	}
 
 	initScrollingMd() {
-		if (this.state.isMobile || !this.state.isEditMode || !this.editorCm) return;
+		if (this.state.isMobile || !this.state.isEditMode || !this.editorCm || this.state.pageMode !== 'md') return;
 
 		// Init scroll sync - use when re-rendering in CM editor:
 		// this.numberViewportChanged = 0;
@@ -1083,6 +1088,7 @@ const myVar = 'content...';
 						isDirty={isDirty}
 						pageMode={pageMode}
 						handleModalOpen_DeleteNote={this.handleModalOpen_DeleteNote}
+						heightEditor={this.state.heightEditor}
 					/>
 				</div>
 

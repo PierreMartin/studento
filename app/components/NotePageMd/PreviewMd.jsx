@@ -144,7 +144,7 @@ class PreviewMd extends Component {
 				className={cx('container-page-dark', 'preview', classEditMode, classMobileMode)}
 				id="container-page-view"
 				ref={refPreviewMd}
-				style={{ height: heightEditor + 'px' }}
+				style={{ height: heightEditor + 'px', minHeight: heightEditor + 'px' }}
 				dangerouslySetInnerHTML={{ __html: contentMarkedSanitized }}
 				// onScroll={handleScroll('preview')}
 			/>
