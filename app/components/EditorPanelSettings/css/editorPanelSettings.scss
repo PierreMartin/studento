@@ -49,13 +49,16 @@
       border: 1px solid $colorBorder;
       .header { color: $colorTextMain; }
       .form-templates {
-        label { display: inline-block; width: 35px; font-weight: 900 }
-        .input-select {
-          display: inline-block;
-          font-size: 10px;
-          color: $colorTextMain !important; font-weight: 900;
-          margin-bottom: 4px;
-          div { font-size: 12px; }
+        .field {
+          margin: 0;
+          label { display: inline-block; width: 35px; font-weight: 900 }
+          .input-select {
+            display: inline-block;
+            font-size: 10px;
+            color: $colorTextMain !important; font-weight: 900;
+            margin-bottom: 4px;
+            div { font-size: 12px; }
+          }
         }
       }
     }

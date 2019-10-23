@@ -88,7 +88,7 @@ class EditorSettingsExplorer extends Component {
 								<Form.Field inline className={cx('form-templates')}>
 									{ selectTemplatesHeaders.map((select, key) => {
 										return (
-											<div key={key}>
+											<div key={key} className={cx('field')}>
 												<label htmlFor={select.name}>{select.label}</label>
 												<Select className={cx('input-select')} name={select.name} options={columnsOptions} value={fields.template[select.name] || 1} onChange={handleInputChange} />
 											</div>
