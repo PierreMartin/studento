@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { loadHighlightAssets } from '../common/loadLanguages';
 import hljs from 'highlight.js/lib/highlight';
+import { HighlightRendering } from '../common/renderingCourse';
 import classNames from 'classnames/bind';
 import stylesMain from '../../css/main.scss';
 import stylesNotePage from '../../pages/css/notePage.scss';
@@ -13,6 +14,8 @@ const cx = classNames.bind({...stylesMain, ...stylesNotePage, ...stylesCourse});
 class PreviewTiny extends Component {
 	constructor(props) {
 		super(props);
+
+		this.timerRenderHighlight = null;
 
 		this.state = {
 			contentMarkedSanitized: ''
@@ -35,6 +38,13 @@ class PreviewTiny extends Component {
 	render() {
 		const { heightEditor } = this.props;
 		const { contentMarkedSanitized } = this.state;
+
+		if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
+			clearTimeout(this.timerRenderHighlight);
+			this.timerRenderHighlight = setTimeout(() => {
+				HighlightRendering(hljs); // Rendering highlight
+			}, 900);
+		}
 
 		return (
 			<div

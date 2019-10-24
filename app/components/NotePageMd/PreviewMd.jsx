@@ -18,6 +18,7 @@ class PreviewMd extends Component {
 		super(props);
 
 		this.timerRenderHighlight = null;
+		this.rendererMarked = null;
 
 		// Init for generate headings wrap:
 		this.indexHeader = 0;
@@ -136,7 +137,7 @@ class PreviewMd extends Component {
 			this.timerRenderHighlight = setTimeout(() => {
 				HighlightRendering(hljs); // Rendering highlight
 				kaTexRendering(katex, content); // Rendering Katex
-			}, 200);
+			}, 900);
 		}
 
 		return (

@@ -69,14 +69,13 @@ class NotePage extends Component {
 		// this.prevNumberViewportChanged = 0;
 		// this.prevArrTitlesinEditor = [];
 
-		this.editorPanelExplorerRef = null;
+		// this.editorPanelExplorerRef = null;
 		this.editorToolbarRef = null;
 		this.editorToolbarMdRef = null;
 
 		this.timerRenderPreview = null;
 		this.timerResizeWindow = null;
 
-		this.rendererMarked = null;
 		this.editorCm = null;
 		this.editorCmMini = null;
 		this.defaultMessageEditorMd = `For start to take notes, **remove** this sample content or **modify** this one
@@ -151,7 +150,6 @@ const myVar = 'content...';
 <p>&nbsp;</p>
 <p>&nbsp;</p>`;
 
-		this.rendererMarked = null;
 		this.refEditorMd = null;
 		this.refPreviewMd = null;
 		this.isFirstCodeMirrorInit = true;
@@ -160,7 +158,6 @@ const myVar = 'content...';
 			tinyMceLib: null,
 			codeMirrorLib: null,
 			pageMode: 'wy',
-			contentMarkedSanitized: '',
 			fieldsTyping: {
 				content: '',
 				template: {}
@@ -255,7 +252,6 @@ const myVar = 'content...';
 				}, () => {
 					setTimeout(() => {
 						this.refPreviewMd && this.refPreviewMd.scrollTo(0, 0);
-						// this.refPreviewTiny && this.refPreviewTiny.scrollTo(0, 0);
 					}, 100);
 				});
 
@@ -1032,7 +1028,7 @@ const myVar = 'content...';
 					/>
 
 					<EditorPanelExplorer
-						ref={(el) => { this.editorPanelExplorerRef = el; }}
+						/*ref={(el) => { this.editorPanelExplorerRef = el; }}*/
 						isOpen={isPanelExplorerOpen}
 						userMe={userMe}
 						course={course}
@@ -1085,7 +1081,6 @@ const myVar = 'content...';
 						categories={categories}
 						handleInputChange={this.handleInputChange}
 						handleSave={this.handleSave}
-						isDirty={isDirty}
 						pageMode={pageMode}
 						handleModalOpen_DeleteNote={this.handleModalOpen_DeleteNote}
 						heightEditor={this.state.heightEditor}

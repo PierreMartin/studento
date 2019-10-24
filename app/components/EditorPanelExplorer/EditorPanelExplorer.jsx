@@ -104,7 +104,8 @@ EditorPanelExplorer.propTypes = {
 	}),
 
 	coursesPagesCount: PropTypes.number,
-	fetchCoursesByFieldAction: PropTypes.func
+	fetchCoursesByFieldAction: PropTypes.func,
+	handleActivePageChange: PropTypes.func
 };
 
 export default connect(null, { fetchCoursesByFieldAction })(EditorPanelExplorer);

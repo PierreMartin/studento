@@ -50,6 +50,7 @@
     "consistent-return": "off",
     "react/no-array-index-key": "off",
     "react/no-unescaped-entities": "off",
+    "react/prefer-stateless-function": "off",
     "no-shadow": "off",
     "no-plusplus": "off",
     "no-case-declarations": "off",
