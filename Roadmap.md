@@ -104,17 +104,13 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- redesign comme Tcloud
+- redesign comme Tcloud + Redesign buttons de la toolbar comme tinyMce
+- My notes (actuel) deviens le dashboard avec [mes dernieres notes] + d'autre modules (stats)
+- Auth facebook google...
+- Prévoir la possibilité de faire des groupes de notes
 
 - dotenv voir pourquoi deplacé dans devDependance
-- Redesign buttons de la toolbar comme tinyMce
-- FAIRE Page My notes =>
-      + Panel gauche  'EditorPanelExplorer' avec leur étoiles (rien d'autre) tout le temps ouvert - prévoir la possibilité de faire des groupes de notes.
-  
-- FAIRE Page dashboard => My notes (actuel) deviens le dashboard avec [mes dernieres notes] + d'autre modules (stats)
-
 - pouvoir uploader images dans les cours
-- Auth facebook google...
 - Commentaires sur une zone de texte
 
 - HomePage + RWD
