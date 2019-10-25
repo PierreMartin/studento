@@ -120,7 +120,6 @@ paginationMethod => 'push' | 'skip'
 - referencement
 
 moins urgent :
-- refacto Editor => 1 top level component get datas | 1 component enfant pour les states (TOUS) | les petites enfants stateless
 - revoir css !!
 
 - sync au scroll - "voir codemirror sync scroll" ou "limiter la vitesse du scroll a un maximum" sur Google mais probleme a cause du DOM qui se rend au fure et a mesure du scroll...
