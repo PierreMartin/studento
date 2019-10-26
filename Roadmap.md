@@ -104,6 +104,7 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
+- rendre catégorie non obligatoire
 - redesign comme Tcloud + Redesign buttons de la toolbar comme tinyMce + RWD (menu mobile, modales)
 - Auth facebook google...
 - Prévoir la possibilité de faire des groupes de notes

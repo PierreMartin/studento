@@ -68,8 +68,17 @@ const EditorToolbar = (
 			</Button.Group>
 
 			<Form error={messagesError.length > 0} size="mini" onSubmit={handleSave} className={cx('form-properties')}>
-				<Form.Input disabled={!isEditMode} size="tiny" required placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} className={cx('title')} />
+				{
+					isEditMode ? (
+						<Form.Input size="tiny" required placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} className={cx('title', 'input')} />
+					) : (
+						<span className={cx('title', 'span')} >{fields.title || ''}</span>
+					)
+				}
+
+				{/*
 				<Form.Select disabled={!isEditMode} size="tiny" required placeholder="Category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} className={cx('category')} />
+				*/}
 
 				{
 					(isEditMode && messagesError.length > 0) ? (

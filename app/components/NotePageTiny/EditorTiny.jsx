@@ -54,6 +54,10 @@ class EditorTiny extends Component {
 				require('tinymce/plugins/image');
 				require('tinymce/plugins/textcolor');
 
+				if (window.matchMedia('(max-width: 410px)').matches) {
+					require('tinymce/themes/mobile');
+				}
+
 				this.props.handleSetTinymce(tinyMceLib, () => {
 					this.tinyMceInit();
 				});

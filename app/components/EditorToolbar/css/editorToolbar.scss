@@ -32,16 +32,22 @@
 
     .form-properties {
       display: inline-block;
+
+      .title.span {
+        margin-left: 8px;
+        color: #fff;
+      }
+
       div[class~=field] {
         display: inline-block;
         margin: 0 5px 0 0 !important;
         vertical-align: 1px;
 
         /* Input text */
-        &.title {
+        &.title.input {
           opacity: 1;
           div[class~=input] {
-            width: 120px !important;
+            width: 100% !important;
             min-width: inherit !important;
             opacity: 1;
             input {
