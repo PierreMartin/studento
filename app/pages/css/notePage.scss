@@ -1,6 +1,9 @@
 @import '../../css/common/colors.scss';
 
 @mixin init() {
+  position: relative;
+  overflow: hidden;
+
   .editor-container-full {
     padding-top: 50px; /* Offset toolbar */
     position: relative;

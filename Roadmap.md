@@ -104,6 +104,7 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
+- enlever mode mobile de tinyMce
 - rendre catégorie non obligatoire
 - redesign comme Tcloud + Redesign buttons de la toolbar comme tinyMce + RWD (menu mobile, modales)
 - Auth facebook google...
@@ -120,7 +121,7 @@ paginationMethod => 'push' | 'skip'
 - referencement
 
 moins urgent :
-- revoir css !!
+- revoir css !! -> mettre les css en top level component uniquement
 
 - sync au scroll - "voir codemirror sync scroll" ou "limiter la vitesse du scroll a un maximum" sur Google mais probleme a cause du DOM qui se rend au fure et a mesure du scroll...
     - TOUT LE TEMPS DESACTIVE  - avoir le button ACTIVER LE SYNC UNIQUEMENT au click sur le button, juste un instant (evite plein de bugs)
