@@ -104,8 +104,7 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- redesign comme Tcloud + Redesign buttons de la toolbar comme tinyMce
-- My notes (actuel) deviens le dashboard avec [mes dernieres notes] + d'autre modules (stats)
+- redesign comme Tcloud + Redesign buttons de la toolbar comme tinyMce + RWD (menu mobile, modales)
 - Auth facebook google...
 - Prévoir la possibilité de faire des groupes de notes
 

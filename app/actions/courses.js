@@ -40,7 +40,7 @@ export function fetchCoursesByFieldAction(param) {
 	if (!param.keyReq || !param.valueReq) return;
 
 	return (dispatch) => {
-		fetchCoursesByFieldRequest(param)
+		return fetchCoursesByFieldRequest(param)
 			.then((res) => {
 				if (res.status === 200) return dispatch(fetchCoursesByIdSuccess(res.data, param.paginationMethod));
 			})

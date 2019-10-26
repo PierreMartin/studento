@@ -8,7 +8,7 @@ import UnreadModalMessages from '../../UnreadMessages/UnreadModalMessages';
 import ButtonOpenMenuMobile from '../../ButtonOpenMenuMobile/ButtonOpenMenuMobile';
 import NavMainMobile from './NavMainMobile';
 import { fetchCategoriesAction } from '../../../actions/category';
-import { getNumberCoursesAction } from '../../../actions/courses';
+import { getNumberCoursesAction, fetchCoursesByFieldAction } from '../../../actions/courses';
 import { logoutAction } from '../../../actions/authentification';
 import { openTchatboxSuccess } from '../../../actions/tchat';
 import { Button, Container, Menu, Segment, Dropdown, Icon, Popup } from 'semantic-ui-react';
@@ -29,6 +29,7 @@ class NavigationMain extends Component {
 
 		this.renderDropdownProfile = this.renderDropdownProfile.bind(this);
 		this.handleCategoriesItemClick = this.handleCategoriesItemClick.bind(this);
+		this.handleClickLastNote = this.handleClickLastNote.bind(this);
 
 		// handle open modal:
 		this.handleClickOpenModalUnreadMessages = this.handleClickOpenModalUnreadMessages.bind(this);
@@ -131,6 +132,23 @@ class NavigationMain extends Component {
 		browserHistory.push(name);
 	};
 
+	handleClickLastNote() {
+		const { fetchCoursesByFieldAction, userMe, courses } = this.props;
+
+		if (courses.length) {
+			browserHistory.push({ pathname: `/course/edit/${courses[0]._id}`, state: { typeNote: courses[0].type } });
+			return;
+		}
+
+		fetchCoursesByFieldAction({ keyReq: 'uId', valueReq: userMe._id, activePage: 1, showPrivate: true, paginationNumber: 1 }).then((res) => {
+			if (res && res.courses && res.courses.length) {
+				browserHistory.push({ pathname: `/course/edit/${res.courses[0]._id}`, state: { typeNote: res.courses[0].type } });
+			} else {
+				browserHistory.push({ pathname: '/course/create/new', state: { typeNote: 'wy' } });
+			}
+		});
+	}
+
 	handleOpenMenuMobile() {
 		this.setState({ isMenuMobileOpen: !this.state.isMenuMobileOpen });
 	}
@@ -205,9 +223,8 @@ class NavigationMain extends Component {
 				<Dropdown item text={userMe.username} title="Settings" className={cx('menu-profile')}>
 					<Dropdown.Menu className="dropdown-profile">
 						{ this.renderGauge() }
-						<Dropdown.Item icon="dashboard" text="Dashboard" title="Dashboard" as={Link} to="/dashboard" />
-						{/* TODO faire fetchLastCourse dans un handleClick sur 'Your Notes' et un  browserHistory.push({ pathname: `/course/edit/${course._id}`, state: { typeNote: course.type } }); */}
-						<Dropdown.Item icon="list ul" text="Your Notes" as={Link} to={{ pathname: '/course/create/new', state: { typeNote: 'wy' } }} />
+						{/*<Dropdown.Item icon="dashboard" text="Dashboard" title="Dashboard" as={Link} to="/dashboard" />*/}
+						<Dropdown.Item icon="list ul" text="Your Notes" as="a" onClick={this.handleClickLastNote} />
 						<Dropdown.Item icon="user" text="Your profile" as={Link} to={'/user/' + userMe._id} />
 						<Dropdown.Item icon="settings" text="Edit your profile" as={Link} to="/settings" />
 						<Dropdown.Item icon="user outline" text="Logout" as={Link} to="/" onClick={logoutAction} />
@@ -231,7 +248,7 @@ class NavigationMain extends Component {
 	}
 
 	render() {
-		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl, categories } = this.props;
+		const { unreadMessages, authentification, logoutAction, userMe, socket, pathUrl, categories, courses, fetchCoursesByFieldAction } = this.props;
 		const { openModalUnreadNotifMessages, isMenuMobileOpen } = this.state;
 
 		return (
@@ -250,6 +267,8 @@ class NavigationMain extends Component {
 					authentification={authentification}
 					pathUrl={pathUrl}
 					logoutAction={logoutAction}
+					courses={courses}
+					fetchCoursesByFieldAction={fetchCoursesByFieldAction}
 				/>
 
 				<Segment inverted className={cx('menu-segment')}>
@@ -316,6 +335,21 @@ NavigationMain.propTypes = {
 		pub: PropTypes.number
 	}),
 
+	courses: PropTypes.arrayOf(PropTypes.shape({
+		_id: PropTypes.string,
+		title: PropTypes.string,
+		category: PropTypes.string,
+		category_info: (PropTypes.shape({
+			description: PropTypes.string,
+			key: PropTypes.string,
+			name: PropTypes.string,
+			picto: PropTypes.string
+		})),
+		subCategories: PropTypes.array,
+		isPrivate: PropTypes.bool,
+		content: PropTypes.string
+	})),
+
 	categories: PropTypes.arrayOf(PropTypes.shape({
 		description: PropTypes.string,
 		name: PropTypes.string,
@@ -331,6 +365,7 @@ NavigationMain.propTypes = {
 	})),
 
 	fetchCategoriesAction: PropTypes.func,
+	fetchCoursesByFieldAction: PropTypes.func,
 	getNumberCoursesAction: PropTypes.func,
 	logoutAction: PropTypes.func.isRequired,
 	openTchatboxSuccess: PropTypes.func
@@ -340,10 +375,11 @@ function mapStateToProps(state) {
 	return {
 		categories: state.categories.all,
 		numberCourses: state.courses.numberCourses,
+		courses: state.courses.all,
 		authentification: state.authentification,
 		userMe: state.userMe.data,
 		unreadMessages: state.tchat.unreadMessages
 	};
 }
 
-export default connect(mapStateToProps, { fetchCategoriesAction, getNumberCoursesAction, logoutAction, openTchatboxSuccess })(NavigationMain);
+export default connect(mapStateToProps, { fetchCategoriesAction, fetchCoursesByFieldAction, getNumberCoursesAction, logoutAction, openTchatboxSuccess })(NavigationMain);
