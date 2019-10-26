@@ -159,7 +159,6 @@ const myVar = 'content...';
 			codeMirrorLib: null,
 			pageMode: 'wy',
 			fieldsTyping: {
-				content: '',
 				template: {}
 			},
 			isEditing: false,
@@ -245,7 +244,7 @@ const myVar = 'content...';
 				this.setState({
 					isEditing,
 					isEditMode,
-					fieldsTyping: { content: '', template: {} },
+					fieldsTyping: { template: {} },
 					isDirty: false,
 					isPanelSettingsOpen: false,
 					pageMode

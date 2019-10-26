@@ -107,7 +107,7 @@ class EditorSettingsExplorer extends Component {
 						{
 							isEditing && (
 								<div>
-									<Form.Button size="mini" basic primary fluid inverted content="Delete the note" />
+									<Form.Button size="mini" basic fluid inverted content="Delete the note" />
 								</div>
 							)
 						}
