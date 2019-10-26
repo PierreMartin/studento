@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getColumnsFormsSelect, getCategoriesFormsSelect } from './attributesForms';
-import { Segment, Form, Header, Message, Select, Icon, Popup } from 'semantic-ui-react';
+import { Segment, Form, Header, Message, Select, Icon, Popup, Radio } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/editorPanelSettings.scss';
 
@@ -19,7 +19,7 @@ class EditorSettingsExplorer extends Component {
 		const errorsField = [];
 
 		if (addOrEditMissingField.title) errorsField.push({ message: 'the title is required ', key: 'title' });
-		if (addOrEditMissingField.category) errorsField.push({ message: 'the category is required ', key: 'category' });
+		// if (addOrEditMissingField.category) errorsField.push({ message: 'the category is required ', key: 'category' });
 
 		// Pas obligé d'afficher les erreurs back-end dans le form, on devrait plutôt les aficher dans une notification
 		if (addOrEditFailure && addOrEditFailure.length > 0) errorsField.push({ message: addOrEditFailure, key: 'backendError' });
@@ -67,20 +67,42 @@ class EditorSettingsExplorer extends Component {
 						<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} />
 						<Form.TextArea label="Description" placeholder="The description of your Note..." name="description" value={fields.description || ''} onChange={handleInputChange} />
 
-						<Form.Select className={cx('select')} required label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} />
+						<Form.Select className={cx('select')} label="Category" placeholder="Select your category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} />
 						{ isEditing || (!isEditing && category.lastSelected && category.lastSelected.length > 0) ? <Form.Select className={cx('select')} label="Sub Categories" placeholder="Sub Categories" name="subCategories" multiple options={subCategoriesOptions} value={fields.subCategories || ''} onChange={handleInputChange} /> : '' }
 
-						<Form.Checkbox className={cx('checkbox')} toggle label="Private" name="isPrivate" checked={fields.isPrivate || false} onChange={handleInputChange} />
-						<Popup trigger={<Icon className={cx('info')} name="info circle" size="big" color="grey" />} flowing hoverable>
-							<Message info icon size="mini">
-								<Icon name="info circle" size="small" />
-								<Message.Header>
-									The more notes you will have in private, the lower your 'sharing score' will be.
-									<br />
-									Don't forget that the goal of this platform is to share as much your knowledge.
-								</Message.Header>
-							</Message>
-						</Popup>
+						<Form.Group grouped>
+							<label htmlFor="isPrivate">Confidentiality</label>
+							<Popup trigger={<Icon className={cx('info')} name="info circle" size="big" color="grey" />} flowing hoverable>
+								<Message info icon size="mini">
+									<Icon name="info circle" size="small" />
+									<Message.Header>
+										The more notes you will have in private, the lower your 'sharing score' will be.
+										<br />
+										Don't forget that the goal of this platform is to share as much your knowledge.
+									</Message.Header>
+								</Message>
+							</Popup>
+							<div>
+								<div>
+									<Radio
+										label="Public"
+										name="isPrivate"
+										value="false"
+										checked={!fields.isPrivate}
+										onChange={handleInputChange}
+									/>
+								</div>
+								<div>
+									<Radio
+										label="Private"
+										name="isPrivate"
+										value="true"
+										checked={fields.isPrivate}
+										onChange={handleInputChange}
+									/>
+								</div>
+							</div>
+						</Form.Group>
 
 						{ pageMode !== 'wy' ? (
 							<Segment className={cx('form-templates-container')}>

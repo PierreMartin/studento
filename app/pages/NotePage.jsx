@@ -245,6 +245,7 @@ const myVar = 'content...';
 					isEditing,
 					isEditMode,
 					fieldsTyping: { template: {} },
+					category: { lastSelected: null },
 					isDirty: false,
 					isPanelSettingsOpen: false,
 					pageMode
@@ -491,7 +492,7 @@ const myVar = 'content...';
 
 		// Set isPrivate:
 		if (field.name === 'isPrivate') {
-			return this.setState({ fieldsTyping: { ...oldStateTyping, ...{[field.name]: field.checked } } });
+			return this.setState({ fieldsTyping: { ...oldStateTyping, ...{[field.name]: field.value === 'true' } } });
 		}
 
 		// Set categories:
