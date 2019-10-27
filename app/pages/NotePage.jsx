@@ -164,6 +164,7 @@ const myVar = 'content...';
 			isEditing: false,
 			category: { lastSelected: null },
 			heightEditor: 0,
+			heightToolbar: 0,
 			modalMiniEditor: {},
 			fieldsModalMiniEditorTyping: {},
 			codeLanguageSelected: '',
@@ -241,6 +242,7 @@ const myVar = 'content...';
 					this.state.tinyMceLib.activeEditor.setContent('');
 				}
 
+				this.resizeEditors();
 				this.setState({
 					isEditing,
 					isEditMode,
@@ -398,7 +400,7 @@ const myVar = 'content...';
 
 		if (this.editorCm) this.editorCm.setSize(null, heightEditor);
 
-		const nextState = { heightEditor, isMobile: false }; // TODO add heightToolbar
+		const nextState = { heightEditor, heightToolbar: heightEditorToolbar, isMobile: false };
 		if (window.matchMedia('(max-width: 768px)').matches) { nextState.isMobile = true; }
 		this.setState(nextState);
 	}
@@ -997,11 +999,14 @@ const myVar = 'content...';
 			canCloseModal,
 			modalDeleteNote,
 			activePage,
-			pageMode
+			pageMode,
+			heightToolbar
 		} = this.state;
 
 		const fields = this.getFieldsVal(fieldsTyping, course);
 		const content = this.getContentVal(fieldsTyping, course);
+		const styles = { paddingTop: heightToolbar };
+		if (isCourseOneLoading || isCourseAllLoading) { styles.display = 'none'; }
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
@@ -1036,9 +1041,10 @@ const myVar = 'content...';
 						handleModalOpen_CanClose={this.handleModalOpen_CanClose}
 						activePage={activePage}
 						handleActivePageChange={(page) => { this.setState({ activePage: page }); }}
+						heightToolbar={heightToolbar}
 					/>
 
-					<div className={cx('editor-container-full', isPanelExplorerOpen ? 'panel-explorer-open' : '')} style={isCourseOneLoading || isCourseAllLoading ? {display: 'none'} : {}}>
+					<div className={cx('editor-container-full', isPanelExplorerOpen ? 'panel-explorer-open' : '')} style={styles}>
 						{ pageMode === 'md' && (
 							<ContainerMd
 								editorToolbarMdRef={(el) => { this.editorToolbarMdRef = el; }}
@@ -1082,6 +1088,7 @@ const myVar = 'content...';
 						pageMode={pageMode}
 						handleModalOpen_DeleteNote={this.handleModalOpen_DeleteNote}
 						heightEditor={this.state.heightEditor}
+						heightToolbar={heightToolbar}
 					/>
 				</div>
 

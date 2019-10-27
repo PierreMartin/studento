@@ -105,7 +105,7 @@ paginationMethod => 'push' | 'skip'
 
 ### TODO :
 - enlever mode mobile de tinyMce
-- redesign comme Tcloud + Redesign buttons de la toolbar comme tinyMce + RWD (menu mobile, modales)
+- redesign comme Tcloud + Redesign buttons de la toolbar comme tinyMce
 - Auth facebook google...
 - Prévoir la possibilité de faire des groupes de notes
 

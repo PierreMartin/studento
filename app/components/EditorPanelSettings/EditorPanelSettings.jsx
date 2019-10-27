@@ -47,7 +47,8 @@ class EditorSettingsExplorer extends Component {
 			course,
 			pageMode,
 			handleModalOpen_DeleteNote,
-			heightEditor
+			heightEditor,
+			heightToolbar
 		} = this.props;
 
 		const messagesError = this.dispayFieldsErrors();
@@ -61,7 +62,7 @@ class EditorSettingsExplorer extends Component {
 		];
 
 		return (
-			<div className={cx('panel-settings-container', isOpen ? 'menu-open' : '')} style={{ height: heightEditor }}>
+			<div className={cx('panel-settings-container', isOpen ? 'menu-open' : '')} style={{ height: heightEditor, paddingTop: heightToolbar }}>
 				<div className={cx('panel-settings-properties')}>
 					<Form error={messagesError.props.children.length > 0} size="mini" onSubmit={handleSave}>
 						<Form.Input required label="Title" placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} />
@@ -144,6 +145,7 @@ EditorSettingsExplorer.propTypes = {
 	isOpen: PropTypes.bool,
 	pageMode: PropTypes.string,
 	heightEditor: PropTypes.number,
+	heightToolbar: PropTypes.number,
 
 	course: PropTypes.shape({
 		_id: PropTypes.string,
