@@ -12,7 +12,7 @@
 
     .button-group {
       border: 1px solid $colorBorder;
-      margin: 3px 5px 3px 0;
+      margin: 3px 10px 3px 0;
 
       [role="button"] { border: none !important; }
       [role="button"]:first-child { border-left: none !important; }
@@ -34,7 +34,9 @@
       display: inline-block;
 
       .title.span {
-        margin-left: 8px;
+        display: inline-block;
+        margin: 6px 0 6px 0;
+        padding-right: 90px;
         color: #fff;
       }
 
@@ -60,6 +62,7 @@
         }
 
         /* Input select */
+        /*
         &.category {
           opacity: 1;
           div[class~=dropdown] {
@@ -87,6 +90,7 @@
             }
           }
         }
+        */
 
         /* Button */
         button[class~=button] {
@@ -94,11 +98,13 @@
         }
 
         &[class~=disabled] {
+          /*
           &.category {
             div[class~=dropdown] {
               i { display: none; }
             }
           }
+          */
         }
       }
 
@@ -149,18 +155,14 @@
   .button-group { margin: 3px 5px 3px 0; }
 }
 
-/* Offset toolbar */
 @media screen and (max-width: 582px) {
   .toolbar {
     &.toolbar-settings {
       .form-properties {
+        &.edit-mode { display: block; }
         div[class~=field] {
           &.title div[class~=input] {
             width: 80px !important;
-          }
-
-          &.category {
-            display: none;
           }
         }
       }

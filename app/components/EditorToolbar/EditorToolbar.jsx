@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Icon, Button, Popup, Form, Message } from 'semantic-ui-react';
-import { getCategoriesFormsSelect } from '../../components/EditorPanelSettings/attributesForms';
 import classNames from 'classnames/bind';
 import styles from './css/editorToolbar.scss';
 
@@ -38,8 +37,6 @@ const dispayFieldsErrors = (addOrEditMissingField, addOrEditFailure) => {
 
 const EditorToolbar = (
 	{ course,
-		categories,
-		category,
 		isEditing,
 		isEditMode,
 		isDirty,
@@ -54,7 +51,6 @@ const EditorToolbar = (
 		editorToolbarRef
 	}) => {
 	const messagesError = dispayFieldsErrors(addOrEditMissingField, addOrEditFailure);
-	const { categoriesOptions } = getCategoriesFormsSelect({ categories, course, category, isEditing });
 	const isPropertiesChanged = fieldsTyping.title || fieldsTyping.category;
 	const stylePopup = { fontWeight: '900' };
 
@@ -67,7 +63,7 @@ const EditorToolbar = (
 				<Button disabled={!isEditing} icon="eye" title="Got to page" as={isDirty ? 'button' : Link} to={`/course/${course._id}`} onClick={isDirty ? handleModalOpen_CanClose(`/course/${course._id}`) : null} />
 			</Button.Group>
 
-			<Form error={messagesError.length > 0} size="mini" onSubmit={handleSave} className={cx('form-properties')}>
+			<Form error={messagesError.length > 0} size="mini" onSubmit={handleSave} className={cx('form-properties', isEditMode ? 'edit-mode' : '')}>
 				{
 					isEditMode ? (
 						<Form.Input size="tiny" required placeholder="Title" name="title" value={fields.title || ''} error={addOrEditMissingField.title} onChange={handleInputChange} className={cx('title', 'input')} />
@@ -75,10 +71,6 @@ const EditorToolbar = (
 						<span className={cx('title', 'span')} >{fields.title || ''}</span>
 					)
 				}
-
-				{/*
-				<Form.Select disabled={!isEditMode} size="tiny" required placeholder="Category" name="category" options={categoriesOptions} value={fields.category || ''} error={addOrEditMissingField.category} onChange={handleInputChange} className={cx('category')} />
-				*/}
 
 				{
 					(isEditMode && messagesError.length > 0) ? (
@@ -117,23 +109,12 @@ EditorToolbar.propTypes = {
 		description: PropTypes.string
 	}),
 
-	category: PropTypes.shape({
-		lastSelected: PropTypes.string
-	}),
-
 	isEditing: PropTypes.bool,
 	isEditMode: PropTypes.bool,
 	isDirty: PropTypes.bool,
 	fields: PropTypes.object,
 	fieldsTyping: PropTypes.object,
 	addOrEditFailure: PropTypes.string,
-
-	categories: PropTypes.arrayOf(PropTypes.shape({
-		description: PropTypes.string,
-		name: PropTypes.string,
-		key: PropTypes.string,
-		subCategories: PropTypes.array
-	})),
 
 	handleClickToolbarMain: PropTypes.func,
 	handleInputChange: PropTypes.func,

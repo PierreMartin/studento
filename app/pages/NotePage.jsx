@@ -398,7 +398,7 @@ const myVar = 'content...';
 
 		if (this.editorCm) this.editorCm.setSize(null, heightEditor);
 
-		const nextState = { heightEditor, isMobile: false };
+		const nextState = { heightEditor, isMobile: false }; // TODO add heightToolbar
 		if (window.matchMedia('(max-width: 768px)').matches) { nextState.isMobile = true; }
 		this.setState(nextState);
 	}
@@ -1012,8 +1012,6 @@ const myVar = 'content...';
 					<EditorToolbar
 						editorToolbarRef={(el) => { this.editorToolbarRef = el; }}
 						course={course}
-						categories={categories}
-						category={category}
 						isEditing={isEditing}
 						isEditMode={isEditMode}
 						fields={fields}

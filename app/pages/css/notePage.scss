@@ -110,11 +110,8 @@
   }
 }
 
-/* Offset toolbar */
 @media screen and (max-width: 410px) {
   .editor-container-full {
-    padding-top: 80px !important;
-
     &.panel-explorer-open { margin-left: 200px !important; }
   }
 }
