@@ -23,14 +23,14 @@ class EditorTiny extends Component {
 
 		let menubar = true;
 		let plugins = 'link image table codesample textcolor tiny_mce_wiris';
-		let toolbar = 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | formatselect | forecolor backcolor | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry';
+		let toolbar = 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | formatselect | forecolor backcolor | image | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry';
 		let pluginWiris = { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' };
 
 		// Mobile:
 		if (window.matchMedia('(max-width: 410px)').matches) {
 			menubar = false;
 			plugins = 'link image table textcolor';
-			toolbar = 'bold italic | alignleft aligncenter alignright | table | forecolor backcolor';
+			toolbar = 'bold italic | alignleft aligncenter alignright | table | forecolor backcolor | image';
 			pluginWiris = {};
 		}
 
