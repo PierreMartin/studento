@@ -21,17 +21,34 @@ class EditorTiny extends Component {
 	tinyMceInit() {
 		const { handleEditorTinyChange, heightEditor, tinyMceLib } = this.props;
 
+		let menubar = true;
+		let plugins = 'link image table codesample textcolor tiny_mce_wiris';
+		let toolbar = 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | formatselect | forecolor backcolor | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry';
+		let pluginWiris = { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' };
+
+		// Mobile:
+		if (window.matchMedia('(max-width: 410px)').matches) {
+			menubar = false;
+			plugins = 'link image table textcolor';
+			toolbar = 'bold italic | alignleft aligncenter alignright | table | forecolor backcolor';
+			pluginWiris = {};
+		}
+
 		tinyMceLib.init({
 			min_height: heightEditor,
-			external_plugins: { tiny_mce_wiris: 'https://www.wiris.net/demo/plugins/tiny_mce/plugin.js' },
+			external_plugins: pluginWiris,
 			language: 'en',
-			plugins: 'link image table codesample textcolor tiny_mce_wiris',
-			toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | codesample | table | formatselect | forecolor backcolor | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry',
+			plugins,
+			toolbar,
+			menubar,
 			selector: `#${this.idEditor}`,
 			skin_url: '/skins/oxide-dark', // css base
 			content_css: '/skins/default/content.css', // css content
 			codesample_content_css: '/css/prism.css', // css code
 			skin: 'oxide-dark',
+			mobile: {
+				theme: 'silver'
+			},
 			setup: (editor) => {
 				this.setState({ editor });
 
