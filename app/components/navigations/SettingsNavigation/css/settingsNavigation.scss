@@ -8,7 +8,7 @@
 		color: $colorTextMain !important;
 		border-bottom: 1px solid $colorBorder;
 
-		&:hover, &[class~=active] { background: $colorBg2 !important; color: white !important; }
+		&:hover, &[class~=active] { background: $colorBorder !important; color: white !important; }
 		&:last-of-type { border-bottom: none; }
 	}
 }

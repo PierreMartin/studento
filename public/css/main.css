@@ -3,7 +3,7 @@ This file is used for overload the existant css
 */
 
 body {
-    color: #b9bbbe;
+    color: #dbdbdb;
 }
 
 .ui.text.container {
@@ -24,15 +24,15 @@ body {
 }
 
 .ui.form .field>label {
-    color: #b9bbbe;
+    color: #dbdbdb;
 }
 .ui.form input[type=text], .ui.form input[type=text]:focus,
 .ui.form input[type=password], .ui.form input[type=password]:focus,
 .ui.selection.dropdown, .ui.selection.dropdown:focus,
 .ui.form textarea, .ui.form textarea:focus {
-    background: none;
-    border: 1px solid #404550;
-    color: #b9bbbe;
+    background: #080808;
+    /*border: 1px solid #363636;*/
+    color: #dbdbdb;
 }
 
 .ui.form .field.error input[type=text], .ui.form .field.error input[type=text]:focus,
@@ -43,21 +43,22 @@ body {
 
 /* Input select */
 .ui.selection.dropdown:hover, .ui.selection.active.dropdown, .ui.selection.active.dropdown:hover {
-    border: 1px solid #b9bbbe;
+    border: 1px solid #dbdbdb;
 }
 
 .ui.selection.visible.dropdown>.text:not(.default) {
-    color: #b9bbbe;
+    color: #dbdbdb;
 }
 
 .ui.dropdown .menu {
-    background: #2a2d32;
-    border: 1px solid #b9bbbe !important;
+    background: #171719;
+    border: 1px solid #dbdbdb !important;
 }
 
 .ui.dropdown .menu>.item:hover, .ui.dropdown .menu .active.item {
-    background: #36393f;
+    background: #363636;
     color: #fff;
+    font-weight: 700;
 }
 
 .ui.dropdown .menu .selected.item, .ui.dropdown.selected, .ui.dropdown .menu>.item {
@@ -65,18 +66,18 @@ body {
 }
 
 .ui.selection.dropdown .menu>.item {
-    border-top: 1px solid #404550;
+    border-top: 1px solid #363636;
 }
 
 /***************************** PAGINATION ******************************/
 .ui.pagination.menu {
     background: none;
-    border: 1px solid #404550;
+    border: 1px solid #363636;
 }
 
 .ui.pagination.menu a {
-    color: #b9bbbe;
-    border-right: 1px solid #404550;
+    color: #dbdbdb;
+    border-right: 1px solid #363636;
 }
 
 .ui.pagination.menu a:last-of-type {
@@ -87,22 +88,22 @@ body {
 .ui.pagination.menu .active.item,
 .ui.menu .active.item:hover,
 .ui.menu a.item:hover {
-    background-color: #36393f;
+    background-color: #363636;
     color: #dc3957;
 }
 
 /***************************** MESSAGES ******************************/
-.ui.message { background-color: #151515; color: #fff; box-shadow: 0 0 0 1px #404550 inset, 0 0 0 0 transparent; }
+.ui.message { background-color: #222225; color: #fff; box-shadow: none; }
 .ui.message .content p { color: #fff !important; opacity: 1; }
 
-.ui.error.message { background-color: rgba(219,40,40,0.35); color: #fff; box-shadow: 0 0 0 1px #404550 inset, 0 0 0 0 transparent; }
+.ui.error.message { background-color: rgba(219,40,40,0.35); color: #fff; box-shadow: 0 0 0 1px #363636 inset, 0 0 0 0 transparent; }
 .ui.error.message .content p { color: #fff !important; opacity: 1; }
 
 /***************************** BUTONS ******************************/
 /* Default basic */
 .ui.basic.button, .ui.basic.buttons .button {
-    color: #b9bbbe !important;
-    border: 1px solid #404550;
+    color: #dbdbdb !important;
+    border: 1px solid #363636;
 }
 
 .ui.basic.button:hover,
@@ -141,7 +142,7 @@ body {
     box-shadow: none !important;
     background: none;
     border: 1px solid #dc3957;
-    color: #b9bbbe !important;
+    color: #dbdbdb !important;
 }
 
 .ui.basic.primary.button:hover,
@@ -179,8 +180,8 @@ body {
 /* Secondary basic */
 .ui.basic.secondary.button, .ui.basic.secondary.buttons .button {
     box-shadow: none !important;
-    color: #b9bbbe !important;
-    border: 1px solid #404550;
+    color: #dbdbdb !important;
+    border: 1px solid #363636;
 }
 
 .ui.basic.secondary.button:hover,
@@ -193,7 +194,7 @@ body {
 .ui.basic.secondary.button:active, .ui.basic.secondary.buttons .button:active {
     color: white !important;
     box-shadow: none !important;
-    background: #151515 !important;
+    background: #222225 !important;
 }
 
 /* Basic grey */
@@ -240,14 +241,16 @@ body {
 
 /***************************** MODALS ******************************/
 .ui.dimmer { background-color: transparent; }
-.ui.modal>.header, .ui.modal>.content, .ui.modal>.actions { background: #151515; color: #b9bbbe; }
+.ui.modal { border-radius: 10px; }
+.ui.modal>.header { background: #222225 !important; color: #dbdbdb; }
+.ui.modal>.header, .ui.modal>.content, .ui.modal>.actions { background: #171719; color: #dbdbdb; }
 .ui.modal>.header { color: #fff !important; }
-.ui.modal .header { color: #b9bbbe; }
-.ui.modal>.content .menu { background: #151515; }
-.ui.modal>.content .CodeMirror { border: 1px solid #404550; }
-.ui.modal>.content .CodeMirror, .ui.modal>.content .CodeMirror-gutters { background: #151515 !important; }
+.ui.modal .header { color: #dbdbdb; }
+.ui.modal>.content .menu { background: #222225; }
+.ui.modal>.content .CodeMirror { border: 1px solid #363636; }
+.ui.modal>.content .CodeMirror, .ui.modal>.content .CodeMirror-gutters { background: #222225 !important; }
 
-.ui.black.button, .ui.black.buttons .button { background-color: #2a2d32; }
+.ui.black.button, .ui.black.buttons .button { background-color: #171719; }
 .ui.black.button:hover, .ui.black.buttons .button:hover, .ui.black.button:focus, .ui.black.buttons .button:focus, .ui.black.button:active, .ui.black.buttons .button:active { background-color: #1f2125; }
 
 .ui.red.button, .ui.red.buttons .button { background-color: #dc3957; }

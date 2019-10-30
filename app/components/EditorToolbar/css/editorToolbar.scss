@@ -20,13 +20,13 @@
       [role="button"] {
         border-left: 1px solid $colorBorder !important;
         color: white !important;
-        &:hover, &:focus, &:active { background-color: #555 !important; box-shadow: none; }
+        &:hover, &:focus, &:active { background-color: #363636 !important; box-shadow: none; }
       }
 
       button[disabled] {
-        border-color: #555 !important;
+        border-color: #363636 !important;
         opacity: 1 !important;
-        color: #555 !important;
+        color: #363636 !important;
       }
     }
 
@@ -54,8 +54,6 @@
             opacity: 1;
             input {
               line-height: 18px;
-              background: #141414;
-              border: 1px solid #555;
               color: #fff;
             }
           }
@@ -69,8 +67,8 @@
             width: 140px !important;
             min-width: inherit !important;
             padding: 11px;
-            background: #141414;
-            border: 1px solid #555;
+            background: #171719;
+            border: 1px solid #363636;
             color: #fff;
             opacity: 1;
 
@@ -80,11 +78,11 @@
             }
 
             div[class~=menu] {
-              background: #141414;
+              background: #171719;
               div[class~=item] {
                 font-size: 11px;
                 color: #fff;
-                border-top: 1px solid #555;
+                border-top: 1px solid #363636;
               }
               div[class~=item]:hover { background: #333; }
             }

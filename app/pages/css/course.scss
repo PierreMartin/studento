@@ -6,7 +6,8 @@ $lines-color: #8F938F;
   margin: 20px 0 15px 0;
   min-height: 600px;
   padding: 20px;
-  border: 1px solid $colorBorder;
+  /* border: 1px solid $colorBorder; */
+  background-color: $colorBg1;
   border-radius: 5px;
   word-wrap: break-word;
   word-break: break-word;
@@ -64,7 +65,7 @@ $lines-color: #8F938F;
   pre {
     border: 1px solid $colorBorder;
     border-radius: 5px;
-    background-color: $colorBg1;
+    background-color: $colorBgMain;
   }
 
   table {
@@ -76,7 +77,7 @@ $lines-color: #8F938F;
     }
 
     tr:nth-child(2n) {
-      background-color: $colorBg2;
+      background-color: $colorBorder;
     }
   }
 }

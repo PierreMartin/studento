@@ -36,13 +36,13 @@
         [role="button"] {
           border-left: 1px solid $colorBorder !important;
           color: white !important;
-          &:hover, &:focus, &:active { background-color: #555 !important; box-shadow: none; }
+          &:hover, &:focus, &:active { background-color: #363636 !important; box-shadow: none; }
         }
 
         button[disabled] {
-          border-color: #555 !important;
+          border-color: #363636 !important;
           opacity: 1 !important;
-          color: #555 !important;
+          color: #363636 !important;
         }
       }
     }

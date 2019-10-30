@@ -1,8 +1,8 @@
 @import './../../../css/common/colors.scss';
 
 .toolbar-container {
-  background-color: transparent !important;
-  border: 1px solid $colorBorder !important;
+  background-color: $colorBg1 !important;
+  /* border: 1px solid $colorBorder !important; */
 
   a, div[class~=item] {
     color: $colorTextMain !important;
