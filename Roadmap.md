@@ -105,7 +105,44 @@ paginationMethod => 'push' | 'skip'
 
 ### TODO :
 - Auth facebook google...
+
 - Prévoir la possibilité de faire des groupes de notes
+    (user.notesGroups: [{id: '1', title: 'Chimie 2018'}])
+    (note.groupId: '1')
+        
+        CODE:
+        const groups = {};
+        for (let i = 0; i < notes.length; i++) {
+        	if (typeof notes[i].groupId !== 'undefined') {
+                const group = notesGroups.filter((group) => group.id === notes[i].groupId);
+                if (group) {
+                    groups[group.id].title = group.title;
+                    groups[group.id].note.push(notes[i]);
+                    notes.splice(i, 1); // delete
+                }
+            }
+        }
+
+                        Object.values(groups).map(grp)
+            groupe1         grp.title
+                note1       grp.note.map()
+                note2
+                note3
+            groupe2
+                note1
+                note2
+                note3
+            note1       notes.map()
+            note2
+            note3
+
+- Prévoir la possibilité de faire des groupes de personne
+    (user.usersGroupsIds: ['1', '42'])
+    (collection => usersGroups: [{id: '42', title: 'ucpa', usersAdmin: ['65656pierre1231'], users: ['65656pierre1231', 'dsjsldkdslksd']}])
+    
+    RENDRE PUBLIC DES NOTES A UNE GROUPE => Quand on selectionne une note et qu'on lui dis d'etre visible pour le groupId '42':
+    (note.isPrivate: true, note.isNotPrivateFor: [usersGroups.users])
+
 
 - dotenv voir pourquoi deplacé dans devDependance
 - pouvoir uploader images dans les cours
