@@ -15,6 +15,10 @@ body {
 }
 
 /***************************** FORMS ******************************/
+input::selection, textarea::selection {
+    color: #fff;
+}
+
 .ui.input { color: #fff; }
 .ui.form .field.field input:-webkit-autofill:focus { border-color: transparent !important; box-shadow: none !important; }
 .ui.form .field.field input:-webkit-autofill { border-color: transparent !important; box-shadow: none !important; }
@@ -30,7 +34,7 @@ body {
 .ui.form input[type=password], .ui.form input[type=password]:focus,
 .ui.selection.dropdown, .ui.selection.dropdown:focus,
 .ui.form textarea, .ui.form textarea:focus {
-    background: #080808;
+    background: #222225;
     /*border: 1px solid #363636;*/
     color: #dbdbdb;
 }
@@ -51,14 +55,13 @@ body {
 }
 
 .ui.dropdown .menu {
-    background: #171719;
+    background: #222225;
     border: 1px solid #dbdbdb !important;
 }
 
 .ui.dropdown .menu>.item:hover, .ui.dropdown .menu .active.item {
     background: #363636;
     color: #fff;
-    font-weight: 700;
 }
 
 .ui.dropdown .menu .selected.item, .ui.dropdown.selected, .ui.dropdown .menu>.item {
@@ -250,16 +253,15 @@ body {
 .ui.modal>.content .CodeMirror { border: 1px solid #363636; }
 .ui.modal>.content .CodeMirror, .ui.modal>.content .CodeMirror-gutters { background: #222225 !important; }
 
-.ui.black.button, .ui.black.buttons .button { background-color: #171719; }
-.ui.black.button:hover, .ui.black.buttons .button:hover, .ui.black.button:focus, .ui.black.buttons .button:focus, .ui.black.button:active, .ui.black.buttons .button:active { background-color: #1f2125; }
+.ui.black.button, .ui.black.buttons .button { background-color: #222225; }
+.ui.black.button:hover, .ui.black.buttons .button:hover, .ui.black.button:focus, .ui.black.buttons .button:focus, .ui.black.button:active, .ui.black.buttons .button:active { background-color: #363636; }
 
 .ui.red.button, .ui.red.buttons .button { background-color: #dc3957; }
 .ui.red.button:hover, .ui.red.buttons .button:hover, .ui.red.button:focus, .ui.red.buttons .button:focus, .ui.red.button:active, .ui.red.buttons .button:active { background-color: #b42e47; }
 
 /***************************** MAIN MENU & FOOTER ******************************/
-.ui.inverted.segment, .ui.primary.inverted.segment {
-    background-color: #dc3957;
-}
+.ui.inverted.segment, .ui.primary.inverted.segment { background-color: #dc3957; }
+.ui.inverted.popup, .ui.inverted.popup:before { background: #080808 !important; }
 
 
 /****************************** MAIN MENU ******************************/
