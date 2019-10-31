@@ -1,3 +1,4 @@
+/** Deprecated **/
 import User from '../models/user';
 
 /* eslint-disable no-param-reassign */

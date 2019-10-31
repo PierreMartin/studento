@@ -1,7 +1,7 @@
 import passport from 'passport';
 import local from './local';
-import google from './google';
-import { passport as dbPassport } from '../../db';
+// import facebook from './google';
+import dbPassport from './deserializeUser';
 
 export default () => {
   // Configure Passport authenticated session persistence.
@@ -12,17 +12,17 @@ export default () => {
   // serializing, and querying the user record by ID from the database when
   // deserializing.
 
-  if (dbPassport && dbPassport.deserializeUser) {
+  if (dbPassport) {
     passport.serializeUser((user, done) => {
       done(null, user.id);
     });
 
-    passport.deserializeUser(dbPassport.deserializeUser);
+    passport.deserializeUser(dbPassport);
   } else {
     console.warn('(de)serialize User');
   }
 
-  // use the following strategies
+  // The strategies:
   local(passport);
-  google(passport);
+  // facebook(passport);
 };

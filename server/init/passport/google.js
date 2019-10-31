@@ -3,11 +3,6 @@ import { google } from '../../../config/secrets';
 import { passport as dbPassport } from '../../db';
 
 export default (passport) => {
-  if (!dbPassport || !dbPassport.google || !typeof dbPassport.google === 'function') {
-    console.warn('passport-google-oauth');
-    return;
-  }
-
   /*
   * OAuth Strategy taken modified from https://github.com/sahat/hackathon-starter/blob/master/config/passport.js
   *

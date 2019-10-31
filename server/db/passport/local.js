@@ -1,3 +1,4 @@
+/** Deprecated **/
 import User from '../models/user';
 
 export default (email, password, done) => {
