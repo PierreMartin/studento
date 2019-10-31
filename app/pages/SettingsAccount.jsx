@@ -131,8 +131,8 @@ class SettingsAccount extends Component {
 						<Modal.Description>
 							<Header>Are you sure to delete your account?</Header>
 
-							<Message icon color="red" size="mini">
-								<Icon name="attention" size="small" />
+							<Message icon size="mini">
+								<Icon name="attention" size="small" color="red" />
 								<Message.Content>This action will delete all your notes.</Message.Content>
 							</Message>
 

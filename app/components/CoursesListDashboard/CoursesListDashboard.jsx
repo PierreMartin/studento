@@ -215,8 +215,8 @@ class CoursesListDashboard extends Component {
 					<Modal.Content image>
 						<Modal.Description>
 							<Header>Are you sure to delete the note "{deleteCourse.courseTitle}"?</Header>
-							<Message icon color="red" size="mini">
-								<Icon name="attention" size="small" />
+							<Message icon size="mini">
+								<Icon name="attention" size="small" color="red" />
 								<Message.Content>This action will permanently delete your note.</Message.Content>
 							</Message>
 						</Modal.Description>

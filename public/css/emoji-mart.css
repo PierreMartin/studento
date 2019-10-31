@@ -92,6 +92,7 @@
     padding: 0 6px;
 }
 .emoji-mart-search input {
+    background: inherit !important;
     font-size: 16px;
     display: block;
     width: 100%;

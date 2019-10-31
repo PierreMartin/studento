@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import EditorMd from '../NotePageMd/EditorMd';
 import PreviewMd from '../NotePageMd/PreviewMd';
-import { Button, Popup } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import stylesMain from '../../css/main.scss';
 import stylesNotePage from '../../pages/css/notePage.scss';
@@ -42,11 +42,11 @@ class ContainerMd extends Component {
 					(isCanEdit && isEditMode) && (
 						<div className={cx('toolbar-editor-md')} ref={editorToolbarMdRef}>
 							<Button.Group basic size="small" className={cx('button-group')}>
-								{ buttonsToolbar.map((button, key) => (<Popup trigger={<Button icon={button.icon} basic className={cx('button')} onClick={handleClickToolbarMarkDown(button.icon)} />} content={button.content} key={key} />)) }
+								{ buttonsToolbar.map((button, key) => (<Button key={key} title={button.content} icon={button.icon} basic className={cx('button')} onClick={handleClickToolbarMarkDown(button.icon)} />)) }
 							</Button.Group>
 
 							<Button.Group basic size="small" className={cx('button-group')}>
-								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} icon={button.icon} basic className={cx('button')} onClick={handleClickToolbarMarkDown(button.icon)} />) }
+								{ buttonsForPopupToolbar.map((button, key) => <Button key={key} title={button.content} icon={button.icon} basic className={cx('button')} onClick={handleClickToolbarMarkDown(button.icon)} />) }
 							</Button.Group>
 
 							{ !isMobile ? (

@@ -24,17 +24,23 @@
       background-color: $colorBgMain;
       border-bottom: 1px solid $colorBorder;
       width: 100%;
-      padding: 4px;
+      /*padding: 4px;*/
 
       .button-group {
+        /*
         border: 1px solid $colorBorder;
         margin: 3px 5px 3px 0;
+        */
+        border-radius: inherit;
+        border-right: 1px solid $colorBorder;
 
         [role="button"] { border: none !important; }
         [role="button"]:first-child { border-left: none !important; }
 
         [role="button"] {
-          border-left: 1px solid $colorBorder !important;
+          margin: 3px;
+          border-radius: 3px;
+          /*border-left: 1px solid $colorBorder !important;*/
           color: white !important;
           &:hover, &:focus, &:active { background-color: #363636 !important; box-shadow: none; }
         }

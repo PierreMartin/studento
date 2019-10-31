@@ -104,7 +104,6 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- redesign comme Tcloud + Redesign buttons de la toolbar comme tinyMce
 - Auth facebook google...
 - Prévoir la possibilité de faire des groupes de notes
 

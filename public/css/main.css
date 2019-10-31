@@ -72,6 +72,17 @@ input::selection, textarea::selection {
     border-top: 1px solid #363636;
 }
 
+/* Form errors */
+.ui.form .field.error input:not([type]), .ui.form .field.error input[type=date], .ui.form .field.error input[type=datetime-local], .ui.form .field.error input[type=email], .ui.form .field.error input[type=file], .ui.form .field.error input[type=number], .ui.form .field.error input[type=password], .ui.form .field.error input[type=search], .ui.form .field.error input[type=tel], .ui.form .field.error input[type=text], .ui.form .field.error input[type=time], .ui.form .field.error input[type=url], .ui.form .field.error select, .ui.form .field.error textarea, .ui.form .fields.error .field input:not([type]), .ui.form .fields.error .field input[type=date], .ui.form .fields.error .field input[type=datetime-local], .ui.form .fields.error .field input[type=email], .ui.form .fields.error .field input[type=file], .ui.form .fields.error .field input[type=number], .ui.form .fields.error .field input[type=password], .ui.form .fields.error .field input[type=search], .ui.form .fields.error .field input[type=tel], .ui.form .fields.error .field input[type=text], .ui.form .fields.error .field input[type=time], .ui.form .fields.error .field input[type=url], .ui.form .fields.error .field select, .ui.form .fields.error .field textarea {
+    border-color: #9f3a38;
+}
+
+.ui.form .field.error .ui.dropdown, .ui.form .field.error .ui.dropdown .item, .ui.form .field.error .ui.dropdown .text, .ui.form .fields.error .field .ui.dropdown, .ui.form .fields.error .field .ui.dropdown .item {
+    background: #222225;
+    border-color: #9f3a38 !important;
+    color: inherit;
+}
+
 /***************************** PAGINATION ******************************/
 .ui.pagination.menu {
     background: none;
@@ -99,7 +110,7 @@ input::selection, textarea::selection {
 .ui.message { background-color: #222225; color: #fff; box-shadow: none; }
 .ui.message .content p { color: #fff !important; opacity: 1; }
 
-.ui.error.message { background-color: rgba(219,40,40,0.35); color: #fff; box-shadow: 0 0 0 1px #363636 inset, 0 0 0 0 transparent; }
+.ui.error.message { background-color: #222225; color: #fff; box-shadow: 0 0 0 1px #9f3a38 inset, 0 0 0 0 transparent; }
 .ui.error.message .content p { color: #fff !important; opacity: 1; }
 
 /***************************** BUTONS ******************************/

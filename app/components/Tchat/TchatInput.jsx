@@ -77,7 +77,7 @@ class TchatInput extends Component {
 		return (
 			<Form onSubmit={handleSubmitSendMessage}>
 				<Form.Input placeholder={usersTyping || 'Your message...'} >
-					<input value={valueEmojify || ''} onChange={handleChangeSendMessage} ref={(el) => { this.inputRef = el; }} />
+					<input value={valueEmojify || ''} onChange={handleChangeSendMessage} ref={(el) => { this.inputRef = el; }} style={{ background: 'inherit' }} />
 
 					<span ref={(el) => { this.contentEmojiRef = el; }} >
 						{ this.state.openModalEmoji && <Picker set="apple" emojiSize={20} onClick={this.handleSubmitEmoji} /> }
