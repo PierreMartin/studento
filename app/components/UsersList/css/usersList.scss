@@ -18,7 +18,8 @@
     width: 216px;
     height: 290px;
     background-color: $colorBg1;
-    border: 1px solid $colorBorder;
+    border-radius: 5px;
+    border: 1px solid transparent;
     /* box-shadow: 0 0 1px 1px rgba(20,23,28,.1), 0 3px 1px 0 rgba(20,23,28,.1); */
 
     &:link, &:visited { text-decoration: none; color: $colorTextMain; @include transition(all .2s); }
