@@ -84,7 +84,7 @@ export default (app) => {
   }
   console.log('--------------------------');
 
-  app.use(session(sess));
+  app.use(session(sess)); // AuthPassport: A session will be established and maintained via a cookie set in the user's browser
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());

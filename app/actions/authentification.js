@@ -46,6 +46,7 @@ export function loginError(messageError) {
 	};
 }
 
+// AuthPassport
 export function loginAction(data) {
 	return (dispatch) => {
 		dispatch(beginLogin());

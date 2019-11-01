@@ -17,7 +17,7 @@ export function login(req, res, next) {
 		return res.status(400).json({errorField});
 	}
 
-	// 'local' define in server/init/passport/local.js
+	// AuthPassport: 'local' define in server/init/passport/local.js
   passport.authenticate('local', (authErr, user, info) => {
     if (authErr) return next(authErr);
 
@@ -26,7 +26,7 @@ export function login(req, res, next) {
 			return res.status(401).json({message: info.message});
 		}
 
-		// login user :
+		// Establish a session:
     return req.logIn(user, (loginErr) => {
 			if (loginErr) return res.status(401).json({message: loginErr});
 
@@ -65,7 +65,7 @@ export function signUp(req, res, next) {
     return user.save((saveErr) => {
       if (saveErr) return next(saveErr);
 
-			// login user :
+			// Establish a session :
       return req.logIn(user, (loginErr) => {
 				if (loginErr) return res.status(401).json({message: loginErr});
 

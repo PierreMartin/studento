@@ -105,6 +105,7 @@ paginationMethod => 'push' | 'skip'
 
 ### TODO :
 - Auth facebook google...
+- voir pourquoi déconnection quand close navigateur
 
 - Prévoir la possibilité de faire des groupes de notes
     (user.notesGroups: [{id: '1', title: 'Chimie 2018'}])

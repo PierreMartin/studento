@@ -15,7 +15,7 @@ export default function render(req, res) {
 			messageError: ''
 		},
 		userMe: {
-			data: req.user
+			data: req.user // AuthPassport: Given from session + passport.js
 		},
 		tchat: {
 			isBoxOpen: false // req.user.isBoxOpen
