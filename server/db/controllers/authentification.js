@@ -17,7 +17,7 @@ export function login(req, res, next) {
 		return res.status(400).json({errorField});
 	}
 
-  // Do email and password validation for the server
+	// 'local' define in server/init/passport/local.js
   passport.authenticate('local', (authErr, user, info) => {
     if (authErr) return next(authErr);
 
