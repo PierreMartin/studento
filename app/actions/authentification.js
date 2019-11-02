@@ -1,4 +1,4 @@
-import { loginRequest, signupRequest, logoutRequest } from './../api';
+import { loginRequest, loginWithFacebookRequest, signupRequest, logoutRequest } from './../api';
 import { push } from 'react-router-redux';
 import * as types from 'types';
 import { toast } from 'react-toastify';
@@ -73,6 +73,27 @@ export function loginAction(data) {
 	};
 }
 
+// login or signup:
+export function loginWithFacebookAction() {
+	return (dispatch) => {
+		dispatch(beginLogin());
+
+		loginWithFacebookRequest()
+			.then((response) => {
+				if (response.status === 200) {
+					debugger;
+					dispatch(loginSuccess(response.data.message, response.data.userObj));
+					dispatch(push('/user/' + response.data.userObj._id)); // redirection
+					toast.success(response.data.message);
+				} else {
+					dispatch(loginError('Something went wrong!'));
+				}
+			})
+			.catch((err) => {
+					dispatch(loginError(getMessage(err)));
+			});
+	};
+}
 
 /***************************************** Sign Up ********************************************/
 export function beginSignUp() {

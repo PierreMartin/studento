@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { loginAction, signupAction, typingLoginSignupAction } from '../actions/authentification';
+import { loginAction, loginWithFacebookAction, signupAction, typingLoginSignupAction } from '../actions/authentification';
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import hubNoteLogo from '../images/logo_hubnote_200.png';
 import classNames from 'classnames/bind';
@@ -15,14 +15,15 @@ class Login extends Component {
 	constructor(props) {
 		super(props);
 		this.handleInputChange = this.handleInputChange.bind(this);
-		this.handleOnSubmit = this.handleOnSubmit.bind(this);
+		this.handleSubmitLocalAuth = this.handleSubmitLocalAuth.bind(this);
+		this.handleSubmitFacebookAuth = this.handleSubmitFacebookAuth.bind(this);
 	}
 
 	handleInputChange(event, field) {
 		this.props.typingLoginSignupAction(field.name, event.target.value);
 	}
 
-	handleOnSubmit(event) {
+	handleSubmitLocalAuth(event) {
 		event.preventDefault();
 
 		const { signupAction, loginAction, typingLoginSignupState } = this.props;
@@ -37,6 +38,11 @@ class Login extends Component {
 		}
 
 		loginAction({email, password});
+	}
+
+	handleSubmitFacebookAuth(event) {
+		event.preventDefault();
+		this.props.loginWithFacebookAction();
 	}
 
 	renderMessage() {
@@ -101,7 +107,13 @@ class Login extends Component {
 					<Grid.Column style={{ maxWidth: 450 }}>
 						<Header as="h2" textAlign="center">{signup ? 'Signup a new account' : 'Login to your account'}</Header>
 
-						<Form error={messages.props.children.length > 0} size="large" onSubmit={this.handleOnSubmit}>
+						<Form size="large" onSubmit={this.handleSubmitFacebookAuth}>
+							<Segment stacked textAlign="left">
+								<Button basic primary fluid size="large">Connect with Facebook</Button>
+							</Segment>
+						</Form>
+
+						<Form error={messages.props.children.length > 0} size="large" onSubmit={this.handleSubmitLocalAuth}>
 							<Segment stacked textAlign="left">
 								{ fieldsSignupNode }
 								<Form.Input fluid icon="user" iconPosition="left" label="E-mail" placeholder="E-mail address" name="email" error={missingRequiredField.email} onChange={this.handleInputChange} />
@@ -125,8 +137,9 @@ Login.propTypes = {
 	typingLoginSignupState: PropTypes.object,
 	missingRequiredField: PropTypes.object,
 	messageErrorState: PropTypes.string,
-	loginAction: PropTypes.func.isRequired,
-	signupAction: PropTypes.func.isRequired
+	loginAction: PropTypes.func,
+	loginWithFacebookAction: PropTypes.func,
+	signupAction: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -137,4 +150,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, {loginAction, signupAction, typingLoginSignupAction})(Login);
+export default connect(mapStateToProps, { loginAction, loginWithFacebookAction, signupAction, typingLoginSignupAction })(Login);

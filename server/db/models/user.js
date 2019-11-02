@@ -41,11 +41,14 @@ const UserSchema = new mongoose.Schema({
 	}],
 
   tokens: Array,
+	provider: { type: String, default: 'local' },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
-  google: {}
+  google: {},
+	facebook: {}
 });
 
+// AuthPassport:
 function encryptPassword(next) {
   const user = this;
   if (!user.isModified('password')) return next();
@@ -65,7 +68,7 @@ function encryptPassword(next) {
 UserSchema.pre('save', encryptPassword);
 
 /*
- Defining our own custom document instance method
+ AuthPassport: Defining our own custom document instance method
  */
 UserSchema.methods = {
   comparePassword(candidatePassword, cb) {

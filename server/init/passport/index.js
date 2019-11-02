@@ -1,6 +1,6 @@
 import passport from 'passport';
 import local from './local';
-// import facebook from './google';
+import facebook from './facebook';
 import User from '../../db/models/user';
 
 export default () => {
@@ -22,5 +22,5 @@ export default () => {
 
   // AuthPassport: The strategies:
   local(passport);
-  // facebook(passport);
+  facebook(passport);
 };

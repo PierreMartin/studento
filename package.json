@@ -101,6 +101,7 @@
     "multer-s3": "^2.7.0",
     "multer-s3-transform": "^2.3.2",
     "passport": "^0.3.2",
+    "passport-facebook": "^3.0.0",
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "pg": "^6.1.5",

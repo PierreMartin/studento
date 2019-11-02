@@ -1,5 +1,5 @@
 import passport from 'passport';
-import { controllers, passport as passportConfig } from '../db';
+import { controllers } from '../db';
 
 const authController = controllers && controllers.auth;
 const usersController = controllers && controllers.users;
@@ -35,8 +35,14 @@ export default (app) => {
 
   // authentification routes
   if (authController) {
+		// Local auth:
     app.post('/api/login', authController.login);
     app.post('/api/signup', authController.signUp);
+
+    // Facebook auth:
+		app.get('/auth/facebook', passport.authenticate('facebook'));
+		app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/login' }));
+
     app.post('/api/logout', authController.logout);
   } else {
     console.warn('authentification routes');

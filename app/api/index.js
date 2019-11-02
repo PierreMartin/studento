@@ -171,6 +171,16 @@ export const loginRequest = (data) => {
 		});
 };
 
+export const loginWithFacebookRequest = () => {
+	return api().loginWithFacebook()
+		.then((res) => {
+			return Promise.resolve(res);
+		})
+		.catch((err) => {
+			return Promise.reject(err);
+		});
+};
+
 export const signupRequest = (data) => {
 	return api().signup(data)
 		.then((res) => {

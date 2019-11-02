@@ -73,6 +73,10 @@ export function api() {
 			url: '/api/login',
 			data
 		}),
+		loginWithFacebook: () => localClient.request({
+			method: 'GET',
+			url: '/auth/facebook'
+		}),
 		signup: data => localClient.request({
 			method: 'POST',
 			url: '/api/signup',
