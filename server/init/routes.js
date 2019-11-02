@@ -41,7 +41,7 @@ export default (app) => {
 
     // Facebook auth:
 		app.get('/auth/facebook', passport.authenticate('facebook'));
-		app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/login' }));
+		app.get('/auth/facebook/callback', authController.facebookLogin);
 
     app.post('/api/logout', authController.logout);
   } else {

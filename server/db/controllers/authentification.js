@@ -19,20 +19,38 @@ export function login(req, res, next) {
 
 	// AuthPassport: 'local' define in server/init/passport/local.js
   passport.authenticate('local', (authErr, user, info) => {
-    if (authErr) return next(authErr);
+    if (authErr) { return next(authErr); }
 
 		// unauthorized error (if wrong password or wrong login) :
 		if (!user) {
-			return res.status(401).json({message: info.message});
+			return res.status(401).json({ message: info.message });
 		}
 
 		// Establish a session:
     return req.logIn(user, (loginErr) => {
-			if (loginErr) return res.status(401).json({message: loginErr});
+			if (loginErr) { return res.status(401).json({ message: loginErr }); }
 
-			return res.status(200).json({message: 'You\'re now logged.', userObj: user});
+			return res.status(200).json({ message: 'You\'re now logged.', userObj: user });
     });
   })(req, res, next);
+}
+
+/**
+ * GET /auth/facebook/callback
+ */
+export function facebookLogin(req, res, next) {
+	// AuthPassport: 'facebook' define in server/init/passport/facebook.js
+	passport.authenticate('facebook', (authErr, user) => {
+		if (authErr) { return next(authErr); }
+		if (!user) { return res.status(401).json({ message: 'A error happen' }); }
+
+		// Establish a session:
+		return req.logIn(user, (loginErr) => {
+			if (loginErr) { return res.status(401).json({ message: loginErr }); }
+
+			return res.status(200).json({ message: 'You\'re now logged.', userObj: user });
+		});
+	})(req, res, next);
 }
 
 /**
@@ -85,6 +103,7 @@ export function logout(req, res) {
 
 export default {
   login,
+	facebookLogin,
   logout,
   signUp
 };

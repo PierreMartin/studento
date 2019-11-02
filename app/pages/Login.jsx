@@ -109,7 +109,7 @@ class Login extends Component {
 
 						<Form size="large" onSubmit={this.handleSubmitFacebookAuth}>
 							<Segment stacked textAlign="left">
-								<Button basic primary fluid size="large">Connect with Facebook</Button>
+								<a href="/auth/facebook" className={cx('fb-login-button')}>Login with Facebook</a>
 							</Segment>
 						</Form>
 

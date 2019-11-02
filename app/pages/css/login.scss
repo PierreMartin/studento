@@ -3,6 +3,13 @@
 
   .form {
     margin-top: 12px;
+
+    .fb-login-button {
+      background: #4267b2;
+      border-radius: 5px;
+      color: white;
+      padding: 8px;
+    }
   }
 
   .info-message {
