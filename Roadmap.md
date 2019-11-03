@@ -105,8 +105,10 @@ paginationMethod => 'push' | 'skip'
 
 ### TODO :
 - Auth facebook google...
+- voir pourquoi process.env.XXX undefined
 - width 100% du panelExplorer en mode mobile + déplier le panelExplorer quand mode create
 - refonte Home
+- pouvoir supprimer les avatars
 
 - Prévoir la possibilité de faire des groupes de notes
     (user.notesGroups: [{id: '1', title: 'Chimie 2018'}])

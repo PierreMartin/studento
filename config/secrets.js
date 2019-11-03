@@ -11,5 +11,5 @@ export const google = {
 export const facebook = {
 	clientID: process.env.FACEBOOK_CLIENTID || '435286900503355',
 	clientSecret: process.env.FACEBOOK_SECRET || '3b786fb4df4e1c49cbb4f41478742f24',
-	callbackURL: process.env.FACEBOOK_CALLBACK || 'http://localhost:3000/auth/facebook/callback'
+	callbackURL: process.env.FACEBOOK_CALLBACK || 'http://hubnote.app/auth/facebook/callback'
 };
