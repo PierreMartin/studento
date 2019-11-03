@@ -30,4 +30,4 @@ yarn-error.log*
 .vscode
 
 Server.md
-hubnote.app.conf.*
+apacheConf/
