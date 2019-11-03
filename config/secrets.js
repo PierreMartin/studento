@@ -9,7 +9,7 @@ export const google = {
 };
 
 export const facebook = {
-	clientID: process.env.FACEBOOK_CLIENTID || '435286900503355',
-	clientSecret: process.env.FACEBOOK_SECRET || '3b786fb4df4e1c49cbb4f41478742f24',
+	clientID: process.env.FACEBOOK_CLIENTID || '',
+	clientSecret: process.env.FACEBOOK_SECRET || '',
 	callbackURL: process.env.FACEBOOK_CALLBACK || 'https://hubnote.app/auth/facebook/callback'
 };
