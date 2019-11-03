@@ -7,7 +7,6 @@ import flash from 'express-flash';
 import methodOverride from 'method-override';
 import gzip from 'compression';
 import helmet from 'helmet';
-import { sessionSecret } from '../../config/secrets';
 import { ENV } from '../../config/env';
 import { session as dbSession } from '../db';
 
@@ -61,7 +60,7 @@ export default (app) => {
   const sess = {
     resave: false,
     saveUninitialized: false,
-    secret: sessionSecret,
+    secret: process.env.SESSION_SECRET || 'Your Session Secret goes here',
     proxy: true, // The "X-Forwarded-Proto" header will be used.
     name: 'sessionId',
     // Add HTTPOnly, Secure attributes on Session Cookie

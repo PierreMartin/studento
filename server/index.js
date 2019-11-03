@@ -11,6 +11,8 @@ import renderMiddleware from './render/middleware';
 
 const app = express();
 
+require('dotenv').config();
+
 // connect to MongoDB using mongoose - register mongoose Schema
 connect();
 

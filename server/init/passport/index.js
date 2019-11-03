@@ -22,5 +22,8 @@ export default () => {
 
   // AuthPassport: The strategies:
   local(passport);
-  facebook(passport);
+
+  if (process.env.FACEBOOK_CLIENTID && process.env.FACEBOOK_SECRET) {
+		facebook(passport);
+  }
 };

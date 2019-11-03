@@ -1,5 +1,4 @@
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
-import { google } from '../../../config/secrets';
 import User from '../../db/models/user';
 
 /* eslint-disable no-param-reassign */
@@ -64,9 +63,9 @@ export default (passport) => {
   * as options specifying a client ID, client secret, and callback URL.
   */
   passport.use(new GoogleStrategy({
-    clientID: google.clientID,
-    clientSecret: google.clientSecret,
-    callbackURL: google.callbackURL,
+    clientID: process.env.GOOGLE_CLIENTID,
+    clientSecret: process.env.GOOGLE_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK,
     passReqToCallback: true
   }, googleCb));
 };

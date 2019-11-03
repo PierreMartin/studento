@@ -105,7 +105,7 @@ paginationMethod => 'push' | 'skip'
 
 ### TODO :
 - Auth facebook google...
-- voir pourquoi process.env.XXX undefined
+- config/env.js
 - width 100% du panelExplorer en mode mobile + déplier le panelExplorer quand mode create
 - refonte Home
 - pouvoir supprimer les avatars

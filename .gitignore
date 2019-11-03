@@ -7,7 +7,6 @@
 /public/assets/*
 /public/uploads/*
 /public/uploadsRaw/*
-secrets.md
 
 # testing
 /coverage
