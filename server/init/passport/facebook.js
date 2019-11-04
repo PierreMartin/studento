@@ -36,7 +36,8 @@ export default (passport) => {
 	passport.use(new FacebookStrategy({
 			clientID: process.env.FACEBOOK_CLIENTID,
 			clientSecret: process.env.FACEBOOK_SECRET,
-			callbackURL: process.env.FACEBOOK_CALLBACK
+			callbackURL: process.env.FACEBOOK_CALLBACK,
+			profileFields: ['id', 'username', 'displayName', 'photos', 'profileUrl', 'email', 'gender', 'name']
 		},
 		facebookCb
 	));
