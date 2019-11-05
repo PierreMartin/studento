@@ -2,7 +2,7 @@ import { Strategy as FacebookStrategy } from 'passport-facebook';
 import User from '../../db/models/user';
 
 export default (passport) => {
-	const facebookCb = (accessToken, refreshToken, profile, done) => {
+	const facebookCb = (req, accessToken, refreshToken, profile, done) => {
 		// 'profile' contain user profile information provided by Facebook
 		console.log('profile ', profile);
 
