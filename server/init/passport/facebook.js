@@ -7,7 +7,7 @@ export default (passport) => {
 		console.log('profile ', profile);
 
 		let photo;
-		if (profile.photos && profile.photos[0] && profile.photos[0].value) {
+		if (profile && profile.photos && profile.photos[0] && profile.photos[0].value) {
 			photo = profile.photos[0].value;
 		}
 
@@ -43,7 +43,7 @@ export default (passport) => {
 			clientSecret: process.env.FACEBOOK_SECRET,
 			callbackURL: process.env.FACEBOOK_CALLBACK,
 			passReqToCallback: true,
-			profileFields: ['id', 'emails', 'name', 'displayName']
+			profileFields: ['id', 'name', 'displayName', 'photos']
 		},
 		facebookCb
 	));
