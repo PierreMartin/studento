@@ -40,7 +40,7 @@ export default (app) => {
     app.post('/api/signup', authController.signUp);
 
     // Facebook auth:
-		app.get('/auth/facebook', passport.authenticate('facebook', { failureRedirect: '/login', scope: ['public_profile'] }));
+		app.get('/auth/facebook', passport.authenticate('facebook', { failureRedirect: '/login', scope: ['email', 'public_profile'] }));
 		app.get('/auth/facebook/callback', authController.facebookLogin);
 
     app.post('/api/logout', authController.logout);
