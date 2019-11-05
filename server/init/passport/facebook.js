@@ -6,6 +6,7 @@ export default (passport) => {
 		// 'profile' contain user profile information provided by Facebook
 		console.log('profile ', profile);
 		console.log('emails ', profile.emails[0].value);
+		// picture: profile.photos ? profile.photos[0].value : '';
 
 		// { 'facebook.id': profile.id }
 		User.findOne({ email: profile.emails[0].value }, (findErr, findUser) => {
@@ -38,7 +39,7 @@ export default (passport) => {
 			clientSecret: process.env.FACEBOOK_SECRET,
 			callbackURL: process.env.FACEBOOK_CALLBACK,
 			passReqToCallback: true,
-			profileFields: ['id', 'name', 'displayName', 'emails', 'photos', 'emails']
+			profileFields: ['id', 'name', 'displayName', 'emails', 'picture.type(large)', 'emails', 'about_me']
 		},
 		facebookCb
 	));
