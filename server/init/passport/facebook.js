@@ -43,7 +43,7 @@ export default (passport) => {
 			clientSecret: process.env.FACEBOOK_SECRET,
 			callbackURL: process.env.FACEBOOK_CALLBACK,
 			passReqToCallback: true,
-			profileFields: ['id', 'name', 'displayName', 'picture.type(large)']
+			profileFields: ['id', 'emails', 'name', 'displayName', 'picture.type(large)']
 		},
 		facebookCb
 	));
