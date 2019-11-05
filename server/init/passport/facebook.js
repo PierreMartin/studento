@@ -24,7 +24,6 @@ export default (passport) => {
 			if (!findUser) {
 				const user = new User({
 					firstName: profile.displayName,
-					// email: profile.emails[0].value,
 					// username: profile.username,
 					provider: 'facebook',
 					facebook: profile._json
@@ -44,7 +43,7 @@ export default (passport) => {
 			clientSecret: process.env.FACEBOOK_SECRET,
 			callbackURL: process.env.FACEBOOK_CALLBACK,
 			passReqToCallback: true,
-			profileFields: ['id', 'name', 'displayName', 'emails', 'picture.type(large)', 'emails', 'about_me']
+			profileFields: ['id', 'name', 'displayName', 'picture.type(large)', 'about_me']
 		},
 		facebookCb
 	));
