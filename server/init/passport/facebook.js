@@ -5,11 +5,16 @@ export default (passport) => {
 	const facebookCb = (accessToken, refreshToken, profile, done) => {
 		// 'profile' contain user profile information provided by Facebook
 		console.log('profile ', profile);
-		console.log('emails ', profile.emails[0].value);
-		// picture: profile.photos ? profile.photos[0].value : '';
+
+		let photo;
+		if (profile.photos && profile.photos[0] && profile.photos[0].value) {
+			photo = profile.photos[0].value;
+		}
+
+		console.log(photo);
 
 		// { 'facebook.id': profile.id }
-		User.findOne({ email: profile.emails[0].value }, (findErr, findUser) => {
+		User.findOne({ 'facebook.id': profile.id }, (findErr, findUser) => {
 			console.log('findErr ', findErr);
 			console.log('findUser ', findUser);
 
@@ -19,7 +24,7 @@ export default (passport) => {
 			if (!findUser) {
 				const user = new User({
 					firstName: profile.displayName,
-					email: profile.emails[0].value,
+					// email: profile.emails[0].value,
 					// username: profile.username,
 					provider: 'facebook',
 					facebook: profile._json
