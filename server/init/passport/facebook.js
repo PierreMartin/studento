@@ -5,8 +5,6 @@ export default (passport) => {
 	const facebookCb = (req, accessToken, refreshToken, profile, done) => {
 		// 'profile' contain user profile information provided by Facebook
 
-		console.log(profile);
-
 		User.findOne({ 'facebook.id': profile.id }, (findErr, findUser) => {
 			if (findErr) { return done(findErr); }
 
@@ -28,8 +26,8 @@ export default (passport) => {
 				if (profile.emails && profile.emails[0] && profile.emails[0].value) {
 					// userObj.email = `${profile.emails[0].value}`;
 				}
-				if (profile._json && profile._json.name) {
-					userObj.username = profile._json.name;
+				if (profile._json && profile.displayName) {
+					userObj.username = profile.displayName;
 				}
 				if (profile.name && profile.name.givenName) {
 					userObj.firstName = profile.name.givenName;
