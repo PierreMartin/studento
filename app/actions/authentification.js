@@ -75,8 +75,8 @@ export function loginAction(data) {
 
 // login or signup:
 export function loginWithFacebookAction() {
-	return (dispatch) => {
-		dispatch(beginLogin());
+	return (/*dispatch*/) => {
+		// dispatch(beginLogin());
 
 		// TODO à cause de la redirection ('auth/facebook/callback'), le serveur ne peut envoyer de reponse à cette API
 		loginWithFacebookRequest();
