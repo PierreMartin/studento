@@ -81,7 +81,6 @@ export function loginWithFacebookAction() {
 		loginWithFacebookRequest()
 			.then((response) => {
 				if (response.status === 200) {
-					debugger;
 					dispatch(loginSuccess(response.data.message, response.data.userObj));
 					dispatch(push('/user/' + response.data.userObj._id)); // redirection
 					toast.success(response.data.message);
