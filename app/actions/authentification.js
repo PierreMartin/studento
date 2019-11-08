@@ -82,7 +82,7 @@ export function loginWithFacebookAction() {
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(loginSuccess(response.data.message, response.data.userObj));
-					dispatch(push('/user/' + response.data.userObj._id)); // redirection
+					// dispatch(push('/user/' + response.data.userObj._id)); // redirection
 					toast.success(response.data.message);
 				} else {
 					dispatch(loginError('Something went wrong!'));
