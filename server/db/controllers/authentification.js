@@ -41,6 +41,7 @@ export function login(req, res, next) {
 export function facebookLogin(req, res, next) {
 	// AuthPassport: 'facebook' define in server/init/passport/facebook.js
 	passport.authenticate('facebook', (authErr, user) => {
+		debugger;
 		if (authErr) { return next(authErr); }
 		if (!user) { return res.status(401).json({ message: 'A error happen' }); }
 
