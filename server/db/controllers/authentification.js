@@ -48,8 +48,8 @@ export function facebookLogin(req, res, next) {
 		return req.logIn(user, (loginErr) => {
 			if (loginErr) { return res.status(401).json({ message: loginErr }); }
 
-			return res.redirect('/dashboard');
-			// return res.status(200).json({ message: 'You\'re now logged.', userObj: user });
+			res.redirect(`/user/${user._id}`);
+			return res.status(200).json({ message: 'You\'re now logged.', userObj: user });
 		});
 	})(req, res, next);
 }
