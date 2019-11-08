@@ -39,10 +39,8 @@ export function login(req, res, next) {
  * GET /auth/facebook/callback
  */
 export function facebookLogin(req, res, next) {
-	console.log('AAAAAAA');
 	// AuthPassport: 'facebook' define in server/init/passport/facebook.js
 	passport.authenticate('facebook', { successRedirect: '/dashboard', failureRedirect: '/login' }, (authErr, user) => {
-		console.log('TESTTTTT');
 		if (authErr) { return next(authErr); }
 		if (!user) { return res.status(401).json({ message: 'A error happen' }); }
 
@@ -50,7 +48,8 @@ export function facebookLogin(req, res, next) {
 		return req.logIn(user, (loginErr) => {
 			if (loginErr) { return res.status(401).json({ message: loginErr }); }
 
-			return res.status(200).json({ message: 'You\'re now logged.', userObj: user });
+			return res.redirect('/dashboard');
+			// return res.status(200).json({ message: 'You\'re now logged.', userObj: user });
 		});
 	})(req, res, next);
 }
