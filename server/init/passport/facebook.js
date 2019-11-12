@@ -40,13 +40,15 @@ export default (passport) => {
 						avatarId: 0,
 						avatar150: profile.photos[0].value,
 						avatar80: profile.photos[0].value,
-						avatar28: profile.photos[0].value
+						avatar28: profile.photos[0].value,
+						provider: 'facebook'
 					});
 
 					userObj.avatarMainSrc.avatarId = 0;
 					userObj.avatarMainSrc.avatar150 = profile.photos[0].value;
 					userObj.avatarMainSrc.avatar80 = profile.photos[0].value;
 					userObj.avatarMainSrc.avatar28 = profile.photos[0].value;
+					userObj.avatarMainSrc.provider = 'facebook';
 				}
 
 				userObj.username += `-${Date.now()}-${Math.ceil(Math.random() * 10000)}`;

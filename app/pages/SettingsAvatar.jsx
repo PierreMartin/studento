@@ -164,7 +164,8 @@ class SettingsAvatar extends Component {
 
 		for (let i = 0; i <= this.numberItems; i++) {
 			const avatarObj = this.getAvatarById(i, avatarsSrc);
-			const src = avatarObj ? `${pathImage}/${avatarObj.avatar150}` : '';
+			const pathImg = avatarObj.provider !== 'local' ? '' : pathImage;
+			const src = avatarObj ? `${pathImg}/${avatarObj.avatar150}` : '';
 			const isSettableMainAvatar = avatarObj && i !== avatarMainSrc.avatarId;
 			const isMainAvatar = avatarObj && i === avatarMainSrc.avatarId;
 

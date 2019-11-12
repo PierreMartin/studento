@@ -12,9 +12,10 @@ const renderAvatarsList = (userFront) => {
 	if (!userFront.avatarsSrc) return '';
 
 	return userFront.avatarsSrc.map((avatar, key) => {
+		const pathImg = avatar && avatar.provider !== 'local' ? '' : pathImage;
 		return (
-			<a href={`${pathImage}/${avatar.avatar150}`} key={key} className={cx('thumbnails')} >
-				<Image src={`${pathImage}/${avatar.avatar80}`} />
+			<a href={`${pathImg}/${avatar.avatar150}`} key={key} className={cx('thumbnails')} >
+				<Image src={`${pathImg}/${avatar.avatar80}`} />
 			</a>
 		);
 	});
@@ -22,7 +23,8 @@ const renderAvatarsList = (userFront) => {
 
 const UserSingle = ({ userFront, userMe, handleOpenChatBox }) => {
 	const isMyProfile = userFront._id === userMe._id;
-	const src = userFront.avatarMainSrc && userFront.avatarMainSrc.avatar150 && `${pathImage}/${userFront.avatarMainSrc.avatar150}`;
+	const pathImg = userFront.avatarMainSrc && userFront.avatarMainSrc.provider !== 'local' ? '' : pathImage;
+	const src = userFront.avatarMainSrc && userFront.avatarMainSrc.avatar150 && `${pathImg}/${userFront.avatarMainSrc.avatar150}`;
 	const avatarsList = renderAvatarsList(userFront);
 	const emptyDescription = !userFront.position && !userFront.schoolName && !userFront.age && !userFront.firstName && !userFront.lastName;
 

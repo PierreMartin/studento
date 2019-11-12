@@ -22,17 +22,19 @@ const UserSchema = new mongoose.Schema({
 	schoolName: { type: String, default: '' },
 
 	avatarsSrc: [{
-		avatarId: { type: Number },
+		avatarId: Number,
 		avatar150: String,
 		avatar80: String,
-		avatar28: String
+		avatar28: String,
+		provider: { type: String, default: 'local' }
 	}],
 
 	avatarMainSrc: {
 		avatarId: { type: Number, default: -1 },
 		avatar150: { type: String, default: '' },
 		avatar80: { type: String, default: '' },
-		avatar28: { type: String, default: '' }
+		avatar28: { type: String, default: '' },
+		provider: { type: String, default: 'local' }
 	},
 
 	votedCourses: [{
