@@ -51,7 +51,7 @@ export default (passport) => {
 					userObj.avatarMainSrc.provider = 'facebook';
 				}
 
-				userObj.username += `-${Date.now()}-${Math.ceil(Math.random() * 10000)}`;
+				userObj.username += `-${Math.ceil(Math.random() * 100000)}`;
 
 				const user = new User(userObj);
 				user.save((err) => {

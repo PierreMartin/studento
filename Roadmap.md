@@ -21,7 +21,7 @@ db.courses.find({ category: 'technology', isPrivate: false }, { _id:0, title: 1 
 Pagination :
 db.courses.find({ category: 'technology' }, { _id:0, title: 1 } ).sort({ 'stars.average': 1 }).skip(page * limit).limit(limit).pretty()
 
-db.users.remove({})
+db.users.deleteOne({ "_id": ObjectId("5dc416933580c35d8525aa9f") })
 db.users.update({}, {$unset: {avatarsSrc: 1}}, false, true)
 db.users.insert({text: "test 1", count: 0})
 
