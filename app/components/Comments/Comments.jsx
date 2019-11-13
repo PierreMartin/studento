@@ -17,7 +17,8 @@ const renderCommentReplyList = (commentsReply) => {
 		const commentDate = moment(comment.at).format('MMMM Y Do LT');
 		const commentContent = comment.content || '';
 		const author = comment.uId || {};
-		const src = author.avatarMainSrc && author.avatarMainSrc.avatar28 ? `${pathImage}/${author.avatarMainSrc.avatar28}` : defaultAvatar28;
+		const pathImg = author.avatarMainSrc && author.avatarMainSrc.provider !== 'local' ? '' : pathImage;
+		const src = author.avatarMainSrc && author.avatarMainSrc.avatar28 ? `${pathImg}${author.avatarMainSrc.avatar28}` : defaultAvatar28;
 
 		return (
 			<Comment key={key}>
@@ -51,7 +52,8 @@ const renderCommentList = (
 		const commentContent = comment.content || '';
 		const author = comment.uId || {};
 		const replyBy = comment.replyBy || [];
-		const src = author.avatarMainSrc && author.avatarMainSrc.avatar28 ? `${pathImage}/${author.avatarMainSrc.avatar28}` : defaultAvatar28;
+		const pathImg = author.avatarMainSrc && author.avatarMainSrc.provider !== 'local' ? '' : pathImage;
+		const src = author.avatarMainSrc && author.avatarMainSrc.avatar28 ? `${pathImg}${author.avatarMainSrc.avatar28}` : defaultAvatar28;
 		const commentReplyListNode = renderCommentReplyList(replyBy);
 		let formReply = '';
 

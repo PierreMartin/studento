@@ -105,7 +105,7 @@ paginationMethod => 'push' | 'skip'
 
 ### TODO :
 - Auth facebook:
-    avatars (si provider === 'facebook', on enleve '/upload')
+    avatars (si provider === 'facebook', on enleve '/upload')   METTRE https://s3.eu-west-3.amazonaws.com/studento/
     disable password et email ?? (voir leetchi)
     delete account sans password ??
 

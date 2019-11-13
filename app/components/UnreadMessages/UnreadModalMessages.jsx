@@ -28,7 +28,8 @@ const renderThreadsList = (handleClickOpenTchatBox, unreadMessages) => {
 	}
 
 	return unreadMessages.map((thread, key) => {
-		const src = thread.author && thread.author[0].avatarMainSrc && thread.author[0].avatarMainSrc.avatar28 ? `${pathImage}/${thread.author[0].avatarMainSrc.avatar28}` : defaultAvatar28;
+		const pathImg = thread.author && thread.author[0].provider !== 'local' ? '' : pathImage;
+		const src = thread.author && thread.author[0].avatarMainSrc && thread.author[0].avatarMainSrc.avatar28 ? `${pathImg}${thread.author[0].avatarMainSrc.avatar28}` : defaultAvatar28;
 		const lastMessageDate = moment(thread.lastMessageDate).format('MMMM Do LT');
 
 		return (

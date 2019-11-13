@@ -22,7 +22,8 @@ class TchatMessages extends Component {
 		if (messagesList && messagesList.length > 0) {
 			messagesNode = messagesList.map((message, key) => {
 				const senderIsMe = message.author._id === userMe._id;
-				const src = message.author.avatarMainSrc && message.author.avatarMainSrc.avatar28 ? `${pathImage}/${message.author.avatarMainSrc.avatar28}` : defaultAvatar28;
+				const pathImg = message.author.avatarMainSrc && message.author.avatarMainSrc.provider !== 'local' ? '' : pathImage;
+				const src = message.author.avatarMainSrc && message.author.avatarMainSrc.avatar28 ? `${pathImg}${message.author.avatarMainSrc.avatar28}` : defaultAvatar28;
 				const dateCreatedAtFormated = moment(message.created_at).format('MMMM Do LT');
 
 				return (

@@ -14,7 +14,8 @@ const renderUsersList = (users) => {
 
 	return users.map((user, key) => {
 		const userJoinedDate = moment(user.created_at).format('Y'); // TODO a ajouter dans model
-		const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 && `${pathImage}/${user.avatarMainSrc.avatar150}`;
+		const pathImg = user.avatarMainSrc && user.avatarMainSrc.provider !== 'local' ? '' : pathImage;
+		const src = user.avatarMainSrc && user.avatarMainSrc.avatar150 && `${pathImg}${user.avatarMainSrc.avatar150}`;
 
 		return (
 			<Link key={key} to={`/user/${user._id}`} className={cx('user-container-item')}>
