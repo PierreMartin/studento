@@ -10,7 +10,7 @@ const requestGetCoursesWithPagination = (res, query, activePage, sortByField = '
 		Course.find(query)
 			.sort({ [sortByField]: -1 })
 			.limit(paginationNumber)
-			.populate('uId', '_id username avatarMainSrc.avatar28')
+			.populate('uId', '_id username avatarMainSrc.avatar28 avatarMainSrc.provider')
 			.populate('category_info', 'name description picto')
 			.exec((err, courses) => {
 				if (err) {
@@ -33,7 +33,7 @@ const requestGetCoursesWithPagination = (res, query, activePage, sortByField = '
 			.sort({ [sortByField]: -1 })
 			.skip((activePage - 1) * paginationNumber)
 			.limit(paginationNumber)
-			.populate('uId', '_id username avatarMainSrc.avatar28')
+			.populate('uId', '_id username avatarMainSrc.avatar28 avatarMainSrc.provider')
 			.populate('category_info', 'name description picto')
 			.exec((err, courses) => {
 				if (err) {
@@ -99,10 +99,10 @@ export function oneByField(req, res) {
 	const { keyReq, valueReq } = req.body;
 
 	Course.findOne({ [keyReq]: valueReq })
-		.populate('uId', '_id username avatarMainSrc.avatar28')
+		.populate('uId', '_id username avatarMainSrc.avatar28 avatarMainSrc.provider')
 		.populate('category_info', 'name description picto')
-		.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28')
-		.populate('commentedBy.replyBy.uId', '_id username avatarMainSrc.avatar28')
+		.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28 avatarMainSrc.provider')
+		.populate('commentedBy.replyBy.uId', '_id username avatarMainSrc.avatar28 avatarMainSrc.provider')
 		.exec((err, course) => {
 			if (err) {
 				console.error(err);
@@ -168,7 +168,7 @@ export function add(req, res) {
 			return res.status(500).json({ message: 'A error happen at the creating new course', err });
 		}
 
-		Course.populate(course, { path: 'uId', select: '_id username avatarMainSrc.avatar28' }, (err, newCourse) => {
+		Course.populate(course, { path: 'uId', select: '_id username avatarMainSrc.avatar28 avatarMainSrc.provider' }, (err, newCourse) => {
 			return res.status(200).json({ message: 'You have create a course', newCourse });
 		});
 	});
@@ -207,8 +207,8 @@ export function addComment(req, res) {
 			}
 
 			Course.findOne({ _id: courseId })
-				.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28')
-				.populate('commentedBy.replyBy.uId', '_id username avatarMainSrc.avatar28')
+				.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28 avatarMainSrc.provider')
+				.populate('commentedBy.replyBy.uId', '_id username avatarMainSrc.avatar28 avatarMainSrc.provider')
 				.exec((err, course) => {
 					if (err) {
 						console.error(err);
@@ -227,8 +227,8 @@ export function addComment(req, res) {
 			}
 
 			Course.findOne({ _id: courseId })
-				.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28')
-				.populate('commentedBy.replyBy.uId', '_id username avatarMainSrc.avatar28')
+				.populate('commentedBy.uId', '_id username avatarMainSrc.avatar28 avatarMainSrc.provider')
+				.populate('commentedBy.replyBy.uId', '_id username avatarMainSrc.avatar28 avatarMainSrc.provider')
 				.exec((err, course) => {
 					if (err) {
 						console.error(err);
@@ -340,7 +340,7 @@ export function update(req, res) {
 			return res.status(500).json({ message: 'A error happen at the updating course', err });
 		}
 
-		Course.findOne({ _id: courseId }).populate('uId', '_id username avatarMainSrc.avatar28').populate('category_info', 'name description picto').exec((err, course) => {
+		Course.findOne({ _id: courseId }).populate('uId', '_id username avatarMainSrc.avatar28 avatarMainSrc.provider').populate('category_info', 'name description picto').exec((err, course) => {
 			if (err) {
 				console.error(err);
 				return res.status(500).json({ message: 'A error happen at the get course', err });
