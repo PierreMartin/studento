@@ -106,13 +106,13 @@ paginationMethod => 'push' | 'skip'
 ### TODO :
 - Auth facebook:
     - Finir design btn
-    - bug dans modal de tchat en haut (thread.author empty)
     METTRE dans .env  https://s3.eu-west-3.amazonaws.com/studento/
 
 - config/env.js
 - width 100% du panelExplorer en mode mobile + déplier le panelExplorer quand mode create
 - refonte Home
 - pouvoir supprimer les avatars
+- Gerer les données quand un utilisateur se supprime => dans modal de tchat en haut (thread.author undefined)
 
 - Prévoir la possibilité de faire des groupes de notes
     (user.notesGroups: [{id: '1', title: 'Chimie 2018'}])
