@@ -81,31 +81,37 @@ class SettingsAccount extends Component {
 	handleSubmitDeleteAccount() {
 		const { deleteUserAccountAction, userMe } = this.props;
 		const { fieldsTypingUpdateUser } = this.state;
+		const isAuthLocal = userMe && userMe.provider === 'local';
 
-		deleteUserAccountAction(userMe._id, fieldsTypingUpdateUser.passwordDelete);
+		deleteUserAccountAction(userMe._id, fieldsTypingUpdateUser.passwordDelete, isAuthLocal);
 	}
 
 	render() {
-		const { updateMissingRequiredField, updateMessageError } = this.props;
+		const { updateMissingRequiredField, updateMessageError, userMe } = this.props;
 		const { fieldsTypingUpdateUser, isModalForDeleteAccountOpened } = this.state;
 		const fields = this.getFieldsVal();
 		const disabledPasswordButton = (typeof fieldsTypingUpdateUser.passwordUpdateChecking === 'undefined' || fieldsTypingUpdateUser.passwordUpdateChecking === '') || (typeof fieldsTypingUpdateUser.password === 'undefined' || fieldsTypingUpdateUser.password === '');
 		const disabledPasswordDelButton = typeof fieldsTypingUpdateUser.passwordDelete === 'undefined' || fieldsTypingUpdateUser.passwordDelete === '';
 		const disabledEmailButton = typeof fieldsTypingUpdateUser.email === 'undefined' || fieldsTypingUpdateUser.email === '';
+		const isAuthLocal = userMe && userMe.provider === 'local';
 
 		return (
 			<LayoutPage {...this.getMetaData()}>
-				<div style={{ marginBottom: '30px' }}>
-					<h3 className={cx('settings-title')}>Change password</h3>
-					<Segment>
-						<Form error={(updateMissingRequiredField.passwordUpdate && updateMissingRequiredField.passwordUpdate.length > 0) || (updateMissingRequiredField.passwordUpdateChecking && updateMissingRequiredField.passwordUpdateChecking.length > 0)} size="small" onSubmit={this.handleOnSubmit}>
-							<Form.Input required label="Your actual Password" placeholder="Your actual Password" name="passwordUpdateChecking" value={fields.passwordUpdateChecking || ''} type="password" error={updateMissingRequiredField.passwordUpdateChecking && updateMissingRequiredField.passwordUpdateChecking.length > 0} onChange={this.handleInputChange} />
-							<Form.Input required label="Set your new Password" placeholder="Set your new Password" name="password" value={fields.password || ''} type="password" error={updateMissingRequiredField.passwordUpdate && updateMissingRequiredField.passwordUpdate.length > 0} onChange={this.handleInputChange} />
-							<Message error content={updateMissingRequiredField.passwordUpdate || updateMissingRequiredField.passwordUpdateChecking} />
-							<Form.Button basic primary disabled={disabledPasswordButton}>Submit</Form.Button>
-						</Form>
-					</Segment>
-				</div>
+				{
+					isAuthLocal && (
+						<div style={{ marginBottom: '30px' }}>
+							<h3 className={cx('settings-title')}>Change password</h3>
+							<Segment>
+								<Form error={(updateMissingRequiredField.passwordUpdate && updateMissingRequiredField.passwordUpdate.length > 0) || (updateMissingRequiredField.passwordUpdateChecking && updateMissingRequiredField.passwordUpdateChecking.length > 0)} size="small" onSubmit={this.handleOnSubmit}>
+									<Form.Input required label="Your actual Password" placeholder="Your actual Password" name="passwordUpdateChecking" value={fields.passwordUpdateChecking || ''} type="password" error={updateMissingRequiredField.passwordUpdateChecking && updateMissingRequiredField.passwordUpdateChecking.length > 0} onChange={this.handleInputChange} />
+									<Form.Input required label="Set your new Password" placeholder="Set your new Password" name="password" value={fields.password || ''} type="password" error={updateMissingRequiredField.passwordUpdate && updateMissingRequiredField.passwordUpdate.length > 0} onChange={this.handleInputChange} />
+									<Message error content={updateMissingRequiredField.passwordUpdate || updateMissingRequiredField.passwordUpdateChecking} />
+									<Form.Button basic primary disabled={disabledPasswordButton}>Submit</Form.Button>
+								</Form>
+							</Segment>
+						</div>
+					)
+				}
 
 				<div style={{ marginBottom: '30px' }}>
 					<h3 className={cx('settings-title')}>Change email</h3>
@@ -136,12 +142,12 @@ class SettingsAccount extends Component {
 								<Message.Content>This action will delete all your notes.</Message.Content>
 							</Message>
 
-							<p>Please type in your password to confirm.</p>
+							{ isAuthLocal && <p>Please type in your password to confirm.</p> }
 
 							<Form error={updateMissingRequiredField.passwordDelete && updateMissingRequiredField.passwordDelete.length > 0} size="small" onSubmit={this.handleSubmitDeleteAccount}>
 								<Form.Group>
-									<Form.Input width={4} required placeholder="Your Password" name="passwordDelete" value={fields.passwordDelete || ''} type="password" error={updateMissingRequiredField.passwordDelete && updateMissingRequiredField.passwordDelete.length > 0} onChange={this.handleInputChange} />
-									<Form.Button primary width={8} disabled={disabledPasswordDelButton} content="I confirm delete my account" />
+									{ isAuthLocal && <Form.Input width={4} required placeholder="Your Password" name="passwordDelete" value={fields.passwordDelete || ''} type="password" error={updateMissingRequiredField.passwordDelete && updateMissingRequiredField.passwordDelete.length > 0} onChange={this.handleInputChange} /> }
+									<Form.Button primary width={8} disabled={isAuthLocal ? disabledPasswordDelButton : false} content="I confirm delete my account" />
 								</Form.Group>
 								<Message error content={updateMissingRequiredField.passwordDelete} />
 							</Form>
@@ -168,7 +174,8 @@ SettingsAccount.propTypes = {
 		username: PropTypes.string,
 		email: PropTypes.string,
 		_id: PropTypes.string,
-		password: PropTypes.string
+		password: PropTypes.string,
+		provider: PropTypes.string
 	})
 };
 

@@ -105,9 +105,9 @@ paginationMethod => 'push' | 'skip'
 
 ### TODO :
 - Auth facebook:
-    avatars (si provider === 'facebook', on enleve '/upload')   METTRE https://s3.eu-west-3.amazonaws.com/studento/
-    disable password et email ?? (voir leetchi)
-    delete account sans password ??
+    - Finir design btn
+    - bug dans modal de tchat en haut (thread.author empty)
+    METTRE dans .env  https://s3.eu-west-3.amazonaws.com/studento/
 
 - config/env.js
 - width 100% du panelExplorer en mode mobile + déplier le panelExplorer quand mode create

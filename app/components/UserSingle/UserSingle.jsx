@@ -15,7 +15,7 @@ const renderAvatarsList = (userFront) => {
 		const pathImg = avatar && avatar.provider !== 'local' ? '' : pathImage;
 		return (
 			<a href={`${pathImg}${avatar.avatar150}`} key={key} className={cx('thumbnails')} >
-				<Image src={`${pathImg}${avatar.avatar80}`} />
+				<Image src={`${pathImg}${avatar.avatar80}`} size="tiny" />
 			</a>
 		);
 	});

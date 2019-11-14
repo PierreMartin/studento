@@ -448,21 +448,47 @@ export function setDefaultAvatar(req, res) {
 	});
 }
 
+function doDeleteUser(req, res, userMeId) {
+	// TODO do transaction
+	Course.deleteMany({ uId: userMeId }).exec((err) => {
+		if (err) {
+			console.error(err);
+			return res.status(500).json({ message: 'A error happen at the deleting user notes - deleteNotes', err });
+		}
+
+		User.deleteOne({ _id: userMeId }).exec((err) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ message: 'A error happen at the deleting user account - deleteUser', err });
+			}
+
+			req.logout();
+			return res.status(200).json({ message: 'Your account has been deleted' });
+		});
+	});
+}
+
 /**
  * DELETE api/deleteuseraccount
  */
 export function deleteById(req, res) {
-	const { userMeId, password } = req.body;
+	const { userMeId, password, isAuthLocal } = req.body;
 
 	// handling required fields - if password empty or contain space:
-	if (password === '' || (typeof password !== 'undefined' && password.trim() === '')) {
-		return res.status(400).json({ errorField: { passwordDelete: 'The password is required and must contain no space' } });
+	if (isAuthLocal) {
+		if (password === '' || (typeof password !== 'undefined' && password.trim() === '')) {
+			return res.status(400).json({ errorField: { passwordDelete: 'The password is required and must contain no space' } });
+		}
 	}
 
 	User.findOne({ _id: userMeId }).exec((err, user) => {
 		if (err) {
 			console.error(err);
 			return res.status(500).json({ message: 'A error happen at the deleting user account - getUser', err });
+		}
+
+		if (!isAuthLocal) {
+			return doDeleteUser(req, res, userMeId);
 		}
 
 		bcrypt.compare(password, user.password, (err, isMatch) => {
@@ -473,23 +499,7 @@ export function deleteById(req, res) {
 
 			if (!isMatch) return res.status(400).json({ errorField: { passwordDelete: 'The password you given is not correct' } });
 
-			// TODO do transaction
-			Course.deleteMany({ uId: userMeId }).exec((err) => {
-				if (err) {
-					console.error(err);
-					return res.status(500).json({ message: 'A error happen at the deleting user notes - deleteNotes', err });
-				}
-
-				User.deleteOne({ _id: userMeId }).exec((err) => {
-					if (err) {
-						console.error(err);
-						return res.status(500).json({ message: 'A error happen at the deleting user account - deleteUser', err });
-					}
-
-					req.logout();
-					return res.status(200).json({ message: 'Your account has been deleted' });
-				});
-			});
+			return doDeleteUser(req, res, userMeId);
 		});
 	});
 }

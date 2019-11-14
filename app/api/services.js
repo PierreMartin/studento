@@ -123,10 +123,10 @@ export function api() {
 			data: { avatarId }
 		}),
 
-		deleteUserAccount: (userMeId, password) => localClient.request({
+		deleteUserAccount: (userMeId, password, isAuthLocal) => localClient.request({
 			method: 'DELETE',
 			url: '/api/deleteuseraccount',
-			data: { userMeId, password }
+			data: { userMeId, password, isAuthLocal }
 		}),
 
 		// Tchat

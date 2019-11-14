@@ -166,11 +166,11 @@ export function deleteUserAccountFailure(messageError) {
 	};
 }
 
-export function deleteUserAccountAction(userMeId, password) {
-	if (!userMeId && (typeof password !== 'string' || password.length === 0)) return;
+export function deleteUserAccountAction(userMeId, password, isAuthLocal) {
+	if (!userMeId && (typeof password !== 'string' || password.length === 0) && isAuthLocal) return;
 
 	return (dispatch) => {
-		return deleteUserAccountRequest(userMeId, password)
+		return deleteUserAccountRequest(userMeId, password, isAuthLocal)
 			.then((response) => {
 				if (response.status === 200) {
 					dispatch(deleteUserAccountSuccess());
