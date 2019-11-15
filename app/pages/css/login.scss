@@ -1,15 +1,28 @@
+@import '../../css/common/colors.scss';
+
 .login-form {
   height: 600px;
 
   .form {
     margin-top: 12px;
 
-    .fb-login-button {
-      background: #4267b2;
-      border-radius: 5px;
-      color: white;
-      padding: 8px;
+    .form-facebook, .form-local { border: 1px solid $colorBorder; }
+
+    .form-facebook {
+      margin-bottom: 8px;
+      a.fb-login-button {
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+        background: #4267b2;
+        border-radius: 5px;
+        color: white;
+        padding: 8px;
+        i { vertical-align: -2px; }
+      }
     }
+
+    .form-local {}
   }
 
   .info-message {

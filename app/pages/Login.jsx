@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loginAction, loginWithFacebookAction, signupAction, typingLoginSignupAction } from '../actions/authentification';
-import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
+import { Button, Form, Grid, Header, Message, Segment, Icon } from 'semantic-ui-react';
 import hubNoteLogo from '../images/logo_hubnote_200.png';
 import classNames from 'classnames/bind';
 import styles from './css/login.scss';
@@ -107,13 +107,13 @@ class Login extends Component {
 					<Grid.Column style={{ maxWidth: 450 }}>
 						<Header as="h2" textAlign="center">{signup ? 'Signup a new account' : 'Login to your account'}</Header>
 
-						<Form size="large" onSubmit={this.handleSubmitFacebookAuth}>
-							<Segment stacked textAlign="left">
-								<a href="/auth/facebook" className={cx('fb-login-button')}>Login with Facebook</a>
+						<Form size="large" onSubmit={this.handleSubmitFacebookAuth} className={cx('form-facebook')}>
+							<Segment>
+								<a href="/auth/facebook" className={cx('fb-login-button')}><Icon name="facebook" size="large" />Login with Facebook</a>
 							</Segment>
 						</Form>
 
-						<Form error={messages.props.children.length > 0} size="large" onSubmit={this.handleSubmitLocalAuth}>
+						<Form error={messages.props.children.length > 0} size="large" onSubmit={this.handleSubmitLocalAuth} className={cx('form-local')}>
 							<Segment stacked textAlign="left">
 								{ fieldsSignupNode }
 								<Form.Input fluid icon="user" iconPosition="left" label="E-mail" placeholder="E-mail address" name="email" error={missingRequiredField.email} onChange={this.handleInputChange} />

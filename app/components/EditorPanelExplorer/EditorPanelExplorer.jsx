@@ -62,10 +62,10 @@ class EditorPanelExplorer extends Component {
 	}
 
 	render() {
-		const { isOpen, coursesPagesCount, activePage, heightToolbar } = this.props;
+		const { isOpen, isMobile, coursesPagesCount, activePage, heightToolbar } = this.props;
 
 		return (
-			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '')} style={{ paddingTop: heightToolbar }}>
+			<div className={cx('panel-explorer-container', isOpen ? 'menu-open' : '', isMobile ? 'full-width' : '')} style={{ paddingTop: heightToolbar }}>
 				<List className={cx('panel-explorer-tree-folder-itemslist')} link>
 					{ this.renderCoursesList()}
 				</List>
@@ -79,6 +79,7 @@ class EditorPanelExplorer extends Component {
 EditorPanelExplorer.propTypes = {
 	heightToolbar: PropTypes.number,
 	isOpen: PropTypes.bool,
+	isMobile: PropTypes.bool,
 	isDirty: PropTypes.bool,
 	handleModalOpen_CanClose: PropTypes.func,
 

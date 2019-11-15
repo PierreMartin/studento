@@ -104,10 +104,8 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- Auth facebook:
-    - Finir design btn
-    METTRE dans .env  https://s3.eu-west-3.amazonaws.com/studento/
-
+- Auth facebook: METTRE dans .env  https://s3.eu-west-3.amazonaws.com/studento/
+- changer couleur logo
 - config/env.js
 - width 100% du panelExplorer en mode mobile + déplier le panelExplorer quand mode create
 - refonte Home

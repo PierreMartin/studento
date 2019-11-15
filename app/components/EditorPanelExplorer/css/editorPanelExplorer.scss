@@ -17,6 +17,7 @@
   height: 100%;
   border-right: 1px solid $colorBorder;
 
+  // &.full-width { width: 100%; left: -100%; }
   &.menu-open { left: 0; }
 
   .panel-explorer-tree-folder-itemslist {
@@ -68,5 +69,6 @@
 @media screen and (max-width: 410px) {
   .panel-explorer-container {
     width: 200px;
+    // &.full-width { width: 100%; }
   }
 }

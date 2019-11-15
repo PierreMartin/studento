@@ -189,6 +189,7 @@ const myVar = 'content...';
 		this.loadDatas().then(({course}) => {
 			const isEditing = course && typeof course._id !== 'undefined';
 			const isEditMode = !isEditing;
+			const isPanelExplorerOpen = !isEditMode;
 
 			const pageMode = this.getPageMode(course);
 
@@ -196,7 +197,7 @@ const myVar = 'content...';
 			this.resizeWindow();
 			window.addEventListener('resize', this.resizeWindow);
 
-			this.setState({ isEditing, isEditMode, pageMode });
+			this.setState({ isEditing, isPanelExplorerOpen, isEditMode, pageMode });
 		});
 	}
 
@@ -990,6 +991,7 @@ const myVar = 'content...';
 		const {
 			category,
 			isEditing,
+			isMobile,
 			fieldsTyping,
 			isDirty,
 			modalMiniEditor,
@@ -1033,6 +1035,7 @@ const myVar = 'content...';
 					<EditorPanelExplorer
 						/*ref={(el) => { this.editorPanelExplorerRef = el; }}*/
 						isOpen={isPanelExplorerOpen}
+						isMobile={isMobile}
 						userMe={userMe}
 						course={course}
 						courses={courses}
