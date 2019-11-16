@@ -41,7 +41,7 @@ class About extends Component {
 				<Segment textAlign="center" vertical>
 					<Container text className={cx('about-container')}>
 						<div className={cx('logo')}>
-							{/* <img src={hubNoteLogo} alt="Logo HubNote" /> TODO changer le logo */}
+							<img src={hubNoteLogo} alt="Logo HubNote" />
 						</div>
 
 						<Header as="h2" content="About HubNote" />
