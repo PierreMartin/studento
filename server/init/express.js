@@ -7,13 +7,12 @@ import flash from 'express-flash';
 import methodOverride from 'method-override';
 import gzip from 'compression';
 import helmet from 'helmet';
-import { ENV } from '../../config/env';
 import { session as dbSession } from '../db';
 
 export default (app) => {
   app.set('port', (process.env.PORT || 3000));
 
-  if (ENV === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     app.use(gzip());
     app.use(helmet());
   }
@@ -74,9 +73,9 @@ export default (app) => {
 
   console.log('--------------------------');
   console.log('===>  Starting Server . . .');
-  console.log(`===>  Environment: ${ENV}`);
+  console.log(`===>  Environment: ${process.env.NODE_ENV}`);
   console.log(`===>  Listening on port: ${app.get('port')}`);
-  if (ENV === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     console.log('===>  Note: In order for authentication to work in production');
     console.log('===>  you will need a secure HTTPS connection');
     sess.cookie.secure = true; // Serve secure cookies
