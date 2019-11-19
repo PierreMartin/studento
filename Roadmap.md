@@ -104,7 +104,6 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- width 100% du panelExplorer en mode mobile + déplier le panelExplorer quand mode create
 - refonte Home
 - pouvoir supprimer les avatars
 - Gerer les données quand un utilisateur se supprime => dans modal de tchat en haut (thread.author undefined)

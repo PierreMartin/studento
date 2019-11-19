@@ -197,7 +197,10 @@ const myVar = 'content...';
 			this.resizeWindow();
 			window.addEventListener('resize', this.resizeWindow);
 
-			this.setState({ isEditing, isPanelExplorerOpen, isEditMode, pageMode });
+			let isMobile = false;
+			if (window.matchMedia('(max-width: 768px)').matches) { isMobile = true; }
+
+			this.setState({ isEditing, isPanelExplorerOpen, isMobile, isEditMode, pageMode });
 		});
 	}
 
@@ -244,6 +247,10 @@ const myVar = 'content...';
 				}
 
 				this.resizeEditors();
+
+				let isPanelExplorerOpen = true;
+				if (this.state.isMobile) { isPanelExplorerOpen = false; }
+
 				this.setState({
 					isEditing,
 					isEditMode,
@@ -251,7 +258,8 @@ const myVar = 'content...';
 					category: { lastSelected: null },
 					isDirty: false,
 					isPanelSettingsOpen: false,
-					pageMode
+					pageMode,
+					isPanelExplorerOpen
 				}, () => {
 					setTimeout(() => {
 						this.refPreviewMd && this.refPreviewMd.scrollTo(0, 0);
@@ -1047,7 +1055,7 @@ const myVar = 'content...';
 						heightToolbar={heightToolbar}
 					/>
 
-					<div className={cx('editor-container-full', isPanelExplorerOpen ? 'panel-explorer-open' : '')} style={styles}>
+					<div className={cx('editor-container-full', (isPanelExplorerOpen && !isMobile) ? 'panel-explorer-open' : '')} style={styles}>
 						{ pageMode === 'md' && (
 							<ContainerMd
 								editorToolbarMdRef={(el) => { this.editorToolbarMdRef = el; }}
