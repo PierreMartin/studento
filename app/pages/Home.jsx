@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import Fade from 'react-reveal/Fade';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
 import { Button, Container, Header, Icon, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
@@ -128,7 +129,18 @@ class Home extends Component {
       <LayoutPage {...this.getMetaData()}>
 				<Segment inverted textAlign="center" vertical className={cx('home-header-segment')}>
 					<Container className={cx('home-header-container')} style={styles} >
-						<Header as="h1" content="Start to share your notes with the world" inverted className={cx('title')} />
+						<Fade bottom cascade duration={3000}>
+							<h1 className={cx('title')}>
+								<span>Start </span>
+								<span>to </span>
+								<span>share </span>
+								<span>your </span>
+								<span>notes </span>
+								<span>with </span>
+								<span>the </span>
+								<span>world </span>
+							</h1>
+						</Fade>
 						<Header as="h2" content="Goodbye flying paper - HubNote is a social network that allows to take and share yours notes in class, at works, for tips or all other domain." inverted className={cx('sub-title')} />
 						{ !authentification.authenticated && <Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }
 					</Container>
@@ -136,12 +148,15 @@ class Home extends Component {
 
 				<Segment textAlign="center" vertical className={cx('home-citation-segment')}>
 					<Container>
-						<blockquote><Header as="h2" content={citationStr} className={cx('title')} /></blockquote>
+							<blockquote>
+								<Fade bottom cascade><h2 className={cx('title')}>{citationStr}</h2></Fade>
+							</blockquote>
 					</Container>
 				</Segment>
 
 				<Segment vertical>
 					<Container text className={cx('courses-container')}>
+						<h2 style={{ textAlign: 'center' }}>Trendy notes</h2>
 
 						<div className={cx('categories')}>
 							{categories.map((cat, index) => (<Button basic primary key={index} active={category.lastClicked === cat.key} onClick={this.handleSelectCategory(cat.key, index)}>{cat.name}</Button>))}
@@ -166,6 +181,12 @@ class Home extends Component {
 						/>
 
 					</Container>
+
+					{/*
+					<Container>
+						<h2>Informations</h2>
+					</Container>
+					*/}
 				</Segment>
 
       </LayoutPage>

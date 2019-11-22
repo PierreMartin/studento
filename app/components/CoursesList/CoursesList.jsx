@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import moment from 'moment';
+import Fade from 'react-reveal/Fade';
 import { Icon, Pagination, Rating } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import styles from './css/courseList.scss';
@@ -21,24 +22,26 @@ const renderCoursesList = (courses) => {
 		const numberOfVote = stars.numberOfTimeVoted || 'No vote';
 
 		return (
-			<Link key={key} to={`/course/${course._id}`} className={cx('course-container-item')}>
-				<div className={cx('course-header')}>
-					<Icon name={categoryInfo.picto || 'code'} size="big" />
-					<div className={cx('subcat')}>
-						{course.subCategories && course.subCategories.map((subCat, i) => {
-							const space = course.subCategories.length - 1 === i ? '' : ', ';
-							return subCat + space;
-						})}
+			<Fade bottom cascade>
+				<Link key={key} to={`/course/${course._id}`} className={cx('course-container-item')}>
+					<div className={cx('course-header')}>
+						<Icon name={categoryInfo.picto || 'code'} size="big" />
+						<div className={cx('subcat')}>
+							{course.subCategories && course.subCategories.map((subCat, i) => {
+								const space = course.subCategories.length - 1 === i ? '' : ', ';
+								return subCat + space;
+							})}
+						</div>
 					</div>
-				</div>
-				<div className={cx('course-body')}>
-					<h2 className={cx('title')}>{course.title}</h2>
-					<div className={cx('description')}>{course.description}</div>
-					<div className={cx('username')}>{author.username}</div>
-					<div className={cx('date')}>{courseDate}</div>
-				</div>
-				<div className={cx('course-footer')}><div><Rating disabled rating={average} maxRating={5} /> { numberOfVote }</div></div>
-			</Link>
+					<div className={cx('course-body')}>
+						<h2 className={cx('title')}>{course.title}</h2>
+						<div className={cx('description')}>{course.description}</div>
+						<div className={cx('username')}>{author.username}</div>
+						<div className={cx('date')}>{courseDate}</div>
+					</div>
+					<div className={cx('course-footer')}><div><Rating disabled rating={average} maxRating={5} /> { numberOfVote }</div></div>
+				</Link>
+			</Fade>
 		);
 	});
 };
