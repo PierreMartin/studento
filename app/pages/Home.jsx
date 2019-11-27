@@ -129,7 +129,7 @@ class Home extends Component {
       <LayoutPage {...this.getMetaData()}>
 				<Segment inverted textAlign="center" vertical className={cx('home-header-segment')}>
 					<Container className={cx('home-header-container')} style={styles} >
-						<Fade bottom cascade duration={3000}>
+						<Fade ssrReveal bottom cascade duration={3000}>
 							<h1 className={cx('title')}>
 								<span>Start </span>
 								<span>to </span>
@@ -149,7 +149,7 @@ class Home extends Component {
 				<Segment textAlign="center" vertical className={cx('home-citation-segment')}>
 					<Container>
 							<blockquote>
-								<Fade bottom cascade><h2 className={cx('title')}>{citationStr}</h2></Fade>
+								<Fade ssrReveal bottom cascade><h2 className={cx('title')}>{citationStr}</h2></Fade>
 							</blockquote>
 					</Container>
 				</Segment>

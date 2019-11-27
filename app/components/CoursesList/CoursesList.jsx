@@ -22,8 +22,8 @@ const renderCoursesList = (courses) => {
 		const numberOfVote = stars.numberOfTimeVoted || 'No vote';
 
 		return (
-			<Fade bottom cascade>
-				<Link key={key} to={`/course/${course._id}`} className={cx('course-container-item')}>
+			<Fade key={key} bottom cascade>
+				<Link to={`/course/${course._id}`} className={cx('course-container-item')}>
 					<div className={cx('course-header')}>
 						<Icon name={categoryInfo.picto || 'code'} size="big" />
 						<div className={cx('subcat')}>
