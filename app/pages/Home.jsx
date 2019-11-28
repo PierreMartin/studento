@@ -129,10 +129,10 @@ class Home extends Component {
       <LayoutPage {...this.getMetaData()}>
 				<Segment inverted textAlign="center" vertical className={cx('home-header-segment')}>
 					<Container className={cx('home-header-container')} style={styles} >
-						<Fade ssrReveal bottom>
+						<Fade top ssrReveal duration={800}>
 							<h1 className={cx('title')}>Start to share your notes <br />with the world</h1>
 						</Fade>
-						<Fade ssrReveal bottom duration={2500}>
+						<Fade bottom ssrReveal duration={1000}>
 							<h2 className={cx('sub-title')}>Goodbye flying paper - HubNote is a social network that allows to take and share yours notes in class, at works, for tips or all other domain.</h2>
 						</Fade>
 						{ !authentification.authenticated && <Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }
