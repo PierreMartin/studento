@@ -129,19 +129,12 @@ class Home extends Component {
       <LayoutPage {...this.getMetaData()}>
 				<Segment inverted textAlign="center" vertical className={cx('home-header-segment')}>
 					<Container className={cx('home-header-container')} style={styles} >
-						<Fade ssrReveal bottom cascade duration={3000}>
-							<h1 className={cx('title')}>
-								<span>Start </span>
-								<span>to </span>
-								<span>share </span>
-								<span>your </span>
-								<span>notes </span>
-								<span>with </span>
-								<span>the </span>
-								<span>world </span>
-							</h1>
+						<Fade ssrReveal bottom>
+							<h1 className={cx('title')}>Start to share your notes <br />with the world</h1>
 						</Fade>
-						<Header as="h2" content="Goodbye flying paper - HubNote is a social network that allows to take and share yours notes in class, at works, for tips or all other domain." inverted className={cx('sub-title')} />
+						<Fade ssrReveal bottom duration={2500}>
+							<h2 className={cx('sub-title')}>Goodbye flying paper - HubNote is a social network that allows to take and share yours notes in class, at works, for tips or all other domain.</h2>
+						</Fade>
 						{ !authentification.authenticated && <Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button> }
 					</Container>
 				</Segment>
@@ -149,7 +142,9 @@ class Home extends Component {
 				<Segment textAlign="center" vertical className={cx('home-citation-segment')}>
 					<Container>
 							<blockquote>
-								<Fade ssrReveal bottom cascade><h2 className={cx('title')}>{citationStr}</h2></Fade>
+								<Fade ssrReveal duration={3000}>
+									<h2 className={cx('title')}>{citationStr}</h2>
+								</Fade>
 							</blockquote>
 					</Container>
 				</Segment>
