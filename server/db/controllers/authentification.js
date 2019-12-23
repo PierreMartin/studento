@@ -41,6 +41,8 @@ export function login(req, res, next) {
 export function facebookLogin(req, res, next) {
 	// AuthPassport: 'facebook' define in server/init/passport/facebook.js
 	passport.authenticate('facebook', { successRedirect: '/dashboard', failureRedirect: '/login' }, (authErr, user) => {
+		console.log('3 authErr ', authErr);
+		console.log('3 user ', user);
 		if (authErr) { return next(authErr); }
 		if (!user) { return res.status(401).json({ message: 'A error happen' }); }
 

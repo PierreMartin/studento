@@ -6,6 +6,8 @@ export default (passport) => {
 		// 'profile' contain user profile information provided by Facebook
 
 		User.findOne({ 'facebook.id': profile.id }, (findErr, findUser) => {
+			console.log('1 ===> findErr ', findErr);
+			console.log('1 ===> findUser ', findUser);
 			if (findErr) { return done(findErr); }
 
 			// No user was found: create a new user with values from Facebook
@@ -52,9 +54,12 @@ export default (passport) => {
 				}
 
 				userObj.username += `-${Math.ceil(Math.random() * 100000)}`;
+				console.log('1 === userObj ', userObj);
 
 				const user = new User(userObj);
 				user.save((err) => {
+					console.log('2 record db err', err);
+					console.log('2 record db user', user);
 					if (err) { console.log(err); }
 					return done(null, user);
 				});
