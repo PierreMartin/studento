@@ -9,7 +9,7 @@ export default (passport) => {
 		const query = {
 			$or: [
 				{ 'facebook.id': profile.id },
-				{ email: { $in: profile.emails } }
+				{ email: { $in: profile.emails.map(email => email.value) } }
 			]
 		};
 
