@@ -4,10 +4,17 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import Fade from 'react-reveal/Fade';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
-import { Button, Container, Header, Icon, Segment } from 'semantic-ui-react';
+import { Button, Container, Grid, Icon, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
 import CourseSearch from '../components/CourseSearch/CourseSearch';
+import editorTiny from '../images/editor_tiny.jpg';
+import editorMd from '../images/editor_md.jpg';
+import editorCode from '../images/editor_code.jpg';
+import chat from '../images/chat.jpg';
+import katex from '../images/katex.jpg';
+import tables from '../images/tables.jpg';
+import sci from '../images/sci.jpg';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
 import stylesHome from './css/home.scss';
@@ -139,6 +146,93 @@ class Home extends Component {
 					</Container>
 				</Segment>
 
+				<Segment vertical className={cx('home-infos-segment')}>
+					<Container className={cx('home-infos-container')} >
+						<Grid divided stackable>
+							<Grid.Row>
+								<Grid.Column width={12}>
+									<Fade left duration={800}><img src={editorTiny} alt="The editor" /></Fade>
+								</Grid.Column>
+								<Grid.Column width={4}>
+									<h2>The editor</h2>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+								</Grid.Column>
+							</Grid.Row>
+
+							<Grid.Row>
+								<Grid.Column width={4}>
+									<h2>Markdown editor</h2>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+								</Grid.Column>
+								<Grid.Column width={12}>
+									<Fade right duration={800}><img src={editorMd} alt="Markdown editor" /></Fade>
+								</Grid.Column>
+							</Grid.Row>
+
+							<Grid.Row>
+								<Grid.Column width={12}>
+									<Fade left duration={800}><img src={editorCode} alt="Code editor" /></Fade>
+								</Grid.Column>
+								<Grid.Column width={4}>
+									<h2>Code editor</h2>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+								</Grid.Column>
+							</Grid.Row>
+
+							<Grid.Row>
+								<Grid.Column width={4}>
+									<h2>Katex editor</h2>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+								</Grid.Column>
+								<Grid.Column width={12}>
+									<Fade right duration={800}><img src={katex} alt="Katex editor" /></Fade>
+								</Grid.Column>
+							</Grid.Row>
+
+							<Grid.Row>
+								<Grid.Column width={12}>
+									<Fade left duration={800}><img src={sci} alt="Science & chemistry editor" /></Fade>
+								</Grid.Column>
+								<Grid.Column width={4}>
+									<h2>Scientist & chemistry editor</h2>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+								</Grid.Column>
+							</Grid.Row>
+
+							<Grid.Row>
+								<Grid.Column width={4}>
+									<h2>Tables</h2>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+								</Grid.Column>
+								<Grid.Column width={12}>
+									<Fade right duration={800}><img src={tables} alt="Tables" /></Fade>
+								</Grid.Column>
+							</Grid.Row>
+
+							<Grid.Row>
+								<Grid.Column width={12}>
+									<Fade left duration={800}><img src={chat} alt="Chat" /></Fade>
+								</Grid.Column>
+								<Grid.Column width={4}>
+									<h2>Chat</h2>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+								</Grid.Column>
+							</Grid.Row>
+						</Grid>
+					</Container>
+				</Segment>
+
+				{/*
+				<Segment inverted textAlign="center" vertical className={cx('home-templates-segment')}>
+					<Container className={cx('home-templates-container')} >
+						<h2 className={cx('title')}>Templates</h2>
+						<Fade left duration={800}>
+							<img src="" alt="" />
+						</Fade>
+					</Container>
+				</Segment>
+				*/}
+
 				<Segment textAlign="center" vertical className={cx('home-citation-segment')}>
 					<Container>
 							<blockquote>
@@ -176,13 +270,15 @@ class Home extends Component {
 						/>
 
 					</Container>
-
-					{/*
-					<Container>
-						<h2>Informations</h2>
-					</Container>
-					*/}
 				</Segment>
+
+				{/*
+				<Segment inverted textAlign="center" vertical className={cx('home-templates-segment')}>
+					<Container className={cx('home-templates-container')} >
+						<h2 className={cx('title')}>Sign up</h2>
+					</Container>
+				</Segment>
+				*/}
 
       </LayoutPage>
     );
