@@ -104,9 +104,14 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- refonte Home
+- home -> agrandir la largeur du container
+- Real time rendering Katex ??
+- bug avatars chat
+- bug emoji chat box
+- css chat boxs
 - pouvoir supprimer les avatars
 - Gerer les données quand un utilisateur se supprime => dans modal de tchat en haut (thread.author undefined)
+- envoyer un mail pour valider les sign up
 
 - Prévoir la possibilité de faire des groupes de notes
     (user.notesGroups: [{id: '1', title: 'Chimie 2018'}])
