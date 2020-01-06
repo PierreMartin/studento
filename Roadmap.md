@@ -104,7 +104,6 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
-- home -> agrandir la largeur du container, mettre ombre sur images
 - Real time rendering Katex ??
 - bug avatars chat
 - bug emoji chat box

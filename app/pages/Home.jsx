@@ -154,15 +154,23 @@ class Home extends Component {
 									<Fade ssrReveal left duration={800} delay={800}><img src={editorTiny} alt="The editor" /></Fade>
 								</Grid.Column>
 								<Grid.Column width={5}>
-									<h2>More than just a note</h2>
-									<p>Take and share yours notes in class, at works, for tips or all other domain. Add some personality with images, source code, mathematical formulas and diagrams.</p>
+									<Fade right duration={800} delay={800}>
+										<div>
+											<h2>More than just a note</h2>
+											<p>Take and share yours notes in class, at works, for tips or all other domain. Add some personality with images, source code, mathematical formulas and diagrams.</p>
+										</div>
+									</Fade>
 								</Grid.Column>
 							</Grid.Row>
 
 							<Grid.Row className={cx('row')}>
 								<Grid.Column width={5}>
-									<h2>Markdown editor</h2>
-									<p>Developer or developer-Friendly? Create yours notes with markdown syntax. A toolbar will help you to format the documents.</p>
+									<Fade left duration={800} delay={800}>
+										<div>
+											<h2>Markdown editor</h2>
+											<p>Developer or developer-Friendly? Create yours notes with markdown syntax. A toolbar will help you to format the documents.</p>
+										</div>
+									</Fade>
 								</Grid.Column>
 								<Grid.Column width={11}>
 									<Fade ssrReveal right duration={800} delay={900}><img src={editorMd} alt="Markdown editor" /></Fade>
@@ -174,15 +182,23 @@ class Home extends Component {
 									<Fade left duration={800}><img src={editorCode} alt="Code editor" /></Fade>
 								</Grid.Column>
 								<Grid.Column width={5}>
-									<h2>Write your code</h2>
-									<p>Select a language and start to write some code for insert where you want in your document.</p>
+									<Fade right duration={800}>
+										<div>
+											<h2>Write your code</h2>
+											<p>Select a language and start to write some code for insert where you want in your document.</p>
+										</div>
+									</Fade>
 								</Grid.Column>
 							</Grid.Row>
 
 							<Grid.Row className={cx('row')}>
 								<Grid.Column width={5}>
-									<h2>Katex editor</h2>
-									<p>Use the fastest math typesetting for the web. Insert hundreds of expressions in your documents.</p>
+									<Fade left duration={800}>
+										<div>
+											<h2>Katex editor</h2>
+											<p>Use the fastest math typesetting for the web. Insert hundreds of expressions in your documents.</p>
+										</div>
+									</Fade>
 								</Grid.Column>
 								<Grid.Column width={11}>
 									<Fade right duration={800}><img src={katex} alt="Katex editor" /></Fade>
@@ -194,15 +210,23 @@ class Home extends Component {
 									<Fade left duration={800}><img src={sci} alt="Science & chemistry editor" /></Fade>
 								</Grid.Column>
 								<Grid.Column width={5}>
-									<h2>Math equations & chemistry editor</h2>
-									<p>Use Wiris Mathtype for easily include quality math equations in your documents and digital content.</p>
+									<Fade right duration={800}>
+										<div>
+											<h2>Math equations & chemistry editor</h2>
+											<p>Use Wiris Mathtype for easily include quality math equations in your documents and digital content.</p>
+										</div>
+									</Fade>
 								</Grid.Column>
 							</Grid.Row>
 
 							<Grid.Row className={cx('row')}>
 								<Grid.Column width={5}>
-									<h2>Tables</h2>
-									<p>Insert easily tables in your documents and presentations.</p>
+									<Fade left duration={800}>
+										<div>
+											<h2>Tables</h2>
+											<p>Insert easily tables in your documents and presentations.</p>
+										</div>
+									</Fade>
 								</Grid.Column>
 								<Grid.Column width={11}>
 									<Fade right duration={800}><img src={tables} alt="Tables" /></Fade>
@@ -214,8 +238,12 @@ class Home extends Component {
 									<Fade left duration={800}><img src={chat} alt="Real time chat" /></Fade>
 								</Grid.Column>
 								<Grid.Column width={5}>
-									<h2>Real time chat</h2>
-									<p>Interact with others users with a real time chat.</p>
+									<Fade right duration={800}>
+										<div>
+											<h2>Real time chat</h2>
+											<p>Interact with others users with a real time chat.</p>
+										</div>
+									</Fade>
 								</Grid.Column>
 							</Grid.Row>
 						</Grid>
@@ -245,7 +273,7 @@ class Home extends Component {
 
 				<Segment vertical className={cx('home-courses-segment')}>
 					<Container text className={cx('courses-container')}>
-						<h2 style={{ textAlign: 'center' }}>Trendy notes</h2>
+						<h2 style={{ textAlign: 'center', marginBottom: '40px' }}>Trendy notes</h2>
 
 						<div className={cx('categories')}>
 							{categories.map((cat, index) => (<Button basic primary key={index} active={category.lastClicked === cat.key} onClick={this.handleSelectCategory(cat.key, index)}>{cat.name}</Button>))}

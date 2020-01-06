@@ -6,6 +6,13 @@ body {
     color: #dbdbdb;
 }
 
+@media only screen and (min-width: 1200px) {
+    .ui.container {
+        width: inherit;
+        padding: 0 30px;
+    }
+}
+
 .ui.text.container {
     max-width: none !important;
 }
