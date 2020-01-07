@@ -9,6 +9,10 @@
   padding: 0 !important;
   height: 55px;
 
+  .left, .right {
+    padding: 0 !important;
+  }
+
   .right {
     .menu-auth-for-mobile { display: none; }
     .menu-signup {
@@ -72,7 +76,6 @@
 
         .left, .right {
           margin: 0 !important;
-          padding: 0 !important;
 
           .menu-login, .menu-signup { display: none !important; }
 

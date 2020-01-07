@@ -163,6 +163,20 @@ class Home extends Component {
 								</Grid.Column>
 							</Grid.Row>
 
+
+							{/* TODO faire ca
+							<div style={{ display: 'flex' }}>
+								<div style={{ flex: '0 0 807px' }}>
+									<Fade ssrReveal left duration={800} delay={800}><img src={editorTiny} alt="The editor" /></Fade>
+								</div>
+								<div style={{ flex: '1 0 0' }}>
+									<h2>More than just a note</h2>
+									<p>Take and share yours notes in class, at works, for tips or all other domain. Add some personality with images, source code, mathematical formulas and diagrams.</p>
+								</div>
+							</div>
+							*/}
+
+
 							<Grid.Row className={cx('row')}>
 								<Grid.Column width={5}>
 									<Fade left duration={800} delay={800}>
@@ -219,6 +233,7 @@ class Home extends Component {
 								</Grid.Column>
 							</Grid.Row>
 
+							{/*
 							<Grid.Row className={cx('row')}>
 								<Grid.Column width={5}>
 									<Fade left duration={800}>
@@ -232,6 +247,7 @@ class Home extends Component {
 									<Fade right duration={800}><img src={tables} alt="Tables" /></Fade>
 								</Grid.Column>
 							</Grid.Row>
+							*/}
 
 							<Grid.Row className={cx('row')}>
 								<Grid.Column width={11}>

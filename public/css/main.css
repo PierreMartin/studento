@@ -8,13 +8,14 @@ body {
 
 @media only screen and (min-width: 1200px) {
     .ui.container {
+        max-width: 1600px !important;
+        padding: 0 25px;
         width: inherit;
-        padding: 0 30px;
     }
 }
 
 .ui.text.container {
-    max-width: none !important;
+    max-width: inherit !important;
 }
 
 .ui.basic.button:hover, .ui.basic.buttons .button:hover {
@@ -120,7 +121,7 @@ input::selection, textarea::selection {
 .ui.error.message { background-color: #222225; color: #fff; box-shadow: 0 0 0 1px #9f3a38 inset, 0 0 0 0 transparent; }
 .ui.error.message .content p { color: #fff !important; opacity: 1; }
 
-/***************************** BUTONS ******************************/
+/***************************** BUTTONS ******************************/
 /* Default basic */
 .ui.basic.button, .ui.basic.buttons .button {
     color: #dbdbdb !important;
