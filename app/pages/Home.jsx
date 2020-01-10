@@ -148,121 +148,105 @@ class Home extends Component {
 
 				<Segment vertical className={cx('home-infos-segment')}>
 					<Container className={cx('home-infos-container')}>
-						<Grid divided stackable>
-							<Grid.Row className={cx('row')}>
-								<Grid.Column width={11}>
-									<Fade ssrReveal left duration={800} delay={800}><img src={editorTiny} alt="The editor" /></Fade>
-								</Grid.Column>
-								<Grid.Column width={5}>
-									<Fade right duration={800} delay={800}>
-										<div>
-											<h2>More than just a note</h2>
-											<p>Take and share yours notes in class, at works, for tips or all other domain. Add some personality with images, source code, mathematical formulas and diagrams.</p>
-										</div>
-									</Fade>
-								</Grid.Column>
-							</Grid.Row>
-
-
-							{/* TODO faire ca
-							<div style={{ display: 'flex' }}>
-								<div style={{ flex: '0 0 807px' }}>
-									<Fade ssrReveal left duration={800} delay={800}><img src={editorTiny} alt="The editor" /></Fade>
-								</div>
-								<div style={{ flex: '1 0 0' }}>
-									<h2>More than just a note</h2>
-									<p>Take and share yours notes in class, at works, for tips or all other domain. Add some personality with images, source code, mathematical formulas and diagrams.</p>
-								</div>
+						<div className={cx('row')}>
+							<div className={cx('column', 'image')}>
+								<Fade ssrReveal left duration={800} delay={800}><img src={editorTiny} alt="The editor" /></Fade>
 							</div>
-							*/}
+							<div className={cx('column', 'description')}>
+								<Fade right duration={800} delay={800}>
+									<div>
+										<h2>More than just a note</h2>
+										<p>Take and share yours notes in class, at works, for tips or all other domain. Add some personality with images, source code, mathematical formulas and diagrams.</p>
+									</div>
+								</Fade>
+							</div>
+						</div>
 
+						<div className={cx('row')}>
+							<div className={cx('column', 'description')}>
+								<Fade left duration={800} delay={800}>
+									<div>
+										<h2>Markdown editor</h2>
+										<p>Developer or developer-Friendly? Create yours notes with markdown syntax. A toolbar will help you to format the documents.</p>
+									</div>
+								</Fade>
+							</div>
+							<div className={cx('column', 'image')}>
+								<Fade ssrReveal right duration={800} delay={900}><img src={editorMd} alt="Markdown editor" /></Fade>
+							</div>
+						</div>
 
-							<Grid.Row className={cx('row')}>
-								<Grid.Column width={5}>
-									<Fade left duration={800} delay={800}>
-										<div>
-											<h2>Markdown editor</h2>
-											<p>Developer or developer-Friendly? Create yours notes with markdown syntax. A toolbar will help you to format the documents.</p>
-										</div>
-									</Fade>
-								</Grid.Column>
-								<Grid.Column width={11}>
-									<Fade ssrReveal right duration={800} delay={900}><img src={editorMd} alt="Markdown editor" /></Fade>
-								</Grid.Column>
-							</Grid.Row>
+						<div className={cx('row')}>
+							<div className={cx('column', 'image')}>
+								<Fade left duration={800}><img src={editorCode} alt="Code editor" /></Fade>
+							</div>
+							<div className={cx('column', 'description')}>
+								<Fade right duration={800}>
+									<div>
+										<h2>Write your code</h2>
+										<p>Select a language and start to write some code for insert where you want in your document.</p>
+									</div>
+								</Fade>
+							</div>
+						</div>
 
-							<Grid.Row className={cx('row')}>
-								<Grid.Column width={11}>
-									<Fade left duration={800}><img src={editorCode} alt="Code editor" /></Fade>
-								</Grid.Column>
-								<Grid.Column width={5}>
-									<Fade right duration={800}>
-										<div>
-											<h2>Write your code</h2>
-											<p>Select a language and start to write some code for insert where you want in your document.</p>
-										</div>
-									</Fade>
-								</Grid.Column>
-							</Grid.Row>
+						<div className={cx('row')}>
+							<div className={cx('column', 'description')}>
+								<Fade left duration={800}>
+									<div>
+										<h2>Katex editor</h2>
+										<p>Use the fastest math typesetting for the web. Insert hundreds of expressions in your documents.</p>
+									</div>
+								</Fade>
+							</div>
+							<div className={cx('column', 'image')}>
+								<Fade right duration={800}><img src={katex} alt="Katex editor" /></Fade>
+							</div>
+						</div>
 
-							<Grid.Row className={cx('row')}>
-								<Grid.Column width={5}>
-									<Fade left duration={800}>
-										<div>
-											<h2>Katex editor</h2>
-											<p>Use the fastest math typesetting for the web. Insert hundreds of expressions in your documents.</p>
-										</div>
-									</Fade>
-								</Grid.Column>
-								<Grid.Column width={11}>
-									<Fade right duration={800}><img src={katex} alt="Katex editor" /></Fade>
-								</Grid.Column>
-							</Grid.Row>
+						<div className={cx('row')}>
+							<div className={cx('column', 'image')}>
+								<Fade left duration={800}><img src={sci} alt="Science & chemistry editor" /></Fade>
+							</div>
+							<div className={cx('column', 'description')}>
+								<Fade right duration={800}>
+									<div>
+										<h2>Math equations & chemistry editor</h2>
+										<p>Use Wiris Mathtype for easily include quality math equations in your documents and digital content.</p>
+									</div>
+								</Fade>
+							</div>
+						</div>
 
-							<Grid.Row className={cx('row')}>
-								<Grid.Column width={11}>
-									<Fade left duration={800}><img src={sci} alt="Science & chemistry editor" /></Fade>
-								</Grid.Column>
-								<Grid.Column width={5}>
-									<Fade right duration={800}>
-										<div>
-											<h2>Math equations & chemistry editor</h2>
-											<p>Use Wiris Mathtype for easily include quality math equations in your documents and digital content.</p>
-										</div>
-									</Fade>
-								</Grid.Column>
-							</Grid.Row>
+						{/*
+						<div className={cx('row')}>
+							<div className={cx('column', 'description')}>
+								<Fade left duration={800}>
+									<div>
+										<h2>Tables</h2>
+										<p>Insert easily tables in your documents and presentations.</p>
+									</div>
+								</Fade>
+							</div>
+							<div className={cx('column', 'image')}>
+								<Fade right duration={800}><img src={tables} alt="Tables" /></Fade>
+							</div>
+						</div>
+						*/}
 
-							{/*
-							<Grid.Row className={cx('row')}>
-								<Grid.Column width={5}>
-									<Fade left duration={800}>
-										<div>
-											<h2>Tables</h2>
-											<p>Insert easily tables in your documents and presentations.</p>
-										</div>
-									</Fade>
-								</Grid.Column>
-								<Grid.Column width={11}>
-									<Fade right duration={800}><img src={tables} alt="Tables" /></Fade>
-								</Grid.Column>
-							</Grid.Row>
-							*/}
-
-							<Grid.Row className={cx('row')}>
-								<Grid.Column width={11}>
-									<Fade left duration={800}><img src={chat} alt="Real time chat" /></Fade>
-								</Grid.Column>
-								<Grid.Column width={5}>
-									<Fade right duration={800}>
-										<div>
-											<h2>Real time chat</h2>
-											<p>Interact with others users with a real time chat.</p>
-										</div>
-									</Fade>
-								</Grid.Column>
-							</Grid.Row>
-						</Grid>
+						<div className={cx('row')}>
+							<div className={cx('column', 'description')}>
+								<Fade left duration={800}>
+									<div>
+										<h2>Real time chat</h2>
+										<p>Interact with others users with a real time chat.</p>
+									</div>
+								</Fade>
+							</div>
+							<div className={cx('column', 'image')}>
+								<Fade right duration={800}><img src={chat} alt="Real time chat" /></Fade>
+							</div>
+						</div>
 					</Container>
 				</Segment>
 

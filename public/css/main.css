@@ -7,15 +7,11 @@ body {
 }
 
 @media only screen and (min-width: 1200px) {
-    .ui.container {
+    .ui.container, .ui.text.container, .ui.grid.container {
         max-width: 1600px !important;
         padding: 0 25px;
-        width: inherit;
+        width: inherit !important;
     }
-}
-
-.ui.text.container {
-    max-width: inherit !important;
 }
 
 .ui.basic.button:hover, .ui.basic.buttons .button:hover {
