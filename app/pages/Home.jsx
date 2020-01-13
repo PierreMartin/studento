@@ -304,7 +304,7 @@ class Home extends Component {
 					!authentification.authenticated && (
 						<Segment textAlign="center" vertical className={cx('home-signup-segment')}>
 							<Container className={cx('home-templates-container')} >
-								<h2 className={cx('title')}>Ready to take and share notes</h2>
+								<h2 className={cx('title')}>Ready to take and share notes?</h2>
 								<Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button>
 							</Container>
 						</Segment>
