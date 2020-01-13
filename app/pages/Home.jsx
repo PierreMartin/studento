@@ -300,13 +300,16 @@ class Home extends Component {
 					</Container>
 				</Segment>
 
-				{/*
-				<Segment inverted textAlign="center" vertical className={cx('home-templates-segment')}>
-					<Container className={cx('home-templates-container')} >
-						<h2 className={cx('title')}>Sign up</h2>
-					</Container>
-				</Segment>
-				*/}
+				{
+					!authentification.authenticated && (
+						<Segment textAlign="center" vertical className={cx('home-signup-segment')}>
+							<Container className={cx('home-templates-container')} >
+								<h2 className={cx('title')}>Ready to take and share notes</h2>
+								<Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button>
+							</Container>
+						</Segment>
+					)
+				}
 
       </LayoutPage>
     );

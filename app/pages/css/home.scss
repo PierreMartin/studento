@@ -1,5 +1,27 @@
 @import '../../css/common/colors.scss';
 
+h1 {
+  font-size: 60px;
+  font-weight: 700;
+  margin-bottom: 0;
+  letter-spacing: -0.04em;
+}
+
+h2 {
+  color: white !important;
+  margin-bottom: 30px;
+}
+
+.sub-title {
+  font-weight: 100;
+  color: $colorTextMain !important;
+}
+
+.title-home {
+  text-align: center;
+  color: $colorBombay !important;
+}
+
 .home-header-segment {
   height: 500px;
   /* background: url(/img/bg-home.jpg) no-repeat 0 0 fixed !important; */
@@ -8,18 +30,6 @@
 
   .home-header-container {
     margin-top: 120px;
-
-    .title {
-      font-size: 60px;
-      font-weight: 700;
-      margin-bottom: 0;
-      letter-spacing: -0.04em;
-    }
-
-    .sub-title {
-      font-weight: 100;
-      color: $colorTextMain !important;
-    }
 
     .signup-button {
       display: block;
@@ -37,11 +47,11 @@
     .row {
       display: flex;
       flex-wrap: wrap;
-      margin: 60px 0;
+      margin: 100px 0;
 
       .column {
         &.image { img { max-width: 100%; box-shadow: 6px 30px 30px #080808; } }
-        &.description { flex: 1 0 0; margin-left: 20px; }
+        &.description { flex: 1 0 0; margin-left: 30px; }
       }
 
       &:nth-child(even) {
@@ -63,18 +73,9 @@
   background-color: $colorLogo !important;
 
   h2 {
-    color: white !important;
-  }
-
-  .title {
     font-weight: 100;
     line-height: 38px;
   }
-}
-
-.title-home {
-  text-align: center;
-  color: $colorBombay !important;
 }
 
 .home-courses-segment {
@@ -91,6 +92,17 @@
         margin: 2px !important;
       }
     }
+  }
+}
+
+.home-signup-segment {
+  padding: 40px 0 !important;
+  background-color: $colorLogo !important;
+
+  h2 { margin-bottom: 30px; }
+
+  .signup-button {
+    border: 1px solid #fff !important;
   }
 }
 
