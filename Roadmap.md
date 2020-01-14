@@ -104,6 +104,7 @@ $ ./scripts/generate_menu.sh
 paginationMethod => 'push' | 'skip'
 
 ### TODO :
+- RWD (menu main)
 - Real time rendering Katex ??
 - bug avatars chat
 - bug emoji chat box
@@ -111,6 +112,7 @@ paginationMethod => 'push' | 'skip'
 - pouvoir supprimer les avatars
 - Gerer les données quand un utilisateur se supprime => dans modal de tchat en haut (thread.author undefined)
 - envoyer un mail pour valider les sign up
+- Prévoir la possibilité d'ajouter des categories / sous cat par les users (inputs de recherche au moment de créer)
 
 - Prévoir la possibilité de faire des groupes de notes
     (user.notesGroups: [{id: '1', title: 'Chimie 2018'}])
@@ -153,8 +155,6 @@ paginationMethod => 'push' | 'skip'
 - dotenv voir pourquoi deplacé dans devDependance
 - pouvoir uploader images dans les cours
 - Commentaires sur une zone de texte
-
-- HomePage + RWD
 - Resolve vulnerabilities in dependencies
 - Google analytique
 - RGPD cookie banner - voir express-session - fait ca en localStorage   componentDidMount de la Home -> setConsentRGPDAction(getLocalStorage('key'))  - dans LayoutMainWeb on récup isConsentRGPD du store
@@ -186,15 +186,6 @@ moins urgent :
 - refacto les notifications + gerer toutes les erreurs
 - check si un username / email est deja utilisé
 - supprimer le fichier de l'avatar si update
-
-
-# AUTH - LOGIN :
-=> controller login() { CALL passport.authenticate('local') }
-=> passport/local.js 
-=> model CALL comparePassword()
-=> controller login() { passport.authenticate() { HERE } }
-=> controller login() { passport.authenticate() { CALL req.logIn } } si dedant, on est authentifié
-
 
 # TODO faire toutes les requetes comme ca:
 const query = [{ keyReq, valueReq }] || { keyReq, valueReq } || {};
