@@ -102,7 +102,14 @@ h2 {
   h2 { margin-bottom: 30px; }
 
   .signup-button {
-    border: 1px solid #fff !important;
+    margin-left: 0.5em !important;
+    top: -3px !important;
+
+    &:hover, &:focus, &[class~=active] {
+      color: $colorLogo !important;
+      background: #fff !important;
+      box-shadow: none !important;
+    }
   }
 }
 

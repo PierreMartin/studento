@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import Fade from 'react-reveal/Fade';
 import { fetchCoursesByFieldAction, fetchCoursesBySearchAction } from '../actions/courses';
-import { Button, Container, Grid, Icon, Segment } from 'semantic-ui-react';
+import { Button, Container, Icon, Segment } from 'semantic-ui-react';
 import LayoutPage from '../components/layouts/LayoutPage/LayoutPage';
 import CoursesList from '../components/CoursesList/CoursesList';
 import CourseSearch from '../components/CourseSearch/CourseSearch';
@@ -13,7 +13,6 @@ import editorMd from '../images/editor_md.jpg';
 import editorCode from '../images/editor_code.jpg';
 import chat from '../images/chat.jpg';
 import katex from '../images/katex.jpg';
-import tables from '../images/tables.jpg';
 import sci from '../images/sci.jpg';
 import classNames from 'classnames/bind';
 import stylesMain from '../css/main.scss';
@@ -303,9 +302,9 @@ class Home extends Component {
 				{
 					!authentification.authenticated && (
 						<Segment textAlign="center" vertical className={cx('home-signup-segment')}>
-							<Container className={cx('home-templates-container')} >
+							<Container className={cx('home-signup-container')} >
 								<h2 className={cx('title')}>Ready to take and share notes?</h2>
-								<Button className={cx('signup-button')} as={Link} to="/signup" basic inverted size="huge">Sign up<Icon name="right arrow" /></Button>
+								<Button as={Link} to="/signup" inverted size="big" className={cx('signup-button')}>Sign Up</Button>
 							</Container>
 						</Segment>
 					)
