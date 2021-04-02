@@ -3,7 +3,9 @@ sudo chown -R $USER:$GROUP ~/.config
 sudo chown -R $USER:$GROUP $PWD   (if no right when rimraf)
 
 ### development :
-$ sudo mongod
+$ sudo brew services start mongodb-community@4.4    |    sudo brew services stop mongodb-community@4.4
+$ brew services list
+($ sudo mongod)
 $ npm run dev
 
 ### Mongo :
