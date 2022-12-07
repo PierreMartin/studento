@@ -82,7 +82,7 @@
     "dompurify": "^1.0.8",
     "dotenv": "^6.2.0",
     "emoji-mart": "^2.5.1",
-    "express": "^4.15.2",
+    "express": "^4.17.3",
     "express-flash": "0.0.2",
     "express-session": "^1.15.2",
     "extract-text-webpack-plugin": "^2.1.0",
